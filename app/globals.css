@@ -50,6 +50,21 @@ body {
   border-radius: 4px;
 }
 
+/* Native form controls must render dark — otherwise the browser draws
+   select dropdowns with a light background under our light text. */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: var(--color-surface);
+  color: var(--color-foreground);
+}
+
+select option:disabled {
+  color: var(--color-muted-2);
+}
+
 /* ——— Reusable surface treatments ——— */
 
 .glass {
