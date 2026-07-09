@@ -10,10 +10,11 @@ const inputClasses =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-[15px] text-foreground placeholder:text-muted-2 " +
   "transition-colors focus:border-accent/50 focus:bg-white/[0.05] focus:outline-none";
 
-// FormSubmit delivers submissions to this inbox — no backend needed.
-// The first-ever submission triggers a one-time activation email; click
-// "Activate" in it and every message after that lands in the inbox.
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/aryan@bugsnaps.in";
+// Web3Forms relays submissions to aryan@bugsnaps.in — no backend needed.
+// The access key is public by design (it only lets people send you mail);
+// manage it at web3forms.com.
+const FORM_ENDPOINT = "https://api.web3forms.com/submit";
+const WEB3FORMS_ACCESS_KEY = "c74ca709-a8b6-45b8-8cad-a3b3bcc12d6a";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -33,18 +34,17 @@ export function Contact() {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `BugSnaps inquiry from ${data.name}`,
+          from_name: "BugSnaps website",
           ...data,
-          _subject: `BugSnaps inquiry from ${data.name}`,
-          _template: "table",
         }),
         // Don't leave visitors staring at "Sending…" if the relay is down.
         signal: AbortSignal.timeout(12_000),
       });
       const body = (await res.json()) as { success?: string | boolean };
-      // FormSubmit returns success:"false" (with HTTP 200) when the form
-      // isn't activated yet — treat that as a failure so no message is lost.
       if (!res.ok || String(body.success) !== "true") {
-        throw new Error(`FormSubmit responded ${res.status}: ${JSON.stringify(body)}`);
+        throw new Error(`Web3Forms responded ${res.status}: ${JSON.stringify(body)}`);
       }
       setStatus("sent");
     } catch {
