@@ -13,7 +13,7 @@ const inputClasses =
 // FormSubmit delivers submissions to this inbox — no backend needed.
 // The first-ever submission triggers a one-time activation email; click
 // "Activate" in it and every message after that lands in the inbox.
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/4ryanwalia@gmail.com";
+const FORM_ENDPOINT = "https://formsubmit.co/ajax/aryan@bugsnaps.in";
 
 type Status = "idle" | "sending" | "sent" | "error";
 

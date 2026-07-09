@@ -116,13 +116,11 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.3, ease: EASE }}
             className="glass absolute top-1/2 left-1/2 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-2xl p-5 shadow-[0_24px_80px_-24px_rgb(0_0_0/0.8)]"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-              </div>
-              <span className="font-mono text-[11px] tracking-wide text-muted-2">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+              <span className="ml-2 font-mono text-[11px] tracking-wide text-muted-2">
                 bugsnaps · sample engagement
               </span>
             </div>
@@ -180,10 +178,12 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.2, ease: EASE }}
-            className="glass absolute top-[8%] right-[2%] rounded-xl px-4 py-3"
+            className="absolute top-[6%] right-0 z-10 rounded-xl border border-white/10 bg-[#15151a] px-5 py-3.5 shadow-[0_16px_48px_-16px_rgb(0_0_0/0.9)]"
           >
-            <p className="font-mono text-[11px] tracking-wide text-muted-2">Critical open</p>
-            <p className="mt-0.5 text-xl font-semibold text-success">0</p>
+            <p className="font-mono text-[11px] font-medium tracking-wide whitespace-nowrap text-muted">
+              Critical open
+            </p>
+            <p className="mt-1 text-2xl font-semibold leading-none text-success">0</p>
           </motion.div>
 
           <motion.div
@@ -191,10 +191,12 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.35, ease: EASE }}
-            className="glass absolute bottom-[6%] left-[4%] rounded-xl px-4 py-3"
+            className="absolute bottom-[6%] left-0 z-10 rounded-xl border border-white/10 bg-[#15151a] px-5 py-3.5 shadow-[0_16px_48px_-16px_rgb(0_0_0/0.9)]"
           >
-            <p className="font-mono text-[11px] tracking-wide text-muted-2">Time to first finding</p>
-            <p className="mt-0.5 text-xl font-semibold">31h</p>
+            <p className="font-mono text-[11px] font-medium tracking-wide whitespace-nowrap text-muted">
+              Time to first finding
+            </p>
+            <p className="mt-1 text-2xl font-semibold leading-none">31h</p>
           </motion.div>
         </div>
       </section>

@@ -74,11 +74,11 @@ export default function CareersPage() {
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-4">
               <Button
-                href="mailto:4ryanwalia@gmail.com?subject=Joining%20BugSnaps"
+                href="mailto:aryan@bugsnaps.in?subject=Joining%20BugSnaps"
                 size="lg"
               >
                 <Mail className="h-4 w-4" />
-                4ryanwalia@gmail.com
+                aryan@bugsnaps.in
               </Button>
               <p className="text-[13px] text-muted-2">
                 We read everything and reply to everyone.
