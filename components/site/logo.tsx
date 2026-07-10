@@ -1,31 +1,48 @@
 import { cn } from "@/lib/utils";
 
 /**
- * BugSnaps mark: a target dot caught between two brackets —
- * a bug, snapped. No locks, no shields.
+ * BugSnaps mark: a bug snapped between brackets.
+ * Vector recreation of the brand logo used on LinkedIn and social.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="0 0 512 512"
       fill="none"
       aria-hidden="true"
       className={cn("h-7 w-7", className)}
     >
-      <rect width="32" height="32" rx="9" fill="#2563EB" />
+      <rect width="512" height="512" rx="118" fill="#2563EB" />
+      {/* top bar */}
+      <rect x="210" y="104" width="92" height="30" rx="6" fill="#FAFAFA" />
+      {/* brackets */}
       <path
-        d="M12.5 9.5H10a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 10 22.5h2.5"
+        d="M176 156 H 172 Q 126 156 126 202 V 330 Q 126 376 172 376 H 176"
         stroke="#FAFAFA"
-        strokeWidth="2"
+        strokeWidth="36"
         strokeLinecap="round"
       />
       <path
-        d="M19.5 9.5H22a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5h-2.5"
+        d="M336 156 H 340 Q 386 156 386 202 V 330 Q 386 376 340 376 H 336"
         stroke="#FAFAFA"
-        strokeWidth="2"
+        strokeWidth="36"
         strokeLinecap="round"
       />
-      <circle cx="16" cy="16" r="2.75" fill="#FAFAFA" />
+      {/* antennae */}
+      <path d="M241 212 Q 233 192 220 180" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M271 212 Q 279 192 292 180" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      {/* head */}
+      <path d="M 223 250 A 33 33 0 0 1 289 250 Z" fill="#FAFAFA" />
+      {/* body with center split */}
+      <ellipse cx="256" cy="313" rx="43" ry="56" fill="#FAFAFA" />
+      <line x1="256" y1="252" x2="256" y2="370" stroke="#2563EB" strokeWidth="9" />
+      {/* legs */}
+      <path d="M 218 280 Q 198 274 191 254" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M 212 314 H 184" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M 221 344 Q 204 350 199 368" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M 294 280 Q 314 274 321 254" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M 300 314 H 328" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
+      <path d="M 291 344 Q 308 350 313 368" stroke="#FAFAFA" strokeWidth="12" strokeLinecap="round" />
     </svg>
   );
 }
