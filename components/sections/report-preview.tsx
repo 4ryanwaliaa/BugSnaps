@@ -25,7 +25,7 @@ export function ReportPreview() {
         description="Here's a sample of exactly what you receive: a summary anyone can read, reproduction steps and fixes for your developers, and proof you can show your customers."
       />
 
-      <Reveal className="mt-16" y={32}>
+      <Reveal className="mt-10 sm:mt-16" y={32}>
         <div className="relative mx-auto max-w-4xl">
           {/* Glow behind the document */}
           <div
@@ -33,37 +33,34 @@ export function ReportPreview() {
             className="absolute -inset-8 rounded-[32px] bg-primary/[0.07] blur-3xl"
           />
 
-          {/* The document — capped height on phones until expanded */}
-          <div
-            className={cn(
-              "relative overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0d0d10] shadow-[0_32px_120px_-32px_rgb(0_0_0/0.9)]",
-              !expanded && "max-lg:max-h-[520px]",
-            )}
-          >
+          {/* The document */}
+          <div className="relative overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0d0d10] shadow-[0_32px_120px_-32px_rgb(0_0_0/0.9)]">
             {/* Document header */}
-            <div className="flex items-center justify-between border-b border-white/[0.07] px-6 py-4 sm:px-10">
-              <div className="flex items-center gap-3">
-                <LogoMark className="h-6 w-6" />
-                <div>
-                  <p className="text-sm font-semibold tracking-tight">
+            <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-5 py-4 sm:px-10">
+              <div className="flex min-w-0 items-center gap-3">
+                <LogoMark className="h-6 w-6 shrink-0" />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold tracking-tight">
                     Penetration Test Report
                   </p>
-                  <p className="font-mono text-[11px] text-muted-2">
+                  <p className="truncate font-mono text-[11px] text-muted-2">
                     Example Co. · Web Application &amp; API
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="hidden rounded-md border border-accent/25 bg-accent/10 px-2 py-1 font-mono text-[10px] tracking-[0.15em] text-accent uppercase sm:inline-flex">
+              <div className="flex shrink-0 items-center gap-3">
+                <span className="inline-flex rounded-md border border-accent/25 bg-accent/10 px-2 py-1 font-mono text-[10px] tracking-[0.15em] text-accent uppercase">
                   Sample
                 </span>
-                <span className="font-mono text-[11px] text-muted-2">v2.1 · 24 pages</span>
+                <span className="hidden font-mono text-[11px] text-muted-2 sm:inline">
+                  v2.1 · 24 pages
+                </span>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-[1fr_260px]">
               {/* Main content */}
-              <div className="space-y-8 px-6 py-8 sm:px-10">
+              <div className="space-y-6 px-5 py-6 sm:space-y-8 sm:px-10 sm:py-8">
                 {/* Executive summary */}
                 <div>
                   <h3 className="font-mono text-[11px] font-medium tracking-[0.2em] text-accent uppercase">
@@ -79,6 +76,22 @@ export function ReportPreview() {
                   </p>
                 </div>
 
+                {/* Phones: rest of the report stays fully hidden until expanded —
+                    no half-clipped charts */}
+                {!expanded && (
+                  <div className="flex justify-center border-t border-white/[0.07] pt-5 lg:hidden">
+                    <button
+                      type="button"
+                      onClick={() => setExpanded(true)}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-foreground active:scale-95"
+                    >
+                      View full sample report
+                      <ChevronDown className="h-4 w-4 text-accent" />
+                    </button>
+                  </div>
+                )}
+
+                <div className={cn("space-y-6 sm:space-y-8", !expanded && "max-lg:hidden")}>
                 {/* Risk distribution */}
                 <div>
                   <h3 className="font-mono text-[11px] font-medium tracking-[0.2em] text-accent uppercase">
@@ -94,7 +107,7 @@ export function ReportPreview() {
                           <motion.div
                             initial={reduceMotion ? false : { width: 0 }}
                             whileInView={{ width: `${(row.count / maxCount) * 100}%` }}
-                            viewport={{ once: true, margin: "-80px" }}
+                            viewport={{ once: true }}
                             transition={{
                               duration: 0.9,
                               delay: 0.15 + index * 0.08,
@@ -187,10 +200,16 @@ export function ReportPreview() {
                     ))}
                   </ul>
                 </div>
+                </div>
               </div>
 
               {/* Meta sidebar */}
-              <aside className="border-t border-white/[0.07] bg-white/[0.015] px-6 py-8 lg:border-t-0 lg:border-l">
+              <aside
+                className={cn(
+                  "border-t border-white/[0.07] bg-white/[0.015] px-6 py-8 lg:border-t-0 lg:border-l",
+                  !expanded && "max-lg:hidden",
+                )}
+              >
                 <dl className="space-y-5">
                   {[
                     { term: "Engagement", detail: "Web app + API pentest" },
@@ -226,20 +245,6 @@ export function ReportPreview() {
                 </div>
               </aside>
             </div>
-
-            {/* Phones: fade + expand control while collapsed */}
-            {!expanded && (
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-center bg-gradient-to-t from-[#0d0d10] via-[#0d0d10]/85 to-transparent pt-24 pb-5 lg:hidden">
-                <button
-                  type="button"
-                  onClick={() => setExpanded(true)}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-sm active:scale-95"
-                >
-                  View full sample report
-                  <ChevronDown className="h-4 w-4 text-accent" />
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </Reveal>
