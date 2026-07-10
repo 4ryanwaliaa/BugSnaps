@@ -1,17 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { FileText, CheckCircle2 } from "lucide-react";
+import { FileText, CheckCircle2, ChevronDown } from "lucide-react";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { SeverityBadge } from "@/components/ui/badge";
 import { LogoMark } from "@/components/site/logo";
 import { reportFindings, riskDistribution } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 const maxCount = Math.max(...riskDistribution.map((r) => r.count));
 
 export function ReportPreview() {
   const reduceMotion = useReducedMotion();
+  // Phones start with the tall report document collapsed to a preview.
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <Section id="report">
@@ -29,8 +33,13 @@ export function ReportPreview() {
             className="absolute -inset-8 rounded-[32px] bg-primary/[0.07] blur-3xl"
           />
 
-          {/* The document */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0d0d10] shadow-[0_32px_120px_-32px_rgb(0_0_0/0.9)]">
+          {/* The document — capped height on phones until expanded */}
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0d0d10] shadow-[0_32px_120px_-32px_rgb(0_0_0/0.9)]",
+              !expanded && "max-lg:max-h-[520px]",
+            )}
+          >
             {/* Document header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-6 py-4 sm:px-10">
               <div className="flex items-center gap-3">
@@ -217,6 +226,20 @@ export function ReportPreview() {
                 </div>
               </aside>
             </div>
+
+            {/* Phones: fade + expand control while collapsed */}
+            {!expanded && (
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-center bg-gradient-to-t from-[#0d0d10] via-[#0d0d10]/85 to-transparent pt-24 pb-5 lg:hidden">
+                <button
+                  type="button"
+                  onClick={() => setExpanded(true)}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-sm active:scale-95"
+                >
+                  View full sample report
+                  <ChevronDown className="h-4 w-4 text-accent" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Reveal>

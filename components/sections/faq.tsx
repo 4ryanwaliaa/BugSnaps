@@ -14,7 +14,7 @@ export function Faq() {
 
   return (
     <Section id="faq" className="border-y border-white/[0.05] bg-surface/40">
-      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div className="grid gap-8 sm:gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionHeading
             align="left"

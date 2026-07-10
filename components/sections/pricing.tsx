@@ -21,10 +21,10 @@ export function Pricing() {
         description="A one-page app and a sprawling platform aren't the same job — so we don't pretend one price fits all."
       />
 
-      <Reveal className="mt-14" y={28}>
+      <Reveal className="mt-10 sm:mt-14" y={28}>
         <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-accent/25 bg-surface shadow-[0_0_60px_-20px_rgb(37_99_235/0.3)]">
           <div className="grid sm:grid-cols-[1.2fr_1fr]">
-            <div className="p-8 sm:p-10">
+            <div className="p-6 sm:p-10">
               <h3 className="text-xl font-semibold tracking-tight">
                 Let&apos;s figure it out together
               </h3>
@@ -41,7 +41,7 @@ export function Pricing() {
               </div>
             </div>
 
-            <div className="border-t border-white/[0.07] bg-white/[0.015] p-8 sm:border-t-0 sm:border-l sm:p-10">
+            <div className="border-t border-white/[0.07] bg-white/[0.015] p-6 sm:border-t-0 sm:border-l sm:p-10">
               <p className="font-mono text-[11px] font-medium tracking-[0.2em] text-muted-2 uppercase">
                 Always included
               </p>

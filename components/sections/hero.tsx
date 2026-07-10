@@ -51,7 +51,7 @@ export function Hero() {
         <div className="absolute top-1/3 right-[-10%] h-[380px] w-[380px] rounded-full bg-accent/[0.07] blur-[120px]" />
       </div>
 
-      <section className="relative mx-auto grid w-full max-w-6xl gap-12 px-6 pt-28 pb-20 sm:gap-16 sm:pt-44 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
+      <section className="relative mx-auto grid w-full max-w-6xl gap-10 px-6 pt-28 pb-14 sm:gap-16 sm:pt-44 sm:pb-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
         {/* ——— Copy ——— */}
         <div>
           <motion.h1
@@ -219,9 +219,9 @@ export function Hero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="mx-auto w-full max-w-6xl px-6 py-12 text-center lg:px-8"
+          className="mx-auto w-full max-w-6xl px-6 py-8 text-center sm:py-12 lg:px-8"
         >
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-muted sm:text-2xl">
+          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted sm:text-2xl">
             We&apos;re a new company — and we won&apos;t pretend otherwise.{" "}
             <span className="text-foreground">
               No inflated numbers, no fake logos. Everyone starts somewhere.

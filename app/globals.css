@@ -65,6 +65,15 @@ select option:disabled {
   color: var(--color-muted-2);
 }
 
+/* Hide scrollbars on mobile snap carousels (content still scrolls) */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ——— Reusable surface treatments ——— */
 
 .glass {

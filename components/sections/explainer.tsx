@@ -13,11 +13,17 @@ export function Explainer() {
         description="Names, emails, passwords, payments. One missed bug is all it takes for that trust to leak out. Here's what usually goes wrong — in plain words."
       />
 
-      {/* The risks, explained simply */}
-      <RevealGroup className="mt-14 grid gap-5 sm:grid-cols-2" stagger={0.07}>
+      {/* The risks, explained simply — swipe row on phones, grid on sm+ */}
+      <RevealGroup
+        className="no-scrollbar -mx-6 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-3 sm:mx-0 sm:mt-14 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0"
+        stagger={0.07}
+      >
         {risks.map((risk) => (
-          <RevealItem key={risk.title} className="h-full">
-            <div className="card-hover flex h-full gap-5 rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
+          <RevealItem
+            key={risk.title}
+            className="h-full w-[82vw] max-w-[330px] shrink-0 snap-center sm:w-auto sm:max-w-none sm:shrink"
+          >
+            <div className="card-hover flex h-full gap-4 rounded-2xl border border-white/[0.07] bg-surface p-5 sm:gap-5 sm:p-7">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-accent">
                 <risk.icon className="h-5 w-5" strokeWidth={1.75} />
               </div>
@@ -37,7 +43,13 @@ export function Explainer() {
       >
         {promiseSteps.map((step, index) => (
           <RevealItem key={step.title} className="h-full">
-            <div className="relative h-full p-7 sm:p-8">
+            <div
+              className={
+                index > 0
+                  ? "relative h-full border-t border-white/[0.07] p-5 sm:border-t-0 sm:p-8"
+                  : "relative h-full p-5 sm:p-8"
+              }
+            >
               {index > 0 && (
                 <div
                   aria-hidden="true"

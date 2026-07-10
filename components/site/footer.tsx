@@ -44,9 +44,9 @@ const socials = [
 export function Footer() {
   return (
     <footer className="border-t border-white/[0.06]">
-      <div className="mx-auto w-full max-w-6xl px-6 py-16 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-          <div>
+      <div className="mx-auto w-full max-w-6xl px-6 py-12 sm:py-16 lg:px-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-12 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+          <div className="col-span-2 lg:col-span-1">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
               Offensive security for growing businesses. Find. Fix. Fortify.

@@ -92,7 +92,7 @@ export function Contact() {
         </p>
       </Reveal>
 
-      <div className="relative mt-16 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="relative mt-10 grid gap-6 sm:mt-16 lg:grid-cols-[1.2fr_0.8fr]">
         {/* Form */}
         <Reveal className="h-full">
           <div className="h-full rounded-2xl border border-white/[0.07] bg-surface p-7 sm:p-9">
