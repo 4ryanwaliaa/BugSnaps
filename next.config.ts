@@ -6,6 +6,10 @@ import type { NextConfig } from "next";
  * `next start`, self-hosted Node). If the site ever moves to a static
  * export behind a CDN, mirror these in the host's header config.
  */
+// next dev needs eval() (source maps, react-refresh) and a WebSocket for
+// HMR; neither relaxation ships to production.
+const isDev = process.env.NODE_ENV === "development";
+
 const securityHeaders = [
   {
     // 'unsafe-inline' for script/style is required by Next.js App Router
@@ -17,11 +21,11 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data:",
       "font-src 'self'",
-      "connect-src 'self' https://api.web3forms.com",
+      `connect-src 'self' https://api.web3forms.com${isDev ? " ws:" : ""}`,
       "object-src 'none'",
       "frame-src 'none'",
       "frame-ancestors 'none'",
