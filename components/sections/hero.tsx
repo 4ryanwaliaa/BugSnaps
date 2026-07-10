@@ -11,6 +11,7 @@ import {
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SeverityBadge } from "@/components/ui/badge";
+import { HeroStoryMobile } from "@/components/sections/hero-story-mobile";
 
 const EASE = [0.21, 0.47, 0.32, 0.98] as const;
 
@@ -50,7 +51,7 @@ export function Hero() {
         <div className="absolute top-1/3 right-[-10%] h-[380px] w-[380px] rounded-full bg-accent/[0.07] blur-[120px]" />
       </div>
 
-      <section className="relative mx-auto grid w-full max-w-6xl gap-16 px-6 pt-36 pb-20 sm:pt-44 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
+      <section className="relative mx-auto grid w-full max-w-6xl gap-12 px-6 pt-28 pb-20 sm:gap-16 sm:pt-44 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
         {/* ——— Copy ——— */}
         <div>
           <motion.h1
@@ -98,7 +99,18 @@ export function Hero() {
           </motion.p>
         </div>
 
-        {/* ——— Visualization ——— */}
+        {/* ——— Mobile-only story visualization ——— */}
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.32, ease: EASE }}
+          className="lg:hidden"
+          aria-hidden="true"
+        >
+          <HeroStoryMobile />
+        </motion.div>
+
+        {/* ——— Visualization (desktop) ——— */}
         <div className="relative hidden min-h-[480px] lg:block" aria-hidden="true">
           {/* Attack-surface graph, behind the panel */}
           <motion.div
