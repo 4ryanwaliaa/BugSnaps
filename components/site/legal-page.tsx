@@ -16,7 +16,7 @@ export function LegalPage({
   return (
     <>
       <Navbar />
-      <main className="mx-auto w-full max-w-3xl px-6 pt-36 pb-24 lg:px-8">
+      <main id="main" className="mx-auto w-full max-w-3xl px-6 pt-36 pb-24 lg:px-8">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"

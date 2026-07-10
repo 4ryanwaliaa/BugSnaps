@@ -35,7 +35,7 @@ export default function CareersPage() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto w-full max-w-4xl px-6 pt-36 pb-24 lg:px-8">
+      <main id="main" className="mx-auto w-full max-w-4xl px-6 pt-36 pb-24 lg:px-8">
         <p className="font-mono text-[13px] font-medium uppercase tracking-[0.2em] text-accent">
           Careers
         </p>

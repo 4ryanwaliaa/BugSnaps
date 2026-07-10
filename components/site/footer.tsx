@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Linkedin, Github, Twitter } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 
 const columns = [
@@ -34,9 +34,11 @@ const columns = [
 ];
 
 const socials = [
-  { label: "LinkedIn", href: "https://linkedin.com", icon: Linkedin },
-  { label: "X (Twitter)", href: "https://x.com", icon: Twitter },
-  { label: "GitHub", href: "https://github.com", icon: Github },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/bugsnaps",
+    icon: Linkedin,
+  },
 ];
 
 export function Footer() {

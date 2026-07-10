@@ -48,11 +48,25 @@ All copy lives in [`lib/data.ts`](lib/data.ts) — services, risks, process
 steps, and FAQ entries are plain typed arrays. Edit there; no component
 changes needed.
 
-## Wiring the contact form
+## Contact form
 
-`components/sections/contact.tsx` currently shows a success state client-side.
-Point `handleSubmit` at your form backend (a Next.js route handler, Formspree,
-or Resend) and drop a Cal.com/Calendly embed into the marked placeholder.
+`components/sections/contact.tsx` submits to Web3Forms, which relays messages
+to the BugSnaps inbox. The access key in that file is public by design — it
+can only be used to send mail *to us* — and is managed at web3forms.com.
+A honeypot field (`botcheck`) filters bot submissions, and a `mailto:`
+fallback covers relay outages. When online booking is ready, drop a
+Cal.com/Calendly embed into the marked placeholder **and** allow the embed
+origin in the CSP in `next.config.ts`.
+
+## Security
+
+Security headers (CSP, HSTS, `frame-ancestors`, Permissions-Policy, etc.) are
+defined in [`next.config.ts`](next.config.ts). They apply on Vercel and
+`next start`; if the site ever moves to a static export behind a CDN, mirror
+them in the host's header config. `npm audit` flags a moderate advisory in
+the `postcss` copy bundled *inside* Next.js — it's build-time-only tooling
+that never processes untrusted CSS here, and no non-canary Next release has
+the patched version yet; accepted risk, revisit on the next Next.js upgrade.
 
 ## Design system
 

@@ -28,6 +28,9 @@ export function Contact() {
       string,
       string
     >;
+    // The name ends up in an email subject line — never let it carry
+    // newlines (header injection) or unbounded length.
+    const safeName = (data.name || "").replace(/[\r\n]+/g, " ").trim().slice(0, 80);
     setStatus("sending");
     try {
       const res = await fetch(FORM_ENDPOINT, {
@@ -35,7 +38,7 @@ export function Contact() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `BugSnaps inquiry from ${data.name}`,
+          subject: `BugSnaps inquiry from ${safeName || "website visitor"}`,
           from_name: "BugSnaps website",
           ...data,
         }),
@@ -50,7 +53,7 @@ export function Contact() {
     } catch {
       // Fallback: hand the visitor a prefilled email so the message
       // still reaches us even if the form relay is down.
-      const subject = `Pentest inquiry from ${data.name || "your website"}`;
+      const subject = `Pentest inquiry from ${safeName || "your website"}`;
       const lines = [
         `Name: ${data.name || "-"}`,
         `Work email: ${data.email || "-"}`,
@@ -105,6 +108,16 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot — invisible to humans; bots that tick it are
+                    dropped as spam by Web3Forms. */}
+                <input
+                  type="checkbox"
+                  name="botcheck"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                />
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label htmlFor="name" className="mb-2 block text-sm font-medium">
@@ -114,6 +127,7 @@ export function Contact() {
                       id="name"
                       name="name"
                       required
+                      maxLength={100}
                       autoComplete="name"
                       placeholder="Jane Smith"
                       className={inputClasses}
@@ -128,6 +142,7 @@ export function Contact() {
                       name="email"
                       type="email"
                       required
+                      maxLength={200}
                       autoComplete="email"
                       placeholder="jane@company.com"
                       className={inputClasses}
@@ -143,6 +158,7 @@ export function Contact() {
                     <input
                       id="company"
                       name="company"
+                      maxLength={150}
                       autoComplete="organization"
                       placeholder="Acme Inc."
                       className={inputClasses}
@@ -175,6 +191,7 @@ export function Contact() {
                     name="message"
                     rows={4}
                     required
+                    maxLength={5000}
                     placeholder="What are you building, what's your stack, and what's driving the need — a customer requirement, compliance, or peace of mind?"
                     className={inputClasses}
                   />
