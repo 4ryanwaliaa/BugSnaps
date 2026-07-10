@@ -11,7 +11,7 @@ import {
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SeverityBadge } from "@/components/ui/badge";
-import { HeroStoryMobile } from "@/components/sections/hero-story-mobile";
+import { HeroTaglineMobile } from "@/components/sections/hero-tagline-mobile";
 
 const EASE = [0.21, 0.47, 0.32, 0.98] as const;
 
@@ -58,7 +58,7 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.08, ease: EASE }}
-            className="text-5xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-[4.25rem]"
+            className="text-[2.7rem] font-semibold leading-[1.06] tracking-tight text-balance sm:text-6xl sm:leading-[1] lg:text-[4.25rem]"
           >
             Find vulnerabilities before attackers do.
           </motion.h1>
@@ -78,13 +78,13 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.24, ease: EASE }}
-            className="mt-9 flex flex-wrap items-center gap-3"
+            className="mt-9 flex flex-wrap items-center gap-3 max-lg:flex-col max-lg:items-stretch"
           >
-            <Button href="#contact" size="lg">
+            <Button href="#contact" size="lg" className="max-lg:w-full">
               Book free consultation
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button href="#services" size="lg" variant="secondary">
+            <Button href="#services" size="lg" variant="secondary" className="max-lg:w-full">
               View services
             </Button>
           </motion.div>
@@ -99,15 +99,14 @@ export function Hero() {
           </motion.p>
         </div>
 
-        {/* ——— Mobile-only story visualization ——— */}
+        {/* ——— Mobile-only tagline accent ——— */}
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.32, ease: EASE }}
-          className="lg:hidden"
-          aria-hidden="true"
+          transition={{ duration: 0.9, delay: 0.36, ease: EASE }}
+          className="-mt-2 lg:hidden"
         >
-          <HeroStoryMobile />
+          <HeroTaglineMobile />
         </motion.div>
 
         {/* ——— Visualization (desktop) ——— */}
