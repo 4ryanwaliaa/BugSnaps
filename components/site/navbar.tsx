@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/#why", label: "Why it matters" },
+  { href: "/#intel", label: "Domain Intel" },
   { href: "/#services", label: "Services" },
   { href: "/#how", label: "How it works" },
   { href: "/#pricing", label: "Pricing" },
+  { href: "/personal", label: "Personal" },
   { href: "/careers", label: "Careers" },
 ];
 

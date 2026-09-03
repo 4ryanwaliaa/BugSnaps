@@ -8,6 +8,9 @@ import { ReportPreview } from "@/components/sections/report-preview";
 import { Pricing } from "@/components/sections/pricing";
 import { Faq } from "@/components/sections/faq";
 import { Contact } from "@/components/sections/contact";
+import { DomainIntelligence } from "@/components/sections/domain-intelligence";
+import { TrustAndBriefing } from "@/components/sections/trust-and-briefing";
+import { PersonalTeaser } from "@/components/sections/personal-teaser";
 
 export default function Home() {
   return (
@@ -15,11 +18,14 @@ export default function Home() {
       <Navbar />
       <main id="main">
         <Hero />
+        <DomainIntelligence />
+        <TrustAndBriefing />
         <Explainer />
         <Services />
         <Process />
         <ReportPreview />
         <Pricing />
+        <PersonalTeaser />
         <Faq />
         <Contact />
       </main>
