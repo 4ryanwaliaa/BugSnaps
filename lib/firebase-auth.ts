@@ -112,11 +112,12 @@ export async function signUpEmail(email: string, password: string): Promise<User
 export function prepareProviderSignIn(): Promise<void> {
   providerPreparation ??= (async () => {
     const auth = await loadAuth();
-    const { browserPopupRedirectResolver } = await import("firebase/auth");
-    const resolver = browserPopupRedirectResolver as {
-      _initialize?: (auth: Auth) => Promise<unknown>;
-    };
-    if (typeof resolver._initialize !== "function") {
+    // getAuth stores an instance here; the public resolver export is its
+    // constructor, which cannot itself be initialized.
+    const resolver = (auth as Auth & {
+      _popupRedirectResolver?: { _initialize?: (auth: Auth) => Promise<unknown> };
+    })._popupRedirectResolver;
+    if (typeof resolver?._initialize !== "function") {
       throw new Error("Firebase's popup sign-in helper is unavailable.");
     }
     await resolver._initialize(auth);
