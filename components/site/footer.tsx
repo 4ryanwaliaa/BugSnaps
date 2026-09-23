@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 import { Logo } from "@/components/site/logo";
+import { CookieSettingsButton } from "@/components/site/cookie-consent";
 import { CONTACT_EMAIL, LINKEDIN_URL, MYRECON_URL } from "@/lib/site";
 
 type FooterLink = { label: string; href: string; external?: boolean };
@@ -105,7 +106,10 @@ export function Footer() {
           <p className="text-[13px] text-muted-2">
             © {new Date().getFullYear()} BugSnaps Security Ltd. MyPentest and MyRecon are BugSnaps products.
           </p>
-          <p className="font-mono text-[12px] tracking-wide text-muted-2">Find. Fix. Fortify.</p>
+          <div className="flex items-center gap-4">
+            <CookieSettingsButton className="text-[12px] text-muted-2 transition-colors hover:text-foreground" />
+            <p className="font-mono text-[12px] tracking-wide text-muted-2">Find. Fix. Fortify.</p>
+          </div>
         </div>
       </div>
     </footer>

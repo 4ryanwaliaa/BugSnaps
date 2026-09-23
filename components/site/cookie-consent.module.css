@@ -1,0 +1,118 @@
+.toast {
+  /* Edit these to match a different site palette. */
+  --cookie-bg: #17171b;
+  --cookie-fg: #fafafa;
+  --cookie-muted: #b1b1ba;
+  --cookie-border: rgb(255 255 255 / 0.14);
+  --cookie-accent: #3b82f6;
+  --cookie-primary: #2563eb;
+  --cookie-primary-hover: #3b82f6;
+
+  position: fixed;
+  inset-inline-end: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 45;
+  width: min(390px, calc(100vw - 32px));
+  padding: 20px;
+  border: 1px solid var(--cookie-border);
+  border-radius: 18px;
+  background: var(--cookie-bg);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 0.42), 0 2px 8px rgb(0 0 0 / 0.22);
+  color: var(--cookie-fg);
+  animation: slide-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.closing {
+  pointer-events: none;
+  animation: slide-out 220ms ease-in both;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  border-radius: 9px;
+  background: rgb(59 130 246 / 0.13);
+  color: var(--cookie-accent);
+}
+
+.description {
+  margin-top: 12px;
+  color: var(--cookie-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.description a {
+  color: var(--cookie-fg);
+  text-decoration: underline;
+  text-decoration-color: var(--cookie-accent);
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.actions button {
+  min-height: 39px;
+  flex: 1;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  cursor: pointer;
+}
+
+.accept {
+  background: var(--cookie-primary);
+  color: #fff;
+}
+
+.accept:hover {
+  background: var(--cookie-primary-hover);
+}
+
+.essential {
+  border: 1px solid var(--cookie-border);
+  background: transparent;
+  color: var(--cookie-fg);
+}
+
+.essential:hover {
+  border-color: var(--cookie-accent);
+  background: rgb(255 255 255 / 0.05);
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-out {
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+@media (max-width: 380px) {
+  .toast { padding: 18px; }
+  .actions { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast, .closing { animation: none; }
+  .closing { opacity: 0; }
+  .actions button { transition: none; }
+}

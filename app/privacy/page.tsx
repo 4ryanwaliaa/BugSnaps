@@ -57,6 +57,20 @@ export default function PrivacyPage() {
         </p>
       </section>
       <section>
+        <h2>Browser storage and cookies</h2>
+        <p className="mt-3">
+          Essential browser storage supports MyPentest sign-in, payment verification after a page reload, and your
+          cookie choice. It remains available when you choose “Essential only.” We do not add advertising or analytics
+          cookies to our pages.
+        </p>
+        <p className="mt-3">
+          If you choose “Sounds good,” we also remember whether you prefer monthly or yearly prices on the public
+          pricing page. “Essential only” removes that saved preference. You can change your choice at any time through
+          Cookie settings in the footer. Firebase Authentication and Razorpay may use their own storage while you
+          sign in or pay.
+        </p>
+      </section>
+      <section>
         <h2>Client data during engagements</h2>
         <p className="mt-3">
           Data accessed during security testing is treated as strictly confidential, handled

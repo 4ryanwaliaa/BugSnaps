@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/site/page-parts";
+import { CookieConsent } from "@/components/site/cookie-consent";
 import { SITE_URL, organizationJsonLd } from "@/lib/site";
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
