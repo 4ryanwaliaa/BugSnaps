@@ -1,0 +1,14 @@
+# Deploy only the marketing site. Vercel falls back to .gitignore when this
+# file is absent, but relying on that is fragile — an explicit list keeps
+# unrelated projects and local business documents out of the deployment.
+
+# Separate OSINT app (own Flask/Android project, ~113MB, and a local
+# config.py holding plaintext API keys). Deploys on its own to Render.
+/Recon-main/
+
+# Local business documents, never web content.
+*.xlsx
+
+# Local tooling and build leftovers.
+/.claude/
+*.tsbuildinfo

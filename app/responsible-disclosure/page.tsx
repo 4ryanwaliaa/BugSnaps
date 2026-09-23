@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Responsible Disclosure",
-  description: "How to report a security vulnerability in BugSnaps's own systems.",
-};
+  description: "How to report a security vulnerability in BugSnaps's own systems, including MyPentest and MyRecon.",
+  path: "/responsible-disclosure",
+});
 
 export default function ResponsibleDisclosurePage() {
   return (

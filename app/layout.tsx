@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
+import { JsonLd } from "@/components/site/page-parts";
+import { SITE_URL, organizationJsonLd } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,46 +16,28 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://bugsnaps.in";
-
+/*
+ * Site-wide defaults. Every indexable page overrides title, description and
+ * canonical through `pageMetadata` (lib/site.ts); these only fill gaps.
+ */
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "BugSnaps — Penetration Testing & Offensive Security",
+    default: "BugSnaps — Penetration Testing, Automated and Expert-Led",
     template: "%s — BugSnaps",
   },
   description:
-    "BugSnaps helps growing businesses find and fix security vulnerabilities through professional penetration testing, API security testing, and actionable remediation. Find. Fix. Fortify.",
-  keywords: [
-    "penetration testing",
-    "pentest",
-    "API security testing",
-    "web application security",
-    "vulnerability assessment",
-    "security audit",
-    "OWASP",
-    "cybersecurity consultancy",
-  ],
-  authors: [{ name: "BugSnaps Security" }],
+    "BugSnaps is a penetration-testing company. Run MyPentest, our automated pentest, free during launch — or bring in our testers for a manual engagement.",
+  applicationName: "BugSnaps",
+  authors: [{ name: "BugSnaps" }],
   openGraph: {
     type: "website",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "BugSnaps",
-    title: "BugSnaps — Penetration Testing & Offensive Security",
-    description:
-      "Find vulnerabilities before attackers do. Manual-led penetration testing with retesting included, for startups, SaaS, and e-commerce.",
     locale: "en_US",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BugSnaps — Penetration Testing & Offensive Security",
-    description:
-      "Find vulnerabilities before attackers do. Manual-led penetration testing with retesting included.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -61,25 +45,6 @@ export const viewport: Viewport = {
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "BugSnaps",
-  slogan: "Find. Fix. Fortify.",
-  url: siteUrl,
-  email: "aryan@bugsnaps.in",
-  description:
-    "Offensive security consultancy specializing in web application penetration testing, API security testing, vulnerability assessment, and remediation support.",
-  areaServed: "Worldwide",
-  knowsAbout: [
-    "Web Application Penetration Testing",
-    "API Security Testing",
-    "Vulnerability Assessment",
-    "Cloud Security Review",
-    "Source Code Review",
-  ],
 };
 
 export default function RootLayout({
@@ -90,14 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} dark`}>
       <body className="min-h-screen font-sans">
-        <script
-          type="application/ld+json"
-          // Escape "<" so the payload can never close the script tag,
-          // even if this object later includes user-provided text.
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-          }}
-        />
+        <JsonLd data={organizationJsonLd()} />
         <a
           href="#main"
           className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[60] focus-visible:rounded-full focus-visible:bg-primary focus-visible:px-5 focus-visible:py-2.5 focus-visible:text-sm focus-visible:font-medium focus-visible:text-white"

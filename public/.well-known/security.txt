@@ -1,0 +1,9 @@
+# BugSnaps security contact (RFC 9116)
+# Researchers: please read the full policy before testing.
+
+Contact: mailto:aryan@bugsnaps.in
+Contact: https://bugsnaps.in/responsible-disclosure
+Expires: 2027-09-09T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://bugsnaps.in/.well-known/security.txt
+Policy: https://bugsnaps.in/responsible-disclosure

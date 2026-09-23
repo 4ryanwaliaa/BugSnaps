@@ -3,12 +3,15 @@ import { Mail, Search, GraduationCap, HeartHandshake } from "lucide-react";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { Button } from "@/components/ui/button";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Careers",
+export const metadata: Metadata = pageMetadata({
+  title: "Careers at BugSnaps",
+  absoluteTitle: true,
   description:
-    "Join BugSnaps — a new offensive security team. Send us your CV and tell us why you want to break things (legally) for a living.",
-};
+    "Join BugSnaps — a new offensive security team building MyPentest and MyRecon. Send us your CV and tell us why you want to break things (legally) for a living.",
+  path: "/careers",
+});
 
 const values = [
   {

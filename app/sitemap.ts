@@ -1,14 +1,22 @@
 import type { MetadataRoute } from "next";
-
-const siteUrl = "https://bugsnaps.in";
+import { posts } from "@/lib/blog";
+import { INDEXABLE_ROUTES } from "@/lib/routes";
+import { absoluteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
   return [
-    { url: siteUrl, changeFrequency: "monthly", priority: 1 },
-    { url: `${siteUrl}/personal`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/careers`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${siteUrl}/privacy`, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${siteUrl}/terms`, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${siteUrl}/responsible-disclosure`, changeFrequency: "yearly", priority: 0.3 },
+    ...INDEXABLE_ROUTES.map((route) => ({
+      url: absoluteUrl(route.path),
+      lastModified: now,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+    })),
+    ...posts.map((p) => ({
+      url: absoluteUrl(`/blog/${p.slug}`),
+      lastModified: new Date(`${p.updated ?? p.published}T00:00:00Z`),
+      changeFrequency: "yearly" as const,
+      priority: 0.5,
+    })),
   ];
 }

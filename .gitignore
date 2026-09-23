@@ -35,3 +35,10 @@ next-env.d.ts
 
 # competitor research spreadsheet (local business doc, not web content)
 /BugSnaps-Competitor-Research.xlsx
+
+# Local business documents: outreach trackers and other spreadsheets.
+*.xlsx
+
+# Client engagement material (reports, findings, notes). Confidential —
+# never in this public repository.
+/clients/

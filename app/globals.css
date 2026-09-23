@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* Scan the project root explicitly, not whatever directory the process was
+   started from (`npm --prefix`, editors and tooling start it elsewhere). */
+@import "tailwindcss" source("..");
 
 @theme {
   --color-background: #09090b;
@@ -153,9 +155,56 @@ select option:disabled {
   animation: edge-flow 6s linear infinite;
 }
 
+/* Indeterminate progress (MyPentest discovery phase) */
+@keyframes indet {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-glow-drift,
   .edge-flow {
     animation: none;
+  }
+  [class*="animate-[indet"] {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Details summaries: no default marker (each summary draws its own). */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Printing a MyPentest report (the app's "Print / PDF"). The page chrome goes,
+   the report stays, dark on white so it reads on paper. */
+@media print {
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  header.sticky,
+  body > div > footer,
+  .print\:hidden {
+    display: none !important;
+  }
+  main * {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+  }
+  main details,
+  main section,
+  main header {
+    break-inside: auto;
+  }
+  main summary {
+    break-after: avoid;
   }
 }

@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
-  description: "How BugSnaps collects, uses, and protects your information.",
-};
+  description: "How BugSnaps collects, uses and protects your information, including MyPentest accounts and assessment data.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="July 2026">
+    <LegalPage title="Privacy Policy" updated="September 2026">
       <section>
         <h2>Overview</h2>
         <p className="mt-3">
           BugSnaps Security Ltd. (&ldquo;BugSnaps&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is
-          committed to protecting the privacy of our clients and website visitors. This policy
-          describes what information we collect, why we collect it, and how we handle it.
+          committed to protecting the privacy of our clients, MyPentest users and website visitors. This
+          policy describes what information we collect, why we collect it, and how we handle it.
         </p>
       </section>
       <section>
@@ -22,15 +24,36 @@ export default function PrivacyPage() {
         <ul className="mt-3">
           <li>Contact details you submit through our forms (name, email, company).</li>
           <li>Engagement-related information you share with us during scoping and testing.</li>
-          <li>Basic, privacy-respecting analytics about how our website is used.</li>
+          <li>MyPentest account details: your email address, display name and sign-in provider.</li>
+          <li>MyPentest assessment data: the domains you verify, how you configure assessments, and their results.</li>
+          <li>Standard request logs kept by our hosting providers (such as IP address and pages requested) for security and reliability.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>MyPentest</h2>
+        <ul className="mt-3">
+          <li>
+            Sign-in is provided by Firebase Authentication (Google). Your password, if you use one, is handled by
+            Firebase and never stored by us.
+          </li>
+          <li>
+            Test-account credentials you supply for signed-in testing are used only during that assessment, held
+            in memory by the testing engine, and not included in reports.
+          </li>
+          <li>
+            The testing engine keeps a running or finished assessment for up to 24 hours. Finished reports are saved
+            to your private history in the Firebase Realtime Database, readable only by your account. You can delete
+            any report from your dashboard at any time.
+          </li>
+          <li>We do not sell assessment results or share them with anyone else.</li>
         </ul>
       </section>
       <section>
         <h2>How we use it</h2>
         <p className="mt-3">
-          We use your information solely to respond to inquiries, deliver contracted services,
-          and improve our website. We do not sell personal data, and we do not share it with
-          third parties except as required to deliver our services or comply with law.
+          We use your information solely to respond to inquiries, provide MyPentest, deliver contracted services,
+          keep our services secure, and improve our website. We do not sell personal data, and we do not share it
+          with third parties except the providers that run our services, or where the law requires it.
         </p>
       </section>
       <section>
@@ -44,7 +67,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Contact</h2>
         <p className="mt-3">
-          Questions about this policy? Email{" "}
+          Questions about this policy, or want your data deleted? Email{" "}
           <a href="mailto:aryan@bugsnaps.in" className="text-accent hover:underline">
             aryan@bugsnaps.in
           </a>
