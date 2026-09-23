@@ -100,19 +100,39 @@ export async function signUpEmail(email: string, password: string): Promise<User
   return user;
 }
 
-export async function signInGoogle(): Promise<User> {
+/*
+ * Redirect, not popup: `signInWithPopup` only calls `window.open` after a
+ * hidden cross-origin iframe on `authDomain` finishes loading, and that first
+ * load is slow enough to lose the click's user-gesture status — the popup
+ * then gets treated as blocked, and only the next attempt (once the iframe
+ * is cached) succeeds. Redirect never opens a popup, so it has no such race.
+ */
+export async function signInGoogle(): Promise<void> {
   const auth = await loadAuth();
-  const { GoogleAuthProvider, signInWithPopup } = await import("firebase/auth");
+  const { GoogleAuthProvider, signInWithRedirect } = await import("firebase/auth");
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
-  return (await signInWithPopup(auth, provider)).user;
+  await signInWithRedirect(auth, provider);
 }
 
 /* No extra scopes: signing in needs only the public profile. */
-export async function signInGitHub(): Promise<User> {
+export async function signInGitHub(): Promise<void> {
   const auth = await loadAuth();
-  const { GithubAuthProvider, signInWithPopup } = await import("firebase/auth");
-  return (await signInWithPopup(auth, new GithubAuthProvider())).user;
+  const { GithubAuthProvider, signInWithRedirect } = await import("firebase/auth");
+  await signInWithRedirect(auth, new GithubAuthProvider());
+}
+
+/**
+ * Call once on load to finish a sign-in that just came back from Google or
+ * GitHub's redirect. Resolves to null on an ordinary page load (nothing
+ * pending); `onUser`/`onAuthStateChanged` picks up the signed-in user
+ * either way — this is for surfacing an error the redirect hit, such as the
+ * email already using another provider.
+ */
+export async function consumeRedirectResult(): Promise<void> {
+  const auth = await loadAuth();
+  const { getRedirectResult } = await import("firebase/auth");
+  await getRedirectResult(auth);
 }
 
 export async function resetPassword(email: string): Promise<void> {
