@@ -29,6 +29,7 @@ export const firebaseConfig = {
 
 let appPromise: Promise<FirebaseApp> | null = null;
 let authPromise: Promise<Auth> | null = null;
+let providerPreparation: Promise<void> | null = null;
 
 export function loadApp(): Promise<FirebaseApp> {
   appPromise ??= (async () => {
@@ -100,34 +101,50 @@ export async function signUpEmail(email: string, password: string): Promise<User
   return user;
 }
 
-/*
- * Redirect, not popup: `signInWithPopup` only calls `window.open` after a
- * hidden cross-origin iframe on `authDomain` finishes loading, and that first
- * load is slow enough to lose the click's user-gesture status — the popup
- * then gets treated as blocked, and only the next attempt (once the iframe
- * is cached) succeeds. Redirect never opens a popup, so it has no such race.
+/**
+ * Firebase opens its popup helper iframe before window.open. On a cold page
+ * that network load can outlast the click's user activation, so prepare the
+ * helper before enabling the provider buttons. The resolver's initializer is
+ * internal to the Firebase SDK; fail visibly if a future version changes it
+ * instead of silently reviving the first-click bug. Popup avoids redirect's
+ * third-party-storage requirement on Vercel.
  */
-export async function signInGoogle(): Promise<void> {
+export function prepareProviderSignIn(): Promise<void> {
+  providerPreparation ??= (async () => {
+    const auth = await loadAuth();
+    const { browserPopupRedirectResolver } = await import("firebase/auth");
+    const resolver = browserPopupRedirectResolver as {
+      _initialize?: (auth: Auth) => Promise<unknown>;
+    };
+    if (typeof resolver._initialize !== "function") {
+      throw new Error("Firebase's popup sign-in helper is unavailable.");
+    }
+    await resolver._initialize(auth);
+  })().catch((error: unknown) => {
+    providerPreparation = null;
+    throw error;
+  });
+  return providerPreparation;
+}
+
+export async function signInGoogle(): Promise<User> {
   const auth = await loadAuth();
-  const { GoogleAuthProvider, signInWithRedirect } = await import("firebase/auth");
+  const { GoogleAuthProvider, signInWithPopup } = await import("firebase/auth");
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
-  await signInWithRedirect(auth, provider);
+  return (await signInWithPopup(auth, provider)).user;
 }
 
 /* No extra scopes: signing in needs only the public profile. */
-export async function signInGitHub(): Promise<void> {
+export async function signInGitHub(): Promise<User> {
   const auth = await loadAuth();
-  const { GithubAuthProvider, signInWithRedirect } = await import("firebase/auth");
-  await signInWithRedirect(auth, new GithubAuthProvider());
+  const { GithubAuthProvider, signInWithPopup } = await import("firebase/auth");
+  return (await signInWithPopup(auth, new GithubAuthProvider())).user;
 }
 
 /**
- * Call once on load to finish a sign-in that just came back from Google or
- * GitHub's redirect. Resolves to null on an ordinary page load (nothing
- * pending); `onUser`/`onAuthStateChanged` picks up the signed-in user
- * either way — this is for surfacing an error the redirect hit, such as the
- * email already using another provider.
+ * Complete any Google/GitHub redirect that started before popup sign-in was
+ * deployed. Once old sessions are gone, this compatibility path can be removed.
  */
 export async function consumeRedirectResult(): Promise<void> {
   const auth = await loadAuth();
