@@ -33,13 +33,13 @@ export function HomeHero() {
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link
+            <a
               href={newAssessmentUrl()}
               className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_0_0_1px_rgb(255_255_255/0.08)_inset,0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
             >
               Run MyPentest free
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            </a>
             <a
               href={MYRECON_URL}
               className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 text-[15px] font-medium text-foreground transition-colors hover:border-white/20 hover:bg-white/[0.07]"

@@ -190,13 +190,13 @@ export function CtaBand({
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-muted">{lead}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
+              <a
                 href={newAssessmentUrl()}
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
               >
                 Start your free pentest
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+              </a>
               {secondary && (
                 <Link
                   href={secondary.href}

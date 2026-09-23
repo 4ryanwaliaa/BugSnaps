@@ -26,12 +26,12 @@ export function ServicePageView({ page }: { page: ServicePage }) {
             Book a scoping call
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <Link
+          <a
             href={newAssessmentUrl()}
             className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 text-sm font-medium transition-colors hover:border-white/20"
           >
             Or run MyPentest free
-          </Link>
+          </a>
         </div>
       </PageHeader>
 

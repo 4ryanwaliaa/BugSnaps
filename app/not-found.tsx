@@ -40,9 +40,9 @@ export default function NotFound() {
         </ul>
         <p className="mt-10 text-sm text-muted">
           Or{" "}
-          <Link href={newAssessmentUrl()} className="text-accent hover:underline">
+          <a href={newAssessmentUrl()} className="text-accent hover:underline">
             run a free pentest
-          </Link>{" "}
+          </a>{" "}
           while you&apos;re here.
         </p>
       </div>

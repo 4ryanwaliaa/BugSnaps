@@ -91,13 +91,13 @@ export function Navbar() {
           <Link href="/contact" className="whitespace-nowrap rounded-full px-2.5 py-2 text-sm text-muted transition-colors hover:text-foreground">
             Contact
           </Link>
-          <Link
+          <a
             href={newAssessmentUrl()}
             className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-accent"
           >
             Run MyPentest free
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
+          </a>
         </div>
 
         <button
@@ -144,14 +144,14 @@ export function Navbar() {
           ))}
         </ul>
         <div className="px-5 pb-6">
-          <Link
+          <a
             href={newAssessmentUrl()}
             onClick={() => setOpen(false)}
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary text-[15px] font-medium text-white"
           >
             Run MyPentest free
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          </a>
         </div>
       </div>
     </header>

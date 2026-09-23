@@ -66,6 +66,9 @@ const securityHeaders = [
  * that lets the sign-in popup report back (with "same-origin" the popup is cut
  * off from the page and sign-in never completes). The MyPentest engine itself
  * is reached through /mypentest/api on this origin, so it needs no entry.
+ * CSP is a document policy: client-side Next.js navigation into this route
+ * keeps the public page's stricter policy. Public-to-app links must perform
+ * a full document navigation (and the AuthProvider guards older links).
  */
 const firebase = {
   script: ["https://apis.google.com", "https://*.firebaseio.com", "https://*.firebasedatabase.app"],

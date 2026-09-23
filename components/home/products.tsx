@@ -39,13 +39,13 @@ export function HomeProducts() {
                     </a>
                   ) : (
                     <>
-                      <Link
+                      <a
                         href={href}
                         className="inline-flex h-10 items-center gap-1.5 rounded-full bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-accent"
                       >
                         {product.cta}
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
+                      </a>
                       <Link href={product.href} className="text-sm text-muted hover:text-foreground">
                         How it works
                       </Link>
