@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMetadata({
   title: "BugSnaps — Penetration Testing, Automated and Expert-Led",
   absoluteTitle: true,
   description:
-    "Security testing that actually tests. Run MyPentest — our automated penetration test — free during launch, or bring in the BugSnaps team for a manual engagement.",
+    "Security testing that actually tests. Run MyPentest — our automated penetration test — free to start, or bring in the BugSnaps team for a manual engagement.",
   path: "/",
 });
 

@@ -134,7 +134,7 @@ export const posts: Post[] = [
       { type: "h2", text: "Clear the easy findings first" },
       {
         type: "p",
-        text: "A manual test is expensive time. Don't spend it on issues automation can find in minutes: exposed .env or .git files, API keys in JavaScript bundles, missing security headers, tokens stored in localStorage, outdated libraries with known CVEs. Run an automated pentest first — MyPentest is free during launch — fix what it finds, then let the human testers start from a cleaner baseline.",
+        text: "A manual test is expensive time. Don't spend it on issues automation can find in minutes: exposed .env or .git files, API keys in JavaScript bundles, missing security headers, tokens stored in localStorage, outdated libraries with known CVEs. Run an automated pentest first — MyPentest has a free plan — fix what it finds, then let the human testers start from a cleaner baseline.",
       },
       {
         type: "callout",

@@ -106,7 +106,7 @@ export const ROWS: Row[] = [
     dimension: "Cost model",
     values: {
       scanner: "Subscription or per-asset licence.",
-      mypentest: "Free during launch; paid plans later.",
+      mypentest: "Free plan; paid plans monthly, no auto-renewal.",
       manual: "Per engagement.",
       bugsnaps: "Fixed quote per scope, in writing before work starts.",
     },
@@ -234,7 +234,7 @@ export const comparePages: ComparePage[] = [
       },
     ],
     verdict: [
-      { title: "Automated (MyPentest)", body: "every release, in minutes, free during launch." },
+      { title: "Automated (MyPentest)", body: "every release, in minutes, starting free." },
       { title: "Manual (BugSnaps engagement)", body: "before launches, for compliance, and for business logic." },
     ],
   },

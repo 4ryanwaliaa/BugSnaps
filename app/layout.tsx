@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s — BugSnaps",
   },
   description:
-    "BugSnaps is a penetration-testing company. Run MyPentest, our automated pentest, free during launch — or bring in our testers for a manual engagement.",
+    "BugSnaps is a penetration-testing company. Run MyPentest, our automated pentest, free to start — or bring in our testers for a manual engagement.",
   applicationName: "BugSnaps",
   authors: [{ name: "BugSnaps" }],
   openGraph: {

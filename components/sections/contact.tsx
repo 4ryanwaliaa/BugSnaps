@@ -21,8 +21,8 @@ const TOPICS: { value: string; label: string }[] = [
   { value: "network", label: "Network pentest" },
   { value: "cloud", label: "Cloud security review" },
   { value: "code", label: "Source code review" },
-  { value: "enterprise", label: "MyPentest for a team / enterprise" },
-  { value: "mypentest-advanced", label: "MyPentest Advanced — tell me when it's ready" },
+  { value: "enterprise", label: "MyPentest Enterprise — book a consultation" },
+  { value: "mypentest-billing", label: "MyPentest plans and billing" },
   { value: "mypentest-support", label: "MyPentest support" },
   { value: "other", label: "Something else" },
 ];

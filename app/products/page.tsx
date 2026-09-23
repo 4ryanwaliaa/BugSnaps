@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
 
 const STATUS: Record<string, string> = {
   available: "Available",
-  beta: "Beta · free during launch",
+  beta: "Beta · free plan",
   "coming-soon": "Coming soon",
 };
 

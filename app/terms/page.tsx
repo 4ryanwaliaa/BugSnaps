@@ -31,8 +31,9 @@ export default function TermsPage() {
       <section>
         <h2>MyPentest: the service</h2>
         <p className="mt-3">
-          MyPentest is free during its launch period, within published usage limits that may change. Paid plans, when
-          introduced, will be announced before they apply to you. MyPentest runs non-destructive checks, but no
+          MyPentest has a free plan and paid plans, with the prices, usage limits and inclusions shown on the pricing
+          page. Paid plans are bought through Razorpay for one period at a time and do not renew automatically; a plan
+          applies to assessments started while it is active. MyPentest runs non-destructive checks, but no
           automated tool finds every vulnerability; results are provided as-is and do not replace a manual penetration
           test. Run assessments against staging environments where you can.
         </p>

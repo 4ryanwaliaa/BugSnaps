@@ -16,7 +16,7 @@ const authEmulator = isDev ? process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR?.tri
 /** The canonical host. www.bugsnaps.in answers with a permanent redirect here. */
 const CANONICAL_HOST = "bugsnaps.in";
 
-function csp(extra: { script?: string[]; connect?: string[]; frame?: string[] } = {}) {
+function csp(extra: { script?: string[]; connect?: string[]; frame?: string[]; img?: string[] } = {}) {
   return [
     "default-src 'self'",
     // 'unsafe-inline' for script/style is required by Next.js App Router
@@ -26,7 +26,7 @@ function csp(extra: { script?: string[]; connect?: string[]; frame?: string[] } 
       .join(" ")
       .trim(),
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    ["img-src 'self' data:", ...(extra.img ?? [])].join(" "),
     "font-src 'self'",
     ["connect-src 'self' https://api.web3forms.com", ...(extra.connect ?? []), isDev ? "ws:" : ""]
       .join(" ")
@@ -40,6 +40,10 @@ function csp(extra: { script?: string[]; connect?: string[]; frame?: string[] } 
   ].join("; ");
 }
 
+function permissionsPolicy(payment = "()") {
+  return `accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=${payment}, usb=()`;
+}
+
 const securityHeaders = [
   // Everything is same-origin; the only external call is the contact-form
   // relay. If a Cal.com/Calendly embed is added later, allow its origin in
@@ -49,11 +53,7 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  {
-    key: "Permissions-Policy",
-    value:
-      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
-  },
+  { key: "Permissions-Policy", value: permissionsPolicy() },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
 ];
@@ -82,9 +82,35 @@ const firebase = {
   frame: ["https://mypentest-bugsnaps.firebaseapp.com", "https://*.firebaseio.com", "https://*.firebasedatabase.app"],
 };
 
+/*
+ * Paid plans are bought with Razorpay Standard Checkout, inside the app only:
+ * checkout.js from checkout.razorpay.com loads Razorpay's fraud-detection
+ * script from cdn.razorpay.com and opens the payment form in a frame from
+ * api.razorpay.com, which reports telemetry to lumberjack.razorpay.com and
+ * shows bank and wallet logos from cdn.razorpay.com. The frame may use the
+ * Payment Request API (saved cards, UPI intents), hence `payment` for it. No
+ * Razorpay secret is anywhere on this site; orders are created and verified
+ * by the MyPentest engine.
+ */
+const razorpay = {
+  script: ["https://checkout.razorpay.com", "https://cdn.razorpay.com"],
+  connect: ["https://api.razorpay.com", "https://lumberjack.razorpay.com"],
+  frame: ["https://api.razorpay.com", "https://checkout.razorpay.com"],
+  img: ["https://cdn.razorpay.com"],
+};
+
 const mypentestHeaders = [
-  { key: "Content-Security-Policy", value: csp(firebase) },
+  {
+    key: "Content-Security-Policy",
+    value: csp({
+      script: [...firebase.script, ...razorpay.script],
+      connect: [...firebase.connect, ...razorpay.connect],
+      frame: [...firebase.frame, ...razorpay.frame],
+      img: razorpay.img,
+    }),
+  },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+  { key: "Permissions-Policy", value: permissionsPolicy('(self "https://api.razorpay.com")') },
 ];
 
 const nextConfig: NextConfig = {

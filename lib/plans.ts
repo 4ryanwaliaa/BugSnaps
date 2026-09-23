@@ -1,100 +1,340 @@
 /*
- * Pricing and plans — the ONE place they are defined.
+ * Pricing and plans — the ONE place the site gets them.
  *
- * /pricing, the MyPentest page and the homepage all render from this file, so
- * changing an offer is an edit here, not a hunt through pages. No page states
- * a price or a limit of its own.
+ * The live catalog is in the Firebase Realtime Database at plans/{id}: public
+ * to read, writable only from the Firebase console or CLI. It is loaded from
+ * plans.json in the scanner repository:
  *
- * The Free limits below describe what the MyPentest API enforces. Enforcement
- * lives in the engine (services/scanner `HostedConfig`, env `SCAN_FREE_*`);
- * if you change a limit there, change it here too. The signed-in app shows the
- * engine's live values, so a mismatch can only affect this marketing copy.
+ *   firebase database:set /plans plans.json
  *
- * Paid tiers are deliberately unpriced: `price` is null until pricing is
- * decided. A paid plan becomes real by adding it to the engine's plan table
- * and recording it on the account as a Firebase custom claim (`plan`).
+ * The MyPentest engine reads the same records to enforce each plan's limits
+ * and to price Razorpay orders, so changing a price or a limit is one edit in
+ * the database — not a deploy of either the site or the engine.
+ *
+ * `getPlans()` reads the catalog on the server (cached for five minutes).
+ * FALLBACK_PLANS mirror plans.json and are used only when the database can't be
+ * read, so a pricing page is never empty. No page states a price or a limit of
+ * its own; they all render from here.
  */
+import { firebaseConfig } from "@/lib/firebase-auth";
+import type { Severity } from "@/lib/mypentest/types";
+import { SEVERITIES } from "@/lib/mypentest/types";
 
-export type PlanStatus = "available" | "coming-soon" | "contact";
+export type ExportFormat = "json" | "md" | "html" | "sarif" | "pdf";
+export const EXPORT_FORMATS: ExportFormat[] = ["json", "md", "html", "sarif", "pdf"];
+export type Cycle = "monthly" | "yearly";
 
 export interface Plan {
-  id: "free" | "advanced" | "business";
-  name: string;
-  status: PlanStatus;
-  /** A display price, or null when not decided — never invent one. */
-  price: string | null;
-  priceNote: string;
+  id: string;
+  order: number;
+  title: string;
   description: string;
-  features: string[];
-  cta: { label: string; href: string };
-  highlight?: boolean;
+  /** Price per period in the currency's smallest unit (paise). 0 is free. */
+  price: number;
+  /** Price for a year, paid at once (paise); 0 when not sold yearly. */
+  yearlyPrice: number;
+  currency: string;
+  periodDays: number;
+  /** Scans per rolling `scanWindowDays`; null is unlimited. */
+  scans: number | null;
+  scanWindowDays: number;
+  concurrentScans: number;
+  /** The finding severities reports show in full. The rest are counted only. */
+  severities: Severity[];
+  targetsPerScan: number;
+  crawlPages: number;
+  scanHours: number;
+  manualTesting: boolean;
+  /** Finished scans are saved to the account's history. */
+  history: boolean;
+  /** Download formats; "pdf" is the report page's print-to-PDF. */
+  exports: ExportFormat[];
+  perks: string[];
+  highlight: boolean;
 }
 
-/** What the free launch offer allows. Mirrors the engine's defaults. */
-export const FREE_LIMITS = {
-  scansPerDay: 10,
-  concurrentScans: 1,
+const LIMITS = {
   targetsPerScan: 200,
   crawlPages: 500,
   scanHours: 1,
+  currency: "INR",
+  periodDays: 30,
+  scanWindowDays: 30,
 };
 
-export const LAUNCH_OFFER = {
-  headline: "Free during launch",
-  detail: "MyPentest is free while we launch. No credit card, no trial clock.",
-};
-
-export const plans: Plan[] = [
+/** Mirrors plans.json. Used only when the database can't be read. */
+export const FALLBACK_PLANS: Plan[] = [
   {
     id: "free",
-    name: "Free",
-    status: "available",
-    price: "Free",
-    priceNote: "During launch · no credit card",
-    description: "Real automated pentests of the web apps you own — not a sample report.",
-    features: [
-      "Attack-surface discovery, then testing",
+    order: 0,
+    title: "Free",
+    description: "Real automated pentests of a site you own, with medium and low findings in full.",
+    price: 0,
+    yearlyPrice: 0,
+    scans: 1,
+    concurrentScans: 1,
+    severities: ["medium", "low"],
+    manualTesting: false,
+    history: false,
+    exports: [],
+    perks: [
       "All 56 checks, passive and safe-active",
-      "Authenticated testing with your test accounts",
-      `Up to ${FREE_LIMITS.scansPerDay} scans a day, one at a time`,
-      `Up to ${FREE_LIMITS.targetsPerScan} URLs and ${FREE_LIMITS.crawlPages} discovered pages per scan`,
-      "Evidence, CVSS, remediation · PDF, SARIF, Markdown, JSON exports",
-      "Private scan history in your account",
+      "Evidence, CVSS and remediation for every finding shown",
+      "An email with the summary when a scan finishes",
     ],
-    cta: { label: "Start free pentest", href: "/mypentest/app/new" },
+    highlight: false,
+    ...LIMITS,
+  },
+  {
+    id: "plus",
+    order: 1,
+    title: "Plus",
+    description: "More scans, saved history and high-severity findings in full, for teams shipping regularly.",
+    price: 99_900,
+    yearlyPrice: 959_000,
+    scans: 5,
+    concurrentScans: 2,
+    severities: ["high", "medium", "low", "info"],
+    manualTesting: false,
+    history: true,
+    exports: ["json", "md", "html", "sarif"],
+    perks: ["Everything in Free", "Early access to new checks and features", "Premium support"],
+    highlight: false,
+    ...LIMITS,
+  },
+  {
+    id: "pro",
+    order: 2,
+    title: "Pro",
+    description: "Every finding at every severity, including critical, with PDF reports you can hand to clients.",
+    price: 199_900,
+    yearlyPrice: 1_919_000,
+    scans: 15,
+    concurrentScans: 2,
+    severities: [...SEVERITIES],
+    manualTesting: false,
+    history: true,
+    exports: [...EXPORT_FORMATS],
+    perks: [
+      "Everything in Plus",
+      "Full attack-chain analysis, critical findings included",
+      "Priority premium support",
+    ],
     highlight: true,
+    ...LIMITS,
   },
   {
-    id: "advanced",
-    name: "Advanced",
-    status: "coming-soon",
-    price: null,
-    priceNote: "Pricing not yet announced",
-    description: "For teams who test every release: higher limits and scheduled retests.",
-    features: [
-      "Higher scan and target limits",
-      "Scheduled and on-demand retests",
-      "Team access to shared assessments",
-      "Priority engine capacity",
+    id: "enterprise",
+    order: 3,
+    title: "Enterprise",
+    description: "Unlimited automated testing, plus a custom manual pentest by the BugSnaps team.",
+    price: 1_099_900,
+    yearlyPrice: 10_559_000,
+    scans: null,
+    concurrentScans: 2,
+    severities: [...SEVERITIES],
+    manualTesting: true,
+    history: true,
+    exports: [...EXPORT_FORMATS],
+    perks: [
+      "Everything in Pro",
+      "A dedicated consultant to plan and review your testing",
+      "Retesting of your fixes after the manual test",
     ],
-    cta: { label: "Tell me when it's ready", href: "/contact?topic=mypentest-advanced" },
-  },
-  {
-    id: "business",
-    name: "Business / Enterprise",
-    status: "contact",
-    price: null,
-    priceNote: "Scoped with you",
-    description: "Automation plus expert-led testing, reporting your auditors accept.",
-    features: [
-      "Manual penetration testing by BugSnaps testers",
-      "Business-logic and chained-attack testing",
-      "Retesting until every fix holds",
-      "Reports for customers, SOC 2 and ISO 27001",
-    ],
-    cta: { label: "Talk to us", href: "/contact?topic=enterprise" },
+    highlight: false,
+    ...LIMITS,
   },
 ];
+
+/* ── Reading the catalog ─────────────────────────────────────── */
+
+const num = (value: unknown, fallback: number) =>
+  typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : fallback;
+const str = (value: unknown, fallback: string) => (typeof value === "string" && value.trim() ? value.trim() : fallback);
+const list = (value: unknown): unknown[] | null =>
+  Array.isArray(value) ? value : value && typeof value === "object" ? Object.values(value) : null;
+
+/** One plans/{id} record over its fallback (or a blank base), defensively. */
+function planFrom(id: string, raw: Record<string, unknown>, base?: Plan): Plan {
+  const fallback: Plan = base ?? {
+    ...FALLBACK_PLANS[0],
+    id,
+    title: id.charAt(0).toUpperCase() + id.slice(1),
+    description: "",
+    perks: [],
+    highlight: false,
+  };
+  const severities = list(raw.severities)?.filter((s): s is Severity => SEVERITIES.includes(s as Severity));
+  const exports =
+    raw.exports === "none"
+      ? []
+      : list(raw.exports)?.filter((f): f is ExportFormat => EXPORT_FORMATS.includes(f as ExportFormat));
+  const perks = list(raw.perks)?.filter((p): p is string => typeof p === "string" && p.trim().length > 0);
+  return {
+    id,
+    order: num(raw.order, fallback.order),
+    title: str(raw.title, fallback.title),
+    description: str(raw.description, fallback.description),
+    price: Math.round(num(raw.price, fallback.price)),
+    yearlyPrice: Math.round(num(raw.yearlyPrice, fallback.yearlyPrice)),
+    currency: str(raw.currency, fallback.currency),
+    periodDays: num(raw.periodDays, fallback.periodDays),
+    scans: raw.scans === "unlimited" ? null : "scans" in raw ? num(raw.scans, 1) : fallback.scans,
+    scanWindowDays: num(raw.scanWindowDays, fallback.scanWindowDays),
+    concurrentScans: num(raw.concurrentScans, fallback.concurrentScans),
+    severities: severities?.length ? SEVERITIES.filter((s) => severities.includes(s)) : fallback.severities,
+    targetsPerScan: num(raw.targetsPerScan, fallback.targetsPerScan),
+    crawlPages: num(raw.crawlPages, fallback.crawlPages),
+    scanHours: num(raw.scanHours, fallback.scanHours),
+    manualTesting: typeof raw.manualTesting === "boolean" ? raw.manualTesting : fallback.manualTesting,
+    history: typeof raw.history === "boolean" ? raw.history : fallback.history,
+    exports: exports ? EXPORT_FORMATS.filter((f) => exports.includes(f)) : fallback.exports,
+    perks: perks ?? fallback.perks,
+    highlight: typeof raw.highlight === "boolean" ? raw.highlight : fallback.highlight,
+  };
+}
+
+/** The catalog from the database, or the fallback. Server-side; cached 5 minutes. */
+export async function getPlans(): Promise<Plan[]> {
+  try {
+    const response = await fetch(`${firebaseConfig.databaseURL}/plans.json`, {
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (response.ok) {
+      const raw = (await response.json()) as Record<string, unknown> | null;
+      if (raw && typeof raw === "object" && Object.keys(raw).length) {
+        const plans = Object.entries(raw)
+          .filter(([id, value]) => /^[a-z0-9-]{1,32}$/.test(id) && value && typeof value === "object")
+          .map(([id, value]) =>
+            planFrom(id, value as Record<string, unknown>, FALLBACK_PLANS.find((p) => p.id === id)),
+          );
+        if (plans.some((p) => p.price === 0)) return plans.sort((a, b) => a.order - b.order);
+      }
+    }
+  } catch {
+    // The fallback below is the answer; a pricing page never renders empty.
+  }
+  return FALLBACK_PLANS;
+}
+
+export function freePlan(plans: Plan[]): Plan {
+  return plans.find((p) => p.price === 0) ?? FALLBACK_PLANS[0];
+}
+
+/* ── Describing a plan ───────────────────────────────────────── */
+
+export function formatPrice(price: number, currency = "INR"): string {
+  if (price === 0) return "Free";
+  const amount = price / 100;
+  if (currency === "INR") {
+    return `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: amount % 1 ? 2 : 0 })}`;
+  }
+  return `${currency} ${amount.toLocaleString("en", { maximumFractionDigits: 2 })}`;
+}
+
+export function periodLabel(days: number): string {
+  return days === 30 ? "month" : days === 365 ? "year" : `${days} days`;
+}
+
+/** What one payment costs on a cycle, or null when the plan isn't sold that way. */
+export function cyclePrice(plan: Pick<Plan, "price" | "yearlyPrice">, cycle: Cycle): number | null {
+  if (plan.price === 0) return null;
+  if (cycle === "monthly") return plan.price;
+  return plan.yearlyPrice > 0 ? plan.yearlyPrice : null;
+}
+
+/** A yearly price as a month, rounded down to the rupee: "₹799". */
+export function perMonth(yearlyPrice: number, currency = "INR"): string {
+  return formatPrice(Math.floor(yearlyPrice / 12 / 100) * 100, currency);
+}
+
+/** How much a year saves against twelve monthly payments, as a whole percent. */
+export function yearlySaving(plan: Pick<Plan, "price" | "yearlyPrice">): number {
+  if (!plan.price || !plan.yearlyPrice) return 0;
+  return Math.round((1 - plan.yearlyPrice / (plan.price * 12)) * 100);
+}
+
+const FORMAT_LABEL: Record<ExportFormat, string> = {
+  json: "JSON",
+  md: "Markdown",
+  html: "HTML",
+  sarif: "SARIF",
+  pdf: "PDF",
+};
+
+/** "Download reports as JSON, Markdown, HTML and SARIF" — or what the plan lacks. */
+export function exportsLabel(exports: ExportFormat[]): string {
+  if (!exports.length) return "Read reports in the app (downloads on paid plans)";
+  const files = exports.filter((f) => f !== "pdf").map((f) => FORMAT_LABEL[f]);
+  if (exports.includes("pdf")) {
+    return files.length ? `PDF reports, plus ${joinWords(files)} downloads` : "PDF reports";
+  }
+  return `Download reports as ${joinWords(files)}`;
+}
+
+export function historyLabel(history: boolean): string {
+  return history ? "Scan history saved to your account" : "Results kept for 24 hours, not saved to history";
+}
+
+const LABEL: Record<Severity, string> = {
+  critical: "critical",
+  high: "high",
+  medium: "medium",
+  low: "low",
+  info: "informational",
+};
+
+function joinWords(words: string[]): string {
+  return words.length <= 1 ? words.join("") : `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}`;
+}
+
+const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+/** "the month" for a 30-day window, "the day" for 1, else "7 days". */
+export function windowLabel(days: number): string {
+  return days === 30 ? "month" : days === 1 ? "day" : days === 7 ? "week" : `${days} days`;
+}
+
+export function scansLabel(plan: { scans: number | null; scanWindowDays: number }): string {
+  if (plan.scans === null) return "Unlimited scans";
+  const per = plan.scanWindowDays === 30 || plan.scanWindowDays === 1 || plan.scanWindowDays === 7 ? "a" : "per";
+  return `${plan.scans} scan${plan.scans === 1 ? "" : "s"} ${per} ${windowLabel(plan.scanWindowDays)}`;
+}
+
+/** "Medium and low findings in full" / "Every finding in full, critical included". */
+export function reachLabel(severities: Severity[]): string {
+  if (SEVERITIES.every((s) => severities.includes(s))) return "Every finding in full, critical included";
+  return `${capitalise(joinWords(SEVERITIES.filter((s) => severities.includes(s)).map((s) => LABEL[s])))} findings in full`;
+}
+
+/** What a plan counts but doesn't detail, or null when it shows everything that matters. */
+export function hiddenLabel(severities: Severity[]): string | null {
+  const hidden = SEVERITIES.filter((s) => !severities.includes(s) && s !== "info");
+  if (!hidden.length) return null;
+  return `${capitalise(joinWords(hidden.map((s) => LABEL[s])))} findings counted, detailed on a higher plan`;
+}
+
+/** Every line a plan card lists, derived from the numbers so copy can't drift. */
+export function planFeatures(plan: Plan): string[] {
+  const hidden = hiddenLabel(plan.severities);
+  return [
+    `${scansLabel(plan)}, ${plan.concurrentScans > 1 ? `${plan.concurrentScans} at a time` : "one at a time"}`,
+    reachLabel(plan.severities),
+    ...(hidden ? [hidden] : []),
+    historyLabel(plan.history),
+    exportsLabel(plan.exports),
+    `Up to ${plan.targetsPerScan} URLs and ${plan.crawlPages} discovered pages per scan`,
+    ...(plan.manualTesting ? ["A custom manual penetration test by BugSnaps testers"] : []),
+    ...plan.perks,
+  ];
+}
+
+export const LAUNCH_OFFER = {
+  headline: "Free plan",
+  detail:
+    "Start on the free plan — no credit card. Upgrade when you need more scans, or critical and high findings in full.",
+};
 
 /** Consultancy engagements are quoted per scope, never listed as a price. */
 export const SERVICE_PRICING = {
