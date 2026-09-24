@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 /** The canonical origin. www.bugsnaps.in redirects here (next.config.ts). */
 export const SITE_URL = "https://bugsnaps.in";
 
-/** MyRecon's canonical origin — its own site, linked, never proxied. */
+/** MyRecon's canonical origin - its own site, linked, never proxied. */
 export const MYRECON_URL = "https://www.myrecon.xyz/";
 
 export const CONTACT_EMAIL = "aryan@bugsnaps.in";
@@ -28,7 +28,7 @@ export const OG_IMAGE = {
   url: "/opengraph-image.png",
   width: 1200,
   height: 627,
-  alt: "BugSnaps — Find. Fix. Fortify. Penetration testing and offensive security.",
+  alt: "BugSnaps - Find. Fix. Fortify. Penetration testing and offensive security.",
 };
 
 export function absoluteUrl(path = "/"): string {
@@ -39,7 +39,7 @@ export function absoluteUrl(path = "/"): string {
 
 /**
  * Page metadata with a canonical URL and matching Open Graph / Twitter cards.
- * `title` is the page's own title; the layout template appends " — BugSnaps".
+ * `title` is the page's own title; the layout template appends " - BugSnaps".
  */
 export function pageMetadata({
   title,
@@ -57,7 +57,7 @@ export function pageMetadata({
   type?: "website" | "article";
 }): Metadata {
   const url = absoluteUrl(path);
-  const socialTitle = absoluteTitle ? title : `${title} — BugSnaps`;
+  const socialTitle = absoluteTitle ? title : `${title} - BugSnaps`;
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,

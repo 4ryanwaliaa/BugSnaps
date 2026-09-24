@@ -7,9 +7,9 @@ import { LAUNCH_OFFER, SERVICE_PRICING, getPlans } from "@/lib/plans";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pricing — MyPentest Plans and Manual Pentesting",
+  title: "Pricing - MyPentest Plans and Manual Pentesting",
   description:
-    "Start MyPentest free. Paid plans add more scans, saved history, downloads, critical and high findings in full, and a custom manual pentest — monthly, or yearly at 20% off, through Razorpay with no auto-renewal. Expert-led testing is quoted per scope.",
+    "Start MyPentest free. Paid plans add more scans, saved history, downloads, critical and high findings in full, and a custom manual pentest - monthly, or yearly at 20% off, through Razorpay with no auto-renewal. Expert-led testing is quoted per scope.",
   path: "/pricing",
 });
 
@@ -22,7 +22,7 @@ export default async function PricingPage() {
         crumbs={[{ name: "Pricing", path: "/pricing" }]}
         eyebrow="Pricing"
         title="Start free. Pay when you need more."
-        lead={`${LAUNCH_OFFER.detail} Pay monthly, or yearly and save 20%, through Razorpay — nothing renews automatically.`}
+        lead={`${LAUNCH_OFFER.detail} Pay once for a single scan, or monthly, or yearly and save 20%, through Razorpay - nothing renews automatically.`}
       />
 
       <Section labelledBy="plans-title">

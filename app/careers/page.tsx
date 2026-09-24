@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Careers at BugSnaps",
   absoluteTitle: true,
   description:
-    "Join BugSnaps — a new offensive security team building MyPentest and MyRecon. Send us your CV and tell us why you want to break things (legally) for a living.",
+    "Join BugSnaps - a new offensive security team building MyPentest and MyRecon. Send us your CV and tell us why you want to break things (legally) for a living.",
   path: "/careers",
 });
 
@@ -24,7 +24,7 @@ const values = [
     icon: GraduationCap,
     title: "Learn by doing",
     description:
-      "We're a young team, which means real responsibility from day one — real targets, real reports, real clients. You'll grow fast because you'll have to.",
+      "We're a young team, which means real responsibility from day one - real targets, real reports, real clients. You'll grow fast because you'll have to.",
   },
   {
     icon: HeartHandshake,
@@ -46,7 +46,7 @@ export default function CareersPage() {
           Break things, legally. Help us build BugSnaps.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          We&apos;re a new offensive security company — small team, no bureaucracy,
+          We&apos;re a new offensive security company - small team, no bureaucracy,
           plenty of interesting problems. If making the internet a little safer
           sounds like your kind of work, we&apos;d love to hear from you.
         </p>
@@ -71,8 +71,7 @@ export default function CareersPage() {
             <h2 className="text-xl font-semibold tracking-tight">How to apply</h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
               No forms, no portals. Email us your CV and a few honest lines about{" "}
-              <span className="text-foreground">why you want to join us</span> —
-              what excites you about security, what you&apos;ve built or broken,
+              <span className="text-foreground">why you want to join us</span> - what excites you about security, what you&apos;ve built or broken,
               what you want to learn. That&apos;s it.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-4">

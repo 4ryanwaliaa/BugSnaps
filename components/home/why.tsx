@@ -4,7 +4,7 @@ import { ENGINE_FACTS } from "@/lib/mypentest";
 const POINTS = [
   {
     title: "Real security testing",
-    body: `MyPentest maps your app, then runs ${ENGINE_FACTS.checks} checks against it — including signed-in access-control tests — not a sample report.`,
+    body: `MyPentest maps your app, then runs ${ENGINE_FACTS.checks} checks against it - including signed-in access-control tests - not a sample report.`,
   },
   {
     title: "Automation, then experts",
@@ -12,7 +12,7 @@ const POINTS = [
   },
   {
     title: "Actionable findings",
-    body: "Every finding has evidence, a CVSS score, how sure we are, and the specific fix — ready for your tracker, or your CI as SARIF.",
+    body: "Every finding has evidence, a CVSS score, how sure we are, and the specific fix - ready for your tracker, or your CI as SARIF.",
   },
   {
     title: "Built for developers and security teams",

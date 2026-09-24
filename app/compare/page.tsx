@@ -20,7 +20,7 @@ export default function CompareHub() {
         crumbs={[{ name: "Compare", path: "/compare" }]}
         eyebrow="Compare"
         title="Scanner, automated pentest, or manual test?"
-        lead="An honest comparison of the ways to test a web application — including where our own products are not the right answer."
+        lead="An honest comparison of the ways to test a web application - including where our own products are not the right answer."
       />
 
       <Section labelledBy="guides-title">

@@ -24,11 +24,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "BugSnaps — Penetration Testing, Automated and Expert-Led",
-    template: "%s — BugSnaps",
+    default: "BugSnaps - Penetration Testing, Automated and Expert-Led",
+    template: "%s - BugSnaps",
   },
   description:
-    "BugSnaps is a penetration-testing company. Run MyPentest, our automated pentest, free to start — or bring in our testers for a manual engagement.",
+    "BugSnaps is a penetration-testing company. Run MyPentest, our automated pentest, free to start - or bring in our testers for a manual engagement.",
   applicationName: "BugSnaps",
   authors: [{ name: "BugSnaps" }],
   openGraph: {

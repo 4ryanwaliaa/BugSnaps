@@ -53,7 +53,7 @@ export function Navbar() {
       )}
     >
       <nav aria-label="Main" className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-6 lg:px-8">
-        <Link href="/" aria-label="BugSnaps — home" className="shrink-0">
+        <Link href="/" aria-label="BugSnaps - home" className="shrink-0">
           <Logo />
         </Link>
 

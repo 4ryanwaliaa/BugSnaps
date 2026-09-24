@@ -6,7 +6,7 @@ import { products } from "@/lib/products";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Products — MyPentest and MyRecon",
+  title: "Products - MyPentest and MyRecon",
   description:
     "The BugSnaps product line: MyPentest for automated penetration testing, and MyRecon for reconnaissance and OSINT. Built by the BugSnaps security team.",
   path: "/products",

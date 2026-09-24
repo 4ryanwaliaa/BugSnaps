@@ -3,8 +3,7 @@
  *
  * Scope and limits: this holds counters in the process, so it protects a
  * single instance. On a multi-instance or serverless deploy each instance
- * keeps its own window, and the effective limit is (limit x instances) —
- * still a hard ceiling on any one attacker, but move to a shared store
+ * keeps its own window, and the effective limit is (limit x instances) - * still a hard ceiling on any one attacker, but move to a shared store
  * (Upstash/Redis, or the platform's WAF) if this ever needs to be exact.
  */
 type Window = { count: number; resetAt: number };
@@ -53,7 +52,7 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
  * Client identity for throttling.
  *
  * `x-forwarded-for` is a list that each proxy APPENDS to, so the left-most
- * entry is whatever the caller sent — attacker-controlled, and rotating it
+ * entry is whatever the caller sent - attacker-controlled, and rotating it
  * defeats any limit keyed on it. The trustworthy value is the entry your
  * nearest trusted proxy appended: the RIGHT-most one. This assumes exactly
  * one trusted proxy in front of the app (Vercel, or a single reverse proxy);

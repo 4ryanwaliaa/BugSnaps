@@ -27,7 +27,7 @@ export default function BlogIndex() {
         crumbs={[{ name: "Blog", path: "/blog" }]}
         eyebrow="Blog"
         title="Notes from the people who do the testing."
-        lead="Straight answers about penetration testing and application security — what works, what doesn't, and what to ask for."
+        lead="Straight answers about penetration testing and application security - what works, what doesn't, and what to ask for."
       />
       <Section labelledBy="posts-title">
         <h2 id="posts-title" className="sr-only">

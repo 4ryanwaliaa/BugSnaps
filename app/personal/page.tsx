@@ -7,9 +7,9 @@ import { OG_IMAGE } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Delete Old Accounts & Clean Your Digital Footprint",
   description:
-    "BugSnaps Personal finds the accounts and listings tied to your identity across 100+ platforms, then helps you delete them — consent-first, official flows only.",
+    "BugSnaps Personal finds the accounts and listings tied to your identity across 100+ platforms, then helps you delete them - consent-first, official flows only.",
   openGraph: {
-    title: "BugSnaps Personal — Clean Your Digital Footprint",
+    title: "BugSnaps Personal - Clean Your Digital Footprint",
     description:
       "Find the accounts you forgot you had, and delete them before someone else uses them. Consent-first, done for you. Free scan.",
     url: "https://bugsnaps.in/personal",

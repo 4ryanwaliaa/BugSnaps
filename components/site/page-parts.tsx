@@ -168,7 +168,7 @@ export function Prose({ children, className }: { children: ReactNode; className?
 
 /** The closing call to action most pages end on. */
 export function CtaBand({
-  title = "Run a real pentest on your app — free.",
+  title = "Run a real pentest on your app - free.",
   lead = "Sign in, prove you own the domain, and MyPentest maps and tests it. No credit card.",
   secondary = { label: "Book a security consultation", href: "/contact" },
 }: {

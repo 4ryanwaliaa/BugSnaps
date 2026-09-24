@@ -18,7 +18,7 @@ export default function ContactPage() {
         crumbs={[{ name: "Contact", path: "/contact" }]}
         eyebrow="Contact"
         title="Tell us what you're building."
-        lead="We reply within one business day with honest advice — even if that advice is that you don't need us yet, or that MyPentest's free tier will do."
+        lead="We reply within one business day with honest advice - even if that advice is that you don't need us yet, or that MyPentest's free tier will do."
       />
       <Container className="py-14 sm:py-20">
         <ContactForm />

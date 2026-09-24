@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
  * The old single-page site linked to on-page anchors (#services, #pricing,
  * #contact, #how, #report, #intel). Those sections now live on their own
  * pages. A fragment never reaches the server, so a permanent redirect can't
- * catch them — this does, in the browser, once, on load. New internal links
+ * catch them - this does, in the browser, once, on load. New internal links
  * point straight at the pages; this is only for old bookmarks and backlinks.
  */
 const MAP: Record<string, string> = {

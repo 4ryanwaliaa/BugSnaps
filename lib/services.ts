@@ -45,13 +45,13 @@ export const serviceSummaries: ServiceSummary[] = [
   {
     title: "Cloud security review",
     description:
-      "Configuration and identity review across AWS, GCP and Azure — IAM, storage exposure, network boundaries and secrets.",
+      "Configuration and identity review across AWS, GCP and Azure - IAM, storage exposure, network boundaries and secrets.",
     deliverables: ["Misconfiguration report", "IAM privilege review", "Remediation runbook"],
   },
   {
     title: "Source code review",
     description:
-      "Security-focused review of the code paths that matter — authentication, payments, file handling.",
+      "Security-focused review of the code paths that matter - authentication, payments, file handling.",
     deliverables: ["Annotated findings", "Vulnerable patterns", "Secure-coding guidance"],
   },
   {
@@ -110,7 +110,7 @@ export const servicePages: ServicePage[] = [
       "Expert-led penetration testing for web apps, APIs and networks. Scoped in writing, tested manually against OWASP and PTES, with retesting until every fix holds.",
     h1: "Penetration testing by people who explain what they found.",
     lead:
-      "A BugSnaps penetration test is a scoped, manual attempt to break your application, API or network the way an attacker would — then a clear account of what worked, how bad it is, and how to fix it.",
+      "A BugSnaps penetration test is a scoped, manual attempt to break your application, API or network the way an attacker would - then a clear account of what worked, how bad it is, and how to fix it.",
     tests: [
       { title: "Web applications", body: "Authentication, authorization, input handling, sessions and business logic." },
       { title: "APIs", body: "Object- and function-level authorization, data exposure, rate limiting, GraphQL." },
@@ -118,7 +118,7 @@ export const servicePages: ServicePage[] = [
       { title: "Cloud and code", body: "Configuration and identity review, and security-focused code review, on request." },
     ],
     approach: [
-      "Scope it together — a free call, then a fixed quote and rules of engagement in writing.",
+      "Scope it together - a free call, then a fixed quote and rules of engagement in writing.",
       "Reconnaissance and mapping, including the attack surface nobody remembered existed.",
       "Manual testing mapped to OWASP WSTG and PTES, with automation for coverage, not conclusions.",
       "Critical issues reported the same day we confirm them.",
@@ -155,16 +155,16 @@ export const servicePages: ServicePage[] = [
     name: "Web application pentesting",
     metaTitle: "Web Application Penetration Testing",
     metaDescription:
-      "Manual web application penetration testing against the OWASP Top 10 and business logic: authentication, access control, injection, sessions — with fixes and retesting.",
+      "Manual web application penetration testing against the OWASP Top 10 and business logic: authentication, access control, injection, sessions - with fixes and retesting.",
     h1: "Web application penetration testing.",
     lead:
-      "We test your web app the way an attacker would: every role, every workflow, every input — looking for the flaw that turns an ordinary account into access it should never have.",
+      "We test your web app the way an attacker would: every role, every workflow, every input - looking for the flaw that turns an ordinary account into access it should never have.",
     tests: [
       { title: "Authentication", body: "Login, password reset, MFA and account recovery flows." },
       { title: "Access control", body: "Horizontal and vertical privilege checks across every role (IDOR/BOLA)." },
       { title: "Injection and XSS", body: "SQL, command, template and client-side injection, verified by hand." },
       { title: "Sessions", body: "Token handling, fixation, expiry, logout and cookie security." },
-      { title: "Business logic", body: "Price and quantity tampering, workflow bypasses, race conditions — agreed in scope." },
+      { title: "Business logic", body: "Price and quantity tampering, workflow bypasses, race conditions - agreed in scope." },
       { title: "Configuration", body: "Headers, CORS, TLS, exposed files and debug surfaces." },
     ],
     approach: [
@@ -180,7 +180,7 @@ export const servicePages: ServicePage[] = [
       "Retest and written confirmation",
     ],
     automation: {
-      fits: "MyPentest covers much of the configuration, injection and access-control surface automatically — including signed-in tests with your test accounts. Run it free on every release.",
+      fits: "MyPentest covers much of the configuration, injection and access-control surface automatically - including signed-in tests with your test accounts. Run it free on every release.",
       manual: "Choose a manual test for business logic, complex roles, payments, or when you need evidence for a customer or auditor.",
     },
     faq: ENGAGEMENT_FAQ,
@@ -194,11 +194,11 @@ export const servicePages: ServicePage[] = [
       "API penetration testing for REST and GraphQL: object- and function-level authorization, data exposure, rate limiting and auth, mapped to the OWASP API Top 10.",
     h1: "API security testing.",
     lead:
-      "APIs quietly hand out data to whoever asks correctly. We test that every endpoint checks who is asking — for every object, every function and every field.",
+      "APIs quietly hand out data to whoever asks correctly. We test that every endpoint checks who is asking - for every object, every function and every field.",
     tests: [
       { title: "Object-level authorization", body: "Can user A read or change user B's records by changing an id? (BOLA)" },
       { title: "Function-level authorization", body: "Can a regular user call admin-only operations?" },
-      { title: "Data exposure", body: "Fields returned that the client never shows — and never should have received." },
+      { title: "Data exposure", body: "Fields returned that the client never shows - and never should have received." },
       { title: "Authentication", body: "Token issuance, validation, expiry and revocation." },
       { title: "Rate limiting", body: "Login, OTP and expensive endpoints that can be hammered." },
       { title: "GraphQL", body: "Introspection, query depth and batching abuse, resolver authorization." },
@@ -225,12 +225,12 @@ export const servicePages: ServicePage[] = [
     slug: "network-pentesting",
     path: "/network-pentesting",
     name: "Network pentesting",
-    metaTitle: "Network Penetration Testing — External and Internal",
+    metaTitle: "Network Penetration Testing - External and Internal",
     metaDescription:
       "External and internal network penetration testing: attack-surface discovery, service and configuration testing, segmentation checks, and a clear path to hardening.",
     h1: "Network penetration testing.",
     lead:
-      "We map what your network exposes — to the internet and inside — and validate what an intruder could actually reach from each foothold.",
+      "We map what your network exposes - to the internet and inside - and validate what an intruder could actually reach from each foothold.",
     tests: [
       { title: "External exposure", body: "Internet-facing hosts, services, forgotten subdomains and certificates." },
       { title: "Services", body: "Vulnerable and misconfigured services, default credentials, weak protocols." },

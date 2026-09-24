@@ -2,7 +2,7 @@ import { MYRECON_URL } from "@/lib/site";
 
 /*
  * The BugSnaps product line. Navigation, the footer, /products and the
- * homepage all read this list, so adding a product is one entry here — not a
+ * homepage all read this list, so adding a product is one entry here - not a
  * redesign. `href` is where the product lives: a path on this site, or its own
  * domain (`external: true`), which is how MyRecon stays independent.
  */
@@ -48,7 +48,7 @@ export const products: Product[] = [
     name: "MyRecon",
     tagline: "Reconnaissance and OSINT",
     summary:
-      "Username, email and breach intelligence, password-exposure checks, WHOIS, DNS and IP investigation — the reconnaissance layer of the BugSnaps ecosystem.",
+      "Username, email and breach intelligence, password-exposure checks, WHOIS, DNS and IP investigation - the reconnaissance layer of the BugSnaps ecosystem.",
     href: MYRECON_URL,
     external: true,
     status: "available",

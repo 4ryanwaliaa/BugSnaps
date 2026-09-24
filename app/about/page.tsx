@@ -4,7 +4,7 @@ import { CtaBand, PageHeader, Prose, Section, SiteShell } from "@/components/sit
 import { MYRECON_URL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About BugSnaps — Penetration Testing Company",
+  title: "About BugSnaps - Penetration Testing Company",
   absoluteTitle: true,
   description:
     "BugSnaps is a young cybersecurity company focused on penetration testing. We build MyPentest and MyRecon and run expert-led engagements, without inflated claims.",
@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
 const PRINCIPLES = [
   {
     title: "Test, don't guess",
-    body: "A finding needs evidence. Anything we can't show, we call a lead — not a vulnerability.",
+    body: "A finding needs evidence. Anything we can't show, we call a lead - not a vulnerability.",
   },
   {
     title: "Honest about what we are",
@@ -40,7 +40,7 @@ export default function AboutPage() {
         <Prose>
           <h2 id="story-title">What we do</h2>
           <p>
-            Our focus is penetration testing — finding the vulnerabilities an attacker would use, proving they&apos;re
+            Our focus is penetration testing - finding the vulnerabilities an attacker would use, proving they&apos;re
             real, and explaining how to close them. We do that two ways:
           </p>
           <ul>
@@ -77,7 +77,7 @@ export default function AboutPage() {
         </ul>
         <Prose>
           <p>
-            Found a vulnerability in something of ours? Please tell us — see our{" "}
+            Found a vulnerability in something of ours? Please tell us - see our{" "}
             <Link href="/responsible-disclosure">responsible disclosure policy</Link>.
           </p>
         </Prose>

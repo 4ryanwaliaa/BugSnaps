@@ -1,5 +1,5 @@
 /*
- * Pricing and plans — the ONE place the site gets them.
+ * Pricing and plans - the ONE place the site gets them.
  *
  * The live catalog is in the Firebase Realtime Database at plans/{id}: public
  * to read, writable only from the Firebase console or CLI. It is loaded from
@@ -9,7 +9,7 @@
  *
  * The MyPentest engine reads the same records to enforce each plan's limits
  * and to price Razorpay orders, so changing a price or a limit is one edit in
- * the database — not a deploy of either the site or the engine.
+ * the database - not a deploy of either the site or the engine.
  *
  * `getPlans()` reads the catalog on the server (cached for five minutes).
  * FALLBACK_PLANS mirror plans.json and are used only when the database can't be
@@ -17,7 +17,7 @@
  * its own; they all render from here.
  */
 import { firebaseConfig } from "@/lib/firebase-auth";
-import type { Severity } from "@/lib/mypentest/types";
+import type { PlanLimits as EnginePlan, Severity } from "@/lib/mypentest/types";
 import { SEVERITIES } from "@/lib/mypentest/types";
 
 export type ExportFormat = "json" | "md" | "html" | "sarif" | "pdf";
@@ -86,9 +86,27 @@ export const FALLBACK_PLANS: Plan[] = [
     ...LIMITS,
   },
   {
-    id: "plus",
+    id: "starter",
     order: 1,
-    title: "Plus",
+    title: "Strike",
+    description:
+      "One full pentest with high-severity findings, saved history and a PDF report. Pay once, no monthly plan.",
+    price: 39_900,
+    yearlyPrice: 0,
+    scans: 1,
+    concurrentScans: 1,
+    severities: ["high", "medium", "low", "info"],
+    manualTesting: false,
+    history: true,
+    exports: [...EXPORT_FORMATS],
+    perks: ["Everything in Free", "Early access to new checks and features", "Premium support"],
+    highlight: false,
+    ...LIMITS,
+  },
+  {
+    id: "plus",
+    order: 2,
+    title: "Hunter",
     description: "More scans, saved history and high-severity findings in full, for teams shipping regularly.",
     price: 99_900,
     yearlyPrice: 959_000,
@@ -104,8 +122,8 @@ export const FALLBACK_PLANS: Plan[] = [
   },
   {
     id: "pro",
-    order: 2,
-    title: "Pro",
+    order: 3,
+    title: "Operator",
     description: "Every finding at every severity, including critical, with PDF reports you can hand to clients.",
     price: 199_900,
     yearlyPrice: 1_919_000,
@@ -116,32 +134,11 @@ export const FALLBACK_PLANS: Plan[] = [
     history: true,
     exports: [...EXPORT_FORMATS],
     perks: [
-      "Everything in Plus",
+      "Everything in Hunter",
       "Full attack-chain analysis, critical findings included",
       "Priority premium support",
     ],
     highlight: true,
-    ...LIMITS,
-  },
-  {
-    id: "enterprise",
-    order: 3,
-    title: "Enterprise",
-    description: "Unlimited automated testing, plus a custom manual pentest by the BugSnaps team.",
-    price: 1_099_900,
-    yearlyPrice: 10_559_000,
-    scans: null,
-    concurrentScans: 2,
-    severities: [...SEVERITIES],
-    manualTesting: true,
-    history: true,
-    exports: [...EXPORT_FORMATS],
-    perks: [
-      "Everything in Pro",
-      "A dedicated consultant to plan and review your testing",
-      "Retesting of your fixes after the manual test",
-    ],
-    highlight: false,
     ...LIMITS,
   },
 ];
@@ -218,6 +215,29 @@ export async function getPlans(): Promise<Plan[]> {
   return FALLBACK_PLANS;
 }
 
+/**
+ * A catalog plan with the engine's numbers over it. The engine enforces the
+ * limits and prices the orders, so where the two differ (a catalog cached a
+ * few minutes longer than the engine's) the engine is what is true.
+ */
+export function withEngine(plan: Plan, engine?: EnginePlan): Plan {
+  if (!engine) return plan;
+  return {
+    ...plan,
+    title: engine.title || plan.title,
+    price: engine.price,
+    yearlyPrice: engine.yearly_price,
+    currency: engine.currency,
+    periodDays: engine.period_days,
+    scans: engine.max_scans,
+    scanWindowDays: engine.scan_window_days,
+    concurrentScans: engine.max_concurrent_scans,
+    severities: SEVERITIES.filter((s) => engine.severities.includes(s)),
+    history: engine.history,
+    exports: EXPORT_FORMATS.filter((f) => engine.exports.includes(f)),
+  };
+}
+
 export function freePlan(plans: Plan[]): Plan {
   return plans.find((p) => p.price === 0) ?? FALLBACK_PLANS[0];
 }
@@ -244,6 +264,24 @@ export function cyclePrice(plan: Pick<Plan, "price" | "yearlyPrice">, cycle: Cyc
   return plan.yearlyPrice > 0 ? plan.yearlyPrice : null;
 }
 
+/**
+ * A plan that is one scan, paid once (Strike): its price is per scan, not per
+ * month, and it is described that way everywhere.
+ */
+export function isSingleScan(plan: Pick<Plan, "price" | "scans" | "scanWindowDays" | "periodDays">): boolean {
+  return plan.price > 0 && plan.scans === 1 && plan.scanWindowDays >= plan.periodDays;
+}
+
+/**
+ * A price less an offer's percent, rounded down to the rupee - the same sum
+ * the engine does (hosted.discounted). The engine's order is what is charged;
+ * this is only for showing it.
+ */
+export function discountedPrice(price: number, percent: number): number {
+  if (!percent) return price;
+  return Math.max(100, Math.floor((price * (100 - percent)) / 10_000) * 100);
+}
+
 /** A yearly price as a month, rounded down to the rupee: "₹799". */
 export function perMonth(yearlyPrice: number, currency = "INR"): string {
   return formatPrice(Math.floor(yearlyPrice / 12 / 100) * 100, currency);
@@ -263,7 +301,7 @@ const FORMAT_LABEL: Record<ExportFormat, string> = {
   pdf: "PDF",
 };
 
-/** "Download reports as JSON, Markdown, HTML and SARIF" — or what the plan lacks. */
+/** "Download reports as JSON, Markdown, HTML and SARIF" - or what the plan lacks. */
 export function exportsLabel(exports: ExportFormat[]): string {
   if (!exports.length) return "Read reports in the app (downloads on paid plans)";
   const files = exports.filter((f) => f !== "pdf").map((f) => FORMAT_LABEL[f]);
@@ -296,8 +334,11 @@ export function windowLabel(days: number): string {
   return days === 30 ? "month" : days === 1 ? "day" : days === 7 ? "week" : `${days} days`;
 }
 
-export function scansLabel(plan: { scans: number | null; scanWindowDays: number }): string {
+export function scansLabel(plan: { scans: number | null; scanWindowDays: number; price?: number; periodDays?: number }): string {
   if (plan.scans === null) return "Unlimited scans";
+  if (plan.price && plan.periodDays && isSingleScan({ ...plan, price: plan.price, periodDays: plan.periodDays })) {
+    return `One full scan, to use within ${plan.periodDays} days`;
+  }
   const per = plan.scanWindowDays === 30 || plan.scanWindowDays === 1 || plan.scanWindowDays === 7 ? "a" : "per";
   return `${plan.scans} scan${plan.scans === 1 ? "" : "s"} ${per} ${windowLabel(plan.scanWindowDays)}`;
 }
@@ -319,7 +360,9 @@ export function hiddenLabel(severities: Severity[]): string | null {
 export function planFeatures(plan: Plan): string[] {
   const hidden = hiddenLabel(plan.severities);
   return [
-    `${scansLabel(plan)}, ${plan.concurrentScans > 1 ? `${plan.concurrentScans} at a time` : "one at a time"}`,
+    isSingleScan(plan)
+      ? scansLabel(plan)
+      : `${scansLabel(plan)}, ${plan.concurrentScans > 1 ? `${plan.concurrentScans} at a time` : "one at a time"}`,
     reachLabel(plan.severities),
     ...(hidden ? [hidden] : []),
     historyLabel(plan.history),
@@ -330,10 +373,19 @@ export function planFeatures(plan: Plan): string[] {
   ];
 }
 
+/** The cheapest paid plan that shows `severity` in full, or null. */
+export function cheapestShowing(plans: Plan[], severity: Severity): Plan | null {
+  return (
+    plans
+      .filter((p) => p.price > 0 && p.severities.includes(severity))
+      .sort((a, b) => a.price - b.price || a.order - b.order)[0] ?? null
+  );
+}
+
 export const LAUNCH_OFFER = {
   headline: "Free plan",
   detail:
-    "Start on the free plan — no credit card. Upgrade when you need more scans, or critical and high findings in full.",
+    "Start on the free plan - no credit card. Upgrade when you need more scans, or critical and high findings in full.",
 };
 
 /** Consultancy engagements are quoted per scope, never listed as a price. */

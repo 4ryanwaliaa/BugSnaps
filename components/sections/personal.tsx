@@ -27,9 +27,7 @@ const EASE = [0.21, 0.47, 0.32, 0.98] as const;
 const FORM_ENDPOINT = "https://api.web3forms.com/submit";
 const WEB3FORMS_ACCESS_KEY = "c74ca709-a8b6-45b8-8cad-a3b3bcc12d6a";
 
-/* ————————————————————————————————————————————————
-   HERO
-—————————————————————————————————————————————————— */
+// HERO
 
 export function PersonalHero() {
   const reduceMotion = useReducedMotion();
@@ -68,7 +66,7 @@ export function PersonalHero() {
             transition={{ duration: 0.8, delay: 0.16, ease: EASE }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty"
           >
-            Old profiles, dead forums, data-broker listings, breach leaks — your
+            Old profiles, dead forums, data-broker listings, breach leaks - your
             past is scattered across the internet. We find every account tied to
             your name, then help you delete it before someone else uses it.
           </motion.p>
@@ -220,9 +218,7 @@ function FootprintVisual() {
   );
 }
 
-/* ————————————————————————————————————————————————
-   HOW IT WORKS
-—————————————————————————————————————————————————— */
+// HOW IT WORKS
 
 const STEPS = [
   {
@@ -235,13 +231,13 @@ const STEPS = [
     icon: FileText,
     step: "02",
     title: "Your report",
-    body: "You get a clear list of what's out there — old profiles, forgotten forums, data-broker entries, and whether your email shows up in known breaches.",
+    body: "You get a clear list of what's out there - old profiles, forgotten forums, data-broker entries, and whether your email shows up in known breaches.",
   },
   {
     icon: Trash2,
     step: "03",
     title: "Deletion",
-    body: "You decide what goes. We either walk you through deleting each account, or — with you present and authorizing — remove them through each platform's own official process.",
+    body: "You decide what goes. We either walk you through deleting each account, or - with you present and authorizing - remove them through each platform's own official process.",
   },
   {
     icon: KeyRound,
@@ -286,9 +282,7 @@ export function PersonalHowItWorks() {
   );
 }
 
-/* ————————————————————————————————————————————————
-   WHAT WE FIND
-—————————————————————————————————————————————————— */
+// WHAT WE FIND
 
 const FINDS = [
   {
@@ -304,12 +298,12 @@ const FINDS = [
   {
     icon: Fingerprint,
     title: "Username trails",
-    body: "The same handle reused across dozens of platforms — an easy thread for a stranger to pull on and map your whole life.",
+    body: "The same handle reused across dozens of platforms - an easy thread for a stranger to pull on and map your whole life.",
   },
   {
     icon: ShieldCheck,
     title: "Breach exposure",
-    body: "Whether your email appears in known data breaches — so you know which passwords to change and which accounts to close.",
+    body: "Whether your email appears in known data breaches - so you know which passwords to change and which accounts to close.",
   },
 ];
 
@@ -319,7 +313,7 @@ export function PersonalWhatWeFind() {
       <SectionHeading
         eyebrow="Why it matters"
         title="Your old accounts are a map to you"
-        description="Every dormant login is a door you left open — a way for a stranger to impersonate you, reset your passwords, or piece your identity together."
+        description="Every dormant login is a door you left open - a way for a stranger to impersonate you, reset your passwords, or piece your identity together."
       />
       <RevealGroup
         className="no-scrollbar -mx-6 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-3 sm:mx-0 sm:mt-14 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0"
@@ -349,7 +343,7 @@ export function PersonalWhatWeFind() {
           <div>
             <h3 className="text-base font-semibold tracking-tight">Curious what&apos;s already out there?</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Try our free scanner on <span className="text-foreground">your own</span> username — no
+              Try our free scanner on <span className="text-foreground">your own</span> username - no
               account, no signup.
             </p>
           </div>
@@ -368,9 +362,7 @@ export function PersonalWhatWeFind() {
   );
 }
 
-/* ————————————————————————————————————————————————
-   TRUST / LEGAL
-—————————————————————————————————————————————————— */
+// TRUST / LEGAL
 
 const PROMISES = [
   {
@@ -403,7 +395,7 @@ export function PersonalTrust() {
       <SectionHeading
         eyebrow="Done right, done legal"
         title="A cleanup you can stand behind"
-        description="We're a security company — we hold ourselves to the same line we'd expect anyone testing us to hold. Here's exactly where that line is."
+        description="We're a security company - we hold ourselves to the same line we'd expect anyone testing us to hold. Here's exactly where that line is."
       />
       <RevealGroup className="mt-14 grid gap-5 sm:mt-16 lg:grid-cols-2" stagger={0.1}>
         {PROMISES.map((col) => (
@@ -441,17 +433,14 @@ export function PersonalTrust() {
       </RevealGroup>
       <Reveal className="mt-8">
         <p className="mx-auto max-w-3xl text-center text-sm leading-relaxed text-muted-2">
-          Handled under India&apos;s DPDP Act 2023. You sign a short consent form before we begin —
-          it names exactly which identities you&apos;re authorizing us to search and act on.
+          Handled under India&apos;s DPDP Act 2023. You sign a short consent form before we begin - it names exactly which identities you&apos;re authorizing us to search and act on.
         </p>
       </Reveal>
     </Section>
   );
 }
 
-/* ————————————————————————————————————————————————
-   PRICING (honest, free scan first)
-—————————————————————————————————————————————————— */
+// PRICING (honest, free scan first)
 
 const PLANS = [
   {
@@ -463,7 +452,7 @@ const PLANS = [
       "We search your identities across 100+ platforms",
       "A plain-language report of what's exposed",
       "Breach-exposure check on your emails",
-      "A fixed quote for cleanup — only if you want it",
+      "A fixed quote for cleanup - only if you want it",
     ],
     cta: "Start free scan",
   },
@@ -501,7 +490,7 @@ export function PersonalPricing() {
       <SectionHeading
         eyebrow="Pricing"
         title="Start free. Pay only if you want the cleanup."
-        description="We scan first and show you what's out there at no cost. If you want us to clean it up, you get a fixed quote before anything happens — no surprises."
+        description="We scan first and show you what's out there at no cost. If you want us to clean it up, you get a fixed quote before anything happens - no surprises."
       />
       <RevealGroup className="mt-12 grid gap-4 sm:mt-16 sm:gap-5 lg:grid-cols-3" stagger={0.1}>
         {PLANS.map((plan) => (
@@ -551,9 +540,7 @@ export function PersonalPricing() {
   );
 }
 
-/* ————————————————————————————————————————————————
-   INTAKE (consent-first, Web3Forms)
-—————————————————————————————————————————————————— */
+// INTAKE (consent-first, Web3Forms)
 
 const inputClasses =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-[15px] text-foreground placeholder:text-muted-2 " +
@@ -576,7 +563,7 @@ export function PersonalIntake() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `BugSnaps Personal — footprint scan request from ${safeName || "an individual"}`,
+          subject: `BugSnaps Personal - footprint scan request from ${safeName || "an individual"}`,
           from_name: "BugSnaps Personal",
           ...data,
         }),
@@ -588,7 +575,7 @@ export function PersonalIntake() {
       }
       setStatus("sent");
     } catch {
-      const subject = `BugSnaps Personal — footprint scan request from ${safeName || "me"}`;
+      const subject = `BugSnaps Personal - footprint scan request from ${safeName || "me"}`;
       const lines = [
         `Name: ${data.name || "-"}`,
         `Contact email: ${data.email || "-"}`,
@@ -691,7 +678,7 @@ export function PersonalIntake() {
               {status === "error" && (
                 <div className="rounded-xl border border-critical/25 bg-critical/10 px-4 py-4 text-sm">
                   <p className="text-critical">
-                    Something went wrong sending your request — but don&apos;t retype it. Click below and
+                    Something went wrong sending your request - but don&apos;t retype it. Click below and
                     it opens in your email app, already written.
                   </p>
                   <a
@@ -718,9 +705,7 @@ export function PersonalIntake() {
   );
 }
 
-/* ————————————————————————————————————————————————
-   FULL LANDING
-—————————————————————————————————————————————————— */
+// FULL LANDING
 
 export function PersonalLanding() {
   return (

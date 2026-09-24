@@ -10,8 +10,8 @@ const columns: { heading: string; links: FooterLink[] }[] = [
   {
     heading: "Products",
     links: [
-      { label: "MyPentest — automated pentesting", href: "/mypentest" },
-      { label: "MyRecon — reconnaissance", href: MYRECON_URL, external: true },
+      { label: "MyPentest - automated pentesting", href: "/mypentest" },
+      { label: "MyRecon - reconnaissance", href: MYRECON_URL, external: true },
       { label: "Example MyPentest report", href: "/mypentest/example-report" },
       { label: "All products", href: "/products" },
       { label: "Pricing", href: "/pricing" },

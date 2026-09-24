@@ -15,8 +15,7 @@ export default function ResponsibleDisclosurePage() {
         <h2>We welcome reports</h2>
         <p className="mt-3">
           We hold ourselves to the standard we test others against. If you believe you have
-          found a security vulnerability in a BugSnaps-owned system, we want to hear from you —
-          and we will treat your report with the respect we&apos;d expect for our own.
+          found a security vulnerability in a BugSnaps-owned system, we want to hear from you - and we will treat your report with the respect we&apos;d expect for our own.
         </p>
       </section>
       <section>

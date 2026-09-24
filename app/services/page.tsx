@@ -20,7 +20,7 @@ export default function ServicesPage() {
         crumbs={[{ name: "Services", path: "/services" }]}
         eyebrow="Services"
         title="Expert-led security testing, scoped to what you've built."
-        lead="When automation isn't enough — business logic, compliance evidence, complex permissions — our testers take it from there. Every engagement is quoted in writing before it starts."
+        lead="When automation isn't enough - business logic, compliance evidence, complex permissions - our testers take it from there. Every engagement is quoted in writing before it starts."
       />
 
       <Section labelledBy="list-title">
@@ -80,7 +80,7 @@ export default function ServicesPage() {
           <div>
             <h2 id="individuals-title" className="text-lg font-semibold tracking-tight">For individuals: BugSnaps Personal</h2>
             <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted">
-              Find the accounts and data-broker listings tied to your identity, and remove them — consent-first, using
+              Find the accounts and data-broker listings tied to your identity, and remove them - consent-first, using
               official platform processes.
             </p>
           </div>

@@ -2,7 +2,7 @@
 
 MyRecon (`https://www.myrecon.xyz/`, repo `4ryanwalia/Myrecon`) is an
 independent product and site. This file records what each side links to, and
-the exact additions MyRecon still needs — it lives in another repository, so it
+the exact additions MyRecon still needs - it lives in another repository, so it
 isn't changed from here.
 
 ## BugSnaps → MyRecon (done, in this repo)
@@ -12,7 +12,7 @@ All links use the canonical `https://www.myrecon.xyz/` (the apex
 
 - Navbar: "MyRecon ↗" on every page
 - Homepage hero: "Explore MyRecon" (secondary CTA); homepage Products section
-- Footer: "MyRecon — reconnaissance", plus the brand line on every page
+- Footer: "MyRecon - reconnaissance", plus the brand line on every page
 - `/products`: MyRecon card and `ItemList` structured data
 - `/about`: reconnaissance paragraph
 - `/personal`: existing "Open myrecon.xyz" link
@@ -22,7 +22,7 @@ All links use the canonical `https://www.myrecon.xyz/` (the apex
 
 `about.html`, `services.html`, `contact.html` and `founder.html` link to
 `https://bugsnaps.in`, and `founder.html` has `worksFor: BugSnaps` in its
-schema. Good — but none of it is sitewide.
+schema. Good - but none of it is sitewide.
 
 ## MyRecon → BugSnaps (to add)
 

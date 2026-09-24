@@ -61,8 +61,8 @@ const securityHeaders = [
 /*
  * MyPentest signs people in with Firebase (Google, GitHub, email) and keeps
  * their history in the Realtime Database. Only the app (/mypentest/app) gets the
- * origins that needs — Identity Toolkit and token endpoints, Google's gapi
- * loader, the project's auth-handler frame, the database hosts — and a COOP
+ * origins that needs - Identity Toolkit and token endpoints, Google's gapi
+ * loader, the project's auth-handler frame, the database hosts - and a COOP
  * that lets the sign-in popup report back (with "same-origin" the popup is cut
  * off from the page and sign-in never completes). The MyPentest engine itself
  * is reached through /mypentest/api on this origin, so it needs no entry.

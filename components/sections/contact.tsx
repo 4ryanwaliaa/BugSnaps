@@ -8,7 +8,7 @@ const inputClasses =
   "w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-[15px] text-foreground placeholder:text-muted-2 " +
   "transition-colors focus:border-accent/50 focus:bg-white/[0.05] focus:outline-none";
 
-// Web3Forms relays submissions to the BugSnaps inbox — no backend needed.
+// Web3Forms relays submissions to the BugSnaps inbox - no backend needed.
 // The access key is public by design (it only lets people send us mail);
 // manage it at web3forms.com.
 const FORM_ENDPOINT = "https://api.web3forms.com/submit";
@@ -21,7 +21,7 @@ const TOPICS: { value: string; label: string }[] = [
   { value: "network", label: "Network pentest" },
   { value: "cloud", label: "Cloud security review" },
   { value: "code", label: "Source code review" },
-  { value: "enterprise", label: "MyPentest Enterprise — book a consultation" },
+  { value: "enterprise", label: "Manual pentest alongside MyPentest - book a consultation" },
   { value: "mypentest-billing", label: "MyPentest plans and billing" },
   { value: "mypentest-support", label: "MyPentest support" },
   { value: "other", label: "Something else" },
@@ -43,7 +43,7 @@ export function ContactForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget).entries()) as Record<string, string>;
-    // The name ends up in an email subject line — never let it carry
+    // The name ends up in an email subject line - never let it carry
     // newlines (header injection) or unbounded length.
     const safeName = (data.name || "").replace(/[\r\n]+/g, " ").trim().slice(0, 80);
     const topicLabel = TOPICS.find((t) => t.value === data.topic)?.label ?? "General";
@@ -68,7 +68,7 @@ export function ContactForm() {
     } catch {
       // Fallback: hand the visitor a prefilled email so the message
       // still reaches us even if the form relay is down.
-      const subject = `${topicLabel} — inquiry from ${safeName || "the website"}`;
+      const subject = `${topicLabel} - inquiry from ${safeName || "the website"}`;
       const lines = [
         `Name: ${data.name || "-"}`,
         `Work email: ${data.email || "-"}`,
@@ -94,13 +94,13 @@ export function ContactForm() {
             </span>
             <h2 className="mt-5 text-xl font-semibold tracking-tight">Message received</h2>
             <p className="mt-2 max-w-sm text-[15px] leading-relaxed text-muted">
-              Thanks — we&apos;ll get back to you within one business day.
+              Thanks - we&apos;ll get back to you within one business day.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <h2 className="text-lg font-semibold tracking-tight">Send us a message</h2>
-            {/* Honeypot — invisible to humans; bots that tick it are dropped. */}
+            {/* Honeypot - invisible to humans; bots that tick it are dropped. */}
             <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
@@ -135,7 +135,7 @@ export function ContactForm() {
                 rows={5}
                 required
                 maxLength={5000}
-                placeholder="What are you building, what's your stack, and what's driving the need — a customer requirement, compliance, or peace of mind?"
+                placeholder="What are you building, what's your stack, and what's driving the need - a customer requirement, compliance, or peace of mind?"
                 className={inputClasses}
               />
             </div>
@@ -143,7 +143,7 @@ export function ContactForm() {
             {status === "error" && (
               <div role="alert" className="rounded-xl border border-critical/25 bg-critical/10 px-4 py-4 text-sm">
                 <p className="text-critical">
-                  Something went wrong sending your message — but don&apos;t retype it. Click below and it opens in your
+                  Something went wrong sending your message - but don&apos;t retype it. Click below and it opens in your
                   email app, already written and addressed to us.
                 </p>
                 <a

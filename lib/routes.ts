@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 /*
  * Every indexable page on the site, in one list. The sitemap is generated from
- * it, so a new page appears in the sitemap by being added here — and a page
+ * it, so a new page appears in the sitemap by being added here - and a page
  * that isn't a real, indexable URL (the signed-in app, the API) is simply
  * never added. `priority` is relative importance, not a ranking promise.
  */

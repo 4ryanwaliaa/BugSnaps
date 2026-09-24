@@ -1,14 +1,14 @@
-# BugSnaps — Find. Fix. Fortify.
+# BugSnaps - Find. Fix. Fortify.
 
-The BugSnaps website (bugsnaps.in): the company, its products — **MyPentest**
+The BugSnaps website (bugsnaps.in): the company, its products - **MyPentest**
 (automated penetration testing, hosted here at `/mypentest`) and **MyRecon**
-(reconnaissance, its own site at myrecon.xyz) — and its expert-led services.
+(reconnaissance, its own site at myrecon.xyz) - and its expert-led services.
 
 ## Stack
 
 - **Next.js 15** (App Router) + **TypeScript**, statically rendered except the MyPentest API proxy
-- **Tailwind CSS v4** — design tokens in `app/globals.css`
-- **Firebase Auth + Realtime Database** (client SDK, lazy-loaded) — MyPentest sign-in and history
+- **Tailwind CSS v4** - design tokens in `app/globals.css`
+- **Firebase Auth + Realtime Database** (client SDK, lazy-loaded) - MyPentest sign-in and history
 - **Lucide** icons; Framer Motion only on `/personal`
 
 ```bash
@@ -23,7 +23,7 @@ npm run build    # production build
 | --- | --- |
 | Site URL, org details, metadata builder, JSON-LD helpers | `lib/site.ts` |
 | Product line (nav, footer, /products, homepage) | `lib/products.ts` |
-| **Pricing and plans — the only place prices/limits are defined** | `lib/plans.ts` |
+| **Pricing and plans - the only place prices/limits are defined** | `lib/plans.ts` |
 | Indexable pages → sitemap | `lib/routes.ts` (+ blog posts from `lib/blog.ts`) |
 | Service pages content | `lib/services.ts` → `components/site/service-page.tsx` |
 | Comparison pages content | `lib/compare.ts` → `components/site/compare-page.tsx` |
@@ -73,8 +73,7 @@ canonical (`https://bugsnaps.in/...`), Open Graph and Twitter card.
 Structured data: Organization + WebSite (layout), SoftwareApplication (MyPentest),
 Service (service pages), FAQPage (only where a visible FAQ exists),
 Article (blog), BreadcrumbList (inner pages), ItemList (products).
-`www.bugsnaps.in` permanently redirects to `bugsnaps.in` (`next.config.ts`) —
-don't also configure the opposite redirect in Vercel, or they will loop.
+`www.bugsnaps.in` permanently redirects to `bugsnaps.in` (`next.config.ts`) - don't also configure the opposite redirect in Vercel, or they will loop.
 
 MyRecon backlinks: see `docs/MYRECON-BACKLINKS.md`.
 

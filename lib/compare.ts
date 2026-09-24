@@ -70,8 +70,8 @@ export const ROWS: Row[] = [
     dimension: "Business-logic flaws",
     values: {
       scanner: "Not detected.",
-      mypentest: "Flags tampering surfaces (e.g. client-controlled prices or roles) as leads — it can't judge intent.",
-      manual: "Yes — this is where human testers earn their keep.",
+      mypentest: "Flags tampering surfaces (e.g. client-controlled prices or roles) as leads - it can't judge intent.",
+      manual: "Yes - this is where human testers earn their keep.",
       bugsnaps: "Yes, including chained attack paths.",
     },
   },
@@ -158,8 +158,8 @@ export const comparePages: ComparePage[] = [
       {
         heading: "Scanners match; MyPentest tests",
         paragraphs: [
-          "A typical vulnerability scanner compares what it sees — a version string, a header, a response pattern — against a database of known issues. That's fast and useful for known CVEs, and it's also where most false positives come from.",
-          "MyPentest maps the application first and then tests the surface it found. Injection checks compare a baseline, a probe and a control response before reporting; access-control checks sign in as two of your test accounts and confirm one can read the other's record — twice — before calling it a finding.",
+          "A typical vulnerability scanner compares what it sees - a version string, a header, a response pattern - against a database of known issues. That's fast and useful for known CVEs, and it's also where most false positives come from.",
+          "MyPentest maps the application first and then tests the surface it found. Injection checks compare a baseline, a probe and a control response before reporting; access-control checks sign in as two of your test accounts and confirm one can read the other's record - twice - before calling it a finding.",
         ],
       },
       {
@@ -171,7 +171,7 @@ export const comparePages: ComparePage[] = [
     ],
     verdict: [
       { title: "Choose a scanner", body: "for broad, continuous inventory of known vulnerabilities across infrastructure." },
-      { title: "Choose MyPentest", body: "to find and confirm exploitable weaknesses in a web app and its API — access control, injection, secrets, sessions — with evidence." },
+      { title: "Choose MyPentest", body: "to find and confirm exploitable weaknesses in a web app and its API - access control, injection, secrets, sessions - with evidence." },
     ],
   },
   {
@@ -208,7 +208,7 @@ export const comparePages: ComparePage[] = [
     path: "/compare/automated-vs-manual-penetration-testing",
     metaTitle: "Automated vs Manual Penetration Testing",
     metaDescription:
-      "Automated vs manual penetration testing: what each finds, what each misses, how long each takes, and how to combine them — from a company that does both.",
+      "Automated vs manual penetration testing: what each finds, what each misses, how long each takes, and how to combine them - from a company that does both.",
     h1: "Automated vs manual penetration testing.",
     lead:
       "They're not competitors. Automation gives you coverage and frequency; people give you judgement. Here's where each one wins.",
@@ -217,7 +217,7 @@ export const comparePages: ComparePage[] = [
       {
         heading: "What automation does well",
         paragraphs: [
-          "Automated testing is consistent, fast and cheap to repeat. It's very good at finding exposed secrets and files, misconfigurations, missing controls, known vulnerable components, many injection flaws, and — when it can sign in as test accounts — broken object-level access control.",
+          "Automated testing is consistent, fast and cheap to repeat. It's very good at finding exposed secrets and files, misconfigurations, missing controls, known vulnerable components, many injection flaws, and - when it can sign in as test accounts - broken object-level access control.",
         ],
       },
       {
@@ -229,7 +229,7 @@ export const comparePages: ComparePage[] = [
       {
         heading: "How to combine them",
         paragraphs: [
-          "Run automated testing on every release and fix what it finds. Schedule a manual test before major launches, for compliance, or when you handle payments or sensitive data — and let the testers spend their time on the parts automation can't reach.",
+          "Run automated testing on every release and fix what it finds. Schedule a manual test before major launches, for compliance, or when you handle payments or sensitive data - and let the testers spend their time on the parts automation can't reach.",
         ],
       },
     ],

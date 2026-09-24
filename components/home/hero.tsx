@@ -28,7 +28,7 @@ export function HomeHero() {
             Security testing that actually tests.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty">
-            BugSnaps finds the vulnerabilities an attacker would use — with MyPentest, our automated
+            BugSnaps finds the vulnerabilities an attacker would use - with MyPentest, our automated
             penetration test, and with our testers when you need a human on it.
           </p>
 
