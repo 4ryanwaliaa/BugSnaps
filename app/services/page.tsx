@@ -30,7 +30,7 @@ export default function ServicesPage() {
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {serviceSummaries.map((service) => (
             <li key={service.title} className="flex">
-              <article className="flex w-full flex-col rounded-2xl border border-white/[0.07] bg-surface p-6">
+              <article className="flex w-full flex-col spot rounded-2xl border border-white/[0.07] bg-surface p-6">
                 <h3 className="text-lg font-semibold tracking-tight">
                   {service.href ? (
                     <Link href={service.href} className="hover:text-accent">

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/site/page-parts";
 import { CookieConsent } from "@/components/site/cookie-consent";
+import { SpotlightTracker } from "@/components/ui/motion";
 import { SITE_URL, organizationJsonLd } from "@/lib/site";
 import "./globals.css";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
         </a>
         {children}
         <CookieConsent />
+        <SpotlightTracker />
       </body>
     </html>
   );

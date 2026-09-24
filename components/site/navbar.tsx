@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
+import { ScrollBeam } from "@/components/ui/motion";
 import { MYRECON_URL } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 import { cn } from "@/lib/utils";
@@ -93,7 +94,7 @@ export function Navbar() {
           </Link>
           <a
             href={newAssessmentUrl()}
-            className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-accent"
+            className="shine inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-accent"
           >
             Run MyPentest free
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -111,6 +112,7 @@ export function Navbar() {
           {open ? <X className="h-[22px] w-[22px]" /> : <Menu className="h-[22px] w-[22px]" />}
         </button>
       </nav>
+      <ScrollBeam />
 
       <div
         id="mobile-menu"

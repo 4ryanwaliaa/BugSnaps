@@ -176,6 +176,237 @@ select option:disabled {
   }
 }
 
+/* ─── Motion language ─────────────────────────────────────────────
+   One idea, used everywhere: a scanner passes over the page. Headlines
+   are uncovered by a beam, cards light up where the cursor probes them,
+   and the CTA band carries a radar sweep. All of it is transform, opacity
+   or clip-path, so it stays on the compositor, and all of it switches off
+   under prefers-reduced-motion. */
+
+/* Film grain: a still SVG noise tile, so it costs one paint. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Headline uncovered by a scanning beam. */
+@keyframes scan-uncover {
+  from {
+    clip-path: inset(-0.2em 100% -0.2em 0);
+  }
+  to {
+    clip-path: inset(-0.2em 0 -0.2em 0);
+  }
+}
+@keyframes scan-beam {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+.scan-reveal {
+  position: relative;
+}
+.scan-reveal > .scan-text {
+  display: block;
+  animation: scan-uncover 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+}
+.scan-reveal::after {
+  content: "";
+  position: absolute;
+  top: -0.1em;
+  bottom: -0.1em;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, #93c5fd 20%, #3b82f6 80%, transparent);
+  box-shadow:
+    0 0 12px 2px rgb(59 130 246 / 0.7),
+    0 0 42px 8px rgb(37 99 235 / 0.35);
+  pointer-events: none;
+  animation: scan-beam 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+}
+
+/* Staggered rise for hero copy: set --d on each element. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.rise {
+  animation: rise 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) var(--d, 0s) both;
+}
+
+/* Blinking terminal caret. */
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.2em;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: caret 1.1s steps(1) infinite;
+}
+
+/* Cursor spotlight on cards. SpotlightTracker writes --mx / --my. */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::before,
+.spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.spot::before {
+  z-index: -1;
+  background: radial-gradient(
+    520px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(59 130 246 / 0.09),
+    transparent 42%
+  );
+}
+.spot::after {
+  padding: 1px;
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(147 197 253 / 0.55),
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.spot:hover::before,
+.spot:hover::after {
+  opacity: 1;
+}
+
+/* Light sweep across a button on hover. */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.28) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+  pointer-events: none;
+}
+.shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* Radar sweep for the CTA band. */
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.radar {
+  background: conic-gradient(from 0deg, transparent 0deg, rgb(59 130 246 / 0.2) 40deg, transparent 42deg);
+  animation: radar-spin 7s linear infinite;
+}
+.radar-rings {
+  background:
+    radial-gradient(circle, transparent 0 22%, rgb(255 255 255 / 0.05) 22.2% 22.5%, transparent 22.7%),
+    radial-gradient(circle, transparent 0 44%, rgb(255 255 255 / 0.05) 44.2% 44.5%, transparent 44.7%),
+    radial-gradient(circle, transparent 0 66%, rgb(255 255 255 / 0.04) 66.2% 66.5%, transparent 66.7%);
+}
+
+/* Endless ticker of what MyPentest checks. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.edge-fade {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* A horizontal scan line drifting down the page header. */
+@keyframes header-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(1000%);
+  }
+}
+.header-scan {
+  background: linear-gradient(to bottom, transparent, rgb(59 130 246 / 0.06), transparent);
+  animation: header-scan 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-reveal > .scan-text,
+  .rise,
+  .caret::after,
+  .radar,
+  .marquee-track,
+  .header-scan {
+    animation: none !important;
+  }
+  .scan-reveal::after,
+  .header-scan,
+  .shine::after {
+    display: none;
+  }
+}
+
+@media print {
+  body::before {
+    display: none;
+  }
+}
+
 /* Details summaries: no default marker (each summary draws its own). */
 summary::-webkit-details-marker {
   display: none;

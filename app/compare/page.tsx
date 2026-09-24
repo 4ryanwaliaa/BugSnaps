@@ -37,7 +37,7 @@ export default function CompareHub() {
             <li key={c.slug} className="flex">
               <Link
                 href={versusPath(c.slug)}
-                className="group flex w-full flex-col rounded-2xl border border-white/[0.07] bg-surface p-6 transition-colors hover:border-white/15"
+                className="group flex w-full flex-col spot rounded-2xl border border-white/[0.07] bg-surface p-6 transition-colors hover:border-white/15"
               >
                 <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-2">{c.category}</span>
                 <span className="mt-2 text-[17px] font-semibold">
@@ -75,7 +75,7 @@ export default function CompareHub() {
             <li key={page.slug} className="flex">
               <Link
                 href={page.path}
-                className="group flex w-full flex-col rounded-2xl border border-white/[0.07] bg-surface p-6 transition-colors hover:border-white/15"
+                className="group flex w-full flex-col spot rounded-2xl border border-white/[0.07] bg-surface p-6 transition-colors hover:border-white/15"
               >
                 <span className="text-[15px] font-semibold">{page.metaTitle}</span>
                 <span className="mt-2 flex-1 text-sm leading-relaxed text-muted">{page.lead}</span>

@@ -55,7 +55,7 @@ export default function CareersPage() {
           {values.map((value) => (
             <div
               key={value.title}
-              className="rounded-2xl border border-white/[0.07] bg-surface p-6"
+              className="spot rounded-2xl border border-white/[0.07] bg-surface p-6"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] text-accent">
                 <value.icon className="h-4.5 w-4.5" strokeWidth={1.75} />

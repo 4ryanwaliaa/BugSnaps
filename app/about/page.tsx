@@ -69,7 +69,7 @@ export default function AboutPage() {
         </Prose>
         <ul className="mt-6 grid max-w-3xl gap-4 sm:grid-cols-3">
           {PRINCIPLES.map((p) => (
-            <li key={p.title} className="rounded-2xl border border-white/[0.07] bg-surface p-5">
+            <li key={p.title} className="spot rounded-2xl border border-white/[0.07] bg-surface p-5">
               <h3 className="text-[15px] font-semibold">{p.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
             </li>

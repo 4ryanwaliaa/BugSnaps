@@ -88,6 +88,8 @@ export function PageHeader({
   return (
     <header className="relative overflow-hidden border-b border-white/[0.05]">
       <div aria-hidden="true" className="dot-grid absolute inset-0 opacity-70" />
+      <div aria-hidden="true" className="header-scan absolute inset-x-0 top-0 h-20" />
+      <div aria-hidden="true" className="absolute -top-40 left-1/3 h-[380px] w-[620px] rounded-full bg-primary/[0.08] blur-[130px]" />
       <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-14 sm:pt-36 sm:pb-20 lg:px-8">
         <Breadcrumbs items={crumbs} />
         {eyebrow && (
@@ -95,14 +97,22 @@ export function PageHeader({
         )}
         <h1
           className={cn(
-            "max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight text-balance sm:text-5xl",
+            "scan-reveal max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight text-balance sm:text-5xl",
             eyebrow ? "mt-4" : "mt-8",
           )}
         >
-          {title}
+          <span className="scan-text">{title}</span>
         </h1>
-        {lead && <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty">{lead}</p>}
-        {children && <div className="mt-8">{children}</div>}
+        {lead && (
+          <p className="rise mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty" style={{ ["--d" as string]: "0.5s" }}>
+            {lead}
+          </p>
+        )}
+        {children && (
+          <div className="rise mt-8" style={{ ["--d" as string]: "0.65s" }}>
+            {children}
+          </div>
+        )}
       </div>
     </header>
   );
@@ -187,7 +197,11 @@ export function CtaBand({
   return (
     <section aria-labelledby="cta-title" className="py-16 sm:py-24">
       <Container>
-        <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-surface px-6 py-14 text-center sm:px-12 sm:py-16">
+        <div className="spot relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-surface px-6 py-14 text-center sm:px-12 sm:py-16">
+          <div aria-hidden="true" className="pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[900px] -translate-x-1/2 -translate-y-1/2">
+            <div className="radar-rings absolute inset-0 rounded-full" />
+            <div className="radar absolute inset-0 rounded-full [mask-image:radial-gradient(circle,black_30%,transparent_68%)]" />
+          </div>
           <div
             aria-hidden="true"
             className="absolute -top-32 left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.16] blur-[110px]"
@@ -200,7 +214,7 @@ export function CtaBand({
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={newAssessmentUrl()}
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
+                className="shine inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
               >
                 Start your free pentest
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

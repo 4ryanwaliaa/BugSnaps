@@ -17,7 +17,7 @@ export function HomeProducts() {
           const href = product.id === "mypentest" ? newAssessmentUrl() : product.href;
           return (
             <li key={product.id} className="flex">
-              <article className="card-hover flex w-full flex-col rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
+              <article className="spot card-hover flex w-full flex-col rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-accent">
                     <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SiteShell } from "@/components/site/page-parts";
 import { HomeHero } from "@/components/home/hero";
 import { HomeProducts } from "@/components/home/products";
+import { HomeHowItRuns, HomeMarquee, HomeReport, HomeStats } from "@/components/home/sections";
 import { HomeWhy } from "@/components/home/why";
 import { HomeResearch } from "@/components/home/research";
 import { HomeClosing } from "@/components/home/closing";
@@ -21,6 +22,10 @@ export default function Home() {
     <SiteShell>
       <LegacyHashRedirect />
       <HomeHero />
+      <HomeMarquee />
+      <HomeHowItRuns />
+      <HomeStats />
+      <HomeReport />
       <HomeProducts />
       <HomeWhy />
       <HomeResearch />

@@ -179,7 +179,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
       <Section labelledBy="glance-title">
         <SectionTitle id="glance-title" eyebrow="At a glance" title="Two different tools for two different jobs." />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
+          <div className="spot rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
             <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-accent">MyPentest · by BugSnaps</p>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">
               A hosted automated penetration test for web apps and their APIs: discovery, {ENGINE_FACTS.checks} passive and safe-active
@@ -190,7 +190,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
               <span className="text-muted">{them.mypentestBestFor}</span>
             </p>
           </div>
-          <div className="rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
+          <div className="spot rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
             <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-2">
               {them.name} · {them.vendor}
             </p>
@@ -232,7 +232,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
       <Section labelledBy="price-title" className="border-t border-white/[0.05] bg-surface/40">
         <SectionTitle id="price-title" eyebrow="Pricing" title="What each one costs." />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <div className="flex flex-col rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
+          <div className="flex flex-col spot rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
             <h3 className="text-lg font-semibold tracking-tight">MyPentest</h3>
             <ul className="mt-4 flex-1 divide-y divide-white/[0.06]">
               {plans.map((plan) => (
@@ -248,7 +248,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
-          <div className="flex flex-col rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
+          <div className="flex flex-col spot rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
             <h3 className="text-lg font-semibold tracking-tight">{them.name}</h3>
             <ul className="mt-4 flex-1 space-y-3 text-[14.5px] leading-relaxed text-muted">
               {them.pricing.map((line) => (
@@ -275,7 +275,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
       <Section labelledBy="choose-title" className="border-t border-white/[0.05]">
         <SectionTitle id="choose-title" eyebrow="The verdict" title="Which one should you choose?" />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
+          <div className="spot rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
             <h3 className="text-base font-semibold">Choose MyPentest if…</h3>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">{them.chooseUs}</p>
             <a href={newAssessmentUrl()} className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
@@ -283,7 +283,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           </div>
-          <div className="rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
+          <div className="spot rounded-2xl border border-white/[0.07] bg-surface p-6 sm:p-7">
             <h3 className="text-base font-semibold">Choose {them.name} if…</h3>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">{them.chooseThem}</p>
           </div>

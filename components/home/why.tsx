@@ -1,5 +1,6 @@
 import { Section, SectionTitle } from "@/components/site/page-parts";
 import { ENGINE_FACTS } from "@/lib/mypentest";
+import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 
 const POINTS = [
   {
@@ -24,14 +25,15 @@ export function HomeWhy() {
   return (
     <Section labelledBy="why-title" className="border-t border-white/[0.05]">
       <SectionTitle id="why-title" eyebrow="Why BugSnaps" title="Testing you can act on." />
-      <ul className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07] sm:mt-12 sm:grid-cols-2">
-        {POINTS.map((point) => (
-          <li key={point.title} className="bg-background p-6 sm:p-8">
-            <h3 className="text-base font-semibold tracking-tight">{point.title}</h3>
+      <RevealGroup className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07] sm:mt-12 sm:grid-cols-2">
+        {POINTS.map((point, i) => (
+          <RevealItem key={point.title} className="spot h-full bg-background p-6 sm:p-8">
+            <p className="font-mono text-[12px] text-accent">{String(i + 1).padStart(2, "0")}</p>
+            <h3 className="mt-3 text-base font-semibold tracking-tight">{point.title}</h3>
             <p className="mt-2 text-[15px] leading-relaxed text-muted">{point.body}</p>
-          </li>
+          </RevealItem>
         ))}
-      </ul>
+      </RevealGroup>
     </Section>
   );
 }

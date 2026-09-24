@@ -39,7 +39,7 @@ export function ServicePageView({ page }: { page: ServicePage }) {
         <SectionTitle id="tests-title" eyebrow="What we test" title="Scope, agreed in writing." />
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {page.tests.map((item) => (
-            <li key={item.title} className="rounded-2xl border border-white/[0.07] bg-surface p-6">
+            <li key={item.title} className="spot rounded-2xl border border-white/[0.07] bg-surface p-6">
               <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
             </li>
