@@ -53,6 +53,14 @@ export interface Plan {
   highlight: boolean;
 }
 
+/**
+ * The engine's own ceilings (MAX_SCAN_TARGETS, MAX_CRAWL_PAGES in the
+ * scanner's web/app.py). A plan set to one has no plan cap on that count;
+ * only the scan's time limit bounds it.
+ */
+export const ENGINE_MAX_TARGETS = 10_000;
+export const ENGINE_MAX_PAGES = 50_000;
+
 const LIMITS = {
   targetsPerScan: 200,
   crawlPages: 500,
@@ -106,6 +114,8 @@ export const FALLBACK_PLANS: Plan[] = [
     ],
     highlight: false,
     ...LIMITS,
+    targetsPerScan: 300,
+    crawlPages: ENGINE_MAX_PAGES,
   },
   {
     id: "plus",
@@ -123,6 +133,8 @@ export const FALLBACK_PLANS: Plan[] = [
     perks: ["Everything in Free", "Early access to new checks and features", "Premium support"],
     highlight: false,
     ...LIMITS,
+    targetsPerScan: ENGINE_MAX_TARGETS,
+    crawlPages: ENGINE_MAX_PAGES,
   },
   {
     id: "pro",
@@ -144,6 +156,8 @@ export const FALLBACK_PLANS: Plan[] = [
     ],
     highlight: true,
     ...LIMITS,
+    targetsPerScan: ENGINE_MAX_TARGETS,
+    crawlPages: ENGINE_MAX_PAGES,
   },
 ];
 
@@ -360,6 +374,15 @@ export function hiddenLabel(severities: Severity[]): string | null {
   return `${capitalise(joinWords(hidden.map((s) => LABEL[s])))} findings counted, detailed on a higher plan`;
 }
 
+function sizeLabel(plan: Plan): string {
+  const urls = plan.targetsPerScan >= ENGINE_MAX_TARGETS;
+  const pages = plan.crawlPages >= ENGINE_MAX_PAGES;
+  if (urls && pages) return "No cap on URLs or discovered pages per scan";
+  if (pages) return `Up to ${plan.targetsPerScan} URLs per scan, no cap on discovered pages`;
+  if (urls) return `No cap on URLs, up to ${plan.crawlPages} discovered pages per scan`;
+  return `Up to ${plan.targetsPerScan} URLs and ${plan.crawlPages} discovered pages per scan`;
+}
+
 /** Every line a plan card lists, derived from the numbers so copy can't drift. */
 export function planFeatures(plan: Plan): string[] {
   const hidden = hiddenLabel(plan.severities);
@@ -371,7 +394,7 @@ export function planFeatures(plan: Plan): string[] {
     ...(hidden ? [hidden] : []),
     historyLabel(plan.history),
     exportsLabel(plan.exports),
-    `Up to ${plan.targetsPerScan} URLs and ${plan.crawlPages} discovered pages per scan`,
+    sizeLabel(plan),
     ...(plan.manualTesting ? ["A custom manual penetration test by BugSnaps testers"] : []),
     ...plan.perks,
   ];
