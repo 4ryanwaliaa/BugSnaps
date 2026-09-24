@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { competitors, versusPath } from "@/lib/competitors";
 
 /*
  * Every indexable page on the site, in one list. The sitemap is generated from
@@ -36,6 +37,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/compare/mypentest-vs-vulnerability-scanners", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/bugsnaps-vs-traditional-pentest", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/automated-vs-manual-penetration-testing", changeFrequency: "monthly", priority: 0.6 },
+  ...competitors.map((c) => ({ path: versusPath(c.slug), changeFrequency: "monthly" as const, priority: 0.7 })),
 
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },

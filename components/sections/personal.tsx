@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { MYRECON_URL } from "@/lib/site";
 import {
   ArrowRight,
   Search,
@@ -348,7 +349,7 @@ export function PersonalWhatWeFind() {
             </p>
           </div>
           <a
-            href="https://www.myrecon.xyz"
+            href={MYRECON_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/[0.1]"

@@ -1,5 +1,5 @@
 # Deploy only the marketing site. Vercel falls back to .gitignore when this
-# file is absent, but relying on that is fragile — an explicit list keeps
+# file is absent, but relying on that is fragile - an explicit list keeps
 # unrelated projects and local business documents out of the deployment.
 
 # Separate OSINT app (own Flask/Android project, ~113MB, and a local

@@ -1,9 +1,8 @@
 /*
- * Comparison pages. They compare categories of testing, not named competitors:
- * we can state facts about MyPentest and BugSnaps engagements, and describe
- * what the categories *typically* do, but we will not publish claims about a
- * specific third-party product we haven't verified. A competitor-specific
- * page gets added only with sourced, checkable facts.
+ * Category comparison pages: kinds of testing, not named products. We state
+ * facts about MyPentest and BugSnaps engagements and describe what categories
+ * *typically* do. Named-competitor pages live in lib/competitors.ts, and only
+ * with sourced, dated facts.
  */
 
 export type ColumnId = "scanner" | "mypentest" | "manual" | "bugsnaps";
@@ -99,7 +98,7 @@ export const ROWS: Row[] = [
       scanner: "Minutes to hours.",
       mypentest: "Minutes to an hour for a typical small app.",
       manual: "Days to weeks, plus scheduling.",
-      bugsnaps: "Typically 5–12 testing days, scoped up front.",
+      bugsnaps: "Typically 5-12 testing days, scoped up front.",
     },
   },
   {

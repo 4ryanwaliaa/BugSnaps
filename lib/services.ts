@@ -86,7 +86,7 @@ const ENGAGEMENT_FAQ: ServiceFaq[] = [
   {
     question: "How long does an engagement take?",
     answer:
-      "Most engagements run 5–12 testing days depending on scope, with the report delivered within 5 business days of testing finishing. Exact dates are agreed in the scoping document before you commit.",
+      "Most engagements run 5-12 testing days depending on scope, with the report delivered within 5 business days of testing finishing. Exact dates are agreed in the scoping document before you commit.",
   },
   {
     question: "Will testing affect production?",

@@ -29,7 +29,7 @@ next-env.d.ts
 # local tooling
 .claude/
 
-# myrecon OSINT tool — a separate app (own Flask/Android project, certs,
+# myrecon OSINT tool - a separate app (own Flask/Android project, certs,
 # build artifacts). Deploys on its own to Render/Vercel; not part of this site.
 /Recon-main/
 
@@ -39,6 +39,6 @@ next-env.d.ts
 # Local business documents: outreach trackers and other spreadsheets.
 *.xlsx
 
-# Client engagement material (reports, findings, notes). Confidential —
+# Client engagement material (reports, findings, notes). Confidential -
 # never in this public repository.
 /clients/

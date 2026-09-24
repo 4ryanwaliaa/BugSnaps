@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/site/navbar";
-import { Footer } from "@/components/site/footer";
+import { Footer, type FooterBrand } from "@/components/site/footer";
 import { breadcrumbJsonLd } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 import { cn } from "@/lib/utils";
@@ -18,14 +18,22 @@ export function JsonLd({ data }: { data: unknown }) {
 }
 
 /** Navbar, main landmark, footer. Every public page uses it. */
-export function SiteShell({ children, className }: { children: ReactNode; className?: string }) {
+export function SiteShell({
+  children,
+  className,
+  footer = "bugsnaps",
+}: {
+  children: ReactNode;
+  className?: string;
+  footer?: FooterBrand;
+}) {
   return (
     <>
       <Navbar />
       <main id="main" className={className}>
         {children}
       </main>
-      <Footer />
+      <Footer brand={footer} />
     </>
   );
 }
