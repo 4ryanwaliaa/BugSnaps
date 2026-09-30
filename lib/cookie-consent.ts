@@ -1,7 +1,7 @@
 export type CookieConsentChoice = "all" | "essential";
 
 export const COOKIE_CONSENT_KEY = "bugsnaps:cookie-consent:v1";
-export const PRICING_CYCLE_KEY = "bugsnaps:pricing-cycle";
+const LEGACY_PRICING_CYCLE_KEY = "bugsnaps:pricing-cycle";
 export const COOKIE_CONSENT_CHANGE_EVENT = "bugsnaps:cookie-consent-change";
 export const COOKIE_SETTINGS_EVENT = "bugsnaps:open-cookie-settings";
 
@@ -17,7 +17,7 @@ export function readCookieConsent(): CookieConsentChoice | null {
 export function saveCookieConsent(choice: CookieConsentChoice): void {
   try {
     window.localStorage.setItem(COOKIE_CONSENT_KEY, choice);
-    if (choice === "essential") window.localStorage.removeItem(PRICING_CYCLE_KEY);
+    window.localStorage.removeItem(LEGACY_PRICING_CYCLE_KEY);
   } catch {
     // Private browsing or blocked storage: the choice still applies for this page.
   }

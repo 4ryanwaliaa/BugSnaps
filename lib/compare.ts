@@ -105,7 +105,7 @@ export const ROWS: Row[] = [
     dimension: "Cost model",
     values: {
       scanner: "Subscription or per-asset licence.",
-      mypentest: "Free plan; paid plans monthly, no auto-renewal.",
+      mypentest: "One free trial; ₹499 for 2 detailed scans with no expiry.",
       manual: "Per engagement.",
       bugsnaps: "Fixed quote per scope, in writing before work starts.",
     },

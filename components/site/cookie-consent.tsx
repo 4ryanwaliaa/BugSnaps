@@ -54,8 +54,8 @@ export function CookieConsent() {
         <h2 id="cookie-consent-title">Cookies, minus the fuss.</h2>
       </div>
       <p className={styles.description}>
-        Essential storage keeps sign-in and checkout working. With your OK, we’ll also remember whether you prefer
-        monthly or yearly prices. No ad tracking. <Link href="/privacy">Privacy details</Link>
+        Essential storage keeps sign-in and checkout working and remembers your cookie choice.
+        No ad tracking. <Link href="/privacy">Privacy details</Link>
       </p>
       <div className={styles.actions}>
         <button type="button" className={styles.accept} onClick={() => choose("all")}>Sounds good</button>

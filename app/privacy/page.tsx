@@ -64,8 +64,7 @@ export default function PrivacyPage() {
           cookies to our pages.
         </p>
         <p className="mt-3">
-          If you choose “Sounds good,” we also remember whether you prefer monthly or yearly prices on the public
-          pricing page. “Essential only” removes that saved preference. You can change your choice at any time through
+          We no longer store a billing-period preference. You can change your cookie choice at any time through
           Cookie settings in the footer. Firebase Authentication and Razorpay may use their own storage while you
           sign in or pay.
         </p>

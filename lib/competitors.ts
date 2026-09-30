@@ -61,7 +61,7 @@ export const MYPENTEST_CELLS: Record<FeatureId, Cell> = {
   hosted: { v: "yes", note: "Runs in the browser at bugsnaps.in" },
   freeStart: { v: "yes", note: "Free plan with the whole engine, no card" },
   noLlmKey: { v: "yes", note: "Nothing to configure" },
-  pricePublic: { v: "yes", note: "In rupees; a single paid scan or monthly plans" },
+  pricePublic: { v: "yes", note: "₹499 for 2 detailed scans, paid once with no expiry" },
   webDast: { v: "yes", note: `Crawl, then ${CHECKS} passive and safe-active checks` },
   authTesting: { v: "yes", note: "Signs in as your test accounts and checks one user can't read another's data" },
   apiTesting: { v: "yes", note: "Discovered REST, GraphQL and OpenAPI endpoints" },
