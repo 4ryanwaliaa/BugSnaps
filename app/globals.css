@@ -412,24 +412,35 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-/* Printing a MyPentest report (the app's "Print / PDF"). The page chrome goes,
-   the report stays, dark on white so it reads on paper. */
+/* PDF keeps the report's website palette, severity bars and green fix panels. */
 @media print {
+  @page { size: A4; margin: 12mm; }
+  html,
   body {
-    background: #fff !important;
-    color: #111 !important;
+    background: var(--color-background) !important;
+    color: var(--color-foreground) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   header.sticky,
   body > div > footer,
+  .pentest-workspace > footer,
+  aside[aria-labelledby="cookie-consent-title"],
   .print\:hidden {
     display: none !important;
   }
   main * {
-    color: #111 !important;
-    background: transparent !important;
-    border-color: #ccc !important;
     box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
   }
+  .pentest-workspace { min-height: 0; }
+  .pentest-report { font-size: 10pt; }
+  .pentest-report :is(h3, h4) { break-after: avoid; }
+  .pentest-report :is(code, li) { overflow-wrap: anywhere; }
+  .pentest-report code { white-space: pre-wrap; }
+  .pentest-report section[aria-labelledby="pdf-actnow"] li,
+  .pentest-report details > div > .rounded-lg { break-inside: avoid; }
   main details,
   main section,
   main header {
