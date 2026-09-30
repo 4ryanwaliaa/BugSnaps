@@ -323,7 +323,7 @@ export const competitors: Competitor[] = [
     ourPros: [
       "Free plan with the whole engine - no card, no trial clock",
       "Priced in rupees with UPI and Indian cards through Razorpay, and never auto-renews",
-      "A single full pentest for one payment (Strike) instead of a subscription",
+      "Two detailed pentests for ₹499, available until used",
       "Every finding carries a confidence level, and pattern matches alone are never reported",
     ],
     ourCons: [

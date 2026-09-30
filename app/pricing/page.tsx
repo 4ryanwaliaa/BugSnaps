@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Pricing - MyPentest Plans and Manual Pentesting",
   description:
-    "Start MyPentest free. Paid plans add more scans, saved history, downloads, critical and high findings in full, and a custom manual pentest - monthly, or yearly at 20% off, through Razorpay with no auto-renewal. Expert-led testing is quoted per scope.",
+    "Try MyPentest once for free. Plus costs ₹499 for 2 detailed scans with no expiry, full reports and no plan URL or discovery cap. Contact us for Enterprise manual audits.",
   path: "/pricing",
 });
 
@@ -22,7 +22,7 @@ export default async function PricingPage() {
         crumbs={[{ name: "Pricing", path: "/pricing" }]}
         eyebrow="Pricing"
         title="Start free. Pay when you need more."
-        lead={`${LAUNCH_OFFER.detail} Pay once for a single scan, or monthly, or yearly and save 20%, through Razorpay - nothing renews automatically.`}
+        lead={`${LAUNCH_OFFER.detail} Plus is ₹499 for 2 detailed scans that never expire. Buy another pack anytime through Razorpay.`}
       />
 
       <Section labelledBy="plans-title">
@@ -31,8 +31,9 @@ export default async function PricingPage() {
         </h2>
         <PricingPlans plans={plans} />
         <p className="mt-6 text-[13px] text-muted-2">
-          Scan allowances count over a rolling 30 days. Every plan runs all the checks; a plan decides which findings a
-          report shows in full, and findings above it are still counted in every report. Prices are in Indian rupees.
+          Free includes 1 scan per account, up to 200 URLs and 500 discovered pages. Plus includes all finding details
+          and report downloads, with no plan cap on URLs or discovery. Service limits of 10,000 tested URLs, 50,000
+          discovered pages and one hour per scan still apply. Prices are in Indian rupees.
         </p>
       </Section>
 

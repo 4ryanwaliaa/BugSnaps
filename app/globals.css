@@ -439,3 +439,32 @@ summary::-webkit-details-marker {
     break-after: avoid;
   }
 }
+
+/* MyPentest: small movements around real state changes, in the existing theme. */
+@keyframes assessment-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pentest-workspace form,
+.pentest-workspace details[open] > ul {
+  animation: assessment-enter 220ms ease-out both;
+}
+.pentest-workspace button,
+.pentest-workspace a[class*="rounded-full"] {
+  transition: background-color 160ms, border-color 160ms, transform 160ms;
+}
+.pentest-workspace button:not(:disabled):active,
+.pentest-workspace a[class*="rounded-full"]:active {
+  transform: scale(0.98);
+}
+.pentest-workspace :is(button, a, summary):focus-visible,
+.plan-card :is(button, a):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pentest-workspace *, .plan-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}

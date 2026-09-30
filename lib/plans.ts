@@ -51,6 +51,9 @@ export interface Plan {
   exports: ExportFormat[];
   perks: string[];
   highlight: boolean;
+  public: boolean;
+  lifetimeScans: boolean;
+  scanPack: boolean;
 }
 
 /**
@@ -61,104 +64,163 @@ export interface Plan {
 export const ENGINE_MAX_TARGETS = 10_000;
 export const ENGINE_MAX_PAGES = 50_000;
 
-const LIMITS = {
-  targetsPerScan: 200,
-  crawlPages: 500,
-  scanHours: 1,
-  currency: "INR",
-  periodDays: 30,
-  scanWindowDays: 30,
-};
-
 /** Mirrors plans.json. Used only when the database can't be read. */
 export const FALLBACK_PLANS: Plan[] = [
   {
-    id: "free",
-    order: 0,
-    title: "Free",
-    description: "Real automated pentests of a site you own, with medium and low findings in full.",
-    price: 0,
-    yearlyPrice: 0,
-    scans: 1,
-    concurrentScans: 1,
-    severities: ["medium", "low"],
-    manualTesting: false,
-    history: false,
-    exports: [],
-    perks: [
-      "All 56 checks, passive and safe-active",
-      "Evidence, CVSS and remediation for every finding shown",
-      "An email with the summary when a scan finishes",
+    "id": "free",
+    "order": 0,
+    "title": "Free",
+    "description": "One free automated pentest of a site you own, with limited URL testing and discovery.",
+    "price": 0,
+    "currency": "INR",
+    "periodDays": 30,
+    "scans": 1,
+    "scanWindowDays": 30,
+    "concurrentScans": 1,
+    "severities": [
+      "medium",
+      "low"
     ],
-    highlight: false,
-    ...LIMITS,
+    "targetsPerScan": 200,
+    "crawlPages": 500,
+    "scanHours": 1,
+    "manualTesting": false,
+    "history": false,
+    "perks": [
+      "Passive and safe-active testing",
+      "Evidence, CVSS and remediation for every finding shown",
+      "Optional email summary on completion"
+    ],
+    "yearlyPrice": 0,
+    "exports": [],
+    "highlight": false,
+    "public": true,
+    "lifetimeScans": true,
+    "scanPack": false
   },
   {
-    id: "starter",
-    order: 1,
-    title: "Strike",
-    description:
-      "One full pentest with nothing held back: every check, every finding including critical, and a PDF report. Pay once, no monthly plan.",
-    price: 39_900,
-    yearlyPrice: 0,
-    scans: 1,
-    concurrentScans: 1,
-    severities: [...SEVERITIES],
-    manualTesting: false,
-    history: true,
-    exports: [...EXPORT_FORMATS],
-    perks: [
+    "id": "starter",
+    "order": 1,
+    "title": "Strike",
+    "description": "One full pentest with nothing held back: every check, every finding including critical, and a PDF report. Pay once, no monthly plan.",
+    "price": 39900,
+    "currency": "INR",
+    "periodDays": 30,
+    "scans": 1,
+    "scanWindowDays": 30,
+    "concurrentScans": 1,
+    "severities": [
+      "critical",
+      "high",
+      "medium",
+      "low",
+      "info"
+    ],
+    "targetsPerScan": 300,
+    "crawlPages": 50000,
+    "scanHours": 1,
+    "manualTesting": false,
+    "history": true,
+    "perks": [
       "Everything Operator shows, for one scan",
       "Full attack-chain analysis, critical findings included",
-      "PDF, HTML, Markdown, JSON and SARIF downloads",
+      "PDF, HTML, Markdown, JSON and SARIF downloads"
     ],
-    highlight: false,
-    ...LIMITS,
-    targetsPerScan: 300,
-    crawlPages: ENGINE_MAX_PAGES,
+    "yearlyPrice": 0,
+    "exports": [
+      "json",
+      "md",
+      "html",
+      "sarif",
+      "pdf"
+    ],
+    "highlight": false,
+    "public": false,
+    "lifetimeScans": false,
+    "scanPack": false
   },
   {
-    id: "plus",
-    order: 2,
-    title: "Hunter",
-    description: "More scans, saved history and high-severity findings in full, for teams shipping regularly.",
-    price: 99_900,
-    yearlyPrice: 959_000,
-    scans: 5,
-    concurrentScans: 2,
-    severities: ["high", "medium", "low", "info"],
-    manualTesting: false,
-    history: true,
-    exports: ["json", "md", "html", "sarif"],
-    perks: ["Everything in Free", "Early access to new checks and features", "Premium support"],
-    highlight: false,
-    ...LIMITS,
-    targetsPerScan: ENGINE_MAX_TARGETS,
-    crawlPages: ENGINE_MAX_PAGES,
+    "id": "plus",
+    "order": 2,
+    "title": "Plus",
+    "description": "Two detailed automated pentests for one payment. Your scans stay available until used. Buy another pack whenever you need it.",
+    "price": 49900,
+    "currency": "INR",
+    "periodDays": 30,
+    "scans": 2,
+    "scanWindowDays": 30,
+    "concurrentScans": 2,
+    "severities": [
+      "critical",
+      "high",
+      "medium",
+      "low",
+      "info"
+    ],
+    "targetsPerScan": 10000,
+    "crawlPages": 50000,
+    "scanHours": 1,
+    "manualTesting": false,
+    "history": true,
+    "perks": [
+      "Unused scans carry over when you buy another pack",
+      "No monthly subscription or automatic charge",
+      "Optional email report on completion"
+    ],
+    "yearlyPrice": 0,
+    "exports": [
+      "json",
+      "md",
+      "html",
+      "sarif",
+      "pdf"
+    ],
+    "highlight": true,
+    "public": true,
+    "lifetimeScans": true,
+    "scanPack": true
   },
   {
-    id: "pro",
-    order: 3,
-    title: "Operator",
-    description: "Every finding at every severity, including critical, with PDF reports you can hand to clients.",
-    price: 199_900,
-    yearlyPrice: 1_919_000,
-    scans: 15,
-    concurrentScans: 2,
-    severities: [...SEVERITIES],
-    manualTesting: false,
-    history: true,
-    exports: [...EXPORT_FORMATS],
-    perks: [
+    "id": "pro",
+    "order": 3,
+    "title": "Operator",
+    "description": "Every finding at every severity, including critical, with PDF reports you can hand to clients.",
+    "price": 199900,
+    "currency": "INR",
+    "periodDays": 30,
+    "scans": 15,
+    "scanWindowDays": 30,
+    "concurrentScans": 2,
+    "severities": [
+      "critical",
+      "high",
+      "medium",
+      "low",
+      "info"
+    ],
+    "targetsPerScan": 10000,
+    "crawlPages": 50000,
+    "scanHours": 1,
+    "manualTesting": false,
+    "history": true,
+    "perks": [
       "Everything in Hunter",
       "Full attack-chain analysis, critical findings included",
-      "Priority premium support",
+      "Priority premium support"
     ],
-    highlight: true,
-    ...LIMITS,
-    targetsPerScan: ENGINE_MAX_TARGETS,
-    crawlPages: ENGINE_MAX_PAGES,
-  },
+    "yearlyPrice": 0,
+    "exports": [
+      "json",
+      "md",
+      "html",
+      "sarif",
+      "pdf"
+    ],
+    "highlight": false,
+    "public": false,
+    "lifetimeScans": false,
+    "scanPack": false
+  }
 ];
 
 /* ── Reading the catalog ─────────────────────────────────────── */
@@ -187,6 +249,9 @@ function planFrom(id: string, raw: Record<string, unknown>, base?: Plan): Plan {
   const perks = list(raw.perks)?.filter((p): p is string => typeof p === "string" && p.trim().length > 0);
   return {
     id,
+    public: typeof raw.public === "boolean" ? raw.public : fallback.public,
+    lifetimeScans: raw.lifetimeScans === true,
+    scanPack: raw.scanPack === true,
     order: num(raw.order, fallback.order),
     title: str(raw.title, fallback.title),
     description: str(raw.description, fallback.description),
@@ -224,13 +289,13 @@ export async function getPlans(): Promise<Plan[]> {
           .map(([id, value]) =>
             planFrom(id, value as Record<string, unknown>, FALLBACK_PLANS.find((p) => p.id === id)),
           );
-        if (plans.some((p) => p.price === 0)) return plans.sort((a, b) => a.order - b.order);
+        if (plans.some((p) => p.id === "free")) return plans.filter((p) => p.public).sort((a, b) => a.order - b.order);
       }
     }
   } catch {
     // The fallback below is the answer; a pricing page never renders empty.
   }
-  return FALLBACK_PLANS;
+  return FALLBACK_PLANS.filter((p) => p.public);
 }
 
 /**
@@ -248,6 +313,11 @@ export function withEngine(plan: Plan, engine?: EnginePlan): Plan {
     currency: engine.currency,
     periodDays: engine.period_days,
     scans: engine.max_scans,
+    lifetimeScans: engine.lifetime_scans,
+    scanPack: engine.scan_pack,
+    targetsPerScan: engine.max_targets_per_scan,
+    crawlPages: engine.max_crawl_pages,
+    scanHours: engine.scan_deadline_seconds / 3600,
     scanWindowDays: engine.scan_window_days,
     concurrentScans: engine.max_concurrent_scans,
     severities: SEVERITIES.filter((s) => engine.severities.includes(s)),
@@ -275,13 +345,6 @@ export function periodLabel(days: number): string {
   return days === 30 ? "month" : days === 365 ? "year" : `${days} days`;
 }
 
-/** What one payment costs on a cycle, or null when the plan isn't sold that way. */
-export function cyclePrice(plan: Pick<Plan, "price" | "yearlyPrice">, cycle: Cycle): number | null {
-  if (plan.price === 0) return null;
-  if (cycle === "monthly") return plan.price;
-  return plan.yearlyPrice > 0 ? plan.yearlyPrice : null;
-}
-
 /**
  * A plan that is one scan, paid once (Strike): its price is per scan, not per
  * month, and it is described that way everywhere.
@@ -298,17 +361,6 @@ export function isSingleScan(plan: Pick<Plan, "price" | "scans" | "scanWindowDay
 export function discountedPrice(price: number, percent: number): number {
   if (!percent) return price;
   return Math.max(100, Math.floor((price * (100 - percent)) / 10_000) * 100);
-}
-
-/** A yearly price as a month, rounded down to the rupee: "₹799". */
-export function perMonth(yearlyPrice: number, currency = "INR"): string {
-  return formatPrice(Math.floor(yearlyPrice / 12 / 100) * 100, currency);
-}
-
-/** How much a year saves against twelve monthly payments, as a whole percent. */
-export function yearlySaving(plan: Pick<Plan, "price" | "yearlyPrice">): number {
-  if (!plan.price || !plan.yearlyPrice) return 0;
-  return Math.round((1 - plan.yearlyPrice / (plan.price * 12)) * 100);
 }
 
 const FORMAT_LABEL: Record<ExportFormat, string> = {
@@ -352,7 +404,9 @@ export function windowLabel(days: number): string {
   return days === 30 ? "month" : days === 1 ? "day" : days === 7 ? "week" : `${days} days`;
 }
 
-export function scansLabel(plan: { scans: number | null; scanWindowDays: number; price?: number; periodDays?: number }): string {
+export function scansLabel(plan: { scans: number | null; scanWindowDays: number; price?: number; periodDays?: number; lifetimeScans?: boolean; scanPack?: boolean }): string {
+  if (plan.scanPack) return `${plan.scans} detailed scans per pack, no expiry`;
+  if (plan.lifetimeScans) return "1 free scan per account, once only";
   if (plan.scans === null) return "Unlimited scans";
   if (plan.price && plan.periodDays && isSingleScan({ ...plan, price: plan.price, periodDays: plan.periodDays })) {
     return `One full scan, to use within ${plan.periodDays} days`;
@@ -377,7 +431,7 @@ export function hiddenLabel(severities: Severity[]): string | null {
 function sizeLabel(plan: Plan): string {
   const urls = plan.targetsPerScan >= ENGINE_MAX_TARGETS;
   const pages = plan.crawlPages >= ENGINE_MAX_PAGES;
-  if (urls && pages) return "No cap on URLs or discovered pages per scan";
+  if (urls && pages) return "No plan cap on URLs or discovered pages";
   if (pages) return `Up to ${plan.targetsPerScan} URLs per scan, no cap on discovered pages`;
   if (urls) return `No cap on URLs, up to ${plan.crawlPages} discovered pages per scan`;
   return `Up to ${plan.targetsPerScan} URLs and ${plan.crawlPages} discovered pages per scan`;
@@ -386,8 +440,8 @@ function sizeLabel(plan: Plan): string {
 /** Every line a plan card lists, derived from the numbers so copy can't drift. */
 export function planFeatures(plan: Plan): string[] {
   const hidden = hiddenLabel(plan.severities);
-  return [
-    isSingleScan(plan)
+  return Array.from(new Set([
+    plan.scanPack || plan.lifetimeScans || isSingleScan(plan)
       ? scansLabel(plan)
       : `${scansLabel(plan)}, ${plan.concurrentScans > 1 ? `${plan.concurrentScans} at a time` : "one at a time"}`,
     reachLabel(plan.severities),
@@ -395,9 +449,10 @@ export function planFeatures(plan: Plan): string[] {
     historyLabel(plan.history),
     exportsLabel(plan.exports),
     sizeLabel(plan),
+    ...(plan.scanPack ? ["Scans follow the service time and safety limits"] : []),
     ...(plan.manualTesting ? ["A custom manual penetration test by BugSnaps testers"] : []),
     ...plan.perks,
-  ];
+  ]));
 }
 
 /** The cheapest paid plan that shows `severity` in full, or null. */
