@@ -5,13 +5,14 @@ import { CtaBand, PageHeader, Section, SiteShell } from "@/components/site/page-
 import { CompareTable } from "@/components/site/compare-page";
 import { AllToolsMatrix, SupportLegend } from "@/components/site/versus-page";
 import { comparePages } from "@/lib/compare";
+import { ALTERNATIVE_PAGES, alternativePath } from "@/lib/alternatives";
 import { HUB_FEATURES, competitors, formatCheckedOn, versusPath } from "@/lib/competitors";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Compare Security Testing Options",
   description:
-    "MyPentest vs Strix, XBOW, Astra, Intruder, Pentest-Tools.com, Burp Suite and ZAP - plus scanners, automated and manual pentests compared, with pros and cons on both sides.",
+    "Compare MyPentest with 15 security tools, including Nuclei, Burp, ZAP, XBOW and enterprise DAST. Sourced features, workflow fit and limitations on both sides.",
   path: "/compare",
 });
 
@@ -30,7 +31,8 @@ export default function CompareHub() {
           MyPentest vs named tools
         </h2>
         <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted">
-          Features, pros and cons for both sides, and pricing - each fact about another product taken from its own site.
+          Features, trade-offs and pricing models based on primary vendor sources. Compare the exact edition and
+          test your required workflow; these pages do not claim measured detection superiority.
         </p>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {competitors.map((c) => (
@@ -61,9 +63,29 @@ export default function CompareHub() {
         <AllToolsMatrix features={HUB_FEATURES} />
         <SupportLegend />
         <p className="mt-3 text-[12.5px] text-muted-2">
-          Hover a mark for detail; each comparison page has the full list with notes and sources. Checked on{" "}
-          {formatCheckedOn(competitors[0].checkedOn)}.
+          Each comparison page has the full notes and primary sources. Vendor descriptions reviewed{" "}
+          {formatCheckedOn(competitors[0].checkedOn)}. Unstated means the sources do not establish a capability;
+          it does not mean the product lacks it.
         </p>
+      </Section>
+
+      <Section labelledBy="alternatives-title" className="border-t border-white/[0.05]">
+        <h2 id="alternatives-title" className="text-2xl font-semibold tracking-tight">
+          Evaluate alternatives by the job you need done
+        </h2>
+        <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted">
+          Selection guides include a practical shortlist, reasons to keep the original tool, checks to run in
+          staging and a transition plan. They distinguish source analysis, runtime tests, infrastructure and
+          manual investigation instead of treating every security product as interchangeable.
+        </p>
+        <ul className="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+          {ALTERNATIVE_PAGES.map((page) => (
+            <li key={page.slug}><Link href={alternativePath(page.slug)} className="text-sm text-accent hover:underline">{competitors.find((tool) => tool.slug === page.competitorSlug)?.name} alternatives</Link></li>
+          ))}
+        </ul>
+        <Link href="/alternatives" className="mt-6 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+          Browse all selection guides <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
       </Section>
 
       <Section labelledBy="guides-title" className="border-t border-white/[0.05]">

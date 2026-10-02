@@ -1,689 +1,236 @@
-/*
- * "MyPentest vs <named tool>" pages.
- *
- * The rule from lib/compare.ts still holds: nothing about a third-party product
- * is published unless it is sourced. Every competitor below carries the pages
- * its facts came from and the date they were checked. Anything their own site
- * doesn't say is marked "unstated" - never guessed as a "no". The MyPentest
- * column and our cons must stay true of the engine as it ships (see
- * lib/mypentest/content.ts and ENGINE_FACTS). When a competitor changes their
- * pricing or product, update the entry and its `checkedOn` date.
+/* Primary vendor sources checked 2026-10-02. Features are edition-specific.
+ * Recommendations are editorial judgments, not measured detection rankings.
+ * Unstated means the linked sources do not establish a capability.
  */
-
 import { ENGINE_FACTS } from "@/lib/mypentest";
-
 const CHECKS = ENGINE_FACTS.checks;
-
 export type Support = "yes" | "partial" | "no" | "unstated";
-
-export interface Cell {
-  v: Support;
-  note?: string;
-}
-
-export type FeatureId =
-  | "hosted"
-  | "freeStart"
-  | "noLlmKey"
-  | "webDast"
-  | "authTesting"
-  | "apiTesting"
-  | "exploitation"
-  | "network"
-  | "cloud"
-  | "sast"
-  | "pentestService"
-  | "ci"
-  | "compliance"
-  | "openSource"
-  | "pricePublic";
-
+export interface Cell { v: Support; note?: string }
+export type FeatureId = "hosted" | "freeStart" | "noLlmKey" | "webDast" | "authTesting" | "apiTesting" | "exploitation" | "network" | "cloud" | "sast" | "pentestService" | "ci" | "compliance" | "openSource" | "pricePublic";
 export const FEATURES: { id: FeatureId; label: string; group: string }[] = [
-  { id: "hosted", label: "Hosted - nothing to install", group: "Getting started" },
-  { id: "freeStart", label: "Free way to start", group: "Getting started" },
-  { id: "noLlmKey", label: "No AI/LLM API key of your own needed", group: "Getting started" },
-  { id: "pricePublic", label: "Prices published on the website", group: "Getting started" },
-  { id: "webDast", label: "Automated testing of a live web app", group: "Testing" },
-  { id: "authTesting", label: "Signed-in (authenticated) testing", group: "Testing" },
-  { id: "apiTesting", label: "REST / GraphQL API testing", group: "Testing" },
-  { id: "exploitation", label: "Exploitation / working proof-of-concept", group: "Testing" },
-  { id: "network", label: "Network & infrastructure scanning", group: "Coverage beyond the web app" },
-  { id: "cloud", label: "Cloud configuration scanning", group: "Coverage beyond the web app" },
-  { id: "sast", label: "Source-code analysis (SAST)", group: "Coverage beyond the web app" },
-  { id: "pentestService", label: "Pentest service from the same company", group: "Workflow" },
-  { id: "ci", label: "CI/CD or ticketing integrations", group: "Workflow" },
-  { id: "compliance", label: "Compliance reports or certifications", group: "Workflow" },
-  { id: "openSource", label: "Open source / self-hostable", group: "Workflow" },
+ { id:"hosted",label:"Hosted workflow without installing a scanner",group:"Getting started" },
+ { id:"freeStart",label:"Free plan, open source or trial",group:"Getting started" },
+ { id:"noLlmKey",label:"No personal LLM API key required",group:"Getting started" },
+ { id:"pricePublic",label:"Public pricing information",group:"Getting started" },
+ { id:"webDast",label:"Tests a running web application",group:"Testing" },
+ { id:"authTesting",label:"Authenticated testing with configuration",group:"Testing" },
+ { id:"apiTesting",label:"API security testing",group:"Testing" },
+ { id:"exploitation",label:"Exploit validation or manual attack tools",group:"Testing" },
+ { id:"network",label:"Network or infrastructure scanning",group:"Coverage beyond the web app" },
+ { id:"cloud",label:"Cloud or infrastructure-as-code checks",group:"Coverage beyond the web app" },
+ { id:"sast",label:"Source-code security analysis",group:"Coverage beyond the web app" },
+ { id:"pentestService",label:"Separate testing service from the vendor",group:"Workflow" },
+ { id:"ci",label:"CI/CD, API or ticketing integration",group:"Workflow" },
+ { id:"compliance",label:"Compliance-oriented reporting",group:"Workflow" },
+ { id:"openSource",label:"Open source or local deployment",group:"Workflow" },
 ];
-
-/** The MyPentest column. Keep it true of what ships. */
-export const MYPENTEST_CELLS: Record<FeatureId, Cell> = {
-  hosted: { v: "yes", note: "Runs in the browser at bugsnaps.in" },
-  freeStart: { v: "yes", note: "Free plan with the whole engine, no card" },
-  noLlmKey: { v: "yes", note: "Nothing to configure" },
-  pricePublic: { v: "yes", note: "₹499 for 2 detailed scans, paid once with no expiry" },
-  webDast: { v: "yes", note: `Crawl, then ${CHECKS} passive and safe-active checks` },
-  authTesting: { v: "yes", note: "Signs in as your test accounts and checks one user can't read another's data" },
-  apiTesting: { v: "yes", note: "Discovered REST, GraphQL and OpenAPI endpoints" },
-  exploitation: { v: "no", note: "By design: harmless probes only, nothing is changed" },
-  network: { v: "no", note: "Web apps and their APIs only" },
-  cloud: { v: "no" },
-  sast: { v: "no" },
-  pentestService: { v: "yes", note: "Expert-led BugSnaps engagements" },
-  ci: { v: "partial", note: "SARIF and Markdown exports; no native pipeline integration yet" },
-  compliance: { v: "no", note: "CVSS 3.1, CWE and CISA KEV on findings; no compliance report packs" },
-  openSource: { v: "no" },
+export const MYPENTEST_CELLS: Record<FeatureId,Cell> = {
+ hosted:{v:"yes",note:"Browser workflow at bugsnaps.in"},
+ freeStart:{v:"yes",note:"One trial assessment; detailed high and critical findings need a paid plan"},
+ noLlmKey:{v:"yes",note:"No personal model key for scanning"},
+ pricePublic:{v:"yes",note:"Plus is a one-time scan pack with no expiry; current prices appear below"},
+ webDast:{v:"yes",note:`Discovery and ${CHECKS} defined checks, subject to scan mode and reachable endpoints`},
+ authTesting:{v:"partial",note:"Supported logins and supplied test accounts; cross-user checks need suitable accounts and reachable records"},
+ apiTesting:{v:"partial",note:"Discovered REST, GraphQL and OpenAPI surfaces; discovery and permissions limit coverage"},
+ exploitation:{v:"no",note:"Evidence probes, not general exploitation or post-exploitation"},
+ network:{v:"no",note:"Automated product focuses on web applications and APIs"},
+ cloud:{v:"no"},sast:{v:"no"},
+ pentestService:{v:"yes",note:"Separate scoped BugSnaps engagements"},
+ ci:{v:"partial",note:"SARIF and Markdown exports; no native pipeline integration"},
+ compliance:{v:"no",note:"Evidence, CVSS and CWE do not constitute compliance certification"},
+ openSource:{v:"no",note:"Hosted product is not an open-source scanner"},
 };
-
 export interface Competitor {
-  slug: string;
-  name: string;
-  vendor: string;
-  website: string;
-  /** Short category chip, e.g. "Open-source AI pentest agent". */
-  category: string;
-  /** One fair sentence on what it is. */
-  summary: string;
-  metaDescription: string;
-  lead: string;
-  checkedOn: string;
-  sources: { label: string; url: string }[];
-  cells: Record<FeatureId, Cell>;
-  bestFor: string;
-  mypentestBestFor: string;
-  theirPros: string[];
-  theirCons: string[];
-  ourPros: string[];
-  ourCons: string[];
-  pricing: string[];
-  chooseThem: string;
-  chooseUs: string;
-  faq: { question: string; answer: string }[];
+ slug:string;name:string;vendor:string;website:string;category:string;
+ summary:string;metaDescription:string;lead:string;checkedOn:string;
+ sources:{label:string;url:string}[];cells:Record<FeatureId,Cell>;
+ bestFor:string;mypentestBestFor:string;theirPros:string[];theirCons:string[];
+ ourPros:string[];ourCons:string[];pricing:string[];chooseThem:string;chooseUs:string;
+ faq:{question:string;answer:string}[];
 }
-
-const CHECKED = "2026-09-24";
-
-export const competitors: Competitor[] = [
-  {
-    slug: "strix",
-    name: "Strix",
-    vendor: "Strix (usestrix)",
-    website: "https://strix.ai",
-    category: "Open-source AI pentest agent",
-    summary:
-      "An Apache-2.0 multi-agent AI pentester that you run locally with Docker and your own LLM key, or use as Strix Cloud.",
-    metaDescription:
-      "MyPentest vs Strix: hosted automated pentesting with a free plan vs an open-source AI agent that exploits findings. Features, pros and cons, and pricing compared.",
-    lead:
-      "Strix is an AI agent that attacks your app and proves what it finds. MyPentest is a hosted, non-destructive pentest that needs no setup. Different trade-offs - here they are, including ours.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "Strix on GitHub (README)", url: "https://github.com/usestrix/strix" },
-      { label: "Strix pricing", url: "https://strix.ai/pricing" },
-    ],
-    cells: {
-      hosted: { v: "yes", note: "Strix Cloud; the open-source version runs on your machine" },
-      freeStart: { v: "yes", note: "Open source is free (you pay your LLM provider); Pro has a 7-day trial" },
-      noLlmKey: { v: "partial", note: "Open source needs your own LLM API key" },
-      pricePublic: { v: "partial", note: "Pro from $29/seat/month; pentests billed separately per test" },
-      webDast: { v: "yes" },
-      authTesting: { v: "unstated" },
-      apiTesting: { v: "yes", note: "API and web app pentesting (Pro)" },
-      exploitation: { v: "yes", note: "Working proof-of-concept and reproduction steps per finding" },
-      network: { v: "partial", note: "Internal infrastructure pentesting on Enterprise" },
-      cloud: { v: "unstated" },
-      sast: { v: "yes", note: "Describes itself as SAST + DAST; PR reviews" },
-      pentestService: { v: "unstated" },
-      ci: { v: "yes", note: "GitHub Actions; Jira, Linear, Slack on Pro" },
-      compliance: { v: "yes", note: "SOC 2, ISO 27001, PCI DSS-ready reports" },
-      openSource: { v: "yes", note: "Apache-2.0; VPC/on-prem on Enterprise" },
-    },
-    bestFor: "Engineering teams comfortable running Docker and paying for LLM usage, who want findings proven by exploitation and fixes as pull requests.",
-    mypentestBestFor: "Teams who want a real pentest of a live app in minutes, with no install, no LLM bill and nothing changed on the target.",
-    theirPros: [
-      "Open source under Apache-2.0 - you can read, audit and self-host it",
-      "Exploits findings and ships a working proof-of-concept, which cuts false positives",
-      "Reads source code too (SAST + DAST) and can open fix pull requests",
-      "GitHub Actions workflow for pull-request runs",
-      "Large community around the project",
-    ],
-    theirCons: [
-      "The open-source version needs Docker and your own LLM API key - and the LLM bill is yours",
-      "Pro pricing is per seat, with each pentest billed separately",
-      "Exploitation is powerful but means real attack traffic - it should point at staging, not production",
-      "Results and cost depend on the LLM you pick",
-    ],
-    ourPros: [
-      "Nothing to install and no LLM key - sign in and run",
-      "Free plan with the whole engine, and single paid scans in rupees with no auto-renewal",
-      "Non-destructive by design, so it is safe to point at production",
-      "Domain ownership is proved with a DNS record before a single request is sent",
-      "Signs in as your test accounts to confirm cross-user access-control flaws",
-    ],
-    ourCons: [
-      "No exploitation or proof-of-concept exploits - findings carry evidence and a confidence level instead",
-      "No source-code analysis and no fix pull requests",
-      "Not open source and can't be self-hosted",
-      "No native CI integration yet (SARIF export only)",
-    ],
-    pricing: [
-      "Open source: free; you pay your LLM provider for the tokens it uses.",
-      "Pro: $29 per seat per month, with pentests billed separately per test; 7-day free trial.",
-      "Enterprise: custom (VPC/on-prem, bring-your-own model, SSO).",
-    ],
-    chooseThem:
-      "You want an agent that exploits and proves each finding, reads your code, and you're happy to run it yourself against staging or pay per seat and per test.",
-    chooseUs:
-      "You want a hosted, safe-on-production pentest of a web app and its API today, free to start, with predictable rupee pricing and no LLM costs.",
-    faq: [
-      {
-        question: "Is MyPentest an AI agent like Strix?",
-        answer:
-          `Not in the same way. MyPentest's findings come from ${CHECKS} defined checks with differential validation (baseline vs probe vs control), worked out in code - so results are repeatable and you never pay for model usage. A language model may write the plain-English summary, but it can't create a finding or change a severity. The trade-off: it doesn't improvise new attacks the way an agent can.`,
-      },
-      {
-        question: "Can I use both?",
-        answer:
-          "Yes. A common split is MyPentest against production on every release, because it's non-destructive, and an exploiting agent like Strix against a staging copy.",
-      },
-      {
-        question: "Does MyPentest exploit what it finds?",
-        answer:
-          "No, by design. It sends harmless canary inputs and read-only access checks and reports evidence plus a confidence level. When you need controlled exploitation, a BugSnaps engagement does that with a person in the loop.",
-      },
-    ],
-  },
-  {
-    slug: "xbow",
-    name: "XBOW",
-    vendor: "XBOW",
-    website: "https://xbow.com",
-    category: "Autonomous offensive security platform",
-    summary:
-      "An enterprise autonomous pentesting platform that validates findings with working exploits, sold on usage-based quotes.",
-    metaDescription:
-      "MyPentest vs XBOW: a self-serve automated pentest with a free plan vs an enterprise autonomous exploitation platform. Features, pros and cons, and pricing compared.",
-    lead:
-      "XBOW is built for security teams at large organisations and proves findings with working exploits. MyPentest is self-serve and starts free. Here's where each one fits.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "XBOW homepage", url: "https://xbow.com" },
-      { label: "XBOW pricing", url: "https://xbow.com/pricing" },
-    ],
-    cells: {
-      hosted: { v: "yes" },
-      freeStart: { v: "no", note: "Demo and quote; no trial mentioned" },
-      noLlmKey: { v: "yes", note: "Managed platform" },
-      pricePublic: { v: "no", note: "Usage-based, quote on request" },
-      webDast: { v: "yes" },
-      authTesting: { v: "unstated" },
-      apiTesting: { v: "yes", note: "Web applications and APIs" },
-      exploitation: { v: "yes", note: "Attack chains with working exploit code" },
-      network: { v: "unstated" },
-      cloud: { v: "unstated" },
-      sast: { v: "unstated" },
-      pentestService: { v: "unstated" },
-      ci: { v: "unstated" },
-      compliance: { v: "yes", note: "SOC 2, ISO 27001, PCI DSS, NIS 2 certified" },
-      openSource: { v: "no" },
-    },
-    bestFor: "Large security teams with budget who want continuous, exploit-validated testing across many applications.",
-    mypentestBestFor: "Startups and small teams who need a real pentest now, without a sales call or an enterprise contract.",
-    theirPros: [
-      "Validates every finding with a working exploit and full attack chain",
-      "Strong public track record - it reached #1 on the HackerOne leaderboard (June 2025)",
-      "Scales from one app to thousands; available through major cloud marketplaces",
-      "Vendor certifications that enterprise procurement asks for",
-    ],
-    theirCons: [
-      "No public prices - you talk to sales for a quote",
-      "No self-serve free way to try it",
-      "Aimed at enterprise security teams, not a solo developer or a small startup",
-    ],
-    ourPros: [
-      "Self-serve: sign in and run your first pentest in minutes",
-      "Free plan, and prices published in rupees - from a single paid scan",
-      "Non-destructive by design, so it's safe on production",
-      "Expert-led BugSnaps pentests from the same team when you need a person",
-    ],
-    ourCons: [
-      "No exploitation - evidence and confidence, not working exploits",
-      "Built for one team's apps, not thousands of assets; team workspaces are still on the roadmap",
-      "No compliance certifications of our own yet",
-      "A young product with a far shorter track record",
-    ],
-    pricing: [
-      "Usage-based pricing scoped to your environment; request a quote.",
-      "Also purchasable through AWS, Google Cloud, Oracle and Microsoft marketplaces.",
-    ],
-    chooseThem:
-      "You're an enterprise security team that wants exploit-validated findings at scale and has the budget for a usage-based contract.",
-    chooseUs:
-      "You want to test your app today, start free, and pay a published price - with a human pentest available when you're ready.",
-    faq: [
-      {
-        question: "Is MyPentest a cheaper XBOW?",
-        answer:
-          "Not exactly. Both automate pentesting, but XBOW exploits findings to prove them and targets enterprise scale. MyPentest deliberately doesn't exploit - it's safe to point at production - and is built for self-serve teams.",
-      },
-      {
-        question: "Can I get exploit-level proof with BugSnaps?",
-        answer:
-          "Yes, through a manual BugSnaps engagement: controlled, non-destructive exploitation agreed in writing, with reproduction steps for each finding.",
-      },
-    ],
-  },
-  {
-    slug: "astra-security",
-    name: "Astra Security",
-    vendor: "Astra IT, Inc.",
-    website: "https://www.getastra.com",
-    category: "PTaaS + vulnerability scanner",
-    summary:
-      "A pentest-as-a-service platform combining a DAST scanner, an autonomous pentest and expert manual pentests, with compliance views.",
-    metaDescription:
-      "MyPentest vs Astra Security: features, pros and cons and pricing compared - free automated pentesting in rupees vs a PTaaS platform with scanners and expert pentests.",
-    lead:
-      "Astra bundles scanners, an AI pentest and human pentesters under one subscription. MyPentest is narrower and starts free. Here's an honest look at both.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "Astra pricing", url: "https://www.getastra.com/pricing" },
-      { label: "Astra homepage", url: "https://www.getastra.com" },
-    ],
-    cells: {
-      hosted: { v: "yes" },
-      freeStart: { v: "partial", note: "$7 one-week trial" },
-      noLlmKey: { v: "yes" },
-      pricePublic: { v: "yes", note: "In USD; Scanner Lite from $69/month" },
-      webDast: { v: "yes", note: "Scanner with 10,000+ tests listed" },
-      authTesting: { v: "yes" },
-      apiTesting: { v: "yes", note: "Separate API security plans" },
-      exploitation: { v: "unstated" },
-      network: { v: "unstated" },
-      cloud: { v: "yes", note: "AWS, Azure, GCP (separate plans)" },
-      sast: { v: "unstated" },
-      pentestService: { v: "yes", note: "Pentest Expert plan" },
-      ci: { v: "yes", note: "CI/CD, Jira, Slack" },
-      compliance: { v: "yes", note: "SOC 2, ISO 27001, PCI-DSS, HIPAA views; publicly verifiable certificate" },
-      openSource: { v: "partial", note: "On-premise on Enterprise" },
-    },
-    bestFor: "Companies that need a pentest certificate for a compliance audit and want scanning, cloud checks and human testers from one vendor.",
-    mypentestBestFor: "Teams who want to find and fix real web-app issues quickly and cheaply, before paying for a certified audit.",
-    theirPros: [
-      "One vendor for DAST, API, cloud scanning and expert manual pentests",
-      "Compliance views (SOC 2, ISO 27001, PCI-DSS, HIPAA) and a publicly verifiable pentest certificate",
-      "Large published test library for its scanner",
-      "Human re-scans included on pentest plans",
-    ],
-    theirCons: [
-      "Priced in USD, per target, with separate plans for web, API and cloud",
-      "The entry scanner plan caps scans (3 a month on Scanner Lite)",
-      "No free plan - the trial costs $7 for a week",
-    ],
-    ourPros: [
-      "Free plan with the whole engine - no card, no trial clock",
-      "Priced in rupees with UPI and Indian cards through Razorpay, and never auto-renews",
-      "Two detailed pentests for ₹499, available until used",
-      "Every finding carries a confidence level, and pattern matches alone are never reported",
-    ],
-    ourCons: [
-      "No compliance certificate or compliance report views",
-      "No cloud or network scanning",
-      `Fewer checks - ${CHECKS} focused checks, not a 10,000-test library`,
-      "Manual pentests are a separate BugSnaps engagement, not a plan tier",
-    ],
-    pricing: [
-      "Scanner Lite $69/month ($699/year), Scanner $199/month, Scanner Agency $499/month.",
-      "Pentest Auto $199/month or $2,999/year; Pentest Expert from $5,999/year; Enterprise from $9,999/year.",
-      "API and cloud security are separate plans. Trial: $7 for one week.",
-    ],
-    chooseThem:
-      "An auditor or customer needs a pentest certificate, and you want scanners, cloud checks and human testers under one contract.",
-    chooseUs:
-      "You want to find and fix your web app's real issues first - free, or for a one-off rupee price - and book an expert test when an audit needs one.",
-    faq: [
-      {
-        question: "Does MyPentest give a pentest certificate like Astra?",
-        answer:
-          "No. MyPentest reports are for engineers: evidence, CVSS 3.1, confidence and fixes. If you need an attestation for customers or auditors, a BugSnaps engagement includes an executive summary written for that.",
-      },
-      {
-        question: "Why is MyPentest cheaper?",
-        answer:
-          "It does less: web apps and their APIs only, no cloud or network scanning, no human in the loop on the automated plans. That focus is what makes a free plan and a single-scan price possible.",
-      },
-    ],
-  },
-  {
-    slug: "intruder",
-    name: "Intruder",
-    vendor: "Intruder Systems Ltd",
-    website: "https://www.intruder.io",
-    category: "Exposure management / vulnerability scanning",
-    summary:
-      "A continuous exposure-management platform: infrastructure, web app (DAST), cloud and container scanning plus attack-surface monitoring.",
-    metaDescription:
-      "MyPentest vs Intruder: an automated pentest of your web app vs a continuous exposure-management and vulnerability scanning platform. Features, pros and cons, pricing.",
-    lead:
-      "Intruder watches your whole external attack surface and keeps scanning it. MyPentest goes deeper on one web app and its API. They answer different questions.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "Intruder homepage", url: "https://www.intruder.io" },
-      { label: "Intruder pricing", url: "https://www.intruder.io/pricing" },
-    ],
-    cells: {
-      hosted: { v: "yes" },
-      freeStart: { v: "yes", note: "Free plan; 14-day trial of the Cloud plan" },
-      noLlmKey: { v: "yes" },
-      pricePublic: { v: "partial", note: "Plans listed; plan prices not shown on the page" },
-      webDast: { v: "yes", note: "75+ application checks" },
-      authTesting: { v: "yes" },
-      apiTesting: { v: "yes" },
-      exploitation: { v: "unstated" },
-      network: { v: "yes", note: "Infrastructure scanning; internal agents on Pro" },
-      cloud: { v: "yes", note: "AWS, Azure, Google Cloud; containers" },
-      sast: { v: "unstated" },
-      pentestService: { v: "yes", note: "Pentests listed from $3,500 per test" },
-      ci: { v: "yes", note: "15+ integrations incl. GitHub, Jira, Slack" },
-      compliance: { v: "yes", note: "SOC 2, ISO, HIPAA, DORA reporting" },
-      openSource: { v: "unstated" },
-    },
-    bestFor: "IT and security teams who need continuous scanning of infrastructure, cloud accounts and many web apps, with alerts when something new appears.",
-    mypentestBestFor: "Teams whose main risk is their own web app and API - access control, injection, leaked secrets - who want pentest-style depth there.",
-    theirPros: [
-      "Broad coverage: infrastructure, web apps, cloud accounts, containers",
-      "Continuous monitoring and alerts when new ports or services appear",
-      "A free plan and a 14-day trial of the paid tier",
-      "Compliance reporting and many integrations",
-    ],
-    theirCons: [
-      "Plan prices aren't published - billed as a base fee plus per-target fees",
-      "Web-app testing is one part of a wide platform rather than the focus",
-      "Prices exclude VAT and are not in rupees",
-    ],
-    ourPros: [
-      "Built around the web app: crawls it, mines JavaScript for hidden endpoints, then tests them",
-      "Signs in as two of your test accounts to confirm one user can read another's data",
-      "Published rupee prices, including a single-scan option, with no auto-renewal",
-      "A human pentest from the same team when you need one",
-    ],
-    ourCons: [
-      "No infrastructure, cloud or container scanning",
-      "No continuous monitoring or scheduled scans yet (on the roadmap)",
-      "No compliance reporting",
-      "Fewer integrations - exports (SARIF, Markdown, JSON) rather than connectors",
-    ],
-    pricing: [
-      "Free plan for getting started; Cloud, Pro and Enterprise tiers.",
-      "Priced per target (base fee plus per-target fee), monthly or annual (annual saves 20%); prices exclude VAT.",
-      "Pentests listed from $3,500 per test.",
-    ],
-    chooseThem:
-      "You need to keep watch over a lot of infrastructure, cloud and apps, and want alerts the moment something new is exposed.",
-    chooseUs:
-      "Your risk is concentrated in your web app and API, and you want pentest-style depth - access control, injection, secrets - on it.",
-    faq: [
-      {
-        question: "Can MyPentest replace Intruder?",
-        answer:
-          "Only if your web app and its API are all you need tested. MyPentest doesn't scan infrastructure, cloud accounts or containers, and doesn't monitor continuously yet.",
-      },
-      {
-        question: "Can I use both?",
-        answer:
-          "Yes - that's a sensible pairing. Use a platform like Intruder for breadth and monitoring, and MyPentest for deeper testing of the applications that hold your users' data.",
-      },
-    ],
-  },
-  {
-    slug: "pentest-tools",
-    name: "Pentest-Tools.com",
-    vendor: "Pentest-Tools.com",
-    website: "https://pentest-tools.com",
-    category: "Online pentest toolkit",
-    summary:
-      "A cloud toolkit of network, website and API scanners plus exploitation tools, priced by the number of assets.",
-    metaDescription:
-      "MyPentest vs Pentest-Tools.com: an automated web-app pentest vs an online toolkit of scanners and exploiters. Features, pros and cons, and pricing compared.",
-    lead:
-      "Pentest-Tools.com gives a tester a box of online tools, exploiters included. MyPentest runs one assessment end to end for you. Here's how they differ.",
-    checkedOn: CHECKED,
-    sources: [{ label: "Pentest-Tools.com pricing", url: "https://pentest-tools.com/pricing" }],
-    cells: {
-      hosted: { v: "yes" },
-      freeStart: { v: "yes", note: "Free plan: limited tools, up to 5 assets" },
-      noLlmKey: { v: "yes" },
-      pricePublic: { v: "yes", note: "From $95/month (NetSec)" },
-      webDast: { v: "yes", note: "WebNetSec plan and above" },
-      authTesting: { v: "yes", note: "AI-assisted authentication (WebNetSec)" },
-      apiTesting: { v: "yes", note: "REST and GraphQL" },
-      exploitation: { v: "yes", note: "Sniper CVE exploiter, SQLi and XSS exploiters (Pentest Suite)" },
-      network: { v: "yes", note: "17,000+ CVEs listed" },
-      cloud: { v: "yes", note: "AWS, Azure, GCP" },
-      sast: { v: "unstated" },
-      pentestService: { v: "unstated" },
-      ci: { v: "yes", note: "API, webhooks, Jira, Teams, Vanta" },
-      compliance: { v: "partial", note: "Vanta integration" },
-      openSource: { v: "unstated" },
-    },
-    bestFor: "Pentesters and consultancies who want a hosted toolbox - scanners, exploiters and an editable report generator - across networks and web apps.",
-    mypentestBestFor: "Product teams who want an end-to-end assessment of their own app without driving individual tools.",
-    theirPros: [
-      "Wide toolkit: network, website, API, cloud and CMS scanners",
-      "Exploitation tools on the top plan (Sniper, SQLi and XSS exploiters)",
-      "Editable DOCX / Google Doc report generator, and Burp Suite import",
-      "Unlimited team members on paid plans",
-    ],
-    theirCons: [
-      "USD pricing by asset count, from $95/month",
-      "Built for people who drive the tools - you assemble the assessment",
-      "Web-app scanning is limited on the entry plan",
-    ],
-    ourPros: [
-      "One run does discovery, testing and a prioritised fix plan - no tools to chain",
-      "Cross-user access-control testing with your test accounts",
-      "Rupee pricing with a free plan and a single-scan option",
-      "Non-destructive by design",
-    ],
-    ourCons: [
-      "No network, cloud or CMS-specific scanning",
-      "No exploitation tools",
-      "No editable report generator or Burp import",
-      "No public API for your own automation yet",
-    ],
-    pricing: [
-      "NetSec from $95/month, WebNetSec from $140/month, Pentest Suite from $190/month.",
-      "Priced by assets scanned (5-500 a month); yearly billing charges 10 months.",
-      "Free plan with limited tools and up to 5 assets.",
-    ],
-    chooseThem:
-      "You're a pentester or consultancy that wants a hosted toolbox with exploiters and editable reports across many clients' assets.",
-    chooseUs:
-      "You're the team that owns the app and want it assessed end to end, with fixes ranked - without learning a toolkit.",
-    faq: [
-      {
-        question: "Is MyPentest a toolkit?",
-        answer:
-          `No. MyPentest is one assessment that runs start to finish: discovery, ${CHECKS} checks, validation and a report with a remediation plan. You don't pick or chain tools.`,
-      },
-    ],
-  },
-  {
-    slug: "burp-suite",
-    name: "Burp Suite",
-    vendor: "PortSwigger",
-    website: "https://portswigger.net/burp",
-    category: "Manual web testing toolkit",
-    summary:
-      "The standard desktop toolkit for web pentesters - proxy, Repeater, Intruder and (in Professional) an automated scanner.",
-    metaDescription:
-      "MyPentest vs Burp Suite: a hosted automated pentest vs the professional's manual testing toolkit. Who each is for, pros and cons, and pricing.",
-    lead:
-      "Burp Suite is what professional pentesters use by hand. MyPentest is for the team that owns the app and wants it tested without becoming a pentester. Both can belong in the same company.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "PortSwigger pricing", url: "https://portswigger.net/pricing" },
-      { label: "Burp Suite Professional", url: "https://portswigger.net/burp/pro" },
-    ],
-    cells: {
-      hosted: { v: "no", note: "Professional is a desktop application" },
-      freeStart: { v: "yes", note: "Community Edition (manual tools); Professional trial" },
-      noLlmKey: { v: "yes" },
-      pricePublic: { v: "yes", note: "Professional listed at $499 per user" },
-      webDast: { v: "yes", note: "Scanner in Professional and Burp Suite DAST" },
-      authTesting: { v: "yes", note: "Authenticated scanning listed" },
-      apiTesting: { v: "yes" },
-      exploitation: { v: "yes", note: "By hand, with Repeater and Intruder" },
-      network: { v: "no" },
-      cloud: { v: "no" },
-      sast: { v: "no" },
-      pentestService: { v: "no", note: "Sells tools, not testing" },
-      ci: { v: "partial", note: "Via the Burp Suite DAST edition" },
-      compliance: { v: "unstated" },
-      openSource: { v: "partial", note: "Runs on your machine; not open source; 300+ extensions" },
-    },
-    bestFor: "Security professionals who test by hand and need full control over every request.",
-    mypentestBestFor: "Developers and founders who want their app tested without learning to drive a proxy.",
-    theirPros: [
-      "The industry-standard manual toolkit - unmatched control over every request",
-      "Huge extension ecosystem (300+ BApps)",
-      "Community Edition is free for learning",
-      "A human can exploit and chain issues that no automated tool finds",
-    ],
-    theirCons: [
-      "Needs a skilled operator - the value is in the person using it",
-      "Desktop software, licensed per user; licences can't be shared",
-      "Community Edition has no automated scanner",
-    ],
-    ourPros: [
-      "No expertise needed - it maps and tests the app for you",
-      "Hosted, nothing to install, results saved to your account",
-      "A structured report with CVSS, confidence and fixes, ready for engineers",
-      "Starts free",
-    ],
-    ourCons: [
-      "Far less control - you can't hand-craft or replay requests",
-      "Can't find what only a human finds: business logic and chained attacks",
-      "No extensions or custom checks",
-    ],
-    pricing: [
-      "Community Edition: free (manual tools).",
-      "Professional: listed at $499 per user; each user needs their own licence.",
-      "Burp Suite DAST (enterprise scanning): quote.",
-    ],
-    chooseThem:
-      "You or your team are pentesters who want hands-on control - or you want to learn web security.",
-    chooseUs:
-      "You own the app and want it tested for you, repeatably, without becoming a pentester.",
-    faq: [
-      {
-        question: "Does MyPentest replace a pentester with Burp Suite?",
-        answer:
-          "No. MyPentest covers the repeatable part - discovery, known issue classes, cross-user access control - on every release. A skilled tester with a manual toolkit still finds business-logic flaws and chained attacks that automation can't; that is what a BugSnaps engagement is for.",
-      },
-    ],
-  },
-  {
-    slug: "owasp-zap",
-    name: "ZAP",
-    vendor: "ZAP by Checkmarx (open source)",
-    website: "https://www.zaproxy.org",
-    category: "Open-source web app scanner",
-    summary:
-      "The widely used free, open-source (Apache-2.0) web app scanner and proxy, now stewarded by Checkmarx.",
-    metaDescription:
-      "MyPentest vs ZAP (OWASP ZAP): hosted automated pentesting vs the free open-source web scanner. Setup, coverage, pros and cons compared.",
-    lead:
-      "ZAP is free, open source and runs anywhere you can run Docker. MyPentest is hosted and does the configuring for you. Here's what you trade either way.",
-    checkedOn: CHECKED,
-    sources: [
-      { label: "ZAP homepage", url: "https://www.zaproxy.org" },
-      { label: "ZAP on GitHub", url: "https://github.com/zaproxy/zaproxy" },
-      { label: "ZAP documentation", url: "https://www.zaproxy.org/docs/" },
-    ],
-    cells: {
-      hosted: { v: "no", note: "You run it yourself" },
-      freeStart: { v: "yes", note: "Free forever" },
-      noLlmKey: { v: "yes" },
-      pricePublic: { v: "yes", note: "Free" },
-      webDast: { v: "yes" },
-      authTesting: { v: "yes", note: "Configured by you (authentication guides in the docs)" },
-      apiTesting: { v: "yes" },
-      exploitation: { v: "partial", note: "Proxy and manual request tools for a human tester" },
-      network: { v: "no" },
-      cloud: { v: "no" },
-      sast: { v: "no" },
-      pentestService: { v: "no" },
-      ci: { v: "yes", note: "Docker images and an automation framework" },
-      compliance: { v: "unstated" },
-      openSource: { v: "yes", note: "Apache-2.0" },
-    },
-    bestFor: "Teams with security know-how who want a free scanner in their pipeline and are willing to tune it.",
-    mypentestBestFor: "Teams who want results without configuring contexts, authentication scripts and scan policies.",
-    theirPros: [
-      "Free and open source (Apache-2.0)",
-      "Runs anywhere - desktop, Docker, CI - under your control",
-      "Large add-on marketplace and community",
-      "Doubles as an intercepting proxy for manual testing",
-    ],
-    theirCons: [
-      "You host, configure and tune it - authentication in particular takes work",
-      "Output needs triage; it's up to you to judge what's real",
-      "No vendor support by default",
-    ],
-    ourPros: [
-      "Hosted and configured for you: discovery, sign-in and checks in one run",
-      "Differential validation and a confidence level on every finding to cut triage",
-      "Cross-user access-control testing with two test accounts",
-      "Reports with CVSS 3.1, CISA KEV status and a remediation plan",
-    ],
-    ourCons: [
-      "Not free beyond the free plan's limits; ZAP is free without limits",
-      "Not open source, can't run inside your network or CI yet",
-      "Fewer knobs - you can't write your own scan rules",
-    ],
-    pricing: ["Free and open source."],
-    chooseThem:
-      "You have the know-how and time to run and tune a scanner yourself, and want it free and inside your own pipeline.",
-    chooseUs:
-      "You'd rather have a hosted assessment that's configured for you, with validated findings and fixes ranked.",
-    faq: [
-      {
-        question: "Is MyPentest built on ZAP?",
-        answer:
-          "No. The MyPentest engine is BugSnaps' own, with its own crawler, checks and validation.",
-      },
-    ],
-  },
+const yes=(note?:string):Cell=>({v:"yes",...(note?{note}:{})});
+const partial=(note:string):Cell=>({v:"partial",note});
+type Profile=Pick<Competitor,"slug"|"name"|"vendor"|"website"|"category"|"summary"|"sources"|"theirPros"|"theirCons"|"pricing"|"chooseThem"|"faq">&{cells:Partial<Record<FeatureId,Cell>>};
+function profile(input:Profile):Competitor {
+ const cells=Object.fromEntries(FEATURES.map(f=>[f.id,{v:"unstated"}])) as Record<FeatureId,Cell>;
+ return {...input,cells:{...cells,...input.cells},checkedOn:"2026-10-02",
+ metaDescription:`MyPentest vs ${input.name}: workflow, authentication, evidence, pricing model and limitations. Compare edition-specific features with primary vendor sources.`,
+ lead:`${input.summary} Compare its workflow with MyPentest's hosted assessment of a verified application, including the limits of both approaches.`,
+ bestFor:input.chooseThem,
+ mypentestBestFor:"Teams assessing a verified web app without installing a scanner, who can supply scoped test accounts and review coverage limits.",
+ ourPros:["Browser assessment of a verified app without scanner installation","Evidence, confidence and remediation with findings","Supported authenticated checks using supplied test accounts"],
+ ourCons:["No source-code, cloud-configuration or network assessment in the automated product","No general exploit chains, custom scan rules or native CI integration","Discovery and credentials limit coverage; a clean run does not guarantee every vulnerability was found","Reports do not certify compliance or replace a scoped manual business-logic test"],
+ chooseUs:"You need an occasional hosted web-app assessment with evidence and remediation, and do not require the other product's wider platform or operator controls."};
+}
+export const competitors:Competitor[]=[
+ profile({
+ slug:"strix",name:"Strix",vendor:"Strix",website:"https://www.strix.ai",category:"AI pentesting agent",
+ summary:"An open-source AI testing agent with a managed cloud offering, proof-of-concept validation and fix suggestions.",
+ sources:[{label:"Strix project and local setup",url:"https://github.com/usestrix/strix"},{label:"Strix cloud plans",url:"https://www.strix.ai/pricing"}],
+ cells:{hosted:yes("Managed cloud; local edition also available"),freeStart:yes("Open-source edition and cloud trial"),noLlmKey:partial("Cloud manages models; local use needs a supported model credential"),pricePublic:partial("Public Pro seat price; pentests billed separately"),webDast:yes(),authTesting:yes("Authenticated instructions documented"),apiTesting:yes(),exploitation:yes("Vendor describes working proof-of-concept validation"),sast:yes("Code and runtime testing described"),network:partial("Internal infrastructure listed for Enterprise"),ci:yes("Repository and delivery integrations"),compliance:partial("Compliance-ready reports are not a certification of your app"),openSource:yes("Apache-2.0 local edition")},
+ theirPros:["Open-source local engine","Code and runtime context with proof-of-concept output","Cloud workflow and repository integrations"],
+ theirCons:["Local model and Docker setup need an operator","Consider both cloud seat and pentest billing","Agree permitted actions before agent-driven tests"],
+ pricing:["Local engine is open source; model usage has its own costs or subscription terms.","Cloud Pro uses seat billing and separately billed pentests; Enterprise is custom."],
+ chooseThem:"You want agent-driven code and runtime tests with a controlled environment for exploit validation.",
+ faq:[{question:"How is MyPentest different from Strix?",answer:"Strix describes AI agents that develop and validate attacks. MyPentest runs defined checks and attaches evidence and confidence; it does not generate general exploit chains or code-fix pull requests."},{question:"Can the local Strix edition run without setup?",answer:"The official setup documents Docker and a supported model credential. Managed cloud is a separate option. Check model access and cloud billing before choosing."}],
+ }),
+ profile({
+ slug:"xbow",name:"XBOW",vendor:"XBOW",website:"https://xbow.com",category:"Autonomous offensive testing",
+ summary:"An autonomous offensive platform describing reproducible exploits and continuous application coverage.",
+ sources:[{label:"XBOW platform and finding evidence",url:"https://xbow.com"},{label:"XBOW pricing model",url:"https://xbow.com/pricing"}],
+ cells:{hosted:yes(),noLlmKey:yes("Managed platform"),pricePublic:partial("Usage model published; environment-specific quote"),webDast:yes(),exploitation:yes("Reproducible exploit and attack-chain evidence described"),compliance:partial("Auditor-oriented reporting does not certify the target")},
+ theirPros:["Attack-chain and exploit evidence described by the vendor","Continuous application coverage","Marketplace procurement options"],
+ theirCons:["Environment-specific pricing quote","Confirm login, API and private-network requirements directly","Exploit validation needs permitted-action rules"],
+ pricing:["Usage-based pricing is scoped to the environment.","Request a quote; marketplace options may support existing procurement agreements."],
+ chooseThem:"Your decision depends on exploit-level proof and testing a wider application portfolio.",
+ faq:[{question:"Is MyPentest equivalent to XBOW?",answer:"No. MyPentest does not claim autonomous attack-chain exploitation or equivalent portfolio coverage. Compare evidence on the same permitted target rather than treating the tools as interchangeable."},{question:"Does an auditor-ready report certify compliance?",answer:"No. A report can support an audit, but the applicable standard and assessor determine acceptance. MyPentest does not issue a compliance certification."}],
+ }),
+ profile({
+ slug:"astra-security",name:"Astra Security",vendor:"Astra",website:"https://www.getastra.com",category:"Scanner and pentest platform",
+ summary:"A platform offering DAST, API security, automated pentests and expert testing in separate plans.",
+ sources:[{label:"Astra product overview",url:"https://www.getastra.com"},{label:"Astra plans, authentication and limits",url:"https://www.getastra.com/pricing"}],
+ cells:{hosted:yes(),freeStart:partial("Paid limited trial advertised"),noLlmKey:yes(),pricePublic:yes("Plan and billing-cycle prices published"),webDast:yes(),authTesting:yes(),apiTesting:yes("Separate API plans"),cloud:partial("Separate cloud security offering"),pentestService:yes("Expert pentest plans"),ci:yes("Integration limits vary by plan"),compliance:partial("Compliance views; audit acceptance depends on the assessor")},
+ theirPros:["Authenticated DAST and API offerings","Expert test packages","Compliance views and development integrations"],
+ theirCons:["Compare web, API and expert plan scope separately","Entry scanner plan has a scan allowance","A scanner report alone does not establish compliance"],
+ pricing:["Public plans distinguish scanners, automated pentests and expert engagements.","The listed scanner trial is paid; verify targets, billing cycle and retest terms."],
+ chooseThem:"You need a packaged expert engagement or broader vendor support alongside scanning.",
+ faq:[{question:"Does MyPentest include a pentest certificate?",answer:"No. Automated MyPentest reports contain evidence and remediation. Ask your assessor what documentation and manual testing an audit requires; a separate BugSnaps engagement needs an agreed scope."},{question:"What should I compare in Astra's plans?",answer:"Check target definitions, authenticated scanning, scan allowances, expert involvement, API scope and retest terms. An entry scanner and an expert engagement provide different services."}],
+ }),
+ profile({
+ slug:"intruder",name:"Intruder",vendor:"Intruder",website:"https://www.intruder.io",category:"Exposure and vulnerability management",
+ summary:"A hosted platform for infrastructure and cloud exposure management, with web-app and API testing on relevant plans.",
+ sources:[{label:"Intruder exposure platform",url:"https://www.intruder.io"},{label:"Intruder current plans and DAST",url:"https://www.intruder.io/pricing"}],
+ cells:{hosted:yes(),freeStart:yes("Free infrastructure plan; authenticated DAST is not included"),noLlmKey:yes(),pricePublic:partial("Plan structure and interactive asset pricing"),webDast:yes("Relevant paid plans"),authTesting:yes("Paid web-app and API scope"),apiTesting:yes(),network:yes(),cloud:yes("Connected cloud-account checks"),ci:yes("Plan-dependent integrations"),compliance:partial("Compliance and cyber-hygiene reporting")},
+ theirPros:["External infrastructure monitoring","Cloud and container checks","Paid authenticated DAST alongside exposure workflows"],
+ theirCons:["Free infrastructure coverage differs from paid DAST","Selected asset types and counts affect pricing","Evaluate application depth on your own test case"],
+ pricing:["A free infrastructure plan is published.","Paid plans separate infrastructure and web-app assets; confirm configured totals and taxes."],
+ chooseThem:"You want ongoing exposure management across infrastructure, cloud and applications.",
+ faq:[{question:"Does Intruder's free plan include authenticated DAST?",answer:"The reviewed plan page lists free infrastructure scanning and says web-app DAST is not included there. Relevant paid plans offer web-app and API testing."},{question:"Can MyPentest complement Intruder?",answer:"A broader exposure workflow and a separate application assessment can serve different needs. Review duplicated coverage and remaining gaps before paying for both."}],
+ }),
+ profile({
+ slug:"pentest-tools",name:"Pentest-Tools.com",vendor:"Pentest-Tools.com",website:"https://pentest-tools.com",category:"Hosted testing toolkit",
+ summary:"A hosted toolkit with network, web and API scanning, exploitation and reporting features depending on the plan.",
+ sources:[{label:"Pentest-Tools.com features and costs",url:"https://pentest-tools.com/pricing"},{label:"Pentest-Tools.com platform",url:"https://pentest-tools.com"}],
+ cells:{hosted:yes(),freeStart:yes("Limited free tools and trial options"),noLlmKey:yes(),pricePublic:yes("Prices vary by assets and billing cycle"),webDast:yes(),authTesting:yes("WebNetSec and above"),apiTesting:yes("REST and GraphQL"),exploitation:yes("Plan-dependent CVE, SQL injection and XSS exploiters"),network:yes(),cloud:yes("Cloud checks listed"),ci:yes("API and integrations"),pentestService:yes("Expert services listed"),compliance:partial("Reporting and integrations; confirm audit requirements")},
+ theirPros:["Network, web and API tools","Plan-dependent exploiters","Editable reports and finding-import workflow"],
+ theirCons:["Plan tier changes scanning and exploitation scope","Assets and billing cycle affect price","An operator still chooses scope and validates relevance"],
+ pricing:["Public tiers separate network assessment, web/API testing and the pentest suite.","Compare asset count, internal scanning add-ons and report requirements."],
+ chooseThem:"You want a hosted toolbox and editable reporting across network and application engagements.",
+ faq:[{question:"Are all Pentest-Tools.com features in the entry plan?",answer:"No. The plan page separates NetSec, WebNetSec and Pentest Suite. Authenticated web scanning and exploiters appear in different tiers."},{question:"Does MyPentest offer the same toolkit?",answer:"No. It runs a narrower web-app assessment without network tools, general exploiters or an editable DOCX report generator."}],
+ }),
+ profile({
+ slug:"burp-suite",name:"Burp Suite",vendor:"PortSwigger",website:"https://portswigger.net/burp",category:"Manual toolkit and DAST editions",
+ summary:"A manual toolkit with automated scanning in Professional and a separate portfolio-oriented Burp Suite DAST product.",
+ sources:[{label:"Burp Suite Professional workflow",url:"https://portswigger.net/burp/pro"},{label:"Burp Suite DAST deployment",url:"https://portswigger.net/burp/dast"},{label:"Burp Community download",url:"https://portswigger.net/burp/communitydownload"}],
+ cells:{hosted:partial("Professional is local; DAST offers managed cloud"),freeStart:yes("Community manual tools and Professional trial"),noLlmKey:partial("Core tests need no personal model key; AI features have separate terms"),pricePublic:partial("Professional price published; DAST contact sales"),webDast:yes("Professional scanner and DAST"),authTesting:yes(),apiTesting:yes(),exploitation:yes("Manual request control and attack tools"),ci:partial("DAST has pipeline and API integrations"),openSource:partial("Local commercial deployment; not an open-source engine")},
+ theirPros:["Manual and automated request-level control","Extension ecosystem","DAST cloud and self-hosted deployment"],
+ theirCons:["Professional and DAST are separate workflows and licences","Manual value depends on the operator","Community is not the automated scanner package"],
+ pricing:["Community provides free manual tools.","Professional has a published per-user licence price; evaluate DAST separately."],
+ chooseThem:"You need request crafting, extensions or a DAST programme with its own deployment controls.",
+ faq:[{question:"Does MyPentest replace a pentester using Burp?",answer:"No. A skilled tester can inspect business logic, craft requests and explore chains beyond the automated MyPentest product's scope."},{question:"Which Burp edition should I compare?",answer:"Use Professional for the operator toolkit and Burp Suite DAST for portfolio scanning. DAST cloud deployment claims do not describe desktop Professional."}],
+ }),
+ profile({
+ slug:"owasp-zap",name:"ZAP",vendor:"ZAP",website:"https://www.zaproxy.org",category:"Open-source web testing",
+ summary:"A free open-source web scanner and proxy with authentication, API and automation features.",
+ sources:[{label:"ZAP project",url:"https://www.zaproxy.org"},{label:"ZAP automation",url:"https://www.zaproxy.org/docs/automate/"},{label:"ZAP authentication",url:"https://www.zaproxy.org/docs/desktop/start/features/authentication/"},{label:"ZAP API scan",url:"https://www.zaproxy.org/docs/docker/api-scan/"}],
+ cells:{hosted:{v:"no",note:"You run the scanner"},freeStart:yes("Free open source"),noLlmKey:yes(),pricePublic:yes("Engine is free"),webDast:yes(),authTesting:yes("Contexts, users and session verification need configuration"),apiTesting:yes("OpenAPI, SOAP and GraphQL API scans"),exploitation:partial("Proxy and request tools for manual operators"),ci:yes("Automation framework and containers"),openSource:yes()},
+ theirPros:["Free open-source engine","Automation and API scans","Authentication and proxy settings under your control"],
+ theirCons:["You operate and maintain the configuration","Verify login success and session state","Active scans need a suitable permitted environment"],
+ pricing:["The engine is free and open source.","Your team supplies execution, configuration and triage time."],
+ chooseThem:"You want a free scanner in your own environment and can maintain its configuration.",
+ faq:[{question:"Is MyPentest based on ZAP?",answer:"MyPentest uses its own crawler and checks. ZAP is a separate open-source scanner with its own rules and automation framework."},{question:"Does ZAP support authenticated API tests?",answer:"ZAP documents authentication contexts and an API-scan workflow. Configure credentials, session verification and API format; this does not prove every endpoint was reached."}],
+ }),
+ profile({
+ slug:"nuclei",name:"Nuclei",vendor:"ProjectDiscovery",website:"https://projectdiscovery.io",category:"Template-based scanning",
+ summary:"An open-source YAML-template scanner with HTTP, DNS and network checks plus custom detection workflows.",
+ sources:[{label:"Nuclei features and authentication",url:"https://docs.projectdiscovery.io/opensource/nuclei/overview"},{label:"Nuclei source and MIT licence",url:"https://github.com/projectdiscovery/nuclei"}],
+ cells:{hosted:partial("Local engine; separate cloud options"),freeStart:yes("MIT-licensed engine"),noLlmKey:yes("Core templates need no LLM key"),pricePublic:partial("Engine is free; cloud is separate"),webDast:yes("HTTP and DAST templates"),authTesting:yes("Supported auth mechanisms need configuration"),apiTesting:partial("Selected templates and DAST determine coverage"),exploitation:partial("Some templates validate exploit conditions; review actions"),network:yes("TCP, DNS and infrastructure checks"),cloud:partial("Template-dependent checks"),ci:yes("CLI and pipeline workflow"),openSource:yes("MIT licence")},
+ theirPros:["Open engine and customizable templates","Multiple protocols","Custom security regression checks"],
+ theirCons:["Template selection determines coverage","Review actions before executing templates","Operators configure authentication and triage evidence"],
+ pricing:["Nuclei is free under the MIT licence.","Hosted ProjectDiscovery services and infrastructure are separate."],
+ chooseThem:"You need editable templates, protocol breadth or custom regressions in your pipeline.",
+ faq:[{question:"Does a large template count prove better detection?",answer:"No. Results depend on selected checks, reachable functionality and evidence. Compare confirmed findings and missed seeded cases on the same authorized app, not only counts."},{question:"Can MyPentest import Nuclei templates?",answer:"The hosted product does not support importing custom Nuclei templates. Its checks and report workflow are separate."}],
+ }),
+ profile({
+ slug:"stackhawk",name:"StackHawk",vendor:"StackHawk",website:"https://www.stackhawk.com",category:"Developer and agent-loop DAST",
+ summary:"A developer security platform with HawkScan runtime tests, cloud findings and coding-agent integrations.",
+ sources:[{label:"HawkScan execution",url:"https://docs.stackhawk.com/hawkscan/"},{label:"HawkScan authentication",url:"https://docs.stackhawk.com/hawkscan/authenticated-scanning/"},{label:"StackHawk workflow and plans",url:"https://www.stackhawk.com/pricing/"},{label:"HawkScan GraphQL configuration",url:"https://docs.stackhawk.com/hawkscan/configuration/graphql-configuration/"}],
+ cells:{hosted:partial("Hosted results; HawkScan runs in your environment"),freeStart:yes("Trial advertised"),noLlmKey:partial("Scanner needs no model key; agent fixes depend on your coding-agent setup"),pricePublic:partial("Wingman public price; Scale scoped with sales"),webDast:yes(),authTesting:yes("Login, session type and indicators in YAML"),apiTesting:yes("API offering"),ci:yes("Local, pipeline and agent workflows"),openSource:partial("Local execution does not establish an open-source product")},
+ theirPros:["Scanner runs near the application","Configured session verification","Developer and coding-agent feedback"],
+ theirCons:["Scanner access and app configuration are required","Review model-assisted code fixes","Check tier and scan allowance"],
+ pricing:["Wingman publishes per-user billing and a scan allowance.","Scale is scoped with the vendor; verify trial and allowance terms."],
+ chooseThem:"You want runtime tests integrated with development, local environments or coding agents.",
+ faq:[{question:"Does StackHawk run only in the cloud?",answer:"No. Its documentation separates the hosted results platform from HawkScan, which runs on laptops, servers, Kubernetes or pipelines and needs access to the app."},{question:"Does MyPentest automatically fix source code?",answer:"No. MyPentest supplies remediation guidance. It does not edit your repository or create automated fix pull requests."}],
+ }),
+ profile({
+ slug:"invicti",name:"Invicti",vendor:"Invicti Security",website:"https://www.invicti.com",category:"Web, API and AppSec platform",
+ summary:"A DAST platform with proof-based validation and broader AppSec engines. Acunetix is now branded Invicti Web + API by the vendor.",
+ sources:[{label:"Invicti DAST",url:"https://www.invicti.com/product/dast"},{label:"Invicti platform",url:"https://www.invicti.com"},{label:"Acunetix branding and deployment",url:"https://www.acunetix.com/vulnerability-scanner/"}],
+ cells:{hosted:yes("SaaS option; local deployment also described"),noLlmKey:yes("Core managed scanner"),webDast:yes(),authTesting:yes("Authenticated DAST"),apiTesting:yes(),exploitation:partial("Proof-based validation for supported findings"),sast:partial("Separate platform engines"),cloud:partial("IaC in broader platform"),ci:yes("Delivery and issue tracking"),openSource:partial("Commercial on-premises deployment")},
+ theirPros:["Web and API runtime testing","Proof-based validation for supported issues","SaaS and private deployment choices"],
+ theirCons:["Review engine and deployment licensing separately","Validation varies by vulnerability class","Evaluate reachable coverage and administration effort"],
+ pricing:["Ask for the required deployment, assets and engines.","Older Acunetix names and current packages are not proof of identical licence terms."],
+ chooseThem:"You need enterprise deployment controls or a broader AppSec programme.",
+ faq:[{question:"Are Acunetix and Invicti unrelated products?",answer:"The reviewed Acunetix site states that Acunetix is Invicti Web + API. Check current packages and migration terms rather than assuming independent vendors."},{question:"Does proof-based scanning validate every possible issue?",answer:"No guarantee is made here. Ask which finding classes receive automated proof and review evidence for the rest."}],
+ }),
+ profile({
+ slug:"detectify",name:"Detectify",vendor:"Detectify",website:"https://detectify.com",category:"Surface and application scanning",
+ summary:"An attack-surface platform with authenticated DAST, API scanning and researcher-informed checks.",
+ sources:[{label:"Detectify platform",url:"https://detectify.com"},{label:"Detectify authenticated DAST",url:"https://detectify.com/product/application-scanning"},{label:"Detectify pricing structure",url:"https://detectify.com/pricing"}],
+ cells:{hosted:yes(),freeStart:partial("Starter and trial options; confirm usage scope"),noLlmKey:yes("Core platform"),pricePublic:partial("Platform fees; added assets and environments cost extra"),webDast:yes(),authTesting:yes(),apiTesting:yes("REST and GraphQL"),network:partial("Surface and internal scanning; confirm protocols"),ci:yes("Plan-dependent integrations"),compliance:partial("Separate PCI ASV offering")},
+ theirPros:["Surface and application workflows","Authenticated crawling and fuzzing","Researcher-informed tests"],
+ theirCons:["Platform fee may not be the total cost","Check application, surface and internal scope separately","Verify authentication success in your evaluation"],
+ pricing:["Published tiers include Starter through Enterprise.","Added assets, domains, environments and IP ranges can increase cost."],
+ chooseThem:"You need surface visibility with recurring application tests and organization controls.",
+ faq:[{question:"Is Detectify only a public website scanner?",answer:"No. Reviewed pages describe surface monitoring, authenticated applications, API and internal options. The selected package determines scope."},{question:"Should I compare only the platform fee?",answer:"No. The pricing page lists added costs for assets, domains, environments and IP ranges. Compare your complete configuration."}],
+ }),
+ profile({
+ slug:"qualys-was",name:"Qualys WAS",vendor:"Qualys",website:"https://www.qualys.com/apps/web-app-scanning",category:"Enterprise web scanning",
+ summary:"Web Application Scanning with authentication records, API tests and reporting across application inventories.",
+ sources:[{label:"Qualys WAS official setup guide",url:"https://www.qualys.com/docs/qualys-was-getting-started-guide.pdf"},{label:"Qualys WAS API",url:"https://docs.qualys.com/en/was/api/get_started/get_started.htm"},{label:"Qualys scan authentication status",url:"https://docs.qualys.com/en/was/portal/latest/scans/check_authentication.htm"}],
+ cells:{hosted:yes("Cloud external scanners; internal targets need an appliance"),noLlmKey:yes("Managed scanner"),webDast:yes(),authTesting:yes("Records and browser scripts"),apiTesting:partial("REST/SOAP and collections; verify specification versions"),ci:yes("API and Jenkins documented"),openSource:partial("Internal appliance, not an open-source engine")},
+ theirPros:["Inventory, tags and reporting","Configured authentication and API scans","Internal and external scanner options"],
+ theirCons:["Internal access requires scanner placement","Verify API specification-version support","Profiles and exclusions change depth and impact"],
+ pricing:["Setup and API guides do not establish current licence prices.","Confirm app count, appliances and contract terms with Qualys."],
+ chooseThem:"You need application findings in an existing Qualys inventory and management workflow.",
+ faq:[{question:"Does WAS include every Qualys infrastructure feature?",answer:"No. WAS is the web-application module. Network and cloud capabilities should not be treated as included merely because they share a vendor."},{question:"Can a cloud scanner reach an internal app?",answer:"The WAS guide documents an internal scanner appliance. Confirm reachability, credentials and exclusions before judging results."}],
+ }),
+ profile({
+ slug:"rapid7-insightappsec",name:"Rapid7 InsightAppSec",vendor:"Rapid7",website:"https://www.rapid7.com/products/insightappsec/",category:"Managed application DAST",
+ summary:"A DAST product with cloud and on-premises engines, authentication configuration, attack replay and remediation reporting.",
+ sources:[{label:"InsightAppSec product and replay",url:"https://www.rapid7.com/products/insightappsec/"},{label:"InsightAppSec authentication",url:"https://docs.rapid7.com/insightappsec/authentication/"}],
+ cells:{hosted:yes("Cloud and optional closed-network engine"),noLlmKey:yes("Managed scanner"),webDast:yes(),authTesting:yes(),apiTesting:yes("Application and API tests described"),exploitation:partial("Attack Replay reproduces reported issues"),ci:yes("Developer and ticketing integration"),compliance:partial("Compliance-oriented reports, not certification"),pentestService:yes("Separate Rapid7 services"),openSource:partial("Private scan engine, not open-source product")},
+ theirPros:["Cloud and private-network engine options","Developer Attack Replay","Remediation reporting"],
+ theirCons:["Engine placement and credentials need setup","Wider Rapid7 modules are separate","Interpret replay evidence in the application's context"],
+ pricing:["Request current licence and asset scope from Rapid7.","Confirm engine, support and wider-platform terms separately."],
+ chooseThem:"You want an integrated DAST programme with developer replay and management workflows.",
+ faq:[{question:"Does InsightAppSec include network scanning?",answer:"This comparison covers application DAST. Other Rapid7 infrastructure and exposure products should not be assumed to be included."},{question:"Does MyPentest provide Attack Replay?",answer:"No. Reports provide evidence and remediation without InsightAppSec's integrated developer replay workflow."}],
+ }),
+ profile({
+ slug:"snyk",name:"Snyk",vendor:"Snyk",website:"https://snyk.io",category:"Code security and separate DAST",
+ summary:"Snyk Code scans source code; the separate Snyk API & Web offering tests running applications.",
+ sources:[{label:"Snyk Code source analysis",url:"https://snyk.io/product/snyk-code/"},{label:"Snyk API & Web DAST",url:"https://snyk.io/product/dast-api-web/"},{label:"Snyk platform products",url:"https://snyk.io/platform/"}],
+ cells:{hosted:yes("Requirements vary by product"),freeStart:partial("Free Code offer; not proof of free DAST"),noLlmKey:yes("Core managed products"),pricePublic:partial("Review the selected product's offer"),webDast:partial("API & Web, not Snyk Code"),authTesting:partial("API & Web lists SSO/OpenID scans"),apiTesting:partial("API & Web"),sast:yes("Snyk Code"),cloud:partial("IaC code checks, not a cloud-account audit"),ci:yes("Repository and developer workflows")},
+ theirPros:["Source feedback during development","Separate runtime API and web tests","Developer integrations and fix guidance"],
+ theirCons:["Code tests do not replace runtime access control","Review entitlements by product","Check languages and authentication support"],
+ pricing:["Snyk Code advertises a free offering with plan-dependent features.","Confirm API & Web entitlements separately; free Code does not imply free DAST."],
+ chooseThem:"You need code and dependency feedback or its separate runtime scanner in a broader programme.",
+ faq:[{question:"Is Snyk only a source-code scanner?",answer:"No. Snyk Code performs source analysis, but the current platform also lists Snyk API & Web DAST. Compare product-level scope."},{question:"Can MyPentest replace Snyk Code?",answer:"No. MyPentest does not read repositories or dependency manifests. Runtime and code tests can complement each other."}],
+ }),
+ profile({
+ slug:"hcl-appscan",name:"HCL AppScan",vendor:"HCLSoftware",website:"https://www.hcl-software.com/appscan",category:"Application security product family",
+ summary:"A family of dynamic, static and other application tests, including Standard, on Cloud and enterprise deployments.",
+ sources:[{label:"HCL AppScan product family",url:"https://www.hcl-software.com/appscan"},{label:"AppScan Standard DAST",url:"https://www.hcl-software.com/appscan/products/appscan-standard"},{label:"AppScan offers",url:"https://www.hcl-software.com/appscan/marketplace"},{label:"AppScan login methods",url:"https://help.hcl-software.com/appscan/Standard/10.12.0/r_ExploreLoginManagement024.html"}],
+ cells:{hosted:partial("On Cloud; Standard has another deployment"),freeStart:yes("Trial advertised"),noLlmKey:yes("Core scanner"),pricePublic:partial("Selected offers; contracts vary"),webDast:yes("DAST editions"),authTesting:yes("Standard login workflows"),apiTesting:yes(),sast:partial("Source and relevant editions"),cloud:partial("Broader IaC capabilities are product-dependent"),ci:yes("Developer workflow integrations"),compliance:partial("Reporting is not application certification"),openSource:partial("Local/private deployment; not open-source engine")},
+ theirPros:["Multiple testing engines","Cloud and private deployments","Developer and organizational workflows"],
+ theirCons:["Compare editions and engines carefully","Deployment and login setup affect coverage","Trial is not full enterprise licensing"],
+ pricing:["The marketplace lists selected offers.","Compare edition, engines, deployment, support and contract term."],
+ chooseThem:"You need a specific AppScan deployment or multiple security-testing engines.",
+ faq:[{question:"Are Standard and on Cloud interchangeable?",answer:"They use different deployments and packages. Standard focuses on dynamic web/API testing; the family also includes cloud and source-analysis products. Confirm the edition."},{question:"Does MyPentest include AppScan static analysis?",answer:"No. MyPentest tests reachable web surfaces and APIs. Source review requires separate tooling or a specifically scoped engagement."}],
+ }),
 ];
-
-export function competitor(slug: string): Competitor | undefined {
-  return competitors.find((c) => c.slug === slug);
-}
-
-export function versusPath(slug: string): string {
-  return `/compare/mypentest-vs-${slug}`;
-}
-
-export const VERSUS_PREFIX = "mypentest-vs-";
-
-/** Rows the hub's all-tools matrix shows (the full list is on each page). */
-export const HUB_FEATURES: FeatureId[] = [
-  "hosted",
-  "freeStart",
-  "noLlmKey",
-  "authTesting",
-  "exploitation",
-  "network",
-  "pentestService",
-  "openSource",
-];
-
-export function formatCheckedOn(date: string): string {
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
+export function competitor(slug:string):Competitor|undefined{return competitors.find(c=>c.slug===slug)}
+export function versusPath(slug:string):string{return `/compare/mypentest-vs-${slug}`}
+export const VERSUS_PREFIX="mypentest-vs-";
+export const HUB_FEATURES:FeatureId[]=["hosted","freeStart","webDast","authTesting","sast","ci","openSource"];
+export function formatCheckedOn(date:string):string{return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"})}

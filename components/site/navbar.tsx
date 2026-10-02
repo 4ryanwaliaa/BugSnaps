@@ -18,7 +18,7 @@ const links: NavLink[] = [
   { href: "/services", label: "Services" },
   { href: "/pricing", label: "Pricing" },
   { href: "/compare", label: "Compare" },
-  { href: "/about", label: "About" },
+  { href: "/resources", label: "Resources" },
 ];
 
 export function Navbar() {

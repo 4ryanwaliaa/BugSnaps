@@ -14,13 +14,14 @@ import {
 import { ENGINE_FACTS, newAssessmentUrl, routes } from "@/lib/mypentest";
 import { formatPrice, isSingleScan, periodLabel, scansLabel, type Plan } from "@/lib/plans";
 import { faqJsonLd } from "@/lib/site";
+import { alternativePath } from "@/lib/alternatives";
 import { cn } from "@/lib/utils";
 
 const SUPPORT = {
   yes: { Icon: Check, label: "Yes", className: "text-success" },
   partial: { Icon: Minus, label: "Partly", className: "text-medium" },
   no: { Icon: X, label: "No", className: "text-muted-2" },
-  unstated: { Icon: HelpCircle, label: "Not stated on their site", className: "text-muted-2" },
+  unstated: { Icon: HelpCircle, label: "Not established by the linked sources", className: "text-muted-2" },
 } as const;
 
 export function SupportMark({ cell, compact = false }: { cell: Cell; compact?: boolean }) {
@@ -31,6 +32,7 @@ export function SupportMark({ cell, compact = false }: { cell: Cell; compact?: b
       <span className="min-w-0">
         <span className={cn(compact ? "sr-only" : "block text-[13.5px] font-medium text-foreground")}>{label}</span>
         {!compact && cell.note && <span className="mt-0.5 block text-[13px] leading-relaxed text-muted">{cell.note}</span>}
+        {compact && cell.note && <span className="sr-only">{cell.note}</span>}
       </span>
     </div>
   );
@@ -130,7 +132,7 @@ function ourPriceLine(plan: Plan): string {
   if (plan.price === 0) return `Free - ${scansLabel(plan).toLowerCase()}`;
   const price = formatPrice(plan.price, plan.currency);
   const scans = scansLabel(plan).toLowerCase();
-  return isSingleScan(plan) ? `${price} once - ${scans}` : `${price} per ${periodLabel(plan.periodDays)} - ${scans}`;
+  return plan.scanPack || isSingleScan(plan) ? `${price} once - ${scans}` : `${price} per ${periodLabel(plan.periodDays)} - ${scans}`;
 }
 
 export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[] }) {
@@ -177,13 +179,13 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
       </PageHeader>
 
       <Section labelledBy="glance-title">
-        <SectionTitle id="glance-title" eyebrow="At a glance" title="Two different tools for two different jobs." />
+        <SectionTitle id="glance-title" eyebrow="At a glance" title="Compare the workflow your team needs." />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           <div className="spot rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
             <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-accent">MyPentest · by BugSnaps</p>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">
               A hosted automated penetration test for web apps and their APIs: discovery, {ENGINE_FACTS.checks} passive and safe-active
-              checks, signed-in access-control testing, and a report with evidence, CVSS and fixes.
+              checks, supported sign-in flows using supplied test accounts, and a report with evidence, CVSS and fixes.
             </p>
             <p className="mt-5 text-[14px] leading-relaxed">
               <span className="font-medium text-foreground">Best for: </span>
@@ -195,12 +197,23 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
               {them.name} · {them.vendor}
             </p>
             <p className="mt-3 text-[15px] leading-relaxed text-muted">{them.summary}</p>
+            <a href={them.sources[0].url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+              Vendor product documentation <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
             <p className="mt-5 text-[14px] leading-relaxed">
               <span className="font-medium text-foreground">Best for: </span>
               <span className="text-muted">{them.bestFor}</span>
             </p>
           </div>
         </div>
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted-2">
+          This is a product-scope comparison, not a head-to-head detection benchmark. Best-fit recommendations are
+          editorial judgments. Check the exact edition and validate it against the same authorized staging application,
+          accounts and exclusions. No scanner can guarantee that every vulnerability was found.
+        </p>
+        <Link href={alternativePath(them.slug)} className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+          How to evaluate {them.name} alternatives <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
       </Section>
 
       <Section labelledBy="matrix-title" className="border-t border-white/[0.05] bg-surface/40">
@@ -273,7 +286,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
       </Section>
 
       <Section labelledBy="choose-title" className="border-t border-white/[0.05]">
-        <SectionTitle id="choose-title" eyebrow="The verdict" title="Which one should you choose?" />
+        <SectionTitle id="choose-title" eyebrow="Selection criteria" title="Which workflow fits your requirements?" />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           <div className="spot rounded-2xl border border-primary/30 bg-surface p-6 sm:p-7">
             <h3 className="text-base font-semibold">Choose MyPentest if…</h3>
@@ -369,7 +382,7 @@ export function AllToolsMatrix({ features }: { features: FeatureId[] }) {
   const rows = FEATURES.filter((f) => features.includes(f.id));
   return (
     <div className="overflow-x-auto rounded-2xl border border-white/[0.08]">
-      <table className="w-full min-w-[860px] border-collapse text-left text-[13.5px]">
+      <table className="w-full min-w-[2100px] border-collapse text-left text-[13.5px]">
         <caption className="sr-only">MyPentest compared with named alternatives</caption>
         <thead>
           <tr className="border-b border-white/[0.08] bg-surface">

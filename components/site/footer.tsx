@@ -24,6 +24,7 @@ const COMPARE: Column = {
     { label: "Vulnerability scanners", href: "/compare/mypentest-vs-vulnerability-scanners" },
     { label: "Automated vs manual", href: "/compare/automated-vs-manual-penetration-testing" },
     { label: "All comparisons", href: "/compare" },
+    { label: "Tool alternatives", href: "/alternatives" },
   ],
 };
 
@@ -55,6 +56,8 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       links: [
         { label: "About", href: "/about" },
         { label: "Blog", href: "/blog" },
+        { label: "Security guides", href: "/guides" },
+        { label: "Testing use cases", href: "/use-cases" },
         { label: "Careers", href: "/careers" },
         { label: "BugSnaps Personal", href: "/personal" },
         { label: "Contact", href: "/contact" },
@@ -66,6 +69,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
         { label: "Privacy policy", href: "/privacy" },
         { label: "Terms of service", href: "/terms" },
         { label: "Responsible disclosure", href: "/responsible-disclosure" },
+        { label: "Site map", href: "/site-map" },
       ],
     },
   ],
@@ -88,6 +92,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
         { label: "MyRecon", href: MYRECON_URL, external: true },
         { label: "All products", href: "/products" },
         { label: "Blog", href: "/blog" },
+        { label: "Security resources", href: "/resources" },
       ],
     },
     COMPARE,
@@ -104,6 +109,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       links: [
         { label: "Privacy policy", href: "/privacy" },
         { label: "Terms of service", href: "/terms" },
+        { label: "Site map", href: "/site-map" },
       ],
     },
   ],

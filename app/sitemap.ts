@@ -4,11 +4,10 @@ import { INDEXABLE_ROUTES } from "@/lib/routes";
 import { absoluteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
   return [
     ...INDEXABLE_ROUTES.map((route) => ({
       url: absoluteUrl(route.path),
-      lastModified: now,
+      ...(route.lastModified ? { lastModified: new Date(`${route.lastModified}T00:00:00Z`) } : {}),
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),

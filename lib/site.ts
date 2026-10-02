@@ -48,6 +48,8 @@ export function pageMetadata({
   absoluteTitle = false,
   noindex = false,
   type = "website",
+  published,
+  modified,
 }: {
   title: string;
   description: string;
@@ -55,6 +57,8 @@ export function pageMetadata({
   absoluteTitle?: boolean;
   noindex?: boolean;
   type?: "website" | "article";
+  published?: string;
+  modified?: string;
 }): Metadata {
   const url = absoluteUrl(path);
   const socialTitle = absoluteTitle ? title : `${title} - BugSnaps`;
@@ -69,12 +73,17 @@ export function pageMetadata({
       title: socialTitle,
       description,
       locale: "en_US",
+      ...(type === "article" ? { publishedTime: published, modifiedTime: modified } : {}),
       // Set explicitly: a page that defines its own openGraph replaces the
       // parent's, and would otherwise lose the file-based image.
       images: [OG_IMAGE],
     },
     twitter: { card: "summary_large_image", title: socialTitle, description, images: [OG_IMAGE.url] },
-    robots: noindex ? { index: false, follow: false } : undefined,
+    robots: noindex ? { index: false, follow: false } : {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    },
   };
 }
 

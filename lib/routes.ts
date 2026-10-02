@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 import { competitors, versusPath } from "@/lib/competitors";
+import { SECURITY_GUIDES, guidePath } from "@/lib/security-guides";
+import { SECURITY_USE_CASES, useCasePath } from "@/lib/security-use-cases";
+import { ALTERNATIVE_PAGES, alternativePath } from "@/lib/alternatives";
 
 /*
  * Every indexable page on the site, in one list. The sitemap is generated from
@@ -14,10 +17,12 @@ export interface IndexableRoute {
   path: string;
   changeFrequency: ChangeFrequency;
   priority: number;
+  /** Date of a substantive content change, not the date of each build. */
+  lastModified?: string;
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0 },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-02" },
 
   // Product
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9 },
@@ -33,14 +38,26 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/network-pentesting", changeFrequency: "monthly", priority: 0.7 },
 
   // Comparisons
-  { path: "/compare", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-02" },
   { path: "/compare/mypentest-vs-vulnerability-scanners", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/bugsnaps-vs-traditional-pentest", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/automated-vs-manual-penetration-testing", changeFrequency: "monthly", priority: 0.6 },
-  ...competitors.map((c) => ({ path: versusPath(c.slug), changeFrequency: "monthly" as const, priority: 0.7 })),
+  ...competitors.map((c) => ({ path: versusPath(c.slug), changeFrequency: "monthly" as const, priority: 0.7,
+    lastModified: c.checkedOn })),
 
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
+  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  ...SECURITY_GUIDES.map((g) => ({ path: guidePath(g.slug), changeFrequency: "monthly" as const,
+    priority: 0.6, lastModified: g.updated })),
+  { path: "/use-cases", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  ...SECURITY_USE_CASES.map((u) => ({ path: useCasePath(u.slug), changeFrequency: "monthly" as const,
+    priority: 0.6, lastModified: u.updated })),
+  { path: "/alternatives", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  ...ALTERNATIVE_PAGES.map((a) => ({ path: alternativePath(a.slug), changeFrequency: "monthly" as const,
+    priority: 0.6, lastModified: a.updated })),
+  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-02" },
 
   // Company
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },

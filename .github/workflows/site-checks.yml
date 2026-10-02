@@ -1,0 +1,43 @@
+name: Public site checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  public-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
+      - name: Audit rendered public pages and sitemap
+        shell: bash
+        run: |
+          npm run start -- --port 3100 > /tmp/bugsnaps-next.log 2>&1 &
+          site_pid=$!
+          trap 'kill "$site_pid"' EXIT
+          for attempt in {1..40}; do
+            if curl --fail --silent http://localhost:3100/robots.txt > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          node scripts/check-seo.cjs --base http://localhost:3100 --report /tmp/seo-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-page-audit
+          path: |
+            /tmp/seo-audit.json
+            /tmp/bugsnaps-next.log
