@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Zap } from "lucide-react";
 import { CtaBand, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { CompareTable } from "@/components/site/compare-page";
 import { AllToolsMatrix, SupportLegend } from "@/components/site/versus-page";
@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Compare Security Testing Options",
   description:
-    "Compare MyPentest with 15 security tools, including Nuclei, Burp, ZAP, XBOW and enterprise DAST. Sourced features, workflow fit and limitations on both sides.",
+    "Compare MyPentest with 20 security tools, including Acunetix, Nessus, Veracode, Checkmarx, Cobalt, Nuclei, Burp, ZAP, and enterprise DAST. Sourced features, workflow fit and limitations.",
   path: "/compare",
 });
 
@@ -25,6 +25,50 @@ export default function CompareHub() {
         title="MyPentest vs the alternatives."
         lead="Honest, sourced comparisons with the tools you're probably weighing up - including where MyPentest is not the right answer."
       />
+      <Section labelledBy="benchmarks-banner-title" className="pb-0">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-accent/25 bg-accent/[0.06] p-6 sm:p-8">
+            <span className="font-mono text-xs uppercase tracking-wider text-accent font-semibold">Empirical Benchmarks</span>
+            <h2 id="benchmarks-banner-title" className="mt-1 text-xl sm:text-2xl font-bold tracking-tight">
+              Sector Benchmarks &amp; Accuracy Analysis
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Explore side-by-side performance benchmarks, setup times, false positive rate metrics, and capability graphs across SaaS, FinTech, and API sectors.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                href="/benchmarks"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+              >
+                View Benchmarks <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/us-vs-competitors"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/[0.04]"
+              >
+                Competitor Battlecards
+              </Link>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.05] p-6 sm:p-8">
+            <span className="font-mono text-xs uppercase tracking-wider text-emerald-400 font-semibold">Trust &amp; Safety</span>
+            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight">
+              World-Ready Security &amp; Trust Center
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Learn how BugSnaps keeps you out of trouble: 4 vulnerability severity levels, non-destructive safety guarantees, and audit-ready attestation.
+            </p>
+            <div className="mt-4">
+              <Link
+                href="/security-readiness"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20"
+              >
+                Explore Security Readiness <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Section>
 
       <Section labelledBy="tools-title">
         <h2 id="tools-title" className="text-2xl font-semibold tracking-tight">

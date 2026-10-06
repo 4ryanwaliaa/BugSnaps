@@ -46,7 +46,22 @@ export const serviceSummaries: ServiceSummary[] = [
     title: "Cloud security review",
     description:
       "Configuration and identity review across AWS, GCP and Azure - IAM, storage exposure, network boundaries and secrets.",
+    href: "/cloud-penetration-testing",
     deliverables: ["Misconfiguration report", "IAM privilege review", "Remediation runbook"],
+  },
+  {
+    title: "Reconnaissance & OSINT",
+    description:
+      "External attack surface discovery, dark web credential monitoring, and shadow IT mapping by offensive researchers.",
+    href: "/reconnaissance",
+    deliverables: ["External attack surface inventory", "Exposed credential report", "Shadow asset risk analysis"],
+  },
+  {
+    title: "Continuous pentesting (PTaaS)",
+    description:
+      "Recurring automated and human-verified testing integrated into CI/CD for ongoing coverage as code ships.",
+    href: "/continuous-penetration-testing",
+    deliverables: ["CI/CD vulnerability gates", "Automated retest validation", "Real-time attack surface monitoring"],
   },
   {
     title: "Source code review",
@@ -254,6 +269,100 @@ export const servicePages: ServicePage[] = [
       manual: "Network testing at BugSnaps is always an expert-led engagement.",
     },
     faq: ENGAGEMENT_FAQ,
+  },
+  {
+    slug: "reconnaissance",
+    path: "/reconnaissance",
+    name: "Reconnaissance & OSINT",
+    metaTitle: "Reconnaissance Services: External Attack Surface & OSINT Assessments",
+    metaDescription:
+      "Expert-led external reconnaissance and OSINT assessments by BugSnaps. Discover shadow IT, leaked credentials, dark web exposures, and perimeter attack paths.",
+    h1: "Reconnaissance and external attack surface assessments.",
+    lead:
+      "Before an attacker touches your application, they map your perimeter. We conduct comprehensive open-source intelligence (OSINT) and external asset discovery to find every forgotten asset, leaked secret, and exposure path before adversaries do.",
+    tests: [
+      { title: "Subdomain & perimeter enumeration", body: "Passive DNS, certificate transparency logs, ASN mapping, and dormant infrastructure." },
+      { title: "Credential & breach intelligence", body: "Dark web forum auditing, paste site monitoring, and corporate email exposure in historical breaches." },
+      { title: "Public code & secret leaks", body: "Unintended repository commits, public S3 buckets, exposed Jira instances, and leaked API tokens." },
+      { title: "Cloud & shadow IT discovery", body: "Unregistered staging environments, forgotten test domains, and dangling DNS pointers vulnerable to subdomain takeover." },
+    ],
+    approach: [
+      "Define scope and organizational boundaries in writing.",
+      "Execute non-intrusive passive reconnaissance across open intelligence sources and certificate logs.",
+      "Analyze employee exposure, credential leaks, and corporate metadata footprints.",
+      "Validate active service banners, DNS records, and potential takeover candidates safely.",
+      "Deliver an actionable attack surface catalog prioritized by exploitability.",
+    ],
+    deliverables: [
+      "Complete external attack-surface inventory with live status",
+      "Leaked credential and dark-web exposure intelligence report",
+      "Subdomain takeover and dangling record remediation guide",
+      "Executive risk briefing on corporate digital footprint",
+    ],
+    automation: {
+      fits: "MyRecon runs automated OSINT lookups, username tracking, and breach intelligence. MyPentest scans discovered web assets for live vulnerabilities.",
+      manual: "Our expert-led reconnaissance service performs in-depth human investigation into corporate supply-chain leakage, executive threat profiling, and multi-cloud perimeter sprawl.",
+    },
+    faq: [
+      ...ENGAGEMENT_FAQ,
+      {
+        question: "Is reconnaissance safe for our live systems?",
+        answer:
+          "Yes. Reconnaissance is conducted predominantly through passive OSINT intelligence sources, public DNS registries, and certificate transparency archives without intrusive probing against your production hosts.",
+      },
+      {
+        question: "How does reconnaissance connect to penetration testing?",
+        answer:
+          "Reconnaissance provides the complete target inventory. Once your perimeter assets are mapped, high-risk web applications and APIs can be immediately fed into automated or manual penetration testing.",
+      },
+    ],
+  },
+  {
+    slug: "cloud-penetration-testing",
+    path: "/cloud-penetration-testing",
+    name: "Cloud penetration testing",
+    metaTitle: "Cloud Penetration Testing Services: AWS, GCP & Azure Security",
+    metaDescription:
+      "Expert cloud penetration testing across AWS, GCP, Azure, and Kubernetes. Audit IAM boundaries, container isolation, cloud metadata endpoints, and serverless architectures.",
+    h1: "Cloud penetration testing for modern infrastructure.",
+    lead:
+      "A misconfigured cloud role can turn a low-severity flaw into complete infrastructure takeover. We assess your AWS, GCP, and Azure environments for privilege escalation, exposed storage, and perimeter bypasses.",
+    tests: [
+      { title: "IAM privilege escalation", body: "Over-permissive role assumptions, policy wildcard abuse, and cross-account trust vulnerabilities." },
+      { title: "Storage & database exposure", body: "Public S3 buckets, Azure Blobs, exposed RDS snapshots, and unauthenticated BigQuery datasets." },
+      { title: "Container & Kubernetes security", body: "Pod security admissions, cluster RBAC, service account token theft, and container escape vectors." },
+      { title: "Serverless & API gateways", body: "Lambda/CloudFunction event injection, unauthenticated API triggers, and secrets stored in environment variables." },
+    ],
+    approach: [
+      "Establish written rules of engagement aligned with cloud provider penetration testing policies.",
+      "Conduct authenticated configuration review and black-box perimeter assessment.",
+      "Attempt non-destructive privilege escalation and lateral movement across cloud boundaries.",
+      "Verify IMDSv2 metadata protection and server-side request forgery defenses.",
+      "Deliver tactical Terraform/CloudFormation fixes alongside executive risk summaries.",
+    ],
+    deliverables: [
+      "Comprehensive cloud vulnerability report with CVSS ratings",
+      "IAM privilege escalation graph and blast-radius analysis",
+      "Infrastructure-as-Code (IaC) hardening recommendations",
+      "Retest confirmation after remediation is applied",
+    ],
+    automation: {
+      fits: "MyPentest continuously tests web apps and APIs deployed on your cloud infrastructure against web-layer vulnerabilities like SSRF that target metadata services.",
+      manual: "Cloud penetration testing requires skilled offensive practitioners to chain complex IAM trust policies, VPC peering relationships, and multi-cloud identities.",
+    },
+    faq: [
+      ...ENGAGEMENT_FAQ,
+      {
+        question: "Do we need cloud provider approval to run a cloud pentest?",
+        answer:
+          "Major providers like AWS, GCP, and Azure permit penetration testing of customer-owned cloud resources without prior authorization, provided testing adheres to their standard acceptable use policies.",
+      },
+      {
+        question: "Do you test Infrastructure-as-Code (IaC) configurations?",
+        answer:
+          "Yes. We review Terraform, CloudFormation, and Kubernetes manifests to ensure security policies and least-privilege principles are enforced before deployment.",
+      },
+    ],
   },
 ];
 

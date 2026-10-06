@@ -6,9 +6,9 @@ import { products } from "@/lib/products";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Products - MyPentest and MyRecon",
+  title: "Products - MyPentest, MyRecon and AI Security Tools",
   description:
-    "The BugSnaps product line: MyPentest for automated penetration testing, and MyRecon for reconnaissance and OSINT. Built by the BugSnaps security team.",
+    "The BugSnaps product line: MyPentest for automated penetration testing, MyRecon for reconnaissance, and autonomous AI pentesting tools. Built by offensive security engineers.",
   path: "/products",
 });
 
@@ -96,8 +96,7 @@ export default function ProductsPage() {
           ))}
         </ul>
         <p className="mt-8 max-w-2xl text-sm text-muted-2">
-          MyRecon runs on its own site, myrecon.xyz, and is part of the BugSnaps ecosystem. More BugSnaps products will
-          appear here as they launch.
+          Discover our full suite of automated penetration testing and reconnaissance tools. MyRecon can also be accessed directly at myrecon.xyz.
         </p>
       </Section>
 

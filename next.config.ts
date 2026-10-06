@@ -16,7 +16,7 @@ const authEmulator = isDev ? process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR?.tri
 /** The canonical host. www.bugsnaps.in answers with a permanent redirect here. */
 const CANONICAL_HOST = "bugsnaps.in";
 
-function csp(extra: { script?: string[]; connect?: string[]; frame?: string[]; img?: string[] } = {}) {
+function csp(extra: { script?: string[]; style?: string[]; connect?: string[]; frame?: string[]; img?: string[] } = {}) {
   return [
     "default-src 'self'",
     // 'unsafe-inline' for script/style is required by Next.js App Router
@@ -25,7 +25,7 @@ function csp(extra: { script?: string[]; connect?: string[]; frame?: string[]; i
     ["script-src 'self' 'unsafe-inline'", ...(extra.script ?? []), isDev ? "'unsafe-eval'" : ""]
       .join(" ")
       .trim(),
-    "style-src 'self' 'unsafe-inline'",
+    ["style-src 'self' 'unsafe-inline'", ...(extra.style ?? [])].join(" "),
     ["img-src 'self' data:", ...(extra.img ?? [])].join(" "),
     "font-src 'self'",
     ["connect-src 'self' https://api.web3forms.com", ...(extra.connect ?? []), isDev ? "ws:" : ""]
@@ -102,14 +102,19 @@ const razorpay = {
   img: ["https://cdn.razorpay.com"],
 };
 
+// The official JS SDK opens the buyer's PayPal approval window. Secrets and
+// capture remain on the engine. Venmo is disabled in our SDK configuration.
+const paypalOrigins = ["https://*.paypal.com", "https://*.paypalobjects.com"];
+
 const mypentestHeaders = [
   {
     key: "Content-Security-Policy",
     value: csp({
-      script: [...firebase.script, ...razorpay.script],
-      connect: [...firebase.connect, ...razorpay.connect],
-      frame: [...firebase.frame, ...razorpay.frame],
-      img: razorpay.img,
+      script: [...firebase.script, ...razorpay.script, ...paypalOrigins],
+      style: paypalOrigins,
+      connect: [...firebase.connect, ...razorpay.connect, ...paypalOrigins],
+      frame: [...firebase.frame, ...razorpay.frame, ...paypalOrigins],
+      img: [...razorpay.img, ...paypalOrigins],
     }),
   },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },

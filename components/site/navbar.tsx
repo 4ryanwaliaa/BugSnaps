@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { ScrollBeam } from "@/components/ui/motion";
-import { MYRECON_URL } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +13,7 @@ type NavLink = { href: string; label: string; external?: boolean };
 
 const links: NavLink[] = [
   { href: "/mypentest", label: "MyPentest" },
-  { href: MYRECON_URL, label: "MyRecon", external: true },
+  { href: "/myrecon", label: "MyRecon" },
   { href: "/services", label: "Services" },
   { href: "/pricing", label: "Pricing" },
   { href: "/compare", label: "Compare" },

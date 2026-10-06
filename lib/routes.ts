@@ -26,6 +26,10 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
 
   // Product
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
+  { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
+  { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
+  { path: "/ai-penetration-testing", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
   { path: "/products", changeFrequency: "monthly", priority: 0.6 },
   { path: "/pricing", changeFrequency: "monthly", priority: 0.7 },
@@ -36,8 +40,20 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/web-application-pentesting", changeFrequency: "monthly", priority: 0.8 },
   { path: "/api-security-testing", changeFrequency: "monthly", priority: 0.8 },
   { path: "/network-pentesting", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/cloud-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/reconnaissance", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/continuous-penetration-testing", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-06" },
+
+  // Solutions
+  { path: "/solutions/saas-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/solutions/fintech-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/solutions/startup-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/solutions/soc2-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
+  { path: "/solutions/api-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
 
   // Comparisons
+  { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
+  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
   { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-02" },
   { path: "/compare/mypentest-vs-vulnerability-scanners", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/bugsnaps-vs-traditional-pentest", changeFrequency: "monthly", priority: 0.6 },
@@ -48,6 +64,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
   { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
   ...SECURITY_GUIDES.map((g) => ({ path: guidePath(g.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: g.updated })),

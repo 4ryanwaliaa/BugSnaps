@@ -14,7 +14,7 @@ import {
 import { ENGINE_FACTS, newAssessmentUrl, routes } from "@/lib/mypentest";
 import { formatPrice, isSingleScan, periodLabel, scansLabel, type Plan } from "@/lib/plans";
 import { faqJsonLd } from "@/lib/site";
-import { alternativePath } from "@/lib/alternatives";
+import { alternativePage, alternativePath } from "@/lib/alternatives";
 import { cn } from "@/lib/utils";
 
 const SUPPORT = {
@@ -211,9 +211,15 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
           editorial judgments. Check the exact edition and validate it against the same authorized staging application,
           accounts and exclusions. No scanner can guarantee that every vulnerability was found.
         </p>
-        <Link href={alternativePath(them.slug)} className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
-          How to evaluate {them.name} alternatives <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </Link>
+        {alternativePage(them.slug) ? (
+          <Link href={alternativePath(them.slug)} className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+            How to evaluate {them.name} alternatives <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        ) : (
+          <Link href="/alternatives" className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+            Browse all security tool alternatives <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        )}
       </Section>
 
       <Section labelledBy="matrix-title" className="border-t border-white/[0.05] bg-surface/40">

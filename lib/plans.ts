@@ -354,12 +354,12 @@ export function isSingleScan(plan: Pick<Plan, "price" | "scans" | "scanWindowDay
 }
 
 /**
- * A price less an offer's percent, rounded down to the rupee - the same sum
- * the engine does (hosted.discounted). The engine's order is what is charged;
- * this is only for showing it.
+ * The engine rounds INR discounts down to rupees and USD discounts to the
+ * nearest cent, with a USD 1 minimum. Orders determine the actual charge.
  */
-export function discountedPrice(price: number, percent: number): number {
+export function discountedPrice(price: number, percent: number, currency = "INR"): number {
   if (!percent) return price;
+  if (currency === "USD") return Math.max(100, Math.floor((price * (100 - percent) + 50) / 100));
   return Math.max(100, Math.floor((price * (100 - percent)) / 10_000) * 100);
 }
 

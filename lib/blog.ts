@@ -23,7 +23,12 @@ export interface Post {
   related: { label: string; href: string }[];
 }
 
-export const posts: Post[] = [
+import { whyPentestingPosts } from "@/lib/articles/why-pentesting";
+import { whyBugsnapsPosts } from "@/lib/articles/why-bugsnaps";
+import { vulnerabilityDeepdivePosts } from "@/lib/articles/vulnerability-deepdives";
+import { architectureIndustryPosts } from "@/lib/articles/architecture-industry";
+
+const originalPosts: Post[] = [
   {
     slug: "vulnerability-assessment-vs-penetration-testing",
     title: "Vulnerability assessment vs penetration testing: what's the difference?",
@@ -224,7 +229,16 @@ export const posts: Post[] = [
     ],
   },
 ];
+ 
+export const posts: Post[] = [
+  ...originalPosts,
+  ...whyPentestingPosts,
+  ...whyBugsnapsPosts,
+  ...vulnerabilityDeepdivePosts,
+  ...architectureIndustryPosts,
+];
 
 export function post(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug);
 }
+
