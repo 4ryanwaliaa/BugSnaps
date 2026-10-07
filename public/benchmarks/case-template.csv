@@ -1,0 +1,1 @@
+run_id,tool,case_id,category,target_commit,target_image_digest,expected_behavior,accounts_roles,scope,eligible_for_score,access_status,check_executed,observed_behavior,review_outcome,evidence_artifact,control_artifact,exclusion_reason,reviewer,review_date,notes

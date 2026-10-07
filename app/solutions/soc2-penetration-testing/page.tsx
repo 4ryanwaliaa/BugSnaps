@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck, ArrowRight, FileCheck, Award, RefreshCw } from "lucide-react";
+import { ArrowRight, FileCheck, Award, RefreshCw } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "SOC 2 Penetration Testing: Auditor-Approved Reports & Attestations",
+  title: "SOC 2 Penetration Testing: Scope and Reports for Security Reviews",
   description:
-    "Auditor-ready SOC 2 Type II penetration testing: satisfy AICPA Trust Services Criteria (CC4.1, CC7.1), complete remediation retests, and receive signed attestation letters.",
+    "Plan a penetration testing engagement for your SOC 2 security review. Agree on scope, methodology, reporting and retesting with your reviewer and BugSnaps.",
   path: "/solutions/soc2-penetration-testing",
 });
 
@@ -15,17 +15,17 @@ const faqs = [
   {
     question: "Do SOC 2 auditors accept BugSnaps penetration testing reports?",
     answer:
-      "Yes. BugSnaps deliverables strictly follow AICPA guidelines, providing formal Rules of Engagement, standardized CVSS v3.1 scoring, executive attestation letters, and verified retest reports accepted by all major auditing firms.",
+      "Acceptance depends on the reviewer and the agreed requirements. Share the proposed target scope, testing method and deliverables before booking. MyPentest is an automated assessment; an expert-led engagement and any signed deliverables must be separately scoped.",
   },
   {
-    question: "What specific SOC 2 controls require penetration testing?",
+    question: "What should we agree on before booking a SOC 2-related pentest?",
     answer:
-      "SOC 2 Trust Services Criteria CC4.1 (COSO Principle 16 - monitoring activities), CC7.1 (vulnerability identification), and CC7.4 (remediation of identified vulnerabilities) mandate third-party technical security evaluations.",
+      "Confirm the required targets, user roles, methodology, report contents, independence expectations and retest process with your reviewer. BugSnaps can then discuss an engagement around those requirements. This page does not prescribe audit controls or certify compliance.",
   },
   {
     question: "Does BugSnaps include retesting for SOC 2 compliance?",
     answer:
-      "Yes. We verify developer fixes and provide a signed retest attestation proving that all critical and high-severity findings have been successfully closed before auditor submission.",
+      "Retesting, its schedule and any written sign-off need to be agreed in the expert engagement scope. An automated reassessment can produce new observations; it does not certify that every vulnerability has been closed.",
   },
 ];
 
@@ -38,56 +38,44 @@ export default function Soc2PenetrationTestingPage() {
           { name: "Solutions", path: "/services" },
           { name: "SOC 2 Penetration Testing", path: "/solutions/soc2-penetration-testing" },
         ]}
-        eyebrow="Compliance Assurance"
-        title="SOC 2 Penetration Testing: Auditor-Approved Reports & Attestations"
-        lead="Satisfy AICPA Trust Services Criteria CC4.1 and CC7.1 with independent, verified penetration testing deliverables built to sail through external auditor reviews."
+        eyebrow="Planning for a security review"
+        title="SOC 2 Penetration Testing: Scope and Reports for Security Reviews"
+        lead="Prepare a testing scope around the evidence your reviewer needs. Discuss expert-led testing, report contents and remediation follow-up separately from MyPentest automated scans."
       />
 
       <Section labelledBy="overview-title">
         <h2 id="overview-title" className="text-2xl font-semibold tracking-tight">
-          What SOC 2 Auditors Look For in a Pentest
+          Agree on the Evidence Your Reviewer Needs
         </h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted">
-          SOC 2 Type II auditors reject raw automated vulnerability scanner dumps and internal self-attestations. They mandate an independent, third-party assessment that attempts real-world exploitation and concludes with a verified retest report demonstrating that all high-risk vulnerabilities have been closed.
+          Ask your reviewer which systems, roles, testing methods and deliverables they expect. A structured assessment can document observed issues and remediation, while an automated scan has a defined coverage boundary. Confirm whether a separately scoped expert assessment is needed before relying on either report for a review.
         </p>
 
-        {/* Sector Capability Benchmark */}
         <div className="mt-8 rounded-2xl border border-white/[0.08] bg-surface p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-wider text-accent">Compliance Benchmark</span>
-              <h3 className="mt-1 text-lg font-semibold">SOC 2 Auditor Acceptance &amp; Completeness Score</h3>
-            </div>
-            <span className="font-mono text-2xl font-bold text-accent">95% vs 45%</span>
-          </div>
-          <p className="mt-2 text-sm text-muted">
-            BugSnaps provides complete auditor packages: formal methodology, executive attestation letters, and certified retests.
-          </p>
-          <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-white/[0.06]">
-            <div className="h-full rounded-full bg-gradient-to-r from-accent to-emerald-400" style={{ width: "95%" }} />
-          </div>
+          <h3 className="text-lg font-semibold">Scope before promises</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted">Reviewer acceptance depends on the agreed requirements. We do not publish an auditor acceptance percentage or treat an automated report as a compliance certificate.</p>
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <FileCheck className="h-5 w-5 text-accent" />
-            <h3 className="mt-3 font-semibold">Auditor Attestation Letters</h3>
+            <h3 className="mt-3 font-semibold">Report Requirements</h3>
             <p className="mt-2 text-sm text-muted">
-              Executive summary letters signed by security researchers, ready for direct inclusion in your SOC 2 audit package.
+              Agree on the executive summary, target scope, methodology, technical findings and any signed document the reviewer requests.
             </p>
           </div>
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <Award className="h-5 w-5 text-emerald-400" />
-            <h3 className="mt-3 font-semibold">Recognized Methodologies</h3>
+            <h3 className="mt-3 font-semibold">Documented Methodology</h3>
             <p className="mt-2 text-sm text-muted">
-              Assessments executed according to OWASP ASVS and NIST SP 800-115 standards required by Qualified Security Assessors.
+              Record the testing method, accounts, exclusions and limits in the engagement scope so the reviewer can assess what the report covers.
             </p>
           </div>
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <RefreshCw className="h-5 w-5 text-blue-400" />
-            <h3 className="mt-3 font-semibold">Verified Retest Attestations</h3>
+            <h3 className="mt-3 font-semibold">Remediation Follow-up</h3>
             <p className="mt-2 text-sm text-muted">
-              Formal verification confirming that developer patches have resolved all identified critical and high vulnerabilities.
+              Define which findings and routes will be retested, what evidence will be captured and what any retest report will state.
             </p>
           </div>
         </div>
@@ -95,15 +83,15 @@ export default function Soc2PenetrationTestingPage() {
 
       <Section labelledBy="comparison-link-title" className="border-t border-white/[0.05] bg-surface/30">
         <h2 id="comparison-link-title" className="text-2xl font-semibold tracking-tight">
-          Compliance Capability Benchmarks
+          Compare Testing Scope and Evidence
         </h2>
         <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-muted">
           <p>
-            Avoid the trap of buying scanners that fail auditor scrutiny. Review our complete capability metrics and vendor comparisons to ensure your audit report passes without exceptions.
+            Compare automated and expert-led workflows by their scope, evidence and agreed deliverables. No tool comparison can guarantee reviewer acceptance or an audit outcome.
           </p>
           <div className="pt-2">
             <Link href="/us-vs-competitors" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">
-              View all competitor benchmarks and sector scores <ArrowRight className="h-3.5 w-3.5" />
+              Compare testing approaches and limitations <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
@@ -123,7 +111,7 @@ export default function Soc2PenetrationTestingPage() {
         </div>
       </Section>
 
-      <CtaBand />
+      <CtaBand title="Plan the assessment your reviewer needs." lead="Start with the required targets, testing method and report contents. Agree on expert testing and any retest deliverables before booking." secondary={{ label: "Discuss an expert-led scope", href: "/contact?topic=enterprise" }} />
     </SiteShell>
   );
 }

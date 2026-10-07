@@ -17,14 +17,14 @@ export const serviceSummaries: ServiceSummary[] = [
   {
     title: "Penetration testing",
     description:
-      "Manual, scoped testing of your application, API or network by BugSnaps testers, with retesting until fixes hold.",
+      "Manual, scoped testing of your application, API or network by BugSnaps testers, with agreed remediation retesting.",
     href: "/penetration-testing",
     deliverables: ["Technical report", "Executive summary", "Free retest of fixes"],
   },
   {
     title: "Web application pentesting",
     description:
-      "In-depth testing against the OWASP Top 10 and the business-logic flaws scanners never find.",
+      "Manual testing of OWASP vulnerability classes and application-specific business logic, within an agreed scope.",
     href: "/web-application-pentesting",
     deliverables: ["Reproduction steps", "Severity and fixes", "Retest"],
   },
@@ -52,16 +52,16 @@ export const serviceSummaries: ServiceSummary[] = [
   {
     title: "Reconnaissance & OSINT",
     description:
-      "External attack surface discovery, dark web credential monitoring, and shadow IT mapping by offensive researchers.",
+      "Scoped external asset discovery, public exposure review and investigation of potentially forgotten services.",
     href: "/reconnaissance",
-    deliverables: ["External attack surface inventory", "Exposed credential report", "Shadow asset risk analysis"],
+    deliverables: ["Discovered asset inventory", "Public exposure evidence", "Prioritized follow-up actions"],
   },
   {
     title: "Continuous pentesting (PTaaS)",
     description:
-      "Recurring automated and human-verified testing integrated into CI/CD for ongoing coverage as code ships.",
+      "Plan recurring assessments and separately scoped expert reviews around your release schedule. Start MyPentest assessments yourself; native CI triggers and scheduled retests are not currently available.",
     href: "/continuous-penetration-testing",
-    deliverables: ["CI/CD vulnerability gates", "Automated retest validation", "Real-time attack surface monitoring"],
+    deliverables: ["Agreed assessment cadence", "Coverage and findings review", "Scoped remediation retests"],
   },
   {
     title: "Source code review",
@@ -101,7 +101,7 @@ const ENGAGEMENT_FAQ: ServiceFaq[] = [
   {
     question: "How long does an engagement take?",
     answer:
-      "Most engagements run 5-12 testing days depending on scope, with the report delivered within 5 business days of testing finishing. Exact dates are agreed in the scoping document before you commit.",
+      "Testing and reporting dates depend on the target, access and agreed scope. The schedule is recorded in the engagement document before testing begins.",
   },
   {
     question: "Will testing affect production?",
@@ -111,7 +111,7 @@ const ENGAGEMENT_FAQ: ServiceFaq[] = [
   {
     question: "Is retesting included?",
     answer:
-      "Yes. When you've fixed the issues, we retest them and confirm in writing which are closed.",
+      "Retesting is agreed in the engagement scope. After your team applies the fixes, we reassess the agreed findings and record whether each is fixed, still present or inconclusive.",
   },
 ];
 
@@ -122,7 +122,7 @@ export const servicePages: ServicePage[] = [
     name: "Penetration testing",
     metaTitle: "Penetration Testing Services",
     metaDescription:
-      "Expert-led penetration testing for web apps, APIs and networks. Scoped in writing, tested manually against OWASP and PTES, with retesting until every fix holds.",
+      "Expert-led penetration testing for web apps, APIs and networks. Agree the scope and rules in writing, review finding evidence and plan remediation retesting.",
     h1: "Penetration testing by people who explain what they found.",
     lead:
       "A BugSnaps penetration test is a scoped, manual attempt to break your application, API or network the way an attacker would - then a clear account of what worked, how bad it is, and how to fix it.",
@@ -138,7 +138,7 @@ export const servicePages: ServicePage[] = [
       "Manual testing mapped to OWASP WSTG and PTES, with automation for coverage, not conclusions.",
       "Critical issues reported the same day we confirm them.",
       "Report and walkthrough: plain language for decisions, reproduction steps and fixes for engineers.",
-      "Fix and retest until every issue is confirmed closed.",
+      "Retest agreed fixes and document unresolved findings or inconclusive results.",
     ],
     deliverables: [
       "Technical report with reproduction steps and CVSS severity",
@@ -147,7 +147,7 @@ export const servicePages: ServicePage[] = [
       "Retest and written confirmation of fixes",
     ],
     automation: {
-      fits: "MyPentest is a good fit for continuous coverage between engagements: every release, every new subdomain.",
+      fits: "Use MyPentest for assessments you start on verified deployed web applications between engagements. Plan limits and scan credits apply; scheduled runs and native CI integration are not currently available.",
       manual: "Bring in a manual test for business logic, chained attack paths, compliance evidence, or anything with real money or data at stake.",
     },
     faq: [
@@ -195,7 +195,7 @@ export const servicePages: ServicePage[] = [
       "Retest and written confirmation",
     ],
     automation: {
-      fits: "MyPentest covers much of the configuration, injection and access-control surface automatically - including signed-in tests with your test accounts. Run it free on every release.",
+      fits: "MyPentest runs defined configuration, injection and access-control checks against discovered surfaces, with supported signed-in testing using your accounts. Review discovery, credentials and current plan limits; the free plan is a trial rather than free testing on every release.",
       manual: "Choose a manual test for business logic, complex roles, payments, or when you need evidence for a customer or auditor.",
     },
     faq: ENGAGEMENT_FAQ,
@@ -231,7 +231,7 @@ export const servicePages: ServicePage[] = [
       "Retest and written confirmation",
     ],
     automation: {
-      fits: "MyPentest discovers API endpoints referenced in your JavaScript, OpenAPI documents and GraphQL, and tests object-level access with your test accounts.",
+      fits: "MyPentest checks supported API surfaces discovered from reachable pages, JavaScript, OpenAPI documents and GraphQL introspection, with read-access checks using suitable test accounts. Importing an API definition is on the roadmap; discovery and credentials limit coverage.",
       manual: "Choose a manual API test for complex permission models, multi-tenant data, or partner and payment APIs.",
     },
     faq: ENGAGEMENT_FAQ,
@@ -276,44 +276,44 @@ export const servicePages: ServicePage[] = [
     name: "Reconnaissance & OSINT",
     metaTitle: "Reconnaissance Services: External Attack Surface & OSINT Assessments",
     metaDescription:
-      "Expert-led external reconnaissance and OSINT assessments by BugSnaps. Discover shadow IT, leaked credentials, dark web exposures, and perimeter attack paths.",
+      "Scoped external reconnaissance and OSINT assessments by BugSnaps. Review discovered domains, public exposure and potential shadow assets with evidence and limits.",
     h1: "Reconnaissance and external attack surface assessments.",
     lead:
-      "Before an attacker touches your application, they map your perimeter. We conduct comprehensive open-source intelligence (OSINT) and external asset discovery to find every forgotten asset, leaked secret, and exposure path before adversaries do.",
+      "Map the public exposure of your organization within agreed boundaries. We review discoverable domains, services and public information, record attribution uncertainty and prioritize assets for further investigation.",
     tests: [
       { title: "Subdomain & perimeter enumeration", body: "Passive DNS, certificate transparency logs, ASN mapping, and dormant infrastructure." },
-      { title: "Credential & breach intelligence", body: "Dark web forum auditing, paste site monitoring, and corporate email exposure in historical breaches." },
+      { title: "Public exposure review", body: "Review approved identifiers and relevant public sources for reported exposure. Record source, date and confidence; an association alone does not establish ownership." },
       { title: "Public code & secret leaks", body: "Unintended repository commits, public S3 buckets, exposed Jira instances, and leaked API tokens." },
       { title: "Cloud & shadow IT discovery", body: "Unregistered staging environments, forgotten test domains, and dangling DNS pointers vulnerable to subdomain takeover." },
     ],
     approach: [
       "Define scope and organizational boundaries in writing.",
       "Execute non-intrusive passive reconnaissance across open intelligence sources and certificate logs.",
-      "Analyze employee exposure, credential leaks, and corporate metadata footprints.",
+      "Review approved public identifiers and exposure reports with their provenance and attribution limits.",
       "Validate active service banners, DNS records, and potential takeover candidates safely.",
-      "Deliver an actionable attack surface catalog prioritized by exploitability.",
+      "Deliver a catalog of discovered in-scope assets, supporting evidence and recommended follow-up tests.",
     ],
     deliverables: [
-      "Complete external attack-surface inventory with live status",
-      "Leaked credential and dark-web exposure intelligence report",
+      "Discovered external asset inventory with review dates and coverage limitations",
+      "Public exposure evidence and attribution notes",
       "Subdomain takeover and dangling record remediation guide",
       "Executive risk briefing on corporate digital footprint",
     ],
     automation: {
-      fits: "MyRecon runs automated OSINT lookups, username tracking, and breach intelligence. MyPentest scans discovered web assets for live vulnerabilities.",
-      manual: "Our expert-led reconnaissance service performs in-depth human investigation into corporate supply-chain leakage, executive threat profiling, and multi-cloud perimeter sprawl.",
+      fits: "MyRecon supports public username lookups and a separate opt-in email breach lookup. These results do not prove identity or ownership. MyPentest can assess a discovered web application after you authorize and verify its domain.",
+      manual: "Choose a separately scoped expert reconnaissance engagement for organizational asset mapping and investigation. Continuous employee, dark-web or perimeter monitoring is not part of these automated lookup products.",
     },
     faq: [
       ...ENGAGEMENT_FAQ,
       {
         question: "Is reconnaissance safe for our live systems?",
         answer:
-          "Yes. Reconnaissance is conducted predominantly through passive OSINT intelligence sources, public DNS registries, and certificate transparency archives without intrusive probing against your production hosts.",
+          "The scope distinguishes passive source review from any direct service checks. We agree permitted methods and request limits before testing. Passive public-source findings still need attribution review; direct checks should follow the target owner's rules.",
       },
       {
         question: "How does reconnaissance connect to penetration testing?",
         answer:
-          "Reconnaissance provides the complete target inventory. Once your perimeter assets are mapped, high-risk web applications and APIs can be immediately fed into automated or manual penetration testing.",
+          "Reconnaissance produces a discovered asset inventory with coverage and attribution limits. Confirm ownership and testing permission before selecting a web app for MyPentest domain verification or a separately scoped manual assessment.",
       },
     ],
   },
@@ -336,18 +336,18 @@ export const servicePages: ServicePage[] = [
     approach: [
       "Establish written rules of engagement aligned with cloud provider penetration testing policies.",
       "Conduct authenticated configuration review and black-box perimeter assessment.",
-      "Attempt non-destructive privilege escalation and lateral movement across cloud boundaries.",
+      "Validate agreed identity and network boundaries using approved test accounts and controlled checks; record actions that were not permitted or could not be assessed.",
       "Verify IMDSv2 metadata protection and server-side request forgery defenses.",
       "Deliver tactical Terraform/CloudFormation fixes alongside executive risk summaries.",
     ],
     deliverables: [
-      "Comprehensive cloud vulnerability report with CVSS ratings",
+      "Scoped cloud findings report with evidence, severity and coverage limitations",
       "IAM privilege escalation graph and blast-radius analysis",
       "Infrastructure-as-Code (IaC) hardening recommendations",
       "Retest confirmation after remediation is applied",
     ],
     automation: {
-      fits: "MyPentest continuously tests web apps and APIs deployed on your cloud infrastructure against web-layer vulnerabilities like SSRF that target metadata services.",
+      fits: "MyPentest assesses verified deployed web applications and supported discovered API surfaces. It does not continuously monitor your cloud, audit IAM policies or review cloud configuration. Start additional assessments yourself, subject to plan limits.",
       manual: "Cloud penetration testing requires skilled offensive practitioners to chain complex IAM trust policies, VPC peering relationships, and multi-cloud identities.",
     },
     faq: [
@@ -355,12 +355,12 @@ export const servicePages: ServicePage[] = [
       {
         question: "Do we need cloud provider approval to run a cloud pentest?",
         answer:
-          "Major providers like AWS, GCP, and Azure permit penetration testing of customer-owned cloud resources without prior authorization, provided testing adheres to their standard acceptable use policies.",
+          "Requirements differ by provider, service and proposed test action. Confirm ownership, check the provider's current testing policy and obtain any required approvals before the engagement. The agreed rules must cover third-party services and excluded actions as well as your own resources.",
       },
       {
         question: "Do you test Infrastructure-as-Code (IaC) configurations?",
         answer:
-          "Yes. We review Terraform, CloudFormation, and Kubernetes manifests to ensure security policies and least-privilege principles are enforced before deployment.",
+          "Terraform, CloudFormation and Kubernetes manifest review can be included in a separately scoped expert engagement. The review records observed configuration risks and remediation guidance; it does not guarantee that a later deployment enforces every security policy.",
       },
     ],
   },

@@ -56,7 +56,7 @@ export default function CompareHub() {
               World-Ready Security &amp; Trust Center
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              Learn how BugSnaps keeps you out of trouble: 4 vulnerability severity levels, non-destructive safety guarantees, and audit-ready attestation.
+              Review DNS ownership verification, passive and safe-active checks, finding confidence, coverage limits and when a manual engagement is needed.
             </p>
             <div className="mt-4">
               <Link
@@ -68,6 +68,16 @@ export default function CompareHub() {
             </div>
           </div>
         </div>
+      </Section>
+
+      <Section labelledBy="ai-comparison-title" className="pb-0">
+        <h2 id="ai-comparison-title" className="text-2xl font-semibold">Choosing between AI assistance and a web security assessment?</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+          ChatGPT, Claude Code and workflow automation can help with security work. Compare the setup, execution, evidence and retest workflow you need for an authorized application.
+        </p>
+        <Link href="/compare/mypentest-vs-ai-assistants" className="mt-5 inline-flex items-center gap-2 text-sm text-accent hover:underline">
+          MyPentest vs AI assistants and automation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </Section>
 
       <Section labelledBy="tools-title">

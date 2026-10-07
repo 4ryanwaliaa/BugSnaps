@@ -11,4 +11,7 @@
 
 # Local tooling and build leftovers.
 /.claude/
+/clients/
+/video/
+/branding/
 *.tsbuildinfo

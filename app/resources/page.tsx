@@ -11,8 +11,11 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const collections = [
-  { title: "World-Ready Security & Trust", path: "/security-readiness", text: "Learn how BugSnaps protects your web application, keeps you out of trouble, and provides the verified attestation you need to launch without fear." },
-  { title: "Offensive Security Benchmarks", path: "/benchmarks", text: "Empirical detection accuracy, false positive rates, and capability matrices comparing BugSnaps against legacy and AI tools." },
+  { title: "Security readiness and scope", path: "/security-readiness", text: "Review authorization, assessment boundaries, report limitations and when to bring in an expert penetration tester." },
+  { title: "Pentesting benchmark methodology", path: "/benchmarks", text: "A reproducible protocol for detection, evidence, false positives and operating cost, with recording templates. Measured head-to-head results are pending." },
+  { title: "Improve your website security", path: "/improvements", text: "Turn a vulnerability finding into a fix, prioritize engineering work and retest the affected path before closing the issue." },
+  { title: "Why give BugSnaps a try?", path: "/why-bugsnaps", text: "See who MyPentest fits, what the free trial shows and how to evaluate the product on an application you own." },
+  { title: "MyPentest vs AI assistants", path: "/compare/mypentest-vs-ai-assistants", text: "Compare a scoped web security assessment with ChatGPT, Claude Code and general AI workflow automation." },
   { title: "Security testing guides", path: "/guides", text: "Understand access control, API weaknesses, sessions, configuration and evidence. Each guide explains what to check, what a result means, and what still needs review." },
   { title: "Testing for your application", path: "/use-cases", text: "Build a scoped workflow for SaaS, ecommerce, multi-tenant services, authenticated applications and release checks. Start with roles and assets, then decide which tests fit." },
   { title: "Compare security tools", path: "/compare", text: "Compare MyPentest with named tools using vendor documentation. See strengths, limitations and when a different product is a better fit." },

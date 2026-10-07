@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaBand, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
 import { MYRECON_URL, pageMetadata } from "@/lib/site";
+import { SecurityReviewFigure } from "@/components/site/security-review-figure";
 
 export const metadata: Metadata = pageMetadata({
   title: "About BugSnaps - Penetration Testing Company",
@@ -81,6 +82,14 @@ export default function AboutPage() {
             <Link href="/responsible-disclosure">responsible disclosure policy</Link>.
           </p>
         </Prose>
+      </Section>
+
+      <Section labelledBy="review-workflow-title" className="border-t border-white/5">
+        <h2 id="review-workflow-title" className="text-2xl font-semibold">Security work that continues after the report.</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
+          Review the observed evidence, assign remediation to your team and retest the affected paths. Our <Link href="/improvements" className="text-accent hover:underline">security improvement checklist</Link> and <Link href="/why-bugsnaps" className="text-accent hover:underline">product fit guide</Link> explain how to evaluate that workflow.
+        </p>
+        <SecurityReviewFigure className="mt-7 max-w-4xl" />
       </Section>
 
       <CtaBand />

@@ -6,9 +6,9 @@ import { MYRECON_URL, ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/si
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "MyRecon: OSINT & Attack Surface Intelligence Platform",
+  title: "MyRecon: Username Search, Digital Footprint and OSINT",
   description:
-    "MyRecon maps your organization's external attack surface: exposed subdomains, credential breach intelligence, shadow cloud assets, and OSINT reconnaissance.",
+    "Explore MyRecon for public username search, email breach exposure, domain, DNS and IP research. Use OSINT context to plan a separately authorized security assessment.",
   path: "/myrecon",
 });
 
@@ -16,22 +16,22 @@ const faqs = [
   {
     question: "What is MyRecon and how does it fit into the BugSnaps ecosystem?",
     answer:
-      "MyRecon is BugSnaps' reconnaissance and open-source intelligence (OSINT) platform. While MyPentest executes automated penetration tests on verified web targets, MyRecon maps the entire digital footprint beforehand - discovering forgotten subdomains, credential leaks, and shadow cloud assets.",
+      "MyRecon is a separate open-source intelligence platform at myrecon.xyz for public username searches, breach exposure checks and domain, DNS and IP research. MyPentest assesses a web application after you verify domain control. Reconnaissance results are context, not proof of a vulnerability or authorization to test a target.",
   },
   {
-    question: "Does MyRecon send intrusive traffic to target networks?",
+    question: "Does an OSINT result prove an account or asset belongs to someone?",
     answer:
-      "No. MyRecon operates primarily through passive reconnaissance techniques, aggregating data from public Certificate Transparency logs, passive DNS caches, ASN routing registries, and dark-web exposure archives without sending hostile traffic.",
+      "No. A matching username or public record is a lead that needs context and verification. Provider failures and inconclusive responses do not prove presence, absence or ownership. Review the result's evidence and limitations before attributing it.",
   },
   {
-    question: "Can I feed discovered MyRecon assets directly into MyPentest?",
+    question: "How can I assess a web application after reconnaissance?",
     answer:
-      "Yes. Discovered subdomains and active web services can be imported directly into MyPentest for cryptographic ownership verification and automated vulnerability assessment.",
+      "Open MyPentest separately, enter a web application you own or are authorized to test, and complete its account-bound DNS verification. Configure the permitted scope and suitable test accounts. MyRecon results do not automatically import targets or bypass ownership verification.",
   },
   {
-    question: "What intelligence sources does MyRecon query?",
+    question: "Where can I check the current MyRecon features?",
     answer:
-      "MyRecon aggregates intelligence from global DNS root zones, Certificate Transparency streams, commercial and dark-web credential leak repositories, WHOIS databases, public cloud storage buckets, and developer code archives.",
+      "Visit myrecon.xyz for its current username, breach, domain, DNS and IP research tools and access limits. Availability depends on the selected tool and its providers; a result is not a complete inventory of every account or internet-facing asset.",
   },
 ];
 
@@ -43,53 +43,53 @@ const softwareJsonLd = {
   operatingSystem: "Web",
   url: `${SITE_URL}/myrecon`,
   description:
-    "Open-source intelligence (OSINT) and external attack surface management: subdomain discovery, credential breach monitoring, and shadow IT mapping.",
+    "Open-source intelligence research for public usernames, breach exposure, domains, DNS and IPs.",
   publisher: { "@id": ORG_ID },
 };
 
 const capabilities = [
   {
     icon: Globe,
-    title: "Subdomain & DNS Mapping",
-    description: "Enumerate active subdomains, wildcard DNS configurations, dangling CNAME pointers, and historical IP resolutions across Certificate Transparency logs.",
+    title: "Domain and DNS Research",
+    description: "Review domain registration and DNS context. Public infrastructure records help inform research; they are not a complete asset inventory.",
   },
   {
     icon: Key,
-    title: "Credential & Breach Intelligence",
-    description: "Scan corporate domains against historical data breaches, paste sites, and dark web compilations to uncover compromised employee credentials.",
+    title: "Breach Exposure Checks",
+    description: "Review supported breach exposure signals for an email address, subject to provider coverage and access limits. A signal does not establish account ownership.",
   },
   {
     icon: Database,
-    title: "Shadow IT & Cloud Asset Discovery",
-    description: "Identify unregistered development environments, public AWS S3 buckets, exposed Azure blobs, and orphan endpoints outside your primary inventory.",
+    title: "Public Username Search",
+    description: "Find public profile leads associated with a username. Review evidence and context before attributing a profile to a person.",
   },
   {
     icon: ShieldAlert,
-    title: "Subdomain Takeover Detection",
-    description: "Detect dangling DNS entries pointing to decommissioned GitHub Pages, S3 buckets, Heroku apps, or CloudFront distributions before attackers hijack them.",
+    title: "IP Investigation",
+    description: "Research public IP and network context. Use relevant information to plan an assessment only after authorization and scope are agreed.",
   },
 ];
 
 const workflow = [
   {
     step: "01",
-    title: "Seed Domain & Entity Input",
-    body: "Provide your primary domain or organization name. MyRecon maps associated Autonomous System Numbers (ASNs), registered CIDR blocks, and legal corporate identifiers.",
+    title: "Choose a Research Question",
+    body: "Select the supported username, email exposure, domain, DNS or IP tool that fits your question.",
   },
   {
     step: "02",
-    title: "Passive OSINT Aggregation",
-    body: "The engine queries Certificate Transparency logs, historical DNS registries, WHOIS records, and breach databases without emitting suspicious port traffic.",
+    title: "Review Public Signals",
+    body: "Inspect the results returned by the selected tool and note provider failures, unknown states and coverage limits.",
   },
   {
     step: "03",
-    title: "Service Resolution & Fingerprinting",
-    body: "Resolves active hosts, captures HTTP response headers, identifies web server software, and checks for vulnerable dangling CNAME records.",
+    title: "Verify the Context",
+    body: "Check attribution and relevance before acting. Similar names and shared infrastructure do not prove a relationship.",
   },
   {
     step: "04",
-    title: "Vulnerability Handoff to MyPentest",
-    body: "Export identified web applications directly into MyPentest for continuous DAST scanning, authenticated access-control testing, and CVSS reporting.",
+    title: "Start an Authorized Assessment",
+    body: "For a web application you can verify, open MyPentest separately and configure a new assessment. Automated importing and continuous monitoring are not established by this workflow.",
   },
 ];
 
@@ -105,8 +105,8 @@ export default function MyReconPage() {
           { name: "MyRecon", path: "/myrecon" },
         ]}
         eyebrow="Reconnaissance & OSINT Engine"
-        title="MyRecon: OSINT & Attack Surface Intelligence Platform"
-        lead="Discover forgotten subdomains, leaked credentials, shadow cloud infrastructure, and attack surface drift before adversaries exploit them. The intelligence layer of the BugSnaps security suite."
+        title="MyRecon: digital footprint and OSINT research."
+        lead="Explore public username leads, breach exposure and domain, DNS and IP context. Review the evidence before drawing a conclusion or planning an authorized assessment."
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <a
@@ -122,7 +122,7 @@ export default function MyReconPage() {
             href={newAssessmentUrl()}
             className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 text-sm font-medium transition-colors hover:border-white/20"
           >
-            Run MyPentest on Discovered Assets
+            Start a separate MyPentest assessment
           </a>
           <Link
             href="/reconnaissance"
@@ -137,8 +137,8 @@ export default function MyReconPage() {
         <SectionTitle
           id="capabilities-title"
           eyebrow="Platform Capabilities"
-          title="See your complete external attack surface through an attacker's lens."
-          lead="Modern organizations lose track of 30% of their internet-facing assets within 6 months of cloud deployment. MyRecon continuously indexes your digital footprint."
+          title="Research public signals with clear limits."
+          lead="Use the current tools at myrecon.xyz to answer a specific question. Results depend on provider coverage and do not establish a complete digital footprint."
         />
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {capabilities.map((c) => {
@@ -158,8 +158,8 @@ export default function MyReconPage() {
         <SectionTitle
           id="workflow-title"
           eyebrow="Methodology"
-          title="From root domain to actionable exploit inventory."
-          lead="A structured four-phase reconnaissance pipeline combining open-source intelligence with active validation."
+          title="From a research question to a reviewed result."
+          lead="Choose a tool, inspect its evidence and verify the context before taking the next step."
         />
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {workflow.map((item) => (
@@ -179,14 +179,14 @@ export default function MyReconPage() {
               id="integration-title"
               eyebrow="Ecosystem Synergy"
               title="Reconnaissance meets automated penetration testing."
-              lead="Knowing your attack surface is only step one. BugSnaps bridges reconnaissance and exploit verification in a unified offensive pipeline."
+              lead="Public research can inform your assessment plan. Testing still requires a verified target, written permission where applicable and an agreed scope."
             />
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted">
               <p>
-                Generic asset discovery tools leave you with a spreadsheet of subdomains and no clarity on which ones are actually vulnerable. MyRecon connects directly to BugSnaps MyPentest.
+                OSINT research and web application testing answer different questions. Use MyRecon for supported public research, then open MyPentest separately when you have a web application you are authorized to assess.
               </p>
               <p>
-                When MyRecon identifies an active API gateway or web portal, you can immediately initiate a deterministic DAST scan with 56 active-safe checks, authenticating with test credentials and testing for BOLA, injection, and broken access controls.
+                MyPentest requires account-bound DNS verification before testing. Its defined checks cover supported reachable surfaces, and supplied test accounts enable supported signed-in checks. Review the resulting evidence and coverage limits.
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-4">
@@ -203,15 +203,15 @@ export default function MyReconPage() {
             <ul className="mt-5 space-y-3">
               <li className="flex gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Discover:</strong> MyRecon finds all subdomains, open ports, and leaked credentials.</span>
+                <span><strong>Research:</strong> Review relevant public username, breach, domain, DNS or IP signals.</span>
               </li>
               <li className="flex gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Verify:</strong> Cryptographic DNS TXT validation ensures ethical, authorized scanning.</span>
+                <span><strong>Verify:</strong> Prove domain control through MyPentest DNS TXT verification and confirm you are authorized to test.</span>
               </li>
               <li className="flex gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Test:</strong> MyPentest executes 56 proof-of-exploit DAST checks with zero false positives.</span>
+                <span><strong>Test:</strong> MyPentest runs defined web security checks and reports observed evidence, confidence and remediation.</span>
               </li>
               <li className="flex gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />

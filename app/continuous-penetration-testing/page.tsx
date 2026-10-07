@@ -1,83 +1,84 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, CheckCircle2, Clock, GitCommit, RefreshCw, Shield, Terminal } from "lucide-react";
+import { ArrowRight, Check, Clock, GitCommit, RefreshCw, Shield } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
-import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
+import { ROADMAP } from "@/lib/mypentest/content";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Continuous Penetration Testing (PTaaS): Automated Security for CI/CD",
+  title: "Continuous Penetration Testing: A Practical Release Workflow",
   description:
-    "Continuous penetration testing as a service (PTaaS). Automate recurring DAST scans on code deployments, track perimeter drift, and verify remediation in real time.",
+    "Build a recurring penetration testing workflow with manually initiated MyPentest assessments, evidence review, remediation and scoped expert testing. Current limits explained.",
   path: "/continuous-penetration-testing",
 });
 
 const faqs = [
   {
-    question: "What is Continuous Penetration Testing as a Service (PTaaS)?",
+    question: "What is continuous penetration testing?",
     answer:
-      "Continuous Penetration Testing (PTaaS) replaces traditional point-in-time annual audits with recurring automated DAST assessments and on-demand human testing integrated directly into your software development lifecycle and CI/CD pipelines.",
+      "Continuous penetration testing is a recurring security testing practice tied to releases, application changes and remediation. With MyPentest today, you start each automated assessment yourself and review its findings. Expert testing is scoped separately for business logic and other needs outside automated coverage.",
   },
   {
-    question: "How does BugSnaps integrate into our CI/CD workflow?",
+    question: "Does MyPentest automatically run when I deploy?",
     answer:
-      "BugSnaps connects via webhooks, GitHub Actions, or GitLab CI. When a production or staging release is deployed, an automated assessment triggers against the target environment, exporting findings directly as SARIF or JSON to block high-risk regressions before they reach customers.",
+      "The current MyPentest product does not promise a deployment webhook, CI runner or automatic release gate. Add a manually initiated assessment to your release checklist. Scheduled retests and automatic assessment diffing are on the roadmap, with no release date promised here.",
   },
   {
     question: "How does fix retesting work in continuous pentesting?",
     answer:
-      "When your engineering team patches a vulnerability and deploys the fix, you can trigger an instant single-target retest. BugSnaps re-executes the exact exploit payload to verify that the vulnerability is closed and updates your compliance attestation report automatically.",
+      "Deploy the change, start another assessment with comparable scope and test accounts, and review the new evidence against the original finding. Confirm the affected route was exercised before marking the issue fixed. A focused expert retest can be discussed as a separately scoped engagement; MyPentest does not automatically issue a compliance attestation.",
   },
   {
     question: "Can continuous testing run against staging environments?",
     answer:
-      "Yes. BugSnaps safe-active payloads are specifically designed for testing pre-production, staging, and preview environments without corrupting test databases or interfering with active engineering workflows.",
+      "A reachable staging web application can be assessed when you can verify its domain and are authorized to test it. Configure the permitted scope and use dedicated test accounts. MyPentest offers passive and deeper non-destructive testing modes; reviewing the setup on staging first remains good practice.",
   },
 ];
 
 const ptaasFeatures = [
   {
     icon: GitCommit,
-    title: "Deployment-Triggered Testing",
-    body: "Run automated security checks automatically on every production release, feature deployment, or perimeter configuration update.",
+    title: "Release Checklist Assessments",
+    body: "Start an assessment after a meaningful release or configuration change. Your team chooses when to run and reviews the results before acting.",
   },
   {
     icon: RefreshCw,
-    title: "Instant Fix Retesting",
-    body: "Validate vulnerability patches with one click. Retests run the exact proof-of-exploit check to ensure security fixes actually hold.",
+    title: "Repeat After a Fix",
+    body: "Run another assessment after deploying a patch. Compare scope, access and evidence before deciding whether the original issue is resolved.",
   },
   {
     icon: Clock,
-    title: "Attack Surface Drift Tracking",
-    body: "Continuously detect new subdomains, modified API routes, and exposed staging services before external adversaries discover them.",
+    title: "Review New Attack Surface",
+    body: "Each assessment performs discovery within its configured scope. Review new pages and API routes alongside your release changes; automatic drift comparison is not currently available.",
   },
   {
     icon: Shield,
-    title: "Compliance Attestation Letters",
-    body: "Maintain evergreen audit readiness for SOC 2, ISO 27001, and vendor risk questionnaires with up-to-date penetration testing reports.",
+    title: "Evidence for Review",
+    body: "Retain reports with test scope and timing to support remediation and security discussions. Your auditor or customer decides what evidence an engagement must provide.",
   },
 ];
 
 const lifecycleSteps = [
   {
     number: "01",
-    title: "Pipeline Integration",
-    body: "Connect your deployment pipeline using webhooks or our CLI integration. Define in-scope domains and test credentials.",
+    title: "Define the Release Check",
+    body: "Choose the authorized environment, verify its domain and configure scope and test accounts. Record the application version you are testing.",
   },
   {
     number: "02",
-    title: "Autonomous DAST Execution",
-    body: "On deployment, our browser engine maps new routes and runs 56 proof-of-exploit vulnerability checks against the target.",
+    title: "Start an Assessment",
+    body: "Initiate the assessment in MyPentest. Discovery and testing run within the configured scope, with progress visible in the app.",
   },
   {
     number: "03",
-    title: "Developer Triage & SARIF",
-    body: "Actionable reproduction curl commands and code fixes are surfaced directly in developer tools and PR status checks.",
+    title: "Review Findings and Fixes",
+    body: "Use severity, confidence, evidence and remediation guidance to create development tasks. Investigate ambiguous observations before treating them as confirmed issues.",
   },
   {
     number: "04",
-    title: "Verified Resolution",
-    body: "Engineering deploys the patch, BugSnaps verifies remediation, and updated attestation documentation is instantly generated.",
+    title: "Review the Retest",
+    body: "Deploy a fix and repeat the relevant assessment. Record fixed, still present or inconclusive after reviewing access, coverage and new evidence.",
   },
 ];
 
@@ -86,9 +87,9 @@ export default function ContinuousPenetrationTestingPage() {
     <SiteShell>
       <JsonLd
         data={serviceJsonLd({
-          name: "Continuous Penetration Testing (PTaaS)",
+          name: "Recurring Penetration Testing Workflow",
           description:
-            "Continuous penetration testing as a service (PTaaS) combining automated deployment-triggered DAST scans with expert remediation verification.",
+            "A recurring security testing workflow with manually initiated MyPentest assessments and separately scoped expert penetration testing.",
           path: "/continuous-penetration-testing",
         })}
       />
@@ -99,16 +100,16 @@ export default function ContinuousPenetrationTestingPage() {
           { name: "Services", path: "/services" },
           { name: "Continuous Pentesting", path: "/continuous-penetration-testing" },
         ]}
-        eyebrow="Continuous Security & PTaaS"
-        title="Continuous Penetration Testing (PTaaS): Automated Security for CI/CD"
-        lead="Shipping code daily while testing security once a year leaves your application exposed for 364 days. BugSnaps delivers continuous automated testing that moves at the speed of modern engineering."
+        eyebrow="A recurring security practice"
+        title="Continuous penetration testing starts with a repeatable release workflow."
+        lead="Test after meaningful changes, review the evidence and verify the fixes. Use MyPentest for assessments your team starts and BugSnaps expert testing for separately scoped work that needs human review."
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <a
             href={newAssessmentUrl()}
             className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-white transition-colors hover:bg-accent"
           >
-            Start Continuous Pentesting Free
+            Start a Free Assessment
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>
           <Link
@@ -121,7 +122,7 @@ export default function ContinuousPenetrationTestingPage() {
             href="/pricing"
             className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 text-sm font-medium transition-colors hover:border-white/20"
           >
-            Subscription Plans
+            Current Scan Plans
           </Link>
         </div>
       </PageHeader>
@@ -129,9 +130,9 @@ export default function ContinuousPenetrationTestingPage() {
       <Section labelledBy="features-title">
         <SectionTitle
           id="features-title"
-          eyebrow="PTaaS Advantages"
+          eyebrow="Available workflow"
           title="Security that keeps pace with your release cycle."
-          lead="Modern development teams cannot wait three weeks for a manual report. Continuous penetration testing provides real-time vulnerability feedback on every deploy."
+          lead="Make recurring assessments part of your engineering checklist. MyPentest automates discovery and testing after you start a run; your team schedules the work and decides what the findings require."
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {ptaasFeatures.map((f) => {
@@ -151,8 +152,8 @@ export default function ContinuousPenetrationTestingPage() {
         <SectionTitle
           id="lifecycle-title"
           eyebrow="Continuous Lifecycle"
-          title="From code commit to verified remediation."
-          lead="How our automated continuous penetration testing platform operates alongside your development workflow."
+          title="From a release change to a reviewed retest."
+          lead="Use comparable scope and access for every run. Keeping that context makes the results more useful when a new route appears or a patch changes existing behavior."
         />
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {lifecycleSteps.map((step) => (
@@ -171,15 +172,15 @@ export default function ContinuousPenetrationTestingPage() {
             <SectionTitle
               id="comparison-section-title"
               eyebrow="Modern Approach"
-              title="Annual snapshot vs Continuous penetration testing."
-              lead="Why forward-thinking engineering organizations are replacing legacy annual penetration tests with continuous testing."
+              title="Combine recurring assessments with expert testing."
+              lead="An automated assessment and an expert-led engagement answer different questions. Choose their cadence and scope around your application and obligations."
             />
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted">
               <p>
-                An annual pentest is outdated the moment your team merges the next pull request. By testing continuously, you catch security flaws within minutes of deployment rather than months later during an audit or breach post-mortem.
+                A report describes the application and scope tested at a particular time. Later releases can change those conditions. Repeating relevant assessments after significant changes helps your team check the current application rather than rely only on an older report.
               </p>
               <p>
-                BugSnaps combines the speed of automated scanning with the precision of deterministic exploit verification, delivering verified findings that developers can fix immediately without wading through hundreds of false alarms.
+                Automated checks provide repeatable coverage of the routes they can reach. Manual testing is still useful for multi-step business logic, custom roles and risks outside that coverage. Neither a recurring cadence nor an automated report establishes that all vulnerabilities have been found.
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-4">
@@ -187,32 +188,44 @@ export default function ContinuousPenetrationTestingPage() {
                 Explore SaaS penetration testing <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground">
-                Compare subscription tiers <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Compare current scan plans <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </div>
           <div className="rounded-2xl border border-white/[0.08] bg-surface p-7">
-            <h3 className="text-lg font-semibold tracking-tight">The PTaaS Operational Advantage</h3>
+            <h3 className="text-lg font-semibold tracking-tight">What to keep with every assessment</h3>
             <ul className="mt-5 space-y-3">
               <li className="flex items-start gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Zero Window of Exposure:</strong> Identify critical authorization or injection bugs within hours of release.</span>
+                <span><strong>Scope and version:</strong> Save the target, roles, exclusions and application version.</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Developer Context Retention:</strong> Engineers fix issues while code is still fresh in their minds.</span>
+                <span><strong>Development context:</strong> Link the finding to its owner, fix and acceptance test.</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Audit Ready Year-Round:</strong> Always possess a current penetration testing report for enterprise procurement.</span>
+                <span><strong>Evidence and limits:</strong> Record the finding, test coverage and any access failures.</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted">
                 <Check className="mt-0.5 h-4 w-4 flex-none text-accent" aria-hidden="true" />
-                <span><strong>Cost Predictability:</strong> Flat-rate continuous testing avoids expensive last-minute emergency pentests.</span>
+                <span><strong>Run budget:</strong> Check current plan limits and available credits before a new assessment.</span>
               </li>
             </ul>
           </div>
         </div>
+      </Section>
+
+      <Section labelledBy="roadmap-title" className="border-t border-white/[0.05] bg-surface/40">
+        <SectionTitle id="roadmap-title" eyebrow="Product status" title="Scheduled retests are planned." lead="Assessments are manually initiated today. These MyPentest features are on the roadmap and are not currently available." />
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+          {ROADMAP.map((item) => (
+            <li key={item} className="flex items-start justify-between gap-3 rounded-xl border border-white/[0.07] bg-surface p-5 text-sm text-muted">
+              <span>{item}</span><span className="shrink-0 rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] text-muted-2">Planned</span>
+            </li>
+          ))}
+        </ul>
+        <Link href="/improvements" className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline">Use the remediation and retest checklist <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
       </Section>
 
       <Section labelledBy="faq-title" id="faq" className="border-t border-white/[0.05]">
@@ -221,7 +234,7 @@ export default function ContinuousPenetrationTestingPage() {
           {faqs.map((faq) => (
             <details key={faq.question} className="group px-6 py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium">
-                <h3>{faq.question}</h3>
+                <span>{faq.question}</span>
                 <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
               </summary>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">{faq.answer}</p>
@@ -231,9 +244,9 @@ export default function ContinuousPenetrationTestingPage() {
       </Section>
 
       <CtaBand
-        title="Upgrade to continuous penetration testing."
-        lead="Integrate automated offensive security into your deployment pipelines and secure your web apps continuously."
-        secondary={{ label: "View subscription pricing", href: "/pricing" }}
+        title="Make your next security assessment repeatable."
+        lead="Start with an authorized staging application, review the evidence and plan the next check around your release changes."
+        secondary={{ label: "Discuss a recurring engagement", href: "/contact" }}
       />
     </SiteShell>
   );

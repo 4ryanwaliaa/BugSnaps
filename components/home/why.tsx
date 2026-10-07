@@ -9,7 +9,7 @@ const POINTS = [
   },
   {
     title: "Automation, then experts",
-    body: "Automated coverage on every release. BugSnaps testers for business logic, chained attacks and anything that needs judgement.",
+    body: "Run an assessment after a release, then scope expert testing for business logic, chained attacks and anything that needs judgement.",
   },
   {
     title: "Actionable findings",

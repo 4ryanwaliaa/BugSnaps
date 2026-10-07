@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
-import { Container, PageHeader, SiteShell } from "@/components/site/page-parts";
+import { Container, JsonLd, PageHeader, SiteShell } from "@/components/site/page-parts";
 import { ContactForm } from "@/components/sections/contact";
-import { pageMetadata } from "@/lib/site";
+import { LocationMap } from "@/components/site/location-map";
+import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Contact BugSnaps",
+  title: "Contact BugSnaps - Gurugram & Remote Penetration Testing",
   absoluteTitle: true,
   description:
-    "Talk to BugSnaps about a penetration test, API or cloud review, or MyPentest for your team. A tester replies within one business day.",
+    "Contact BugSnaps in Gurugram, India for remote website penetration testing, API security assessments and scoped expert engagements. View our city-level map.",
   path: "/contact",
 });
 
 export default function ContactPage() {
   return (
     <SiteShell>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: "Contact BugSnaps",
+        url: absoluteUrl("/contact"),
+        about: { "@id": ORG_ID },
+        spatialCoverage: { "@type": "Place", name: "Gurugram, India" },
+      }} />
       <PageHeader
         crumbs={[{ name: "Contact", path: "/contact" }]}
         eyebrow="Contact"
@@ -22,6 +31,7 @@ export default function ContactPage() {
       />
       <Container className="py-14 sm:py-20">
         <ContactForm />
+        <LocationMap />
       </Container>
     </SiteShell>
   );

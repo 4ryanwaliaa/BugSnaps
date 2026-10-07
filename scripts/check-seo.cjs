@@ -67,7 +67,7 @@ const errors = [], pages = [], linked = new Set(), titles = new Map(), descripti
 const fail = (url, message) => errors.push({ url, message });
 async function get(route) {
   const response = await fetch(new URL(route, base), { redirect: "manual", signal: AbortSignal.timeout(30000) });
-  return { status: response.status, type: response.headers.get("content-type") || "", robots: response.headers.get("x-robots-tag") || "", body: await response.text() };
+  return { status: response.status, type: response.headers.get("content-type") || "", robots: response.headers.get("x-robots-tag") || "", csp: response.headers.get("content-security-policy") || "", body: await response.text() };
 }
 async function audit(route) {
   try {
@@ -147,7 +147,7 @@ async function audit(route) {
     } else group.rules.push({ key, value });
   }
   if (group.agents.length) groups.push(group);
-  for (const bot of ["Googlebot", "Bingbot", "DuckDuckBot", "OAI-SearchBot", "GPTBot", "Google-Extended", "ClaudeBot", "Claude-SearchBot", "PerplexityBot"]) {
+  for (const bot of ["Googlebot", "Googlebot-Image", "Bingbot", "DuckDuckBot", "Slurp", "MojeekBot", "PetalBot", "OAI-SearchBot", "GPTBot", "ChatGPT-User", "Google-Extended", "ClaudeBot", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Applebot", "Meta-ExternalAgent", "Twitterbot", "LinkedInBot"]) {
     const applicable = groups.filter(g => g.agents.includes(bot.toLowerCase()));
     assert(applicable.length, `Missing explicit crawler policy for ${bot}`);
     const rules = applicable.flatMap(g => g.rules);
@@ -168,6 +168,16 @@ async function audit(route) {
   const csv = await get("/benchmarks/run-template.csv");
   assert.equal(csv.status, 200, "Benchmark record template unavailable");
   assert(csv.body.includes("ground_truth_artifact") && csv.body.includes("raw_report_artifact"), "Benchmark template missing evidence fields");
+  const cases = await get("/benchmarks/case-template.csv");
+  assert.equal(cases.status, 200, "Benchmark case-review template unavailable");
+  assert(cases.body.includes("expected_behavior") && cases.body.includes("control_artifact"), "Case-review template missing comparison controls");
+  const editorialImage = await fetch(new URL("/images/website-security-review.webp", base), { signal: AbortSignal.timeout(30000) });
+  assert.equal(editorialImage.status, 200, "Editorial image is unavailable");
+  assert((editorialImage.headers.get("content-type") || "").includes("image/webp"), "Editorial image must be served as WebP");
+  const contact = await get("/contact");
+  assert(contact.csp.includes("frame-src https://www.openstreetmap.org"), "Contact map frame is blocked by CSP");
+  const home = await get("/");
+  assert(home.csp.includes("frame-src 'none'"), "The public homepage should retain its stricter frame policy");
   let index = 0;
   await Promise.all(Array.from({ length: 5 }, async () => { while (index < paths.length) await audit(paths[index++]); }));
   for (const p of paths) if (p !== "/" && !linked.has(p)) fail(p, "No internal page links to this URL");

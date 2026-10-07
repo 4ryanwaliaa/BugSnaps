@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Zap, Clock, DollarSign, ArrowRight, CheckCircle2, ShieldCheck, Rocket } from "lucide-react";
+import { Clock, DollarSign, ArrowRight, Rocket } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Penetration Testing for Startups: Fast, Affordable & Auditor-Ready",
+  title: "Penetration Testing for Startups: Automated Checks and Expert Scope",
   description:
-    "Fast, affordable penetration testing built for growing startups: close enterprise deals, satisfy SOC 2 and ISO 27001 requirements, and eliminate vulnerabilities without enterprise contracts.",
+    "Start with a free automated web security assessment, review evidence and fixes, and scope expert-led penetration testing for your startup when deeper review is needed.",
   path: "/solutions/startup-penetration-testing",
 });
 
@@ -15,17 +15,17 @@ const faqs = [
   {
     question: "When should an early-stage startup get a penetration test?",
     answer:
-      "Startups should test before processing customer production data, when preparing for enterprise security reviews, or when pursuing SOC 2 / ISO 27001 certifications. Testing proactively prevents stalled sales cycles.",
+      "Consider testing before a launch, after significant authentication or payment changes, and when a customer requests a security review. Choose the scope and testing method around the application and the evidence the reviewer requires.",
   },
   {
     question: "How long does a BugSnaps startup assessment take?",
     answer:
-      "Automated testing with MyPentest delivers verified findings in minutes directly in your browser. Certified human expert engagements are completed and delivered within days, not weeks.",
+      "Automated scan duration depends on DNS verification, scope, reachable routes, supplied accounts and scan limits. You can watch progress in the app. Expert-led schedules and report delivery are agreed during scoping; this page does not promise a fixed turnaround.",
   },
   {
     question: "Do enterprise customers accept BugSnaps reports during procurement reviews?",
     answer:
-      "Yes. BugSnaps deliverables include executive summary letters, CVSS v3.1 scoring, CWE mappings, and signed retest attestations designed specifically for enterprise vendor risk management teams.",
+      "Acceptance depends on the customer and the evidence they request. MyPentest reports technical findings within automated coverage. If procurement requires independent manual testing, a specific report or a signed retest document, discuss those as separately scoped deliverables before booking.",
   },
 ];
 
@@ -39,55 +39,43 @@ export default function StartupPenetrationTestingPage() {
           { name: "Startup Penetration Testing", path: "/solutions/startup-penetration-testing" },
         ]}
         eyebrow="Startup Security"
-        title="Penetration Testing for Startups: Fast, Affordable & Auditor-Ready"
-        lead="Stop enterprise sales deals from stalling on security questionnaires. Get auditor-approved penetration test reports within days without $20,000 enterprise lock-in."
+        title="Penetration Testing for Startups: Automated Checks and Expert Scope"
+        lead="Review your application with a free automated assessment, then choose paid scan packs or discuss expert-led testing as your needs grow. Confirm customer report requirements before selecting a testing scope."
       />
 
       <Section labelledBy="overview-title">
         <h2 id="overview-title" className="text-2xl font-semibold tracking-tight">
-          Built for Agile Startups Moving at High Velocity
+          A Practical Starting Point for Startup Security
         </h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted">
-          Enterprise prospects and compliance auditors demand third-party penetration testing before signing software agreements. Yet traditional security consultancies take weeks to schedule scoping calls and charge five-figure fees. BugSnaps provides immediate, hosted testing that matches agile startup sprint cycles.
+          Your first assessment can help uncover exposed secrets, access-control weaknesses, injection indicators and configuration issues. MyPentest runs defined checks on a verified domain and reports evidence and confidence. Use those observations to plan remediation and decide where a deeper expert review is needed.
         </p>
 
-        {/* Sector Capability Benchmark */}
         <div className="mt-8 rounded-2xl border border-white/[0.08] bg-surface p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-wider text-accent">Sector Benchmark</span>
-              <h3 className="mt-1 text-lg font-semibold">Startup Time-to-Scan &amp; Cost Efficiency Score</h3>
-            </div>
-            <span className="font-mono text-2xl font-bold text-accent">98% vs 38%</span>
-          </div>
-          <p className="mt-2 text-sm text-muted">
-            BugSnaps delivers zero-setup browser testing and flat-rate scan packs, reducing startup security costs by up to 80%.
-          </p>
-          <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-white/[0.06]">
-            <div className="h-full rounded-full bg-gradient-to-r from-accent to-emerald-400" style={{ width: "98%" }} />
-          </div>
+          <h3 className="text-lg font-semibold">Scope before promises</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted">The free trial, Plus scan packs and expert engagements serve different needs. Current plan access is listed on the pricing page; no measured cost-saving or time-to-scan percentage is published.</p>
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <Clock className="h-5 w-5 text-accent" />
-            <h3 className="mt-3 font-semibold">Zero Wait Time</h3>
+            <h3 className="mt-3 font-semibold">Self-Service Assessment Setup</h3>
             <p className="mt-2 text-sm text-muted">
-              Start testing immediately through your browser with MyPentest. No sales calls or procurement delays.
+              Create an account, verify DNS ownership and configure your authorized scope. Supply dedicated test accounts for signed-in checks.
             </p>
           </div>
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <DollarSign className="h-5 w-5 text-emerald-400" />
             <h3 className="mt-3 font-semibold">Predictable Flat Pricing</h3>
             <p className="mt-2 text-sm text-muted">
-              Transparent scan packs with lifetime validity. Never pay for unused monthly enterprise subscriptions.
+              The Plus plan provides scan packs with no expiry. Check current pricing for scan allowances, finding visibility and downloadable report access.
             </p>
           </div>
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <Rocket className="h-5 w-5 text-blue-400" />
-            <h3 className="mt-3 font-semibold">Enterprise Deal Enablement</h3>
+            <h3 className="mt-3 font-semibold">Prepare for Customer Reviews</h3>
             <p className="mt-2 text-sm text-muted">
-              Deliver professional executive summaries that satisfy enterprise vendor risk security questionnaires.
+              Ask the customer what testing and report evidence they require. Expert engagements and signed deliverables are agreed separately.
             </p>
           </div>
         </div>
@@ -95,15 +83,15 @@ export default function StartupPenetrationTestingPage() {
 
       <Section labelledBy="comparison-link-title" className="border-t border-white/[0.05] bg-surface/30">
         <h2 id="comparison-link-title" className="text-2xl font-semibold tracking-tight">
-          How BugSnaps Compares Against Traditional Security Consultancies
+          Choose Automated or Expert-Led Testing
         </h2>
         <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-muted">
           <p>
-            Traditional firms require multiple weeks of planning and deliver static 100-page PDF reports. BugSnaps gives developers actionable reproduction curl commands and instant retesting.
+            Automated checks offer repeatable observations within a defined application surface. Expert-led testing can examine business logic and custom roles that automation cannot fully assess. Compare scope, evidence, report access and agreed timelines; no universal cost or speed advantage is claimed.
           </p>
           <div className="pt-2">
             <Link href="/us-vs-competitors" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">
-              Inspect all benchmarks in BugSnaps vs Competitors <ArrowRight className="h-3.5 w-3.5" />
+              Compare tools by scope and evidence <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
@@ -123,7 +111,7 @@ export default function StartupPenetrationTestingPage() {
         </div>
       </Section>
 
-      <CtaBand />
+      <CtaBand title="Start with evidence from your own application." lead="Run a free automated assessment or discuss the deeper review your customer requires." secondary={{ label: "Discuss expert-led startup testing", href: "/contact?topic=enterprise" }} />
     </SiteShell>
   );
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Section, SiteShell } from "@/components/site/page-parts";
+import { JsonLd, Section, SiteShell } from "@/components/site/page-parts";
+import { SecurityReviewFigure } from "@/components/site/security-review-figure";
 import { HomeHero } from "@/components/home/hero";
 import { HomeProducts } from "@/components/home/products";
 import { HomeHowItRuns, HomeMarquee, HomeReport, HomeStats } from "@/components/home/sections";
@@ -9,19 +10,30 @@ import { HomeWhy } from "@/components/home/why";
 import { HomeResearch } from "@/components/home/research";
 import { HomeClosing } from "@/components/home/closing";
 import { LegacyHashRedirect } from "@/components/home/legacy-hash-redirect";
-import { pageMetadata } from "@/lib/site";
+import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "BugSnaps - Penetration Testing, Automated and Expert-Led",
+  title: "Website & API Penetration Testing - BugSnaps",
   absoluteTitle: true,
   description:
-    "Security testing that actually tests. Run MyPentest - our automated penetration test - free to start, or bring in the BugSnaps team for a manual engagement.",
+    "Automated website and API penetration testing with MyPentest. Review vulnerability evidence and fixes, start with a free trial, or scope an expert engagement.",
   path: "/",
 });
 
 export default function Home() {
   return (
     <SiteShell>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "ImageObject",
+        "@id": absoluteUrl("/#security-review-image"),
+        contentUrl: absoluteUrl("/images/website-security-review.webp"),
+        caption: "Review evidence, assign a fix and retest the affected path. AI-generated illustration; not a product screenshot or customer assessment.",
+        width: 1600,
+        height: 900,
+        creator: { "@id": ORG_ID },
+        creditText: "BugSnaps; AI-generated illustration",
+      }} />
       <LegacyHashRedirect />
       <HomeHero />
       <HomeMarquee />
@@ -64,6 +76,27 @@ export default function Home() {
       </Section>
 
       <HomeWhy />
+      <Section labelledBy="improve-security-title" className="border-t border-white/5">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-wider text-accent">From findings to fixes</p>
+            <h2 id="improve-security-title" className="mt-3 text-3xl font-semibold tracking-tight">
+              Improve your website security with a clear next step.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              A useful web application security assessment gives your team an affected path, evidence, severity and remediation. Check access control, exposed secrets, injection and session handling on systems you are authorized to test, then rerun the relevant checks after fixing them.
+            </p>
+            <div className="mt-6 flex flex-col items-start gap-3 text-sm">
+              <Link href="/improvements" className="inline-flex items-center gap-2 text-accent hover:underline">
+                The security improvement checklist <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link href="/why-bugsnaps" className="text-accent hover:underline">Why give BugSnaps a try?</Link>
+              <Link href="/compare/mypentest-vs-ai-assistants" className="text-accent hover:underline">Compare MyPentest with AI assistants</Link>
+            </div>
+          </div>
+          <SecurityReviewFigure />
+        </div>
+      </Section>
       <HomeResearch />
       <Section labelledBy="security-resources-title" className="border-t border-white/5">
         <h2 id="security-resources-title" className="text-2xl font-semibold">

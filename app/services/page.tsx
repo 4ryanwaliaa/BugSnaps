@@ -100,7 +100,7 @@ export default function ServicesPage() {
           </Link>
           <Link href="/solutions/soc2-penetration-testing" className="group rounded-2xl border border-white/[0.07] bg-surface p-5 transition-colors hover:border-white/15">
             <h3 className="font-semibold group-hover:text-accent">SOC 2 Compliance Pentesting</h3>
-            <p className="mt-2 text-xs leading-relaxed text-muted">AICPA CC4.1 &amp; CC7.1 mapping, auditor letters, and retest attestations.</p>
+            <p className="mt-2 text-xs leading-relaxed text-muted">Scope an expert assessment and agree report and retest deliverables with your team and assessor.</p>
             <span className="mt-3 inline-flex items-center gap-1 text-xs text-accent">Learn more →</span>
           </Link>
           <Link href="/solutions/api-penetration-testing" className="group rounded-2xl border border-white/[0.07] bg-surface p-5 transition-colors hover:border-white/15">

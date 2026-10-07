@@ -1,6 +1,6 @@
 # BugSnaps search growth and Strix positioning
 
-Updated: 7 October 2026. Owner: BugSnaps. This is an execution plan, not achieved rankings or measured detection results.
+Updated: 8 October 2026. Owner: BugSnaps. This is an execution plan, not achieved rankings or measured detection results.
 
 ## Positioning to earn
 
@@ -26,3 +26,15 @@ Take a Search Console and Bing baseline at release. Review weekly for six weeks:
 Public content is server-rendered with canonical URLs, social metadata, readable answers, breadcrumbs and visible-text-matching FAQ schema. Sitemap last-modified dates describe substantive changes. Private application and API paths remain excluded. `/llms.txt` is an optional public directory, not a proven ranking signal or Google requirement.
 
 [Google's AI search guidance](https://developers.google.com/search/docs/appearance/ai-features) uses ordinary SEO eligibility and does not guarantee indexing or inclusion. [OpenAI crawler documentation](https://developers.openai.com/api/docs/bots) distinguishes search access from training access. The requested policy allows both on public pages. No ranking, citation, benchmark win or compliance certification is promised.
+
+## October 8 enrichment release
+
+- Added `/improvements` for website security improvement and remediation, `/why-bugsnaps` for trial and product fit, and `/compare/mypentest-vs-ai-assistants` for ChatGPT, Claude Code and automation workflow comparisons. Benchmarks remain a methodology with pending measured results.
+- Improved homepage search title and description, public resource links, HTML/XML sitemaps and the optional AI directory. Added a compressed editorial visual with alt text and a visible illustration caption. The actual example report remains separately labelled.
+- Expanded explicit search, image, AI and social crawler groups. The wildcard allows other public crawlers as well. Firefox is a browser; its users discover the site through their chosen search engine. Client user-agent checks establish a request can access public content, not that a provider crawled it or cited it.
+- Added a city-level Gurugram map to contact, based on the founder's previously supplied location. It identifies no street address or office, and loads OpenStreetMap only after a visitor chooses to view it. The frame permission is limited to the contact page.
+- Removed unsupported detection percentages, zero-false-positive/downtime promises and universal compliance or audit acceptance claims from the refreshed landing pages. Scheduled retests remain a roadmap item.
+- `node scripts/submit-indexnow.cjs / /improvements /benchmarks /why-bugsnaps /compare/mypentest-vs-ai-assistants` validates live ownership, public sitemap membership, page availability and canonical/indexing metadata before notifying IndexNow. The public ownership file is deployed with the site. A 200 means received; 202 means key validation pending. Neither means indexed. See [IndexNow documentation](https://www.indexnow.org/documentation).
+- Use search terms naturally in relevant titles, headings and explanations: automated penetration testing, website security testing, API security testing, vulnerability assessment, AI pentesting comparisons, access control, BOLA/IDOR, remediation and retesting. No search volume is claimed without keyword data; no hidden keyword stuffing or invented reviews are added.
+
+Google Search Console/Bing account verification and indexing are separate provider outcomes. Record a submission receipt only when observed. A deployed sitemap and successful IndexNow request do not establish Google submission.

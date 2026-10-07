@@ -127,6 +127,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // Only the contact page can load the optional city map frame.
+      { source: "/contact", headers: [{ key: "Content-Security-Policy", value: csp({ frame: ["https://www.openstreetmap.org"] }) }] },
       { source: "/mypentest/app", headers: mypentestHeaders },
       { source: "/mypentest/app/:path*", headers: mypentestHeaders },
       // The signed-in app is never indexed, whatever a crawler finds linking to it.

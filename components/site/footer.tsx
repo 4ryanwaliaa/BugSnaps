@@ -20,6 +20,7 @@ const COMPARE: Column = {
   links: [
     { label: "Benchmark methodology", href: "/benchmarks" },
     { label: "BugSnaps vs Competitors", href: "/us-vs-competitors" },
+    { label: "MyPentest vs AI assistants", href: "/compare/mypentest-vs-ai-assistants" },
     { label: "MyPentest vs Strix", href: "/compare/mypentest-vs-strix" },
     { label: "MyPentest vs Astra", href: "/compare/mypentest-vs-astra-security" },
     { label: "MyPentest vs Acunetix", href: "/compare/mypentest-vs-acunetix" },
@@ -62,6 +63,8 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       heading: "Company",
       links: [
         { label: "About", href: "/about" },
+        { label: "Why try BugSnaps", href: "/why-bugsnaps" },
+        { label: "Security improvements", href: "/improvements" },
         { label: "Security readiness & trust", href: "/security-readiness" },
         { label: "Blog", href: "/blog" },
         { label: "Security guides", href: "/guides" },
