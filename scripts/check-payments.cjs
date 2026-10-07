@@ -143,8 +143,8 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, paymen
     button: (text) => nodes(view.tree).find((node) => node.type === "button" && copy(node).includes(text)),
     async startInternational() {
       view.render(); await flush(); view.render();
-      const method = this.button("International"); assert.ok(method, "international choice is visible");
-      method.props.onClick(); view.render();
+      assert.ok(this.find("PayPalCheckout"), "PayPal checkout is primary");
+      assert.ok(this.button("For India:"), "India checkout is available below PayPal");
       return this.find("PayPalCheckout").props;
     },
   };
@@ -157,7 +157,7 @@ async function main() {
   assert.equal(legacy.button("Buy 2 more scans").props.disabled, false);
   const unavailable = fixture({ paypalEnabled: false });
   unavailable.view.render(); await flush(); unavailable.view.render();
-  assert.equal(unavailable.button("International"), undefined, "disabled PayPal must be hidden");
+  assert.equal(unavailable.find("PayPalCheckout"), undefined, "disabled PayPal must be hidden");
 
   const linked = fixture({ payment: "paypal" });
   linked.view.render(); await flush(); linked.view.render();
@@ -169,12 +169,20 @@ async function main() {
   const checkout = await success.startInternational();
   const usdCard = nodes(success.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
   assert.equal(usdCard.props.plan.currency, "USD"); assert.equal(usdCard.props.plan.price, 799);
+  assert.ok(copy(success.button("For India:")).includes("374"), "India checkout shows the server-matched 25 percent discount");
+  const standard = fixture(); standard.state.offer = null;
+  await standard.startInternational();
+  assert.ok(copy(standard.button("For India:")).includes("499"), "India list price remains INR 499");
+  assert.equal(success.button("For India:").props.disabled, false);
   const orderId = await checkout.createOrder();
+  success.view.render();
+  assert.equal(success.button("For India:").props.disabled, true, "PayPal checkout blocks a simultaneous Razorpay payment");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("create-order")).body, { plan: "plus", cycle: "monthly" }, "browser cannot submit a price");
   await checkout.onApprove(orderId); success.view.render();
   assert.equal(success.find("Notice").props.tone, "ok");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("capture-order")).body, { order_id: orderId });
   assert.equal(success.storage.size, 0, "confirmed order clears recovery storage");
+  assert.equal(success.button("For India:").props.disabled, false, "confirmed checkout restores the India payment option");
 
   const cancelled = fixture();
   const cancelCheckout = await cancelled.startInternational();
@@ -217,7 +225,7 @@ async function main() {
   await inFlight; switched.view.render();
   assert.equal(switched.calls.filter((call) => call.url.endsWith("capture-order")).length, 1, "changing account stops automatic retries");
   assert.ok(switched.storage.has("mypentest:pending-paypal-payment:alice"), "the original owner can still recover after signing back in");
-  assert.equal(switched.find("Notice"), undefined, "late payment results cannot appear to the new user");
+  assert.equal(nodes(switched.view.tree).find((node) => node.type.displayName === "Notice" && node.props.title !== "PayPal sandbox"), undefined, "late payment results cannot appear to the new user");
 
   assert.equal(success.plans.discountedPrice(799, 50, "USD"), 400, "USD rounds half cents up");
   assert.equal(success.plans.discountedPrice(799, 25, "USD"), 599);
