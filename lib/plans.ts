@@ -24,6 +24,9 @@ export type ExportFormat = "json" | "md" | "html" | "sarif" | "pdf";
 export const EXPORT_FORMATS: ExportFormat[] = ["json", "md", "html", "sarif", "pdf"];
 export type Cycle = "monthly" | "yearly";
 
+/** Public list price; the backend owns the amount charged. */
+export const INTERNATIONAL_PLUS_USD_CENTS = 799;
+
 export interface Plan {
   id: string;
   order: number;
@@ -165,7 +168,8 @@ export const FALLBACK_PLANS: Plan[] = [
     "perks": [
       "Unused scans carry over when you buy another pack",
       "No monthly subscription or automatic charge",
-      "Optional email report on completion"
+      "Optional email report on completion",
+      "Priority support for paid users"
     ],
     "yearlyPrice": 0,
     "exports": [
@@ -452,6 +456,7 @@ export function planFeatures(plan: Plan): string[] {
     ...(plan.scanPack ? ["Scans follow the service time and safety limits"] : []),
     ...(plan.manualTesting ? ["A custom manual penetration test by BugSnaps testers"] : []),
     ...plan.perks,
+    ...(plan.price > 0 && !plan.perks.some((perk) => /priority.*support/i.test(perk)) ? ["Priority support for paid users"] : []),
   ]));
 }
 

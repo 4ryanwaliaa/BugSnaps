@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Pricing - MyPentest Plans and Manual Pentesting",
   description:
-    "Try MyPentest once for free. Plus costs ₹499 for 2 detailed scans with no expiry, full reports and no plan URL or discovery cap. Contact us for Enterprise manual audits.",
+    "Try MyPentest once for free. Plus costs ₹499 in India or US$7.99 internationally for 2 deep scans with no expiry, full reports and priority support. Contact us for Enterprise manual audits.",
   path: "/pricing",
 });
 
@@ -22,7 +22,7 @@ export default async function PricingPage() {
         crumbs={[{ name: "Pricing", path: "/pricing" }]}
         eyebrow="Pricing"
         title="Start free. Pay when you need more."
-        lead={`${LAUNCH_OFFER.detail} Plus is ₹499 for 2 detailed scans that never expire. Buy another pack anytime through Razorpay.`}
+        lead={`${LAUNCH_OFFER.detail} Plus is ₹499 in India through Razorpay or US$7.99 internationally through PayPal. Both include 2 deep scans with no expiry and priority support for paid users.`}
       />
 
       <Section labelledBy="plans-title">
@@ -33,7 +33,7 @@ export default async function PricingPage() {
         <p className="mt-6 text-[13px] text-muted-2">
           Free includes 1 scan per account, up to 200 URLs and 500 discovered pages. Plus includes all finding details
           and report downloads, with no plan cap on URLs or discovery. Service limits of 10,000 tested URLs, 50,000
-          discovered pages and one hour per scan still apply. Prices are in Indian rupees.
+          discovered pages and one hour per scan still apply. India checkout uses INR; international PayPal checkout uses USD.
         </p>
       </Section>
 

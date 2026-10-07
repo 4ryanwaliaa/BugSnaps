@@ -24,6 +24,7 @@ const TOPICS: { value: string; label: string }[] = [
   { value: "enterprise", label: "Manual pentest alongside MyPentest - book a consultation" },
   { value: "mypentest-billing", label: "MyPentest plans and billing" },
   { value: "mypentest-support", label: "MyPentest support" },
+  { value: "priority-support", label: "MyPentest priority support (paid users)" },
   { value: "other", label: "Something else" },
 ];
 
@@ -102,6 +103,9 @@ export function ContactForm() {
             <h2 className="text-lg font-semibold tracking-tight">Send us a message</h2>
             {/* Honeypot - invisible to humans; bots that tick it are dropped. */}
             <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+            {topic === "priority-support" && (
+              <p className="text-sm text-muted">Use the email linked to your paid MyPentest account. We verify paid status when handling priority requests.</p>
+            )}
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <label htmlFor="name" className="mb-2 block text-sm font-medium">Name</label>

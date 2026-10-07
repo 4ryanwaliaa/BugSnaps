@@ -69,7 +69,7 @@ function runner(component, props) {
   };
 }
 
-function fixture({ uid = "alice", providers = true, paypalEnabled = true, storage = new Map() } = {}) {
+function fixture({ uid = "alice", providers = true, paypalEnabled = true, payment = null, storage = new Map() } = {}) {
   const calls = [];
   let captureStatus = 200;
   let captureResponder = null;
@@ -78,7 +78,7 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, storag
   const modules = {
     react,
     "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
-    "next/navigation": { useSearchParams: () => new URLSearchParams() },
+    "next/navigation": { useSearchParams: () => new URLSearchParams(payment ? { payment } : {}) },
     "lucide-react": { CreditCard: marker("icon"), Loader2: marker("loader") },
     "@/lib/firebase-auth": { firebaseConfig: { databaseURL: "https://fixture.invalid" }, idToken: async () => `test-${owner}` },
     "@/lib/mypentest": { routes: { api: "/mypentest/api", consultation: "/contact" } },
@@ -95,7 +95,7 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, storag
     subscription: null, plans: [], offer: { percent: 25, expires_at: "2030-01-01", seconds_left: 100 },
     ...(providers ? { providers: {
       razorpay: { enabled: true, test_mode: false },
-      paypal: { enabled: paypalEnabled, test_mode: true, client_id: "public-fixture-client", currency: "USD", prices: { plus: 699 } },
+      paypal: { enabled: paypalEnabled, test_mode: true, client_id: "public-fixture-client", currency: "USD", prices: { plus: 799 } },
     } } : {}),
   };
   const sessionStorage = {
@@ -110,7 +110,7 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, storag
       if (url.endsWith("capture-order") && captureResponder) return captureResponder();
       const status = url.endsWith("capture-order") ? captureStatus : 200;
       const data = url.endsWith("/billing") ? state
-        : url.endsWith("create-order") ? { order_id: "FIXTUREORDER12345", amount: 524, list_amount: 699, currency: "USD", plan: { name: "plus", title: "Plus" } }
+        : url.endsWith("create-order") ? { order_id: "FIXTUREORDER12345", amount: 599, list_amount: 799, currency: "USD", plan: { name: "plus", title: "Plus" } }
         : status === 200 ? { ok: true, subscription: { plan: "plus", title: "Plus", scan_pack: true, scan_credits: 2 } }
         : { error: "Confirmation is temporarily unavailable." };
       return { ok: status >= 200 && status < 300, status, json: async () => data };
@@ -159,10 +159,16 @@ async function main() {
   unavailable.view.render(); await flush(); unavailable.view.render();
   assert.equal(unavailable.button("International"), undefined, "disabled PayPal must be hidden");
 
+  const linked = fixture({ payment: "paypal" });
+  linked.view.render(); await flush(); linked.view.render();
+  assert.ok(linked.find("PayPalCheckout"), "international pricing link selects PayPal automatically");
+  assert.ok(linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "plus")).includes("Priority support for paid users"));
+  assert.ok(!linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "free")).includes("Priority support for paid users"));
+
   const success = fixture();
   const checkout = await success.startInternational();
   const usdCard = nodes(success.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
-  assert.equal(usdCard.props.plan.currency, "USD"); assert.equal(usdCard.props.plan.price, 699);
+  assert.equal(usdCard.props.plan.currency, "USD"); assert.equal(usdCard.props.plan.price, 799);
   const orderId = await checkout.createOrder();
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("create-order")).body, { plan: "plus", cycle: "monthly" }, "browser cannot submit a price");
   await checkout.onApprove(orderId); success.view.render();
@@ -213,8 +219,8 @@ async function main() {
   assert.ok(switched.storage.has("mypentest:pending-paypal-payment:alice"), "the original owner can still recover after signing back in");
   assert.equal(switched.find("Notice"), undefined, "late payment results cannot appear to the new user");
 
-  assert.equal(success.plans.discountedPrice(699, 50, "USD"), 350, "USD rounds half cents up");
-  assert.equal(success.plans.discountedPrice(699, 25, "USD"), 524);
+  assert.equal(success.plans.discountedPrice(799, 50, "USD"), 400, "USD rounds half cents up");
+  assert.equal(success.plans.discountedPrice(799, 25, "USD"), 599);
   assert.equal(success.plans.discountedPrice(100, 80, "USD"), 100, "USD minimum matches the server");
   assert.equal(success.plans.discountedPrice(49900, 25, "INR"), 37400, "INR retains whole-rupee pricing");
 
