@@ -209,7 +209,8 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted-2">
           This is a product-scope comparison, not a head-to-head detection benchmark. Best-fit recommendations are
           editorial judgments. Check the exact edition and validate it against the same authorized staging application,
-          accounts and exclusions. No scanner can guarantee that every vulnerability was found.
+          accounts and exclusions. No scanner can guarantee that every vulnerability was found.{" "}
+          <Link href="/benchmarks" className="text-accent underline">Use the reproducible benchmark protocol.</Link>
         </p>
         {alternativePage(them.slug) ? (
           <Link href={alternativePath(them.slug)} className="mt-5 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">

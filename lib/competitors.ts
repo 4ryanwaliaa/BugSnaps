@@ -51,9 +51,9 @@ export interface Competitor {
 const yes=(note?:string):Cell=>({v:"yes",...(note?{note}:{})});
 const partial=(note:string):Cell=>({v:"partial",note});
 type Profile=Pick<Competitor,"slug"|"name"|"vendor"|"website"|"category"|"summary"|"sources"|"theirPros"|"theirCons"|"pricing"|"chooseThem"|"faq">&{cells:Partial<Record<FeatureId,Cell>>};
-function profile(input:Profile):Competitor {
+function profile(input:Profile, checkedOn = "2026-10-02"):Competitor {
  const cells=Object.fromEntries(FEATURES.map(f=>[f.id,{v:"unstated"}])) as Record<FeatureId,Cell>;
- return {...input,cells:{...cells,...input.cells},checkedOn:"2026-10-02",
+ return {...input,cells:{...cells,...input.cells},checkedOn,
  metaDescription:`MyPentest vs ${input.name}: workflow, authentication, evidence, pricing model and limitations. Compare edition-specific features with primary vendor sources.`,
  lead:`${input.summary} Compare its workflow with MyPentest's hosted assessment of a verified application, including the limits of both approaches.`,
  bestFor:input.chooseThem,
@@ -259,8 +259,8 @@ export const competitors:Competitor[]=[
  theirCons:["Local model and Docker setup need an operator","Consider both cloud seat and pentest billing","Agree permitted actions before agent-driven tests"],
  pricing:["Local engine is open source; model usage has its own costs or subscription terms.","Cloud Pro uses seat billing and separately billed pentests; Enterprise is custom."],
  chooseThem:"You want agent-driven code and runtime tests with a controlled environment for exploit validation.",
- faq:[{question:"How is MyPentest different from Strix?",answer:"Strix describes AI agents that develop and validate attacks. MyPentest runs defined checks and attaches evidence and confidence; it does not generate general exploit chains or code-fix pull requests."},{question:"Can the local Strix edition run without setup?",answer:"The official setup documents Docker and a supported model credential. Managed cloud is a separate option. Check model access and cloud billing before choosing."}],
- }),
+ faq:[{question:"How is MyPentest different from Strix?",answer:"Strix describes AI agents that develop and validate attacks. MyPentest runs defined checks and attaches evidence and confidence; it does not generate general exploit chains or code-fix pull requests."},{question:"Can the local Strix edition run without setup?",answer:"The official setup documents Docker and a supported model credential. Managed cloud is a separate option. Check model access and cloud billing before choosing."},{question:"Is MyPentest more accurate than Strix?",answer:"No published head-to-head run establishes that claim. Compare both tools on the same authorized staging revision, accounts and scope; review misses, false positives, reproducible evidence and total cost using the BugSnaps benchmark protocol."}],
+ }, "2026-10-07"),
  profile({
  slug:"xbow",name:"XBOW",vendor:"XBOW",website:"https://xbow.com",category:"Autonomous offensive testing",
  summary:"An autonomous offensive platform describing reproducible exploits and continuous application coverage.",

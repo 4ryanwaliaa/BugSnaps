@@ -18,7 +18,7 @@ export type FooterBrand = "bugsnaps" | "mypentest";
 const COMPARE: Column = {
   heading: "Compare",
   links: [
-    { label: "Sector benchmarks", href: "/benchmarks" },
+    { label: "Benchmark methodology", href: "/benchmarks" },
     { label: "BugSnaps vs Competitors", href: "/us-vs-competitors" },
     { label: "MyPentest vs Strix", href: "/compare/mypentest-vs-strix" },
     { label: "MyPentest vs Astra", href: "/compare/mypentest-vs-astra-security" },
@@ -200,7 +200,7 @@ export function Footer({ brand = "bugsnaps", hardLinks = false }: { brand?: Foot
   return (
     <footer className="px-4 pb-6 pt-10 sm:px-6 sm:pb-8">
       <div className="mx-auto w-full max-w-7xl rounded-2xl border border-white/[0.06] bg-[#0c0c0e] px-6 py-12 sm:px-10 sm:py-14 xl:px-12">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 xl:grid-cols-[minmax(10rem,1fr)_repeat(5,max-content)] xl:gap-x-0 xl:gap-y-0">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 xl:grid-cols-[minmax(10rem,1fr)_repeat(5,minmax(0,1fr))] xl:gap-x-0 xl:gap-y-0">
           <div className="col-span-2 flex flex-col justify-between gap-8 sm:col-span-3 xl:col-span-1 xl:pr-8">
             <div>
               <Brand brand={brand} hardLinks={hardLinks} />

@@ -133,6 +133,41 @@ async function audit(route) {
   assert.equal(robots.status, 200, "robots.txt is unavailable");
   assert(robots.body.includes(`Sitemap: ${SITE_URL}/sitemap.xml`), "Missing sitemap discovery directive");
   assert(robots.body.includes("Disallow: /mypentest/app") && robots.body.includes("Disallow: /mypentest/api"), "Private areas must remain excluded");
+  // Check the applicable named group, not just the wildcard fallback.
+  const groups = [];
+  let group = { agents: [], rules: [] };
+  for (const raw of robots.body.split(/\r?\n/)) {
+    const line = raw.replace(/#.*/, "").trim();
+    const match = line.match(/^(user-agent|allow|disallow):\s*(.*)$/i);
+    if (!match) continue;
+    const key = match[1].toLowerCase(), value = match[2];
+    if (key === "user-agent") {
+      if (group.rules.length) { groups.push(group); group = { agents: [], rules: [] }; }
+      group.agents.push(value.toLowerCase());
+    } else group.rules.push({ key, value });
+  }
+  if (group.agents.length) groups.push(group);
+  for (const bot of ["Googlebot", "Bingbot", "DuckDuckBot", "OAI-SearchBot", "GPTBot", "Google-Extended", "ClaudeBot", "Claude-SearchBot", "PerplexityBot"]) {
+    const applicable = groups.filter(g => g.agents.includes(bot.toLowerCase()));
+    assert(applicable.length, `Missing explicit crawler policy for ${bot}`);
+    const rules = applicable.flatMap(g => g.rules);
+    assert(rules.some(r => r.key === "allow" && r.value === "/"), `${bot} cannot crawl public content`);
+    for (const privatePath of ["/mypentest/app", "/mypentest/api"]) {
+      assert(rules.some(r => r.key === "disallow" && r.value === privatePath), `${bot} private-path exclusion missing`);
+    }
+  }
+  const llms = await get("/llms.txt");
+  assert.equal(llms.status, 200, "AI discovery directory unavailable");
+  assert(llms.type.includes("text/plain"), "AI directory must be plain text");
+  for (const match of llms.body.matchAll(/\]\((https:\/\/[^)]+)\)/g)) {
+    const url = new URL(match[1]);
+    assert.equal(url.origin, SITE_URL, "AI directory must use the canonical origin");
+    const canonical = url.pathname === "/" ? url.origin : url.href;
+    assert(expected.has(canonical), `Unknown AI discovery URL: ${url.href}`);
+  }
+  const csv = await get("/benchmarks/run-template.csv");
+  assert.equal(csv.status, 200, "Benchmark record template unavailable");
+  assert(csv.body.includes("ground_truth_artifact") && csv.body.includes("raw_report_artifact"), "Benchmark template missing evidence fields");
   let index = 0;
   await Promise.all(Array.from({ length: 5 }, async () => { while (index < paths.length) await audit(paths[index++]); }));
   for (const p of paths) if (p !== "/" && !linked.has(p)) fail(p, "No internal page links to this URL");

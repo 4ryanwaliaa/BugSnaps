@@ -1,0 +1,1 @@
+run_id,tool,edition,engine_version,target_commit,target_image_digest,mode,model,config_artifact,ground_truth_artifact,accounts_roles,excluded_cases,tp,fp,fn,tn,reported_findings,reproducible_findings,setup_minutes,scan_minutes,triage_minutes,cost,currency,cost_basis,raw_report_artifact,reviewer,review_date

@@ -28,12 +28,12 @@ export default function CompareHub() {
       <Section labelledBy="benchmarks-banner-title" className="pb-0">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-accent/25 bg-accent/[0.06] p-6 sm:p-8">
-            <span className="font-mono text-xs uppercase tracking-wider text-accent font-semibold">Empirical Benchmarks</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-accent font-semibold">Benchmark Methodology</span>
             <h2 id="benchmarks-banner-title" className="mt-1 text-xl sm:text-2xl font-bold tracking-tight">
-              Sector Benchmarks &amp; Accuracy Analysis
+              Reproducible Pentesting Evaluation
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              Explore side-by-side performance benchmarks, setup times, false positive rate metrics, and capability graphs across SaaS, FinTech, and API sectors.
+              Compare precision, recall, evidence, setup time and total cost using a shared test protocol. Head-to-head measurements are pending.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Link

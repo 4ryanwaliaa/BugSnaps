@@ -22,7 +22,7 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-02" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-07" },
 
   // Product
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9 },
@@ -52,9 +52,9 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/solutions/api-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-06" },
 
   // Comparisons
-  { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
-  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-06" },
-  { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-02" },
+  { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-07" },
+  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-07" },
+  { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-07" },
   { path: "/compare/mypentest-vs-vulnerability-scanners", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/bugsnaps-vs-traditional-pentest", changeFrequency: "monthly", priority: 0.6 },
   { path: "/compare/automated-vs-manual-penetration-testing", changeFrequency: "monthly", priority: 0.6 },
@@ -74,7 +74,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/alternatives", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
   ...ALTERNATIVE_PAGES.map((a) => ({ path: alternativePath(a.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: a.updated })),
-  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-02" },
+  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-07" },
 
   // Company
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },

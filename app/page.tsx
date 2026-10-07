@@ -42,7 +42,7 @@ export default function Home() {
                 You don&apos;t need to be insecure about the world: We&apos;ve got your back.
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                BugSnaps protects your web application against catastrophic breaches, keeps you out of legal and compliance trouble, and verifies fixes with mathematical proof so you can launch with confidence.
+                Assess your authorized application, review finding evidence and retest fixes. Use the coverage and reporting limits to decide when you need a separately scoped expert engagement.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -56,7 +56,7 @@ export default function Home() {
                 href="/benchmarks"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-medium text-foreground hover:bg-white/[0.08]"
               >
-                View Accuracy Benchmarks
+                Benchmark Methodology
               </Link>
             </div>
           </div>
