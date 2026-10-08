@@ -2,8 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/site/page-parts";
 import { CookieConsent } from "@/components/site/cookie-consent";
+import { GoogleAnalytics } from "@/components/site/google-analytics";
 import { SpotlightTracker } from "@/components/ui/motion";
 import { SITE_URL, organizationJsonLd } from "@/lib/site";
+import { INDEXABLE_ROUTES } from "@/lib/routes";
+import { posts } from "@/lib/blog";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,6 +20,14 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   display: "swap",
 });
+
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() ?? "G-GQWKB7QXXY";
+// Only this small public-page map enters the client bundle, not article bodies
+// or private app routes. Titles come from site data, never user input.
+const analyticsPages = Object.fromEntries([
+  ...INDEXABLE_ROUTES.map(({ path }) => [path, path === "/" ? "Home - BugSnaps" : `${path} - BugSnaps`]),
+  ...posts.map(({ slug, title }) => [`/blog/${slug}`, `${title} - BugSnaps`]),
+]);
 
 /*
  * Site-wide defaults. Every indexable page overrides title, description and
@@ -66,6 +77,9 @@ export default function RootLayout({
         </a>
         {children}
         <CookieConsent />
+        {/^G-[A-Z0-9]+$/.test(gaMeasurementId) && (
+          <GoogleAnalytics measurementId={gaMeasurementId} pages={analyticsPages} origin={SITE_URL} />
+        )}
         <SpotlightTracker />
       </body>
     </html>

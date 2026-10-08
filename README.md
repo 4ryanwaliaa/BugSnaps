@@ -77,6 +77,34 @@ Article (blog), BreadcrumbList (inner pages), ItemList (products).
 
 MyRecon backlinks: see `docs/MYRECON-BACKLINKS.md`.
 
+## Google Analytics
+
+The BugSnaps GA4 web stream is `G-GQWKB7QXXY`, configured for
+`https://bugsnaps.in` with **Enhanced measurement OFF**. Keep it off in
+Admin → Data streams → this web stream.
+This is required: automatic history, form, search and outbound-click events
+could otherwise send URLs or form metadata outside our manual page-view filter.
+Keep Google Signals and advertising features disabled.
+
+The verified stream ID is the default. To use a different stream, set
+`NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX` and rebuild/redeploy; an explicitly
+empty value disables analytics. This ID is public, not a secret. Collection
+only runs on `bugsnaps.in`, so local and preview visits do not enter the reports.
+
+The tag loads only after **Allow analytics**, including for returning visitors
+who previously accepted the old essential-only wording. It measures known
+public pages on initial load and client navigation. Private MyPentest routes,
+APIs and unknown paths are excluded. Page URLs and referrers omit query strings
+and fragments; account IDs, targets and form values are never sent by this code.
+Cookie settings → **Essential only** disables collection immediately and removes
+first-party `_ga` cookies. A blocked browser-storage choice applies for that page.
+
+Verify a fresh visit sends no Google request until opt-in, an accepted visit
+appears in Reports → Realtime, client navigation counts once per page, and
+withdrawal stops collection. Directly opening `/mypentest/app` must not load
+the tag even with consent saved. Verify Enhanced measurement remains OFF
+before changing the stream settings.
+
 ## Contact form
 
 `components/sections/contact.tsx` submits to Web3Forms (public access key, it can

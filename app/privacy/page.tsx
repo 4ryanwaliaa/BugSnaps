@@ -10,7 +10,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="September 2026">
+    <LegalPage title="Privacy Policy" updated="October 8, 2026">
       <section>
         <h2>Overview</h2>
         <p className="mt-3">
@@ -27,6 +27,7 @@ export default function PrivacyPage() {
           <li>MyPentest account details: your email address, display name and sign-in provider.</li>
           <li>MyPentest assessment data: the domains you verify, how you configure assessments, and their results.</li>
           <li>Standard request logs kept by our hosting providers (such as IP address and pages requested) for security and reliability.</li>
+          <li>With your permission, Google Analytics collects public-page visits and basic browser, device and approximate location information.</li>
         </ul>
       </section>
       <section>
@@ -60,13 +61,20 @@ export default function PrivacyPage() {
         <h2>Browser storage and cookies</h2>
         <p className="mt-3">
           Essential browser storage supports MyPentest sign-in, payment verification after a page reload, and your
-          cookie choice. It remains available when you choose “Essential only.” We do not add advertising or analytics
-          cookies to our pages.
+          cookie choice. It remains available when you choose “Essential only.” Google Analytics loads only after
+          you choose “Allow analytics” and uses first-party analytics cookies to help us understand visits to our public pages.
+          We do not use advertising tracking or Google Signals.
         </p>
         <p className="mt-3">
-          We no longer store a billing-period preference. You can change your cookie choice at any time through
-          Cookie settings in the footer. Firebase Authentication and Razorpay may use their own storage while you
-          sign in or pay.
+          Analytics excludes the private MyPentest app, assessment targets, account details, form contents, URL query
+          strings and fragments. Google processes analytics data as our service provider. See{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google’s privacy policy</a>.
+          You can withdraw permission at any time through Cookie settings in the footer by choosing “Essential only.”
+          This stops analytics and removes its cookies from this site; it does not remove data already collected by Google.
+        </p>
+        <p className="mt-3">
+          We no longer store a billing-period preference. Firebase Authentication, Razorpay and PayPal may use their own
+          storage while you sign in or pay.
         </p>
       </section>
       <section>

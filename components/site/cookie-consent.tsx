@@ -55,10 +55,11 @@ export function CookieConsent() {
       </div>
       <p className={styles.description}>
         Essential storage keeps sign-in and checkout working and remembers your cookie choice.
-        No ad tracking. <Link href="/privacy">Privacy details</Link>
+        With your permission, Google Analytics helps us see visits to public pages. No ad tracking.
+        {" "}<Link href="/privacy">Privacy details</Link>
       </p>
       <div className={styles.actions}>
-        <button type="button" className={styles.accept} onClick={() => choose("all")}>Sounds good</button>
+        <button type="button" className={styles.accept} onClick={() => choose("all")}>Allow analytics</button>
         <button type="button" className={styles.essential} onClick={() => choose("essential")}>Essential only</button>
       </div>
     </aside>

@@ -16,19 +16,27 @@ const authEmulator = isDev ? process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR?.tri
 /** The canonical host. www.bugsnaps.in answers with a permanent redirect here. */
 const CANONICAL_HOST = "bugsnaps.in";
 
+// GA4 only runs after analytics consent. Ads, Signals and Enhanced Measurement
+// are disabled; the tag needs just its loader and Analytics collection hosts.
+const googleAnalytics = {
+  script: ["https://www.googletagmanager.com"],
+  connect: ["https://www.google-analytics.com", "https://region1.google-analytics.com"],
+  img: ["https://www.google-analytics.com"],
+};
+
 function csp(extra: { script?: string[]; style?: string[]; connect?: string[]; frame?: string[]; img?: string[] } = {}) {
   return [
     "default-src 'self'",
     // 'unsafe-inline' for script/style is required by Next.js App Router
     // hydration on statically rendered pages (a nonce-based CSP would force
     // every page to render dynamically).
-    ["script-src 'self' 'unsafe-inline'", ...(extra.script ?? []), isDev ? "'unsafe-eval'" : ""]
+    ["script-src 'self' 'unsafe-inline'", ...googleAnalytics.script, ...(extra.script ?? []), isDev ? "'unsafe-eval'" : ""]
       .join(" ")
       .trim(),
     ["style-src 'self' 'unsafe-inline'", ...(extra.style ?? [])].join(" "),
-    ["img-src 'self' data:", ...(extra.img ?? [])].join(" "),
+    ["img-src 'self' data:", ...googleAnalytics.img, ...(extra.img ?? [])].join(" "),
     "font-src 'self'",
-    ["connect-src 'self' https://api.web3forms.com", ...(extra.connect ?? []), isDev ? "ws:" : ""]
+    ["connect-src 'self' https://api.web3forms.com", ...googleAnalytics.connect, ...(extra.connect ?? []), isDev ? "ws:" : ""]
       .join(" ")
       .trim(),
     "object-src 'none'",
@@ -45,7 +53,7 @@ function permissionsPolicy(payment = "()") {
 }
 
 const securityHeaders = [
-  // Everything is same-origin; the only external call is the contact-form
+  // Public pages also permit the consent-gated Analytics tag and contact-form
   // relay. If a Cal.com/Calendly embed is added later, allow its origin in
   // frame-src and connect-src here.
   { key: "Content-Security-Policy", value: csp() },
