@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "check:seo": "node scripts/check-seo.cjs",
+    "check:assessments": "node scripts/check-assessments.cjs",
     "lint": "next lint"
   },
   "dependencies": {
