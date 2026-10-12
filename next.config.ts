@@ -40,7 +40,8 @@ function csp(extra: { script?: string[]; style?: string[]; connect?: string[]; f
       .join(" ")
       .trim(),
     "object-src 'none'",
-    extra.frame?.length ? `frame-src ${extra.frame.join(" ")}` : "frame-src 'none'",
+    // Public client-side navigation retains the initial document's policy.
+    ["frame-src https://www.youtube-nocookie.com", ...(extra.frame ?? [])].join(" "),
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

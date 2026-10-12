@@ -175,9 +175,16 @@ async function audit(route) {
   assert.equal(editorialImage.status, 200, "Editorial image is unavailable");
   assert((editorialImage.headers.get("content-type") || "").includes("image/webp"), "Editorial image must be served as WebP");
   const contact = await get("/contact");
-  assert(contact.csp.includes("frame-src https://www.openstreetmap.org"), "Contact map frame is blocked by CSP");
+  const frameSources = (policy) => policy.split(";").map((part) => part.trim()).find((part) => part.startsWith("frame-src "))?.split(/\s+/).slice(1) ?? [];
+  assert(frameSources(contact.csp).includes("https://www.openstreetmap.org"), "Contact map frame is blocked by CSP");
   const home = await get("/");
-  assert(home.csp.includes("frame-src 'none'"), "The public homepage should retain its stricter frame policy");
+  assert.deepEqual(frameSources(home.csp), ["https://www.youtube-nocookie.com"], "Homepage should allow only the privacy-enhanced YouTube player");
+  for (const route of ["/", "/mypentest"]) {
+    const tutorial = await get(route);
+    assert(tutorial.body.includes("https://www.youtube.com/watch?v=wZM29H-GTvU"), `Missing tutorial video link on ${route}`);
+    assert(tutorial.body.includes('id="how-to-use"'), `Missing tutorial section on ${route}`);
+    assert(!/<iframe[^>]+youtube/.test(tutorial.body), `YouTube must load only after play on ${route}`);
+  }
   let index = 0;
   await Promise.all(Array.from({ length: 5 }, async () => { while (index < paths.length) await audit(paths[index++]); }));
   for (const p of paths) if (p !== "/" && !linked.has(p)) fail(p, "No internal page links to this URL");

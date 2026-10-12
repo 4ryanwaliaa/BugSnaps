@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { JsonLd, Section, SiteShell } from "@/components/site/page-parts";
 import { SecurityReviewFigure } from "@/components/site/security-review-figure";
 import { HomeHero } from "@/components/home/hero";
+import { TutorialVideo } from "@/components/site/tutorial-video";
 import { HomeProducts } from "@/components/home/products";
 import { HomeHowItRuns, HomeMarquee, HomeReport, HomeStats } from "@/components/home/sections";
 import { HomeWhy } from "@/components/home/why";
@@ -38,6 +39,7 @@ export default function Home() {
       <HomeHero />
       <HomeMarquee />
       <HomeHowItRuns />
+      <TutorialVideo />
       <HomeStats />
       <HomeReport />
       <HomeProducts />
