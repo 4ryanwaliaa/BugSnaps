@@ -25,7 +25,7 @@ export const EXPORT_FORMATS: ExportFormat[] = ["json", "md", "html", "sarif", "p
 export type Cycle = "monthly" | "yearly";
 
 /** Public list price; the backend owns the amount charged. */
-export const INTERNATIONAL_PLUS_USD_CENTS = 799;
+export const INTERNATIONAL_PLUS_USD_CENTS = 499;
 
 export interface Plan {
   id: string;

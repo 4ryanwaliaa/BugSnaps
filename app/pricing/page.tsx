@@ -3,13 +3,15 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { CtaBand, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { PricingPlans } from "@/components/mypentest/plan-cards";
-import { LAUNCH_OFFER, SERVICE_PRICING, getPlans } from "@/lib/plans";
+import { INTERNATIONAL_PLUS_USD_CENTS, LAUNCH_OFFER, SERVICE_PRICING, getPlans } from "@/lib/plans";
 import { pageMetadata } from "@/lib/site";
+
+const internationalPlusPrice = `US$${(INTERNATIONAL_PLUS_USD_CENTS / 100).toFixed(2)}`;
 
 export const metadata: Metadata = pageMetadata({
   title: "Pricing - MyPentest Plans and Manual Pentesting",
   description:
-    "Try MyPentest once for free. Plus costs ₹499 in India or US$7.99 internationally for 2 deep scans with no expiry, full reports and priority support. Contact us for Enterprise manual audits.",
+    `Try MyPentest once for free. Plus costs ₹499 in India or ${internationalPlusPrice} internationally for 2 deep scans with no expiry, full reports and priority support. Contact us for Enterprise manual audits.`,
   path: "/pricing",
 });
 
@@ -22,7 +24,7 @@ export default async function PricingPage() {
         crumbs={[{ name: "Pricing", path: "/pricing" }]}
         eyebrow="Pricing"
         title="Start free. Pay when you need more."
-        lead={`${LAUNCH_OFFER.detail} Plus is ₹499 in India through Razorpay or US$7.99 internationally through PayPal. Both include 2 deep scans with no expiry and priority support for paid users.`}
+        lead={`${LAUNCH_OFFER.detail} Plus is ₹499 in India through Razorpay or ${internationalPlusPrice} internationally through PayPal. Both include 2 deep scans with no expiry and priority support for paid users.`}
       />
 
       <Section labelledBy="plans-title">
