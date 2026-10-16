@@ -17,7 +17,7 @@ export const LINKEDIN_URL = "https://www.linkedin.com/company/bugsnaps";
 
 export const ORG = {
   name: "BugSnaps",
-  legalName: "BugSnaps Security Ltd",
+  legalName: "BugSnaps",
   slogan: "Find. Fix. Fortify.",
   description:
     "BugSnaps is a cybersecurity company focused on penetration testing: MyPentest for automated testing, MyRecon for reconnaissance, and expert-led engagements.",

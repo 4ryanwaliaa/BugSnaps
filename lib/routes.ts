@@ -80,13 +80,14 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-08" },
 
   // Company
+  { path: "/security", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-16" },
   { path: "/about", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-08" },
   { path: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: "2026-10-08" },
   { path: "/careers", changeFrequency: "monthly", priority: 0.4 },
   { path: "/personal", changeFrequency: "monthly", priority: 0.6 },
 
   // Legal
-  { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/privacy", changeFrequency: "yearly", priority: 0.2, lastModified: "2026-10-16" },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
   { path: "/responsible-disclosure", changeFrequency: "yearly", priority: 0.2 },
 ];

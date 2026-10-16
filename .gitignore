@@ -43,3 +43,6 @@ next-env.d.ts
 # Client engagement material (reports, findings, notes). Confidential -
 # never in this public repository.
 /clients/
+
+# Local security self-assessments can include unpublished operating details.
+/docs/security/

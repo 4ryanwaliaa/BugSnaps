@@ -65,6 +65,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
         { label: "About", href: "/about" },
         { label: "Why try BugSnaps", href: "/why-bugsnaps" },
         { label: "Security improvements", href: "/improvements" },
+        { label: "Security & trust", href: "/security" },
         { label: "Security readiness & trust", href: "/security-readiness" },
         { label: "Blog", href: "/blog" },
         { label: "Security guides", href: "/guides" },
@@ -99,6 +100,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       heading: "BugSnaps",
       links: [
         { label: "About BugSnaps", href: "/about" },
+        { label: "Security & trust", href: "/security" },
         { label: "Security readiness", href: "/security-readiness" },
         { label: "Manual pentesting", href: "/penetration-testing" },
         { label: "MyRecon", href: "/myrecon" },

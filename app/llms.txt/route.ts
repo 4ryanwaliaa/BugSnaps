@@ -16,6 +16,7 @@ export function GET() {
     `- [Example report](${absoluteUrl("/mypentest/example-report")}): An illustrative report, not a customer case study or measured benchmark.`,
     "",
     "## Comparisons and evidence",
+    `- [Security and trust](${absoluteUrl("/security")}): Encryption, account isolation and provider assurance. BugSnaps has not completed its own SOC 2 examination and does not claim a CSA STAR listing.`,
     `- [MyPentest vs Strix](${absoluteUrl("/compare/mypentest-vs-strix")}): Edition-specific comparison with primary vendor sources and limitations of both products.`,
     `- [Strix alternatives](${absoluteUrl("/alternatives/strix")}): Alternative assessment workflows and migration considerations.`,
     `- [Benchmarks](${absoluteUrl("/benchmarks")}): Reproducible evaluation protocol; no measured head-to-head detection results are published.`,

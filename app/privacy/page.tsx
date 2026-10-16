@@ -10,11 +10,11 @@ export const metadata: Metadata = pageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="October 8, 2026">
+    <LegalPage title="Privacy Policy" updated="October 16, 2026">
       <section>
         <h2>Overview</h2>
         <p className="mt-3">
-          BugSnaps Security Ltd. (&ldquo;BugSnaps&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is
+          BugSnaps (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is
           committed to protecting the privacy of our clients, MyPentest users and website visitors. This
           policy describes what information we collect, why we collect it, and how we handle it.
         </p>
@@ -42,11 +42,18 @@ export default function PrivacyPage() {
             in memory by the testing engine, and not included in reports.
           </li>
           <li>
-            The testing engine keeps a running or finished assessment for up to 24 hours. Finished reports are saved
-            to your private history in the Firebase Realtime Database, readable only by your account. You can delete
-            any report from your dashboard at any time.
+            Running assessments remain available while they are processed. Finished assessments become eligible
+            for engine cleanup after the configured retention period (24 hours by default); cleanup runs on subsequent
+            assessment activity, so this is not a guaranteed deletion deadline. Saved reports remain in your
+            account-scoped Firebase Realtime Database history until deleted. Database rules restrict customer access
+            to the matching authenticated account; privileged administrative and provider access is separate.
+            You can delete saved reports from your dashboard.
           </li>
-          <li>We do not sell assessment results or share them with anyone else.</li>
+          <li>
+            We do not sell assessment results or publish them. Our service providers process data to deliver the
+            service. If you request an emailed report, Brevo processes your recipient address and the report PDF
+            attachment. Downloaded or emailed copies are not removed when you delete a dashboard report.
+          </li>
         </ul>
       </section>
       <section>
@@ -55,6 +62,17 @@ export default function PrivacyPage() {
           We use your information solely to respond to inquiries, provide MyPentest, deliver contracted services,
           keep our services secure, and improve our website. We do not sell personal data, and we do not share it
           with third parties except the providers that run our services, or where the law requires it.
+        </p>
+      </section>
+      <section>
+        <h2>Infrastructure and data protection</h2>
+        <p className="mt-3">
+          Vercel hosts the website and API proxy, Render runs the hosted assessment engine, and Google Firebase
+          provides authentication and saved assessment storage. Connections to these services use HTTPS/TLS;
+          Firebase Authentication and Realtime Database provide provider-managed encryption at rest. MyPentest
+          processes assessment data and does not provide end-to-end encryption. Provider logs and backups follow
+          their own retention policies. Read our <a href="/security" className="text-accent hover:underline">security page</a>{" "}
+          for details and provider sources.
         </p>
       </section>
       <section>
