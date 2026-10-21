@@ -21,6 +21,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description: found.description,
     path: `/blog/${found.slug}`,
     type: "article",
+    published: found.published,
+    modified: found.updated ?? found.published,
   });
 }
 
@@ -84,7 +86,7 @@ export default async function BlogPost({ params }: Params) {
         lead={found.description}
       >
         <p className="font-mono text-[12px] text-muted-2">
-          By {found.author} · <time dateTime={found.published}>{found.published}</time> · {found.readingMinutes} min read
+          By {found.author} · {found.updated ? "Updated " : "Published "}<time dateTime={found.updated ?? found.published}>{found.updated ?? found.published}</time>
         </p>
       </PageHeader>
 

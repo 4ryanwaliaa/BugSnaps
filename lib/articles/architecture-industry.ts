@@ -344,16 +344,17 @@ export const architectureIndustryPosts: Post[] = [
   },
   {
     slug: "devsecops-pipeline-penetration-testing",
-    title: "CI/CD Security Testing: Checks and Release Gates",
+    title: "Automated Security Testing in CI/CD: A Checklist",
     description:
-      "Plan CI/CD security testing across pull requests, staging and releases. Choose practical checks, handle false positives and retest security regressions.",
+      "What security checks belong in CI/CD? Use a pull-request, staging and release checklist, with evidence-based blocking rules and a failed-scan policy.",
     published: "2026-10-05",
+    updated: "2026-10-22",
     author: "BugSnaps Security Research",
     readingMinutes: 8,
     body: [
       {
         type: "p",
-        text: "The core philosophy of DevSecOps is 'shifting left'—catching security issues early in the software development lifecycle when they are easiest and cheapest to fix. However, poorly implemented security gates often frustrate developers by breaking builds with false positives and taking hours to run.",
+        text: "Automated security testing in CI/CD works best in stages: check code, secrets and dependencies on pull requests; assess a running application in an authorized staging environment; and review unresolved findings before release. Define which evidence blocks a release, who handles exceptions, and what happens when a scan cannot complete. A failed scan must not silently become a passing security result.",
       },
       { type: "h2", text: "The right cadence for automated security gates" },
       {
@@ -363,22 +364,30 @@ export const architectureIndustryPosts: Post[] = [
       {
         type: "ul",
         items: [
-          "Pull Request stage (fast feedback): automated static linting, secret detection (e.g., Gitleaks), and dependency scanning running in under 2 minutes.",
-          "Staging deployment stage (runtime assessment): automated DAST and penetration testing with BugSnaps MyPentest running against deployed preview environments.",
-          "Pre-release milestone (compliance gate): comprehensive authenticated scans verifying role separation, BOLA, and security headers.",
+          "Pull request: review newly introduced secrets, vulnerable dependencies and relevant static-analysis findings. Set a measured runtime budget for your repository rather than assuming every check finishes in two minutes.",
+          "Staging: assess the deployed application with approved test accounts and disposable data. Verify that authentication worked and the expected routes were reached before interpreting an empty findings list.",
+          "Release: review unresolved findings, accepted exceptions and untested coverage. Include role separation and ownership regression cases; a passing automated scan is not a compliance certification.",
         ],
       },
       { type: "h2", text: "Preventing false positives from blocking releases" },
       {
         type: "p",
-        text: "A security gate that blocks builds on unverified warnings will quickly be disabled or bypassed by engineering teams. Use BugSnaps MyPentest to focus build-blocking rules exclusively on verified High and Critical findings backed by deterministic proof of exploit.",
+        text: "Choose blocking rules according to your application's risk and the evidence available. Separate new confirmed findings from existing accepted issues and unverified candidates. Each exception needs an owner, rationale and expiry date. Severity alone is insufficient: an exposed credential can need immediate attention while another high-severity candidate still needs validation.",
       },
       {
         type: "callout",
-        text: "Automate verification in staging environments so security testing runs in parallel with integration tests, keeping deployment pipelines fast and reliable.",
+        text: "This is a pipeline design checklist, not a ready-made MyPentest CI integration. MyPentest assessments and report exports can support review; verify the supported automation interface and authentication requirements before connecting any scanner to your pipeline.",
       },
+      { type: "h2", text: "Example: turn an ownership bug into a release check" },
+      { type: "p", text: "Create an invoice for test account A and another for B. First confirm A can read its own invoice. Then verify A cannot read B's unshared invoice, including its export route. If the forbidden case returns B's protected data, preserve redacted evidence and open a finding. After a fix, repeat both the denied case and the allowed control on the new build." },
+      { type: "h2", text: "What should happen when a scan fails?" },
+      { type: "p", text: "Distinguish scanner failure from a security finding. An expired test session, unreachable staging host or timeout means coverage is unknown. Retry only within an agreed budget, notify the responsible owner and use your documented release policy. Keep the failure visible rather than reporting zero vulnerabilities." },
+      { type: "h2", text: "Before enabling a blocking gate" },
+      { type: "ul", items: ["Record the tested build, scope and test account roles.", "Prove that a known safe control passes and a deliberately failing test fixture is detected.", "Assign an owner for triage, failed runs and expiring exceptions.", "Store redacted evidence and keep credentials out of build logs.", "Measure runtime and false positives before making the check mandatory."] },
     ],
     related: [
+      { label: "Download API security test cases", href: "/guides/api-security-test-cases" },
+      { label: "Track findings and retest outcomes", href: "/guides/pentest-report-template" },
       { label: "MyPentest automated scanner", href: "/mypentest" },
       { label: "Automated vs manual penetration testing", href: "/compare/automated-vs-manual-penetration-testing" },
       { label: "BugSnaps pricing", href: "/pricing" },
