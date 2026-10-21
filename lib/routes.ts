@@ -22,12 +22,12 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-08" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-21" },
 
   // Product
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9 },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
-  { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
+  { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-21" },
   { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/ai-penetration-testing", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
@@ -66,9 +66,9 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
 
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
-  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-08" },
+  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
   { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
-  { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
+  { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
   ...SECURITY_GUIDES.map((g) => ({ path: guidePath(g.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: g.updated })),
   { path: "/use-cases", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },

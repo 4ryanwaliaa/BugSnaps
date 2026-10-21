@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
@@ -11,6 +11,8 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const collections = [
+  { title: "API security test cases (CSV)", path: "/guides/api-security-test-cases", text: "Download eight starting cases with positive controls, expected behavior and evidence fields." },
+  { title: "Pentest findings and retest template", path: "/guides/pentest-report-template", text: "Download a blank findings register and learn what to include in scope, executive summaries and retests." },
   { title: "Security readiness and scope", path: "/security-readiness", text: "Review authorization, assessment boundaries, report limitations and when to bring in an expert penetration tester." },
   { title: "Pentesting benchmark methodology", path: "/benchmarks", text: "A reproducible protocol for detection, evidence, false positives and operating cost, with recording templates. Measured head-to-head results are pending." },
   { title: "Improve your website security", path: "/improvements", text: "Turn a vulnerability finding into a fix, prioritize engineering work and retest the affected path before closing the issue." },

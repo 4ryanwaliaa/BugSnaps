@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowUpRight, Linkedin, Mail } from "lucide-react";
 import { Logo, LogoMark } from "@/components/site/logo";
 import { CookieSettingsButton } from "@/components/site/cookie-consent";

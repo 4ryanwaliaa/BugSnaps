@@ -1,0 +1,9 @@
+case_id,area,test_identity,example_operation,expected_behavior,actual_behavior,status,evidence_reference,build,retest_date
+API-01,Positive control,Invoice owner,Read own test invoice,Owned record returned,,Not run,,,
+API-02,Authentication,Anonymous,Read private test invoice,No private data returned,,Not run,,,
+API-03,Object ownership,Other test account,Read unshared test invoice,No other account data returned,,Not run,,,
+API-04,Role authorization,Viewer,Update admin-only test setting,No unauthorized state change,,Not run,,,
+API-05,Tenant isolation,Member of tenant B,Read tenant A test record,No cross-tenant data returned,,Not run,,,
+API-06,Property authorization,Ordinary member,Set privileged field on disposable record,Forbidden field rejected or ignored,,Not run,,,
+API-07,Rate limiting,Approved test account,Requests within agreed test budget,Documented threshold and recovery enforced,,Not run,,,
+API-08,Revocation,Removed test member,Access former workspace,Access follows documented revocation policy,,Not run,,,

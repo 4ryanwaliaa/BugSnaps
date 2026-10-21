@@ -109,6 +109,9 @@ export default function Home() {
         </p>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
+            { path: "/guides/api-security-test-cases", title: "API security test cases", text: "Download a CSV matrix for ownership, roles and tenant boundaries." },
+            { path: "/guides/pentest-report-template", title: "Free pentest report template", text: "Track evidence, remediation and retest outcomes in a reusable CSV." },
+            { path: "/blog/bola-idor-vulnerability-prevention-guide", title: "BOLA vs IDOR explained", text: "Understand object authorization failures and how to verify a fix." },
             { path: "/guides", title: "Practical security guides", text: "Access control, APIs, sessions, evidence and remediation." },
             { path: "/use-cases", title: "Workflows for your application", text: "SaaS, ecommerce, multi-tenant apps and release validation." },
             { path: "/alternatives", title: "Choose a testing tool", text: "Sourced alternatives with strengths and operating trade-offs." },

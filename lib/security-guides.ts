@@ -14,6 +14,7 @@ export type SecurityGuide = {
   category: SecurityGuideCategory;
   answer: string;
   updated: string;
+  download?: { path: string; label: string };
   sections: SecurityGuideSection[];
   limitations: string;
   faqs: { question: string; answer: string }[];
@@ -21,11 +22,14 @@ export type SecurityGuide = {
   related: string[];
 };
 
+import { PRACTICAL_TEMPLATES } from "@/lib/practical-templates";
+
 const UPDATED = "2026-10-02";
 const cheatSheet = (name: string) => `https://cheatsheetseries.owasp.org/cheatsheets/${name}_Cheat_Sheet.html`;
 
 /** Editorial guides. Each route answers a different assessment question. */
 export const SECURITY_GUIDES: SecurityGuide[] = [
+  ...PRACTICAL_TEMPLATES,
   {
     slug: "bola-testing",
     title: "BOLA testing: verify object ownership in APIs",

@@ -344,9 +344,9 @@ export const architectureIndustryPosts: Post[] = [
   },
   {
     slug: "devsecops-pipeline-penetration-testing",
-    title: "Integrating security testing into CI/CD pipelines: automated regression testing without slowing velocity",
+    title: "CI/CD Security Testing: Checks and Release Gates",
     description:
-      "How to embed automated penetration testing into GitHub Actions, GitLab CI, and deployment pipelines to catch security regressions before production release.",
+      "Plan CI/CD security testing across pull requests, staging and releases. Choose practical checks, handle false positives and retest security regressions.",
     published: "2026-10-05",
     author: "BugSnaps Security Research",
     readingMinutes: 8,

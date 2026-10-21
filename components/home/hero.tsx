@@ -40,15 +40,15 @@ export function HomeHero() {
             className="scan-reveal mt-6 text-[2.7rem] font-semibold leading-[1.02] tracking-tight text-balance sm:text-6xl lg:text-[4.3rem]"
           >
             <span className="scan-text">
-              Security testing that{" "}
+              Website & API{" "}
               <span className="bg-gradient-to-r from-white via-sky-200 to-accent bg-clip-text text-transparent">
-                actually tests.
+                penetration testing.
               </span>
             </span>
           </h1>
           <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty" style={delay(0.55)}>
-            BugSnaps finds the vulnerabilities an attacker would use - with MyPentest, our automated
-            penetration test, and with our testers when you need a human on it.
+            Test your application with MyPentest, review vulnerability evidence and suggested fixes,
+            then retest after remediation. Start free or scope an expert-led assessment.
           </p>
 
           <div className="rise mt-9 flex flex-col gap-3 sm:flex-row sm:items-center" style={delay(0.7)}>

@@ -136,6 +136,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // RSC variants are navigation data, not independent search landing pages.
+      // Keep them fetchable for rendering and never strip their cache key.
+      { source: "/:path*", has: [{ type: "query", key: "_rsc" }], headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
       // Only the contact page can load the optional city map frame.
       { source: "/contact", headers: [{ key: "Content-Security-Policy", value: csp({ frame: ["https://www.openstreetmap.org"] }) }] },
       { source: "/mypentest/app", headers: mypentestHeaders },

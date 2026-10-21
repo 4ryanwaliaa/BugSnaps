@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { SECURITY_GUIDES, SECURITY_GUIDE_CATEGORIES, guidePath } from "@/lib/security-guides";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Security Testing Guides and Practical Checklists",
-  description: "24 practical security testing guides for APIs, web applications, account access, evidence, and remediation, with primary sources and explicit assessment limits.",
+  description: "Practical security testing guides and free CSV templates for APIs, access control, pentest reports and remediation. Check evidence, coverage and limitations.",
   path: "/guides",
 });
 
@@ -66,7 +66,7 @@ export default function SecurityGuidesIndex() {
             {SECURITY_GUIDES.filter((guide) => guide.category === category).map((guide) => (
               <li key={guide.slug} className="rounded-2xl border border-white/[0.08] bg-surface/30 p-6">
                 <article>
-                  <p className="font-mono text-[11px] text-muted-2">Updated <time dateTime={guide.updated}>2 October 2026</time></p>
+                  <p className="font-mono text-[11px] text-muted-2">Updated <time dateTime={guide.updated}>{new Date(`${guide.updated}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</time></p>
                   <h3 className="mt-3 text-lg font-semibold leading-snug">
                     <Link href={guidePath(guide.slug)} className="hover:text-accent">{guide.title}</Link>
                   </h3>

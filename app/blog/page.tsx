@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { CtaBand, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { posts } from "@/lib/blog";
 import { pageMetadata } from "@/lib/site";

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { SECURITY_GUIDES, guidePath } from "@/lib/security-guides";
 import { SECURITY_USE_CASES, useCasePath } from "@/lib/security-use-cases";

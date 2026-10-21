@@ -178,6 +178,19 @@ async function audit(route) {
   const frameSources = (policy) => policy.split(";").map((part) => part.trim()).find((part) => part.startsWith("frame-src "))?.split(/\s+/).slice(1) ?? [];
   assert(frameSources(contact.csp).includes("https://www.openstreetmap.org"), "Contact map frame is blocked by CSP");
   const home = await get("/");
+  for (const route of ["/?_rsc=seo-check", "/guides?source=check&_rsc=seo-check"]) {
+    const variant = await get(route);
+    assert.equal(variant.status, 200, "Navigation variants must stay fetchable");
+    assert(/noindex/i.test(variant.robots), "RSC variants need an HTTP noindex directive");
+  }
+  const flight = await fetch(new URL("/guides?_rsc=seo-check", base), { headers: { RSC: "1" }, signal: AbortSignal.timeout(30000) });
+  assert.equal(flight.status, 200, "Client navigation must remain available");
+  assert((flight.headers.get("content-type") || "").includes("text/x-component"), "RSC navigation must return component data, not a redirect or HTML");
+  for (const [route, field] of [["/templates/api-security-test-cases.csv", "case_id"], ["/templates/pentest-findings-template.csv", "finding_id"]]) {
+    const template = await get(route);
+    assert.equal(template.status, 200, "Download unavailable");
+    assert(template.body.startsWith(field + ","), "Download must contain CSV data");
+  }
   assert.deepEqual(frameSources(home.csp), ["https://www.youtube-nocookie.com"], "Homepage should allow only the privacy-enhanced YouTube player");
   for (const route of ["/", "/mypentest"]) {
     const tutorial = await get(route);

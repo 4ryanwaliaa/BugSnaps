@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
 import { guidePath, getSecurityGuide, type SecurityGuide } from "@/lib/security-guides";
 import { newAssessmentUrl } from "@/lib/mypentest";
@@ -34,7 +34,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
         lead={guide.description}
       >
         <p className="font-mono text-[12px] text-muted-2">
-          By BugSnaps · Updated <time dateTime={guide.updated}>2 October 2026</time>
+          By BugSnaps · Updated <time dateTime={guide.updated}>{new Date(`${guide.updated}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</time>
         </p>
       </PageHeader>
 
@@ -46,6 +46,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
                 Direct answer
               </h2>
               <p className="mt-3 text-lg leading-relaxed text-foreground/90">{guide.answer}</p>
+              {guide.download && <a href={guide.download.path} download className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-accent">{guide.download.label}</a>}
             </section>
 
             <Prose>
@@ -132,6 +133,9 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
         </ul>
         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
           <Link href="/guides" className="text-accent hover:underline">Browse all security guides</Link>
+          <Link href="/guides/api-security-test-cases" className="text-accent hover:underline">API test-case template</Link>
+          <Link href="/guides/pentest-report-template" className="text-accent hover:underline">Pentest report template</Link>
+          <Link href="/mypentest/example-report" className="text-accent hover:underline">View an example assessment report</Link>
           <Link href="/compare" className="text-accent hover:underline">Compare security testing approaches</Link>
           <Link href="/contact" className="text-accent hover:underline">Discuss assessment scope</Link>
         </div>
