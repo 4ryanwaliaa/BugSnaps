@@ -6,7 +6,7 @@ import { SECURITY_USE_CASES, useCasePath } from "@/lib/security-use-cases";
 import { ALTERNATIVE_PAGES, alternativePath } from "@/lib/alternatives";
 import { competitors, versusPath } from "@/lib/competitors";
 import { posts } from "@/lib/blog";
-import { INDEXABLE_ROUTES } from "@/lib/routes";
+import { SITEMAP_PAGES } from "@/lib/sitemap-pages";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -57,7 +57,11 @@ const sections = [
   { title: "Articles", test: (p: string) => p.startsWith("/blog") },
 ];
 
-const paths = [...INDEXABLE_ROUTES.map((r) => r.path), ...posts.map((p) => `/blog/${p.slug}`)];
+const paths = SITEMAP_PAGES.map((page) => page.path);
+const recentPages = SITEMAP_PAGES
+  .filter((page) => page.lastModified && page.path !== "/site-map" && /\/(blog|guides)\//.test(page.path))
+  .sort((a, b) => b.lastModified!.localeCompare(a.lastModified!) || a.path.localeCompare(b.path))
+  .slice(0, 6);
 const fallbackName = (p: string) => (p.split("/").filter(Boolean).at(-1) ?? "Home").replace(/-/g, " ").replace(/\b\w/g, (s) => s.toUpperCase());
 
 export default function SiteMapPage() {
@@ -70,13 +74,32 @@ export default function SiteMapPage() {
         lead="Every public guide, comparison, use case, benchmark, and service in one place. Search engines can also use our XML sitemap."
       />
       <Section>
+        <p className="mb-4 text-muted">Browse {paths.length} public pages by topic, or start with recently updated guides and articles.</p>
         <a href="/sitemap.xml" className="text-sm text-accent hover:underline">
           Open the XML sitemap
         </a>
+        <nav aria-label="Site map topics" className="mt-6 flex flex-wrap gap-3">
+          {sections.map((section, index) => (
+            <a key={section.title} href={`#topic-${index}`} className="rounded-lg border border-border px-3 py-2 text-sm hover:text-accent">
+              {section.title} ({paths.filter(section.test).length})
+            </a>
+          ))}
+        </nav>
+        <section aria-labelledby="recent-updates" className="mt-8 rounded-xl border border-border p-6">
+          <h2 id="recent-updates" className="text-xl font-semibold">Recently updated guides and articles</h2>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {recentPages.map((page) => (
+              <li key={page.path}>
+                <Link href={page.path} className="text-sm hover:text-accent">{names.get(page.path) ?? fallbackName(page.path)}</Link>
+                <p className="mt-1 text-xs text-muted">Updated <time dateTime={page.lastModified}>{page.lastModified}</time></p>
+              </li>
+            ))}
+          </ul>
+        </section>
         <div className="mt-8 space-y-10">
-          {sections.map((section) => (
-            <section key={section.title}>
-              <h2 className="text-xl font-semibold">{section.title}</h2>
+          {sections.map((section, index) => (
+            <section key={section.title} aria-labelledby={`topic-${index}`}>
+              <h2 id={`topic-${index}`} className="scroll-mt-24 text-xl font-semibold">{section.title}</h2>
               <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
                 {paths.filter(section.test).map((p) => (
                   <li key={p}>

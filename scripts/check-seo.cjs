@@ -29,6 +29,7 @@ function load(file) {
 const { INDEXABLE_ROUTES } = load("lib/routes.ts");
 const { posts } = load("lib/blog.ts");
 const { SITE_URL } = load("lib/site.ts");
+const { SITEMAP_PAGES } = load("lib/sitemap-pages.ts");
 const paths = [...INDEXABLE_ROUTES.map((r) => r.path), ...posts.map((p) => `/blog/${p.slug}`)];
 assert.equal(new Set(paths).size, paths.length, "Duplicate sitemap paths");
 assert(paths.every((p) => p.startsWith("/") && !/^\/mypentest\/(app|api)/.test(p)), "Private routes in sitemap");
@@ -64,6 +65,7 @@ assert.equal(text('<div aria-hidden="true"><span>Decoration</span></div><p>Conte
 const meta = (html, key) => [...html.matchAll(/<meta\b[^>]*>/gi)].map((m) => attributes(m[0])).find((a) => (a.name || a.property || "").toLowerCase() === key)?.content;
 const links = (html) => [...html.matchAll(/<a\b[^>]*>/gi)].map((m) => attributes(m[0]).href).filter(Boolean);
 const errors = [], pages = [], linked = new Set(), titles = new Map(), descriptions = new Map();
+const graph = new Map();
 const fail = (url, message) => errors.push({ url, message });
 async function get(route) {
   const response = await fetch(new URL(route, base), { redirect: "manual", signal: AbortSignal.timeout(30000) });
@@ -106,6 +108,8 @@ async function audit(route) {
       }
     }
     const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/g)].map((m) => decode(m[1])));
+    const targets = new Set();
+    graph.set(route, targets);
     for (const href of links(html)) {
       if (href.startsWith("#")) {
         if (href.length > 1 && !ids.has(decodeURIComponent(href.slice(1)))) fail(route, `Missing on-page anchor: ${href}`);
@@ -115,7 +119,7 @@ async function audit(route) {
       const url = new URL(href, SITE_URL + route);
       if (url.origin !== SITE_URL) continue;
       const target = url.pathname.replace(/\/$/, "") || "/";
-      if (expected.has(target === "/" ? SITE_URL : SITE_URL + target)) linked.add(target);
+      if (expected.has(target === "/" ? SITE_URL : SITE_URL + target)) { linked.add(target); targets.add(target); }
       else if (!/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
     }
     pages.push({ path: route, status: response.status, title, canonical, schemaTypes: schema.map((d) => d["@type"]) });
@@ -129,6 +133,17 @@ async function audit(route) {
   assert.equal(entries.length, expected.size, "Sitemap entry count does not match route catalog");
   assert.equal(new Set(entries).size, entries.length, "Sitemap contains duplicates");
   assert(entries.every((url) => expected.has(url)), "Sitemap contains unknown or private URLs");
+  for (const match of xml.body.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+    const url = decode(match[1].match(/<loc>(.*?)<\/loc>/)[1]);
+    const date = match[1].match(/<lastmod>(.*?)<\/lastmod>/)?.[1];
+    const source = SITEMAP_PAGES.find((page) => (page.path === "/" ? SITE_URL : SITE_URL + page.path) === url);
+    assert.equal(date, source.lastModified, `Incorrect content modification date: ${url}`);
+    if (date) {
+      // Editorial dates are calendar dates in the publisher's India timezone.
+      const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+      assert(/^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 10) === date && date <= today, `Invalid or future sitemap date: ${url}`);
+    }
+  }
   const robots = await get("/robots.txt");
   assert.equal(robots.status, 200, "robots.txt is unavailable");
   assert(robots.body.includes(`Sitemap: ${SITE_URL}/sitemap.xml`), "Missing sitemap discovery directive");
@@ -201,11 +216,21 @@ async function audit(route) {
   let index = 0;
   await Promise.all(Array.from({ length: 5 }, async () => { while (index < paths.length) await audit(paths[index++]); }));
   for (const p of paths) if (p !== "/" && !linked.has(p)) fail(p, "No internal page links to this URL");
+  const depths = new Map([["/", 0]]), queue = ["/"];
+  for (let i = 0; i < queue.length; i++) {
+    for (const target of graph.get(queue[i]) || []) if (!depths.has(target)) {
+      depths.set(target, depths.get(queue[i]) + 1); queue.push(target);
+    }
+  }
+  for (const p of paths) {
+    if (!depths.has(p)) fail(p, "Unreachable through links from the homepage");
+    if (!graph.get("/site-map")?.has(p)) fail(p, "Missing from the HTML site map");
+  }
   for (const route of ["/guides/not-a-guide", "/use-cases/not-a-use-case", "/alternatives/not-a-tool", "/compare/mypentest-vs-not-a-tool"]) {
     const response = await get(route);
     if (response.status !== 404) fail(route, `Unknown content must return 404; found ${response.status}`);
   }
-  const report = { base: base.origin, checkedAt: new Date().toISOString(), sitemapEntries: entries.length, pagesChecked: pages.length, errors, pages };
+  const report = { base: base.origin, checkedAt: new Date().toISOString(), sitemapEntries: entries.length, pagesChecked: pages.length, maxClickDepth: Math.max(...depths.values()), errors, pages };
   if (reportPath) fs.writeFileSync(path.resolve(reportPath), JSON.stringify(report, null, 2) + "\n");
   if (errors.length) { for (const e of errors) console.error(`${e.url}: ${e.message}`); process.exitCode = 1; }
   else console.log(`PASS: ${pages.length} public pages; sitemap, canonical URLs, unique metadata, headings, schema, FAQ text, internal discovery and unknown-route 404s.`);

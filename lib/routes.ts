@@ -77,7 +77,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/alternatives", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
   ...ALTERNATIVE_PAGES.map((a) => ({ path: alternativePath(a.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: a.updated })),
-  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-08" },
+  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-22" },
 
   // Company
   { path: "/security", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-16" },
