@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 type NavLink = { href: string; label: string; external?: boolean };
 
 const links: NavLink[] = [
+  { href: "/products", label: "Products" },
   { href: "/mypentest", label: "MyPentest" },
   { href: "/myrecon", label: "MyRecon" },
   { href: "/services", label: "Services" },

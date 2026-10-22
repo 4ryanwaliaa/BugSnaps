@@ -1,18 +1,23 @@
+import { MyReconLinks, MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Database, Globe, Key, Search, ShieldAlert } from "lucide-react";
+import { ArrowRight, Check, Database, Globe, Key, Search, ShieldAlert } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
-import { MYRECON_URL, ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
+import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "MyRecon: Username Search, Digital Footprint and OSINT",
+  title: "MyRecon Website & Android App | Digital Footprint & OSINT",
   description:
-    "Explore MyRecon for public username search, email breach exposure, domain, DNS and IP research. Use OSINT context to plan a separately authorized security assessment.",
+    "Explore MyRecon on the web and Android. Search public usernames, check breach exposure and research domains, DNS and IPs. Visit the website or get the mobile app.",
   path: "/myrecon",
 });
 
 const faqs = [
+  {
+    question: "Is MyRecon available as a mobile app?",
+    answer: "Yes. MyRecon is available on Google Play for Android 11 and later and contains ads. Use the Android app for public username research, breach checks, domain tools, device security settings and link or QR checks. You can also use the web toolkit at myrecon.xyz. Features and access limits vary by platform.",
+  },
   {
     question: "What is MyRecon and how does it fit into the BugSnaps ecosystem?",
     answer:
@@ -40,7 +45,7 @@ const softwareJsonLd = {
   "@type": "SoftwareApplication",
   name: "MyRecon",
   applicationCategory: "SecurityApplication",
-  operatingSystem: "Web",
+  operatingSystem: "Web, Android",
   url: `${SITE_URL}/myrecon`,
   description:
     "Open-source intelligence research for public usernames, breach exposure, domains, DNS and IPs.",
@@ -108,16 +113,8 @@ export default function MyReconPage() {
         title="MyRecon: digital footprint and OSINT research."
         lead="Explore public username leads, breach exposure and domain, DNS and IP context. Review the evidence before drawing a conclusion or planning an authorized assessment."
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <a
-            href={MYRECON_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-white transition-colors hover:bg-accent"
-          >
-            Launch MyRecon App
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
+        <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
+          <MyReconLinks />
           <a
             href={newAssessmentUrl()}
             className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 text-sm font-medium transition-colors hover:border-white/20"
@@ -132,6 +129,8 @@ export default function MyReconPage() {
           </Link>
         </div>
       </PageHeader>
+
+      <MyReconPromo />
 
       <Section labelledBy="capabilities-title">
         <SectionTitle

@@ -44,9 +44,9 @@ export const products: Product[] = [
   {
     id: "myrecon",
     name: "MyRecon",
-    tagline: "Reconnaissance and OSINT",
+    tagline: "Digital footprint research on web and Android",
     summary:
-      "Username, email and breach intelligence, password-exposure checks, WHOIS, DNS and IP investigation - the reconnaissance layer of the BugSnaps ecosystem.",
+      "Explore public username leads, breach exposure, WHOIS, DNS and IP context with the MyRecon website and Android app.",
     href: "/myrecon",
     external: false,
     status: "available",

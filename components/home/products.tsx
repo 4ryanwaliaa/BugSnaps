@@ -1,3 +1,4 @@
+import { MyReconLinks } from "@/components/site/myrecon-promo";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Radar, ScanSearch } from "lucide-react";
 import { Section, SectionTitle } from "@/components/site/page-parts";
@@ -9,7 +10,7 @@ const ICONS = { mypentest: ScanSearch, myrecon: Radar } as const;
 export function HomeProducts() {
   return (
     <Section labelledBy="products-title" className="border-t border-white/[0.05]">
-      <SectionTitle id="products-title" eyebrow="Products" title="Two tools, one security team behind them." />
+      <SectionTitle id="products-title" eyebrow="Products" title="Security tools for your apps and your digital footprint." />
 
       <ul className="mt-10 grid gap-4 sm:mt-12 md:grid-cols-2">
         {products.map((product) => {
@@ -28,6 +29,7 @@ export function HomeProducts() {
                   </div>
                 </div>
                 <p className="mt-5 flex-1 text-[15px] leading-relaxed text-muted">{product.summary}</p>
+                {product.id === "myrecon" && <div className="mt-6"><MyReconLinks /></div>}
                 <div className="mt-6 flex flex-wrap items-center gap-4">
                   {product.external ? (
                     <a

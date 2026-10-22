@@ -11,6 +11,7 @@ export const SITE_URL = "https://bugsnaps.in";
 
 /** MyRecon's canonical origin - its own site, linked, never proxied. */
 export const MYRECON_URL = "https://www.myrecon.xyz/";
+export const MYRECON_ANDROID_URL = "https://play.google.com/store/apps/details?id=com.Myrecon.osint";
 
 export const CONTACT_EMAIL = "aryan@bugsnaps.in";
 export const LINKEDIN_URL = "https://www.linkedin.com/company/bugsnaps";

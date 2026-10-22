@@ -1,3 +1,4 @@
+import { MyReconLinks, MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
@@ -8,7 +9,7 @@ import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 export const metadata: Metadata = pageMetadata({
   title: "Products - MyPentest, MyRecon and AI Security Tools",
   description:
-    "The BugSnaps product line: MyPentest for automated penetration testing, MyRecon for reconnaissance, and autonomous AI pentesting tools. Built by offensive security engineers.",
+    "The BugSnaps product line: MyPentest for automated penetration testing, MyRecon for digital footprint research on the web and Android. Explore the website and get the mobile app.",
   path: "/products",
 });
 
@@ -30,7 +31,7 @@ const itemList = {
       name: product.name,
       description: product.summary,
       applicationCategory: "SecurityApplication",
-      operatingSystem: "Web",
+      operatingSystem: product.id === "myrecon" ? "Web, Android" : "Web",
       url: product.external ? product.href : absoluteUrl(product.href),
       publisher: { "@id": ORG_ID },
     },
@@ -72,7 +73,8 @@ export default function ProductsPage() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-8">
+                <div className="mt-8 space-y-4">
+                  {product.id === "myrecon" && <MyReconLinks />}
                   {product.external ? (
                     <a
                       href={product.href}
@@ -100,6 +102,7 @@ export default function ProductsPage() {
         </p>
       </Section>
 
+      <MyReconPromo />
       <CtaBand />
     </SiteShell>
   );

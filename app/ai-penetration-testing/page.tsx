@@ -1,3 +1,4 @@
+import { MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BrainCircuit, Check, Layers, ShieldCheck, Terminal } from "lucide-react";
@@ -138,6 +139,7 @@ export default function AiPenetrationTestingPage() {
           ))}
         </div>
       </Section>
+      <MyReconPromo />
       <CtaBand title="See what an assessment tells you about your application." lead="Start free, verify your domain and review evidence with clear confidence labels." secondary={{ label: "Compare testing tools", href: "/us-vs-competitors" }} />
     </SiteShell>
   );
