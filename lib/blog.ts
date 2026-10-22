@@ -27,6 +27,10 @@ import { whyPentestingPosts } from "@/lib/articles/why-pentesting";
 import { whyBugsnapsPosts } from "@/lib/articles/why-bugsnaps";
 import { vulnerabilityDeepdivePosts } from "@/lib/articles/vulnerability-deepdives";
 import { architectureIndustryPosts } from "@/lib/articles/architecture-industry";
+import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
+import { securityResponsePosts } from "@/lib/articles/security-response";
+import { frameworkAdvisoryPosts } from "@/lib/articles/framework-advisories";
+import { vulnerabilityDecisionPosts } from "@/lib/articles/vulnerability-decisions";
 
 const originalPosts: Post[] = [
   {
@@ -230,7 +234,15 @@ const originalPosts: Post[] = [
   },
 ];
  
+export const vulnerabilityPosts: Post[] = [
+  ...recentAdvisoryPosts,
+  ...securityResponsePosts,
+  ...frameworkAdvisoryPosts,
+  ...vulnerabilityDecisionPosts,
+];
+
 export const posts: Post[] = [
+  ...vulnerabilityPosts,
   ...originalPosts,
   ...whyPentestingPosts,
   ...whyBugsnapsPosts,

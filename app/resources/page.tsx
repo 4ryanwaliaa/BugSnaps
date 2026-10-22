@@ -11,6 +11,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const collections = [
+  { title: "React2Shell and framework vulnerability guides", path: "/vulnerability-guides", text: "Check advisory names, affected deployments, framework patches and scan evidence across a connected collection of practical guides." },
   { title: "API security test cases (CSV)", path: "/guides/api-security-test-cases", text: "Download eight starting cases with positive controls, expected behavior and evidence fields." },
   { title: "Pentest findings and retest template", path: "/guides/pentest-report-template", text: "Download a blank findings register and learn what to include in scope, executive summaries and retests." },
   { title: "Security readiness and scope", path: "/security-readiness", text: "Review authorization, assessment boundaries, report limitations and when to bring in an expert penetration tester." },

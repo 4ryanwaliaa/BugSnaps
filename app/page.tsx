@@ -12,6 +12,7 @@ import { HomeResearch } from "@/components/home/research";
 import { HomeClosing } from "@/components/home/closing";
 import { LegacyHashRedirect } from "@/components/home/legacy-hash-redirect";
 import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
+import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
 
 export const metadata: Metadata = pageMetadata({
   title: "Website & API Penetration Testing - BugSnaps",
@@ -125,6 +126,21 @@ export default function Home() {
         <Link href="/resources" className="mt-6 inline-block text-sm text-accent hover:underline">
           All security resources
         </Link>
+      </Section>
+      <Section labelledBy="advisory-guides-title" className="border-t border-white/5">
+        <p className="font-mono text-xs uppercase tracking-widest text-accent">Vulnerability briefings</p>
+        <h2 id="advisory-guides-title" className="mt-3 text-3xl font-semibold tracking-tight">Check what the security headlines mean for your site.</h2>
+        <p className="mt-4 max-w-2xl text-muted">Understand affected software, verify deployed patches and use a scoped scan to review supported security checks.</p>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {recentAdvisoryPosts.map((article) => (
+            <Link key={article.slug} href={`/blog/${article.slug}`} prefetch={false} className="rounded-2xl border border-white/10 bg-surface p-6 transition-colors hover:border-accent/40">
+              <h3 className="text-lg font-semibold">{article.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{article.description}</p>
+              <span className="mt-5 inline-block text-sm text-accent">Read the guide →</span>
+            </Link>
+          ))}
+        </div>
+        <Link href="/vulnerability-guides" prefetch={false} className="mt-6 inline-block text-sm text-accent hover:underline">Explore the React2Shell and framework vulnerability guide collection</Link>
       </Section>
       <HomeClosing />
     </SiteShell>

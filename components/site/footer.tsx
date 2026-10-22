@@ -68,6 +68,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
         { label: "Security & trust", href: "/security" },
         { label: "Security readiness & trust", href: "/security-readiness" },
         { label: "Blog", href: "/blog" },
+        { label: "Vulnerability guides", href: "/vulnerability-guides" },
         { label: "Security guides", href: "/guides" },
         { label: "Testing use cases", href: "/use-cases" },
         { label: "Careers", href: "/careers" },

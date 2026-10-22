@@ -1,4 +1,5 @@
 import { INDEXABLE_ROUTES } from "@/lib/routes";
+import { posts } from "@/lib/blog";
 import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -16,6 +17,7 @@ export function GET() {
     `- [Example report](${absoluteUrl("/mypentest/example-report")}): An illustrative report, not a customer case study or measured benchmark.`,
     "",
     "## Comparisons and evidence",
+    `- [Vulnerability guide collection](${absoluteUrl("/vulnerability-guides")}): React2Shell, Next.js advisories, dependency verification, scan interpretation and incident response. Advisory dates and sources are explicit; specific CVE detection by MyPentest is not established.`,
     `- [Security and trust](${absoluteUrl("/security")}): Encryption, account isolation and provider assurance. BugSnaps has not completed its own SOC 2 examination and does not claim a CSA STAR listing.`,
     `- [MyPentest vs Strix](${absoluteUrl("/compare/mypentest-vs-strix")}): Edition-specific comparison with primary vendor sources and limitations of both products.`,
     `- [Strix alternatives](${absoluteUrl("/alternatives/strix")}): Alternative assessment workflows and migration considerations.`,
@@ -30,6 +32,9 @@ export function GET() {
     "",
     "## Public page directory",
     ...INDEXABLE_ROUTES.map(({ path }) => `- [${path === "/" ? "Home" : path.slice(1).replace(/[-/]/g, " ")}](${absoluteUrl(path)})`),
+    "",
+    "## Security articles",
+    ...posts.map((post) => `- [${post.title}](${absoluteUrl(`/blog/${post.slug}`)}): ${post.description}`),
     "",
     `Sitemap: ${absoluteUrl("/sitemap.xml")}`,
     "",

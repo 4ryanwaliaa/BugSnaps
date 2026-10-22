@@ -22,7 +22,8 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-21" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-22" },
+  { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9 },
