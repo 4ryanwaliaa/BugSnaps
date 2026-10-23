@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CtaBand, JsonLd, PageHeader, Prose, SiteShell } from "@/components/site/page-parts";
 import { post, posts, vulnerabilityPosts, type Block } from "@/lib/blog";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
+import { PreferredSource } from "@/components/site/preferred-source";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -92,6 +93,7 @@ export default async function BlogPost({ params }: Params) {
         <p className="font-mono text-[12px] text-muted-2">
           By {found.author} · {found.readingMinutes} min read · {found.updated ? "Updated " : "Published "}<time dateTime={found.updated ?? found.published}>{found.updated ?? found.published}</time>
         </p>
+        <PreferredSource />
       </PageHeader>
 
       <article className="mx-auto w-full max-w-6xl px-6 py-14 sm:py-20 lg:px-8">

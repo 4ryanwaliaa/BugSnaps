@@ -2,6 +2,7 @@ import Link from "@/components/site/content-link";
 import { ArrowUpRight, Linkedin, Mail } from "lucide-react";
 import { Logo, LogoMark } from "@/components/site/logo";
 import { CookieSettingsButton } from "@/components/site/cookie-consent";
+import { PreferredSource } from "@/components/site/preferred-source";
 import { CONTACT_EMAIL, LINKEDIN_URL, MYRECON_URL, ORG } from "@/lib/site";
 import { routes } from "@/lib/mypentest";
 
@@ -210,6 +211,7 @@ export function Footer({ brand = "bugsnaps", hardLinks = false }: { brand?: Foot
           <div className="col-span-2 flex flex-col justify-between gap-8 sm:col-span-3 xl:col-span-1 xl:pr-8">
             <div>
               <Brand brand={brand} hardLinks={hardLinks} />
+              {brand === "bugsnaps" && <PreferredSource compact />}
             </div>
             <address className="text-sm not-italic leading-relaxed text-muted">
               {ORG.legalName}

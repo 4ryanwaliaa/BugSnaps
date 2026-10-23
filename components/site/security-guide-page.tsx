@@ -3,6 +3,7 @@ import { JsonLd, PageHeader, Prose, Section, SiteShell } from "@/components/site
 import { guidePath, getSecurityGuide, type SecurityGuide } from "@/lib/security-guides";
 import { newAssessmentUrl } from "@/lib/mypentest";
 import { absoluteUrl, faqJsonLd, OG_IMAGE, ORG, ORG_ID } from "@/lib/site";
+import { PreferredSource } from "@/components/site/preferred-source";
 
 export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
   const path = guidePath(guide.slug);
@@ -36,6 +37,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
         <p className="font-mono text-[12px] text-muted-2">
           By BugSnaps · Updated <time dateTime={guide.updated}>{new Date(`${guide.updated}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</time>
         </p>
+        <PreferredSource />
       </PageHeader>
 
       <article className="mx-auto w-full max-w-6xl px-6 py-14 sm:py-20 lg:px-8">
