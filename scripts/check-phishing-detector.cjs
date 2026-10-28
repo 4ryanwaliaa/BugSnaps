@@ -16,6 +16,7 @@ try {
   assert.equal(ordinary.ok, true);
   assert.equal(ordinary.hostname, "example.com");
   assert.equal(ordinary.verdict, "no-obvious-signals");
+  assert.ok(ordinary.findings.some((finding) => finding.id === "assumed-scheme"));
 
   for (const input of ["", "javascript:alert(1)", "file:///etc/passwd", "https://", "https:///evil.example", "https:8080", "https://example.com\\@evil.com", "https://exam ple.com", "https://example.com/\nother", "https://%zz.com"]) {
     assert.equal(analyzePhishingUrl(input).ok, false, `Should reject ${JSON.stringify(input)}`);
@@ -39,6 +40,36 @@ try {
   expectFinding("https://bit.ly/example", "shortener");
   expectFinding("https://login.verify.example.com/", "account-terms");
   expectFinding("http://example.com/", "http");
+  for (const address of [
+    "https://paypa1-example.com/login",
+    "https://paypal.com.attacker.example/",
+    "https://g00gle-login.example/",
+    "https://micros0ft.example/",
+  ]) expectFinding(address, "brand-lookalike");
+  for (const address of [
+    "https://www.paypal.com/",
+    "https://accounts.google.com/",
+    "https://www.google.co.in/",
+    "https://login.microsoftonline.com/",
+    "https://example.com/paypal-login",
+    "https://example.com/?q=paypal",
+    "https://example.com/@user",
+  ]) {
+    const result = analyzePhishingUrl(address);
+    assert.equal(result.ok, true);
+    assert.equal(result.findings.some((finding) => finding.id === "brand-lookalike"), false, `Unexpected brand match: ${address}`);
+    assert.equal(result.findings.some((finding) => finding.id === "userinfo"), false, `Unexpected authority match: ${address}`);
+  }
+  expectFinding("https://example.com/login?next=https%3A%2F%2Fother.example%2Faccount", "external-redirect-parameter");
+  for (const address of [
+    "https://example.com/?next=%2Faccount",
+    "https://example.com/?next=https%3A%2F%2Fexample.com%2Faccount",
+    "https://example.com/?q=https%3A%2F%2Fother.example",
+  ]) {
+    const result = analyzePhishingUrl(address);
+    assert.equal(result.ok, true);
+    assert.equal(result.findings.some((finding) => finding.id === "external-redirect-parameter"), false, `Unexpected destination warning: ${address}`);
+  }
   assert.equal(analyzePhishingUrl("https://bit.ly.example.com/").findings.some((finding) => finding.id === "shortener"), false);
   assert.equal(analyzePhishingUrl("https://example.com/?next=bit.ly").findings.some((finding) => finding.id === "shortener"), false);
   assert.equal(analyzePhishingUrl("example.com:8080").ok, true);

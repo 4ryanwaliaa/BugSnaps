@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { AlertCircle, ArrowRight, Check, CircleHelp, Link2, LockKeyhole, RotateCcw, ScanSearch, ShieldAlert } from "lucide-react";
 import { analyzePhishingUrl, type AnalysisResult } from "@/lib/phishing-detector";
+import { DnsCheck } from "@/components/phishing-detector/dns-check";
 
 const examples = [
   { label: "Deceptive host", value: "https://trusted.example@account-check.example/login" },
@@ -38,10 +39,11 @@ export function PhishLensWorkspace() {
             <div className={`rounded-2xl border p-5 ${tone}`}><div className="flex items-start gap-3"><ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" /><div><p className="text-xs font-medium uppercase tracking-[.15em]">Inspection complete</p><h2 className="mt-2 text-xl font-semibold text-white">{label}</h2><p className="mt-2 text-sm leading-relaxed text-zinc-300">{success.verdict === "no-obvious-signals" ? "The link's appearance alone cannot establish that it is safe. Verify the sender and destination independently." : "These patterns can appear in legitimate links too. Verify the destination independently before interacting."}</p></div></div></div>
             <div className="rounded-xl border border-white/[.08] bg-black/15 p-4"><p className="font-mono text-[10px] uppercase tracking-[.15em] text-zinc-500">Destination hostname</p><p className="mt-2 break-all font-mono text-sm text-zinc-100">{success.hostname}</p></div>
             <div><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-semibold text-zinc-200">What we found</h3><span className="font-mono text-xs text-zinc-500">{success.findings.length} {success.findings.length === 1 ? "signal" : "signals"}</span></div>{success.findings.length ? <ul className="space-y-2">{success.findings.map((finding) => <li key={finding.id} className="flex gap-3 rounded-xl border border-white/[.07] bg-white/[.025] p-4"><span className={`mt-0.5 ${finding.severity === "high" ? "text-rose-400" : finding.severity === "moderate" ? "text-amber-400" : "text-cyan-400"}`}><AlertCircle className="h-4 w-4" /></span><div><p className="text-sm font-medium text-zinc-100">{finding.title}</p><p className="mt-1 text-sm leading-relaxed text-zinc-400">{finding.detail}</p></div></li>)}</ul> : <p className="flex gap-2 rounded-xl border border-white/[.07] p-4 text-sm leading-relaxed text-zinc-400"><Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-400" />No listed patterns were found. This is not a safety verdict.</p>}</div>
+            <DnsCheck key={success.hostname} hostname={success.hostname} />
             <button type="button" onClick={() => { setInput(""); setResult(null); }} className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white"><RotateCcw className="h-4 w-4" /> Clear and check another</button>
           </div>}
         </div>
-        <p className="mt-6 flex gap-2 border-t border-white/[.07] pt-5 text-xs leading-relaxed text-zinc-500"><CircleHelp className="mt-0.5 h-4 w-4 shrink-0" /> This is a URL-pattern check, not a live reputation or website scan. No result guarantees a link is safe.</p>
+        <p className="mt-6 flex gap-2 border-t border-white/[.07] pt-5 text-xs leading-relaxed text-zinc-500"><CircleHelp className="mt-0.5 h-4 w-4 shrink-0" /> URL patterns and the optional DNS check do not establish whether a site is safe. The destination is never visited.</p>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="October 16, 2026">
+    <LegalPage title="Privacy Policy" updated="October 28, 2026">
       <section>
         <h2>Overview</h2>
         <p className="mt-3">
@@ -55,6 +55,17 @@ export default function PrivacyPage() {
             attachment. Downloaded or emailed copies are not removed when you delete a dashboard report.
           </li>
         </ul>
+      </section>
+      <section>
+        <h2>PhishLens</h2>
+        <p className="mt-3">
+          PhishLens reviews the link you enter in your browser without sending it to BugSnaps or visiting the
+          destination. If you choose the optional DNS filtering check, your browser sends the hostname and your
+          IP address directly to Cloudflare’s DNS resolvers; the link’s path and query are not sent. DNS resolution
+          can also involve the domain’s authoritative DNS provider. Cloudflare handles this data under its own{" "}
+          <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" className="text-accent hover:underline">DNS privacy policy</a>.
+          Browser and network providers may handle their own request logs.
+        </p>
       </section>
       <section>
         <h2>How we use it</h2>
