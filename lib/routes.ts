@@ -28,13 +28,14 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Product
   { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-28" },
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
+  { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-28" },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/ai-penetration-testing", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
   { path: "/mypentest/php2shell", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
-  { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-23" },
+  { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
   { path: "/pricing", changeFrequency: "monthly", priority: 0.7 },
 
   // Services

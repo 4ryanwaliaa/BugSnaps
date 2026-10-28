@@ -59,6 +59,23 @@ export const products: Product[] = [
     ],
   },
   {
+    id: "endpointradar",
+    name: "EndpointRadar",
+    tagline: "Windows endpoint security posture",
+    summary:
+      "Review EndpointRadar scan reports in your browser, or use the Windows command-line scanner locally for authorized security testing.",
+    href: "/endpointradar",
+    external: false,
+    status: "beta",
+    cta: "Open EndpointRadar",
+    capabilities: [
+      "Import a report or explore a sample in your browser",
+      "Filter results and review remediation guidance",
+      "One endpoint at a time in the free workspace",
+      "Run the Windows command-line scanner locally",
+    ],
+  },
+  {
     id: "myrecon",
     name: "MyRecon",
     tagline: "Digital footprint research on web and Android",

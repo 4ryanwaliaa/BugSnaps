@@ -7,9 +7,9 @@ import { products } from "@/lib/products";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Products - MyPentest, PhishLens and MyRecon",
+  title: "Products - MyPentest, EndpointRadar, PhishLens and MyRecon",
   description:
-    "Explore BugSnaps products: MyPentest, PhishLens and MyRecon for security testing, phishing link assessment and digital footprint research.",
+    "Explore BugSnaps products: MyPentest, EndpointRadar, PhishLens and MyRecon for security testing, phishing link assessment and digital footprint research.",
   path: "/products",
 });
 
@@ -31,7 +31,7 @@ const itemList = {
       name: product.name,
       description: product.summary,
       applicationCategory: "SecurityApplication",
-      operatingSystem: product.id === "myrecon" ? "Web, Android" : "Web",
+      operatingSystem: product.id === "myrecon" ? "Web, Android" : product.id === "endpointradar" ? "Web, Windows" : "Web",
       url: product.external ? product.href : absoluteUrl(product.href),
       publisher: { "@id": ORG_ID },
     },
