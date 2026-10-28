@@ -85,9 +85,28 @@ export default function PrivacyPage() {
         </p>
       </section>
       <section>
+        <h2>EndpointRadar</h2>
+        <p className="mt-3">
+          The local import workspace reads files in the current browser tab. The optional managed workspace
+          uses Firebase sign-in and stores client workspace names, membership and invitation email addresses,
+          device names, reporting schedules, security posture evidence, findings and timestamps. The Windows
+          reporting helper sends this data to BugSnaps over HTTPS after an administrator enrolls the device.
+          It omits the full installed-software inventory. Workspace administrators and invited viewers can read
+          that workspace&apos;s results; administrators manage membership, enrollment and schedules. Privileged
+          administrative and provider access is separate.
+        </p>
+        <p className="mt-3">
+          The service retains up to ten accepted scans per device and bounded alert history. Workspace and
+          device records otherwise remain stored until removed; contact BugSnaps to request deletion.
+          Revoking a device prevents future reporting and does not erase its history. Downloaded PDF copies
+          remain on the recipient&apos;s device. Review reports before sharing them. Device credentials are stored
+          as digests on the service; the helper protects its local credential with Windows account encryption.
+        </p>
+      </section>
+      <section>
         <h2>How we use it</h2>
         <p className="mt-3">
-          We use your information solely to respond to inquiries, provide MyPentest, deliver contracted services,
+          We use your information solely to respond to inquiries, provide our products, deliver contracted services,
           keep our services secure, and improve our website. We do not sell personal data, and we do not share it
           with third parties except the providers that run our services, or where the law requires it.
         </p>
