@@ -53,6 +53,20 @@ their absence was verified. No existing customer accounts or teams were used.
 - No traffic-volume, large-team, cross-browser or device compatibility claim is
   made by these acceptance checks.
 
+## Follow-up — 29 October 2026 (India time)
+
+The live acceptance check was repeated against the then-current deployment.
+All 39 checks passed, including three new checks using the actual PhishLens team
+service and Firebase client SDK in Node: an employee submitted and read a report,
+an employee's decision update was denied, and an administrator saved a decision
+and deleted the report. All temporary teams and accounts were removed and their
+absence was verified. The read-only deployed asset and CORS checks also passed.
+
+This SDK check still does not test browser hydration, form interactions or
+responsive rendering. The browser automation tool could not start because its
+kernel assets path was unavailable. PhishDestroy continued to report degraded
+freshness during the follow-up lookup; the application surfaces that condition.
+
 ## Repeatable checks
 
 Read-only deployed document, asset and CORS checks:

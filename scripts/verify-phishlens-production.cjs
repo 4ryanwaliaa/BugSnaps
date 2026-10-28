@@ -19,6 +19,7 @@ const apiKey = configSource.match(/apiKey: "([^"]+)"/)[1];
 const runId = crypto.randomBytes(10).toString('hex');
 const teamIds = [`production-verification-${runId}`, `production-verification-other-${runId}`];
 const accounts = [];
+const sdkApps = [];
 const disposableTeams = new Set();
 const checks = [];
 let adminToken;
@@ -58,7 +59,8 @@ async function createAccount(role) {
   const password = `V!${crypto.randomBytes(24).toString('base64url')}9a`;
   const signup = await authCall('signUp', { email, password, returnSecureToken: true });
   assert.equal(signup.status, 200, `temporary ${role} signup: ${JSON.stringify(signup.body.error ?? {})}`);
-  const user = { localId: signup.body.localId, idToken: signup.body.idToken, email };
+  // The password is held only in this process and is never written to the report.
+  const user = { localId: signup.body.localId, idToken: signup.body.idToken, email, password };
   accounts.push(user);
   const login = await authCall('signInWithPassword', { email, password, returnSecureToken: true });
   assert.equal(login.status, 200, `temporary ${role} login failed`);
@@ -130,6 +132,44 @@ async function run() {
   assert.equal(history.reviews.verification1.hostname, history.reviews.verification2.hostname);
   assert.ok(Number.isFinite(history.reviews.verification1.submittedAt));
   passed('message history, repeated sender/domain, and server timestamps persist');
+
+  // Exercise the same client service and Firebase SDK that the deployed team UI
+  // imports, against the same disposable production team. This is a Node SDK
+  // test; it does not represent a browser interaction or rendering test.
+  const { initializeApp } = require('firebase/app');
+  const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
+  let activeApp;
+  for (const account of [owner, member]) {
+    const app = initializeApp({ apiKey, authDomain: 'mypentest-bugsnaps.firebaseapp.com', databaseURL: db, projectId: project }, `phishlens-${runId}-${account.localId}`);
+    sdkApps.push(app);
+    await signInWithEmailAndPassword(getAuth(app), account.email, account.password);
+    account.sdkApp = app;
+  }
+  const serviceFile = path.join(__dirname, '../lib/phishlens-team.ts');
+  const service = { exports: {} };
+  const serviceCode = ts.transpileModule(fs.readFileSync(serviceFile, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const serviceRequire = id => id === '@/lib/firebase-auth' ? { loadApp: async () => activeApp } : id === '@/lib/phishing-detector' ? load('phishing-detector') : require(id);
+  new Function('exports', 'module', 'require', serviceCode)(service.exports, service, serviceRequire);
+  const client = service.exports;
+  const sdkDeadline = (promise, label) => new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label} timed out`)), 25000);
+    promise.then(value => { clearTimeout(timer); resolve(value); }, error => { clearTimeout(timer); reject(error); });
+  });
+  activeApp = member.sdkApp;
+  await sdkDeadline(client.submitReview(teamIds[0], { url: 'https://example.com/sdk-verification', displayed: 'https://visible.example.test', sender: 'sdk-sender@example.test', message: 'Synthetic SDK verification' }), 'SDK submit');
+  const memberView = await sdkDeadline(client.getTeam(teamIds[0]), 'SDK employee read');
+  const sdkReview = memberView.reviews.find(item => item.message === 'Synthetic SDK verification');
+  assert.ok(sdkReview); assert.equal(sdkReview.hostname, 'example.com'); assert.equal(sdkReview.status, 'unresolved');
+  passed('production Firebase SDK and application service submit and read a report');
+  await assert.rejects(sdkDeadline(client.updateReview(teamIds[0], sdkReview, 'legitimate', 'not allowed'), 'SDK employee decision'), /permission.denied/i);
+  passed('production application service enforces employee decision restrictions');
+  activeApp = owner.sdkApp;
+  await sdkDeadline(client.updateReview(teamIds[0], sdkReview, 'suspicious', 'SDK reviewed'), 'SDK administrator decision');
+  const ownerView = await sdkDeadline(client.getTeam(teamIds[0]), 'SDK administrator read');
+  assert.equal(ownerView.reviews.find(item => item.id === sdkReview.id)?.notes, 'SDK reviewed');
+  await sdkDeadline(client.deleteReview(teamIds[0], sdkReview.id), 'SDK administrator deletion');
+  assert.ok(!(await sdkDeadline(client.getTeam(teamIds[0]), 'SDK deletion check')).reviews.some(item => item.id === sdkReview.id));
+  passed('production Firebase SDK and application service save decisions and delete reports');
   await deny(database('PATCH', `${team}/reviews/verification1`, member, { status: 'legitimate', updatedBy: member.localId, updatedAt: { '.sv': 'timestamp' } }), 'employee cannot change administrator decision');
   await deny(database('PATCH', `${team}/reviews/verification1`, owner, { message: 'tampered', updatedBy: owner.localId, updatedAt: { '.sv': 'timestamp' } }), 'administrator cannot rewrite submitted evidence');
   for (const status of ['suspicious', 'legitimate', 'unresolved']) {
@@ -163,6 +203,14 @@ async function run() {
   try { await run(); report.result = 'passed'; }
   catch (error) { failure = error; report.result = 'failed'; report.failure = String(error.message); console.error('Verification failed:', error.message); }
   finally {
+    for (const app of sdkApps) {
+      try {
+        const { getDatabase, goOffline } = require('firebase/database');
+        goOffline(getDatabase(app));
+        await require('firebase/app').deleteApp(app);
+      }
+      catch { failure ??= new Error('Could not close a disposable Firebase SDK client'); }
+    }
     if (adminToken) for (const id of disposableTeams) {
       try {
         assert.match(id, /^production-verification-(?:other-)?[a-f0-9]{20}$/);
@@ -184,10 +232,12 @@ async function run() {
     }
     if (failure) report.result = 'failed';
     report.finishedAt = new Date().toISOString();
-    report.browserInteraction = 'Not exercised: local browser automation disabled in Work settings.';
+    report.browserInteraction = 'Not exercised by this API and client-SDK test.';
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
     console.log(`Verification report: ${reportPath}`);
     console.log(`Result: ${report.result}; ${checks.length} checks; cleanup ${Object.values(report.cleanup).every(v => v.startsWith('deleted')) ? 'passed' : 'requires attention'}`);
-    process.exitCode = failure ? 1 : 0;
+    // The SDK can leave reconnect timers alive even after goOffline/deleteApp.
+    // All cleanup and report writes above are awaited; exit after flushing output.
+    process.stdout.write('', () => process.exit(failure ? 1 : 0));
   }
 })();
