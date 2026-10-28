@@ -1,6 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { createReport, reportMarkdown, type Evidence, type LocalReview } from "@/lib/phishlens-review";
 
 export function downloadFile(content: string, filename: string, type: string) {
@@ -16,5 +16,10 @@ export function ReportActions({ result, evidence, reviewedAt }: { result: LocalR
     const report = createReport(result, evidence, reviewedAt);
     downloadFile(format === "json" ? JSON.stringify(report, null, 2) : reportMarkdown(report), `phishlens-investigation.${format}`, format === "json" ? "application/json" : "text/markdown;charset=utf-8");
   }
-  return <div className="rounded-2xl border border-white/10 bg-black/15 p-5"><div className="flex flex-wrap items-center justify-between gap-4"><div><h3 className="text-sm font-medium">Take the evidence with you</h3><p className="mt-2 max-w-2xl text-xs leading-relaxed text-zinc-500">Exports include completed checks, missing coverage, source health and observation times. Full URLs, paths, credentials and queries are omitted. Hostnames and provider evidence remain; review before sharing.</p></div><div className="flex gap-2">{(["json", "md"] as const).map(format => <button key={format} type="button" onClick={() => exportReport(format)} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm text-zinc-200 hover:bg-white/5"><Download className="h-4 w-4" />{format === "json" ? "JSON" : "Markdown"}</button>)}</div></div></div>;
+  return <section aria-labelledby="report-title" className="rounded-2xl border border-cyan-300/15 bg-gradient-to-br from-cyan-300/[.055] to-[#0c141b] p-5 sm:p-6">
+    <div className="flex items-start gap-4"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-cyan-300/15 bg-cyan-300/[.07] text-cyan-300"><FileText aria-hidden="true" className="h-5 w-5" /></span>
+      <div className="min-w-0 flex-1"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-cyan-300">Investigation report</p><h3 id="report-title" className="mt-2 text-lg font-semibold text-zinc-100">Take the evidence with you</h3><p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-400">Export completed checks, source health, observation times and missing coverage.</p></div>
+    </div>
+    <div className="mt-5 flex flex-col items-start gap-4 border-t border-white/[.07] pt-5 lg:flex-row lg:items-center lg:justify-between"><p className="max-w-2xl text-xs leading-relaxed text-zinc-400">Full URLs, paths, credentials and queries are omitted. Hostnames and provider evidence remain; review before sharing.</p><div className="flex w-full gap-2 sm:w-auto">{(["json", "md"] as const).map(format => <button key={format} type="button" onClick={() => exportReport(format)} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[.035] px-4 text-sm font-medium text-zinc-200 transition-colors hover:bg-white/[.08] sm:flex-none"><Download aria-hidden="true" className="h-4 w-4" />{format === "json" ? "JSON" : "Markdown"}</button>)}</div></div>
+  </section>;
 }
