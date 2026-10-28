@@ -26,6 +26,7 @@ export default function PrivacyPage() {
           <li>Engagement-related information you share with us during scoping and testing.</li>
           <li>MyPentest account details: your email address, display name and sign-in provider.</li>
           <li>MyPentest assessment data: the domains you verify, how you configure assessments, and their results.</li>
+          <li>PhishLens team account and review data that you choose to submit, including links, senders, message text, decisions and notes.</li>
           <li>Standard request logs kept by our hosting providers (such as IP address and pages requested) for security and reliability.</li>
           <li>With your permission, Google Analytics collects public-page visits and basic browser, device and approximate location information.</li>
         </ul>
@@ -69,10 +70,18 @@ export default function PrivacyPage() {
           under its own <a href="https://phishdestroy.io/privacy" className="text-accent hover:underline">privacy policy</a>.
           Browser and network providers may handle their own request logs.
           Optional batch lookups send only the eligible hostnames shown in your batch. A deeper investigation may
-          cause PhishDestroy to query DNS and registry RDAP services. Local inputs and results remain in page memory;
-          PhishLens does not save them to your account or browser storage. Downloaded reports are saved to your device
+          cause PhishDestroy to query DNS and registry RDAP services. The local inspection inputs and results remain in page memory;
+          the inspector does not automatically save them to your account or browser storage. Downloaded reports are saved to your device
           and include hostnames, findings and available provider evidence, while omitting complete URLs, credentials,
           paths, queries and fragments. Review exported evidence before sharing it.
+        </p>
+        <p className="mt-3">
+          If you use the optional team inbox, Firebase Authentication handles sign-in and Firebase Realtime Database
+          stores the information you submit: full links, sender details, message text, team membership, review decisions,
+          action notes and timestamps. Every member of that team can read its submissions; administrators manage team
+          membership and decisions. Provider and privileged administrative access is separate. Do not submit passwords,
+          one-time codes or information your team is not authorized to store. Team records remain stored until removed;
+          team administrators can delete individual reports, or you can contact BugSnaps to request removal. Copies already shared or downloaded are separate.
         </p>
       </section>
       <section>

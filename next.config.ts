@@ -141,6 +141,10 @@ const nextConfig: NextConfig = {
       { source: "/:path*", has: [{ type: "query", key: "_rsc" }], headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
       // Only the contact page can load the optional city map frame.
       { source: "/contact", headers: [{ key: "Content-Security-Policy", value: csp({ frame: ["https://www.openstreetmap.org"] }) }] },
+      // Team pages need Firebase on the initial document; navigation into them
+      // must use a full page load so the correct CSP is applied.
+      { source: "/phishing-detector/team", headers: [{ key: "Content-Security-Policy", value: csp({ script: firebase.script, connect: firebase.connect, frame: firebase.frame }) }, { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+      { source: "/phishing-detector/team/:path*", headers: [{ key: "Content-Security-Policy", value: csp({ script: firebase.script, connect: firebase.connect, frame: firebase.frame }) }, { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/mypentest/app", headers: mypentestHeaders },
       { source: "/mypentest/app/:path*", headers: mypentestHeaders },
       // The signed-in app is never indexed, whatever a crawler finds linking to it.

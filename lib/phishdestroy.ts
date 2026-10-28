@@ -10,7 +10,12 @@ export type PhishDestroyResult = {
     liveness?: "serving" | "dns-active" | "inactive";
     livenessCheckedAt?: string;
     listedSince?: string;
+    /** Provider observation time, if reported. */
     checkedAt?: string;
+    /** Time this browser received and validated the provider result. */
+    receivedAt: string;
+    /** Provider's own indicators, not a probability of phishing. */
+    score?: { value: number; kind: "listed" | "heuristic" };
   };
   health: { status: "healthy" | "degraded" | "unavailable"; lastSync?: string; fullSyncAt?: string };
 };
@@ -119,9 +124,16 @@ export function parsePhishDestroy(data: Record<string, unknown>, host: string, h
     matchedDomain,
     providerSignals,
     checkedAt: timestamp(data.checked_at),
+    receivedAt: new Date().toISOString(),
     listedSince: timestamp(data.listed_since),
     livenessCheckedAt: timestamp(data.liveness_checked_at),
   };
+  // Do not make a missing provider score look like zero. Listed risk and
+  // unlisted hostname heuristics are distinct provider measurements.
+  const score = data.threat ? data.risk_score : data.heuristic_score;
+  if (typeof score === "number" && Number.isInteger(score) && score >= 0 && score <= (data.threat ? 100 : 10000)) {
+    details.score = { value: score, kind: data.threat ? "listed" : "heuristic" };
+  }
   // This is the provider's last liveness observation, not a check we ran.
   if (data.liveness === "serving") details.liveness = "serving";
   else if (data.liveness === "resolving" || data.liveness === "active" || data.liveness === "dns_active") details.liveness = "dns-active";
