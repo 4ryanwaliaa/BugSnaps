@@ -1,0 +1,17 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const ts = require("typescript");
+const code = ts.transpileModule(fs.readFileSync("app/endpointradar/app/client-report.tsx", "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+const mod = { exports: {} }; vm.runInNewContext(code, { module: mod, exports: mod.exports, require, Date, Object, Map, Set });
+const { buildReport } = mod.exports;
+const record = (id, date, title = "Issue") => ({ managedDeviceId: id, managedDeviceName: id, hostname: "HOST", ip: "10.0.0.1", date, level: "HIGH", score: 1, connection: "Local", antivirus: "Enabled", firewall: "All profiles on", patches: "Unknown", findings: [{ title, severity: "HIGH", description: "Evidence", fix: "Fix" }] });
+const a = record("a", "2026-10-26T00:00:00Z"); const b = record("b", "2026-10-27T00:00:00Z"); const a2 = record("a", "2026-10-27T01:00:00Z", "New issue");
+const report = buildReport([{...a, managedReceivedAt:"2026-10-28T00:00:00Z"}, b, {...a2, managedReceivedAt:"2026-10-27T01:00:00Z"}]);
+assert.equal(report.length, 2, "identical hostname/address must not mix enrolled devices");
+const deviceA = report.find(x => x.current.managedDeviceId === "a");
+assert.equal(deviceA.previous.date, a.date);
+assert.equal(deviceA.current.date, a2.date);
+assert.equal(report.find(x => x.current.managedDeviceId === "b").previous, undefined);
+assert(deviceA.changes.some(x => x.includes("Not reported")));
+console.log("PASS enrolled-device isolation and comparison");

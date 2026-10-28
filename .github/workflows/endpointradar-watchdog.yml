@@ -1,0 +1,30 @@
+name: EndpointRadar reporting watchdog
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: endpointradar-watchdog-production
+  cancel-in-progress: false
+
+jobs:
+  check-reporting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check expected device reports
+        env:
+          WATCHDOG_SECRET: ${{ secrets.ENDPOINTRADAR_CRON_SECRET }}
+        shell: bash
+        run: |
+          if [ -z "$WATCHDOG_SECRET" ]; then
+            echo 'Configure ENDPOINTRADAR_CRON_SECRET before enabling the reporting watchdog.'
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 120 \
+            --header "Authorization: Bearer $WATCHDOG_SECRET" \
+            https://bugsnaps.in/endpointradar/api/cron/watchdog

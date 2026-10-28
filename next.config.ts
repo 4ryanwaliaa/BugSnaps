@@ -141,6 +141,8 @@ const nextConfig: NextConfig = {
       { source: "/:path*", has: [{ type: "query", key: "_rsc" }], headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
       // Only the contact page can load the optional city map frame.
       { source: "/contact", headers: [{ key: "Content-Security-Policy", value: csp({ frame: ["https://www.openstreetmap.org"] }) }] },
+      { source: "/endpointradar/managed", headers: [{ key: "Content-Security-Policy", value: csp(firebase) }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+      { source: "/endpointradar/api/:path*", headers: [{ key: "Cache-Control", value: "no-store" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/mypentest/app", headers: mypentestHeaders },
       { source: "/mypentest/app/:path*", headers: mypentestHeaders },
       // The signed-in app is never indexed, whatever a crawler finds linking to it.

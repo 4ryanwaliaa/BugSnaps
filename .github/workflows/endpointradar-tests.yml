@@ -1,0 +1,32 @@
+name: EndpointRadar managed checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  isolation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci
+      - run: node scripts/check-endpointradar-watchdog.cjs
+      - run: node scripts/check-endpointradar-reports.cjs
+      - run: npx --yes firebase-tools@15.34.1 emulators:exec --config docs/endpointradar/firebase.test.json --project demo-endpointradar --only auth,database "node scripts/run-endpointradar-tests.cjs"
+  windows-runner:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test schedule and retry handling
+        shell: powershell
+        run: ./scripts/test-endpointradar-agent.ps1

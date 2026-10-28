@@ -1,0 +1,51 @@
+const assert = require('node:assert/strict');
+const { randomUUID, createHash } = require('node:crypto');
+const { initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const base = 'http://127.0.0.1:3018/endpointradar/api';
+process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:19099';
+const auth = getAuth(initializeApp({projectId:'demo-endpointradar'}, 'endpoint-tests'));
+async function account(email) {
+ const password = 'testing123456'; const u = await auth.createUser({email,password,emailVerified:true});
+ const r=await fetch('http://127.0.0.1:19099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=any',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,password,returnSecureToken:true})});
+ const data=await r.json(); assert.equal(r.status,200,JSON.stringify(data)); return {uid:u.uid,token:data.idToken};
+}
+async function call(path, token, method='GET', data) {
+ const r=await fetch(base+path,{method,headers:{...(token?{authorization:`Bearer ${token}`} : {}),...(data?{'content-type':'application/json'}:{})},body:data?JSON.stringify(data):undefined}); return {status:r.status,body:await r.json()};
+}
+(async()=>{
+ const suffix=randomUUID().slice(0,8); const a=await account(`a${suffix}@example.com`), b=await account(`b${suffix}@example.com`), c=await account(`c${suffix}@example.com`);
+ const r=await call('/service/workspaces',a.token,'POST',{name:'Acme'}); assert.equal(r.status,201, JSON.stringify(r)); const wid=r.body.workspace.id;
+ assert.equal((await call(`/service/workspaces/${wid}`,b.token)).status,404); assert.equal((await call(`/service/workspaces/${wid}`,null)).status,401);
+ const invite=await call(`/service/workspaces/${wid}/invites`,a.token,'POST',{email:`b${suffix}@example.com`,role:'viewer'}); assert.equal(invite.status,201);
+ assert.equal((await call('/service/invites/accept',c.token,'POST',{inviteId:invite.body.inviteId})).status,404);
+ assert.equal((await call('/service/invites/accept',b.token,'POST',{inviteId:invite.body.inviteId})).status,200);
+ assert.equal((await call(`/service/workspaces/${wid}`,b.token)).status,200); assert.equal((await call(`/service/workspaces/${wid}/devices`,b.token,'POST',{name:'bad',intervalMinutes:15})).status,403);
+ const pending=await call(`/service/workspaces/${wid}/invites`,a.token,'POST',{email:`b${suffix}@example.com`,role:'viewer'}); assert.equal(pending.status,201);
+ const memberId=createHash('sha256').update(b.uid).digest('hex'); assert.equal((await call(`/service/workspaces/${wid}/members/${memberId}/revoke`,a.token,'POST',{})).status,200);
+ assert.equal((await call(`/service/workspaces/${wid}`,b.token)).status,404);
+ assert.equal((await call('/service/invites/accept',b.token,'POST',{inviteId:invite.body.inviteId})).status,404);
+ assert.equal((await call('/service/invites/accept',b.token,'POST',{inviteId:pending.body.inviteId})).status,404);
+ const reinvite=await call(`/service/workspaces/${wid}/invites`,a.token,'POST',{email:`b${suffix}@example.com`,role:'viewer'}); assert.equal(reinvite.status,201);
+ assert.equal((await call('/service/invites/accept',b.token,'POST',{inviteId:reinvite.body.inviteId})).status,200);
+ const d=await call(`/service/workspaces/${wid}/devices`,a.token,'POST',{name:'test',intervalMinutes:15}); assert.equal(d.status,201,JSON.stringify(d)); const {deviceId,secret}=d.body;
+ assert.equal((await call(`/device/${wid}/${deviceId}`,'incorrect')).status,401); assert.equal((await call(`/device/${wid}/${deviceId}`,secret)).status,200);
+ const scan={hostname:'TEST',last_scan_at:new Date(Date.now()-60000).toISOString(),vulnerabilities:[],firewall:{profiles:{Domain:{state:'ON'},Private:{state:'ON'},Public:{state:'ON'}}},antivirus:{status:'enabled'}};
+ const id=randomUUID(); assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()-120000).toISOString()},scanId:randomUUID()})).status,409);
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()+3600000).toISOString()},scanId:randomUUID()})).status,400);
+ const scans=await call(`/service/workspaces/${wid}/devices/${deviceId}/scans`,b.token); assert.equal(scans.body.scans.length,1); assert.equal(scans.body.scans[0].scan.hostname,'TEST');
+ const out=await call(`/service/workspaces/${wid}`,b.token); assert(!JSON.stringify(out.body).includes(secret)); assert(!JSON.stringify(out.body).includes('secretHash'));
+ const d2=await call(`/service/workspaces/${wid}/devices`,a.token,'POST',{name:'concurrency',intervalMinutes:15}); assert.equal(d2.status,201);
+ const outcomes=await Promise.all(Array.from({length:6},()=>call(`/device/${wid}/${d2.body.deviceId}`,d2.body.secret,'POST',{scan,scanId:randomUUID()})));
+ assert.equal(outcomes.filter(x=>x.status===200).length,1,JSON.stringify(outcomes)); assert.equal(outcomes.filter(x=>x.status===409).length,5,JSON.stringify(outcomes));
+ await new Promise(resolve=>setTimeout(resolve,11000));
+ const changed={...scan,last_scan_at:new Date(Date.now()-1000).toISOString(),firewall:{profiles:{Domain:{state:'OFF'},Private:{state:'ON'},Public:{state:'ON'}}}};
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:changed,scanId:randomUUID()})).status,200);
+ const posture=await call(`/service/workspaces/${wid}`,a.token); assert(posture.body.alerts.some(alert=>alert.kind==='posture' && alert.message.includes('Profile off')),JSON.stringify(posture));
+ assert.equal(posture.body.devices.find(item=>item.id===deviceId).latestScan.scan.firewall.profiles.Domain.state,'OFF');
+ assert.equal((await call(`/service/workspaces/${wid}/devices/${deviceId}/disable`,a.token,'POST',{})).status,200); assert.equal((await call(`/device/${wid}/${deviceId}`,secret)).status,401);
+ const direct=await fetch(`http://127.0.0.1:19100/endpointRadar/workspaces/${wid}.json?ns=demo-endpointradar-default-rtdb`); assert.equal(direct.status,401);
+ console.log('PASS managed: tenant isolation, verified invite, member revocation, invitation replay, device auth, idempotence, concurrent uploads, timestamps, posture alert, device revocation, direct database denial.');
+})().catch(e=>{console.error(e); process.exitCode=1});

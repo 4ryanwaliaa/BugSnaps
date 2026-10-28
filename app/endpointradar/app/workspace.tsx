@@ -28,7 +28,7 @@ const demo: Scan = {
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 const value = (v: unknown, fallback = "Unknown") => typeof v === "string" && v.trim() ? v.trim().slice(0, 5000) : fallback;
 const obj = (v: unknown) => isObject(v) ? v : {};
-function normalize(raw: unknown): Scan {
+export function normalize(raw: unknown): Scan {
   if (!isObject(raw) || !Array.isArray(raw.vulnerabilities)) throw new Error("This does not look like an EndpointRadar scan record with findings. Import a scan JSON file, not a discovery or threat report.");
   const findings = raw.vulnerabilities;
   if (findings.length > MAX_FINDINGS) throw new Error(`This record exceeds the ${MAX_FINDINGS} findings limit.`);

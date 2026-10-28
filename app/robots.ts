@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // The signed-in application and its API are not content to index.
-        disallow: ["/mypentest/app", "/mypentest/api"],
+        disallow: ["/mypentest/app", "/mypentest/api", "/endpointradar/app", "/endpointradar/managed", "/endpointradar/api"],
       },
       {
         userAgent: [
@@ -49,7 +49,7 @@ export default function robots(): MetadataRoute.Robots {
           "Omgilibot",
         ],
         allow: "/",
-        disallow: ["/mypentest/app", "/mypentest/api"],
+        disallow: ["/mypentest/app", "/mypentest/api", "/endpointradar/app", "/endpointradar/managed", "/endpointradar/api"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
