@@ -344,11 +344,11 @@ export const architectureIndustryPosts: Post[] = [
   },
   {
     slug: "devsecops-pipeline-penetration-testing",
-    title: "Automated Security Testing in CI/CD: A Checklist",
+    title: "CI/CD Security Testing: Tools and Pipeline Checklist",
     description:
-      "What security checks belong in CI/CD? Use a pull-request, staging and release checklist, with evidence-based blocking rules and a failed-scan policy.",
+      "Plan automated security testing in CI/CD with SAST, dependency and secret scanning, staging DAST, release gates, and a failed-scan policy.",
     published: "2026-10-05",
-    updated: "2026-10-22",
+    updated: "2026-10-29",
     author: "BugSnaps Security Research",
     readingMinutes: 8,
     body: [
@@ -369,6 +369,9 @@ export const architectureIndustryPosts: Post[] = [
           "Release: review unresolved findings, accepted exceptions and untested coverage. Include role separation and ownership regression cases; a passing automated scan is not a compliance certification.",
         ],
       },
+      { type: "h2", text: "Which security testing solutions fit each stage?" },
+      { type: "p", text: "Use a combination of methods that fits the application and available integration, rather than assuming one scanner covers every stage. SAST examines source or build artifacts for selected coding patterns; software composition analysis (SCA) compares dependencies with vulnerability information; and secret scanning looks for exposed credentials. Test these against a small known fixture before enforcing a gate." },
+      { type: "p", text: "For a running staging application, DAST checks reachable behavior and configuration using the access and test data supplied. Add authorization regression tests for business-specific permissions and an expert review for cases automation cannot establish. Validate tool licensing, output format, authentication, operating costs, and access to a disposable staging environment before choosing a solution." },
       { type: "h2", text: "Preventing false positives from blocking releases" },
       {
         type: "p",
@@ -376,7 +379,7 @@ export const architectureIndustryPosts: Post[] = [
       },
       {
         type: "callout",
-        text: "This is a pipeline design checklist, not a ready-made MyPentest CI integration. MyPentest assessments and report exports can support review; verify the supported automation interface and authentication requirements before connecting any scanner to your pipeline.",
+        text: "This is a pipeline design checklist, not a ready-made MyPentest CI integration. MyPentest assessments are started by a user; native CI triggers and scheduled runs are not currently available. Its report can inform review, but it does not automatically gate a pipeline.",
       },
       { type: "h2", text: "Example: turn an ownership bug into a release check" },
       { type: "p", text: "Create an invoice for test account A and another for B. First confirm A can read its own invoice. Then verify A cannot read B's unshared invoice, including its export route. If the forbidden case returns B's protected data, preserve redacted evidence and open a finding. After a fix, repeat both the denied case and the allowed control on the new build." },
@@ -391,6 +394,8 @@ export const architectureIndustryPosts: Post[] = [
       { label: "MyPentest automated scanner", href: "/mypentest" },
       { label: "Automated vs manual penetration testing", href: "/compare/automated-vs-manual-penetration-testing" },
       { label: "BugSnaps pricing", href: "/pricing" },
+      { label: "OWASP DevSecOps Guideline", href: "https://owasp.org/projects/devsecops-guideline/" },
+      { label: "OWASP CI/CD Security Cheat Sheet", href: "https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html" },
     ],
   },
   {

@@ -13,7 +13,7 @@ export interface AlternativePage {
   transition: string;
   faq: { question: string; answer: string }[];
 }
-type Guide = Pick<AlternativePage, "competitorSlug" | "answer" | "keepOriginal" | "options" | "checks" | "transition"> & { question: string; response: string };
+type Guide = Pick<AlternativePage, "competitorSlug" | "answer" | "keepOriginal" | "options" | "checks" | "transition"> & { question: string; response: string; title?: string; description?: string; updated?: string };
 const guides: Guide[] = [
   {
     competitorSlug: "strix",
@@ -187,16 +187,19 @@ const guides: Guide[] = [
   },
   {
     competitorSlug: "detectify",
-    answer: "Detectify alternatives should separate attack-surface monitoring from deep application testing. Intruder addresses broader exposure workflows, Nuclei offers targeted templates, and MyPentest fits an individual hosted application assessment. First document the assets and monitoring cadence you cannot lose.",
+    updated: "2026-10-29",
+    title: "Detectify Alternatives: Compare Attack Surface and DAST Tools",
+    description: "Compare Detectify alternatives for attack-surface monitoring, web application testing and custom scans. See when Intruder, Nuclei or MyPentest may fit.",
+    answer: "Detectify alternatives serve different needs: Intruder is an option for wider exposure workflows, Nuclei runs team-managed custom templates, and MyPentest offers a hosted assessment of a verified web app. First decide whether you need ongoing attack-surface discovery, authenticated application testing, or both; no single substitute should be assumed equivalent without a scoped trial.",
     keepOriginal: "Keep Detectify under consideration if surface visibility joined to authenticated application tests meets your operational needs. Replacing the application scanner alone does not replace asset discovery, internal coverage or organizational controls.",
     options: [
       { slug: "intruder", fit: "Evaluate broader infrastructure and cloud exposure alongside paid application DAST.", check: "Compare the required asset types and configured price, not only the entry plan." },
       { slug: "nuclei", fit: "Evaluate for custom targeted checks managed by your team.", check: "Inventory collection, scheduling and authentication remain a separate operational responsibility." },
     ],
     checks: [
-      { title: "Discovery completeness", body: "Compare the tool's asset inventory with a known list from engineering. Track unknown and unreachable systems rather than treating them as clean." },
-      { title: "Authenticated crawl", body: "Use a supplied test account and a protected workflow. Check whether the crawler reaches the expected routes and remains authenticated." },
-      { title: "Configured cost", body: "Count assets, domains, environments and IP ranges together. A published platform fee may exclude usage or expanded scope." },
+      { title: "Discovery completeness", body: "List the domains, applications, IP ranges and internal environments in your current programme, then compare each candidate's discovered assets with an engineering-owned inventory. Mark missing or unreachable systems explicitly. A hosted app assessment alone is not a replacement for continuous external discovery." },
+      { title: "Authenticated crawl", body: "Use the same staging build, supplied test account and protected workflow for each authorized pilot. Confirm that the scanner reaches the expected pages and stays signed in. Compare confirmed findings and missed known cases, not just an alert count." },
+      { title: "Configured cost", body: "Ask each vendor for the complete scope: assets, domains, applications, environments and IP ranges, plus any internal access, report and integration requirements. Detectify's pricing page identifies added scope as a possible extra cost; a platform fee alone is not the full comparison." },
     ],
     transition: "Keep the existing monitoring process while validating the replacement inventory. Export findings and owners, compare a representative authenticated application, and avoid deleting asset history before the new workflow is stable.",
     question: "Can MyPentest replace external attack-surface monitoring?",
@@ -364,9 +367,9 @@ export const ALTERNATIVE_PAGES: AlternativePage[] = guides.map((guide) => {
   return {
     ...guide,
     slug: item.slug,
-    title: `${item.name} Alternatives: Choose by Testing Workflow`,
-    description: `Evaluate ${item.name} alternatives by test scope, authentication, deployment, evidence and migration effort. A practical shortlist with vendor sources and clear limits.`,
-    updated: item.checkedOn,
+    title: guide.title ?? `${item.name} Alternatives: Choose by Testing Workflow`,
+    description: guide.description ?? `Evaluate ${item.name} alternatives by test scope, authentication, deployment, evidence and migration effort. A practical shortlist with vendor sources and clear limits.`,
+    updated: guide.updated ?? item.checkedOn,
     faq: [
       { question: guide.question, answer: guide.response },
       { question: `How should I evaluate a ${item.name} alternative?`, answer: "Use the same authorized staging build, test accounts and scope. Compare reachable endpoints, confirmed findings, missed known cases, evidence and total operating effort. Product feature lists alone do not establish detection quality." },

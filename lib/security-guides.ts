@@ -68,14 +68,15 @@ export const SECURITY_GUIDES: SecurityGuide[] = [
   ...SECURITY_PROGRAM_GUIDES,
   {
     slug: "bola-testing",
-    title: "BOLA testing: verify object ownership in APIs",
-    description: "Learn how to assess broken object level authorization with two test accounts, ownership controls, and evidence that distinguishes a real access failure.",
+    title: "BOLA and IDOR Testing: API Authorization Checks",
+    description: "Test BOLA and IDOR with two authorized accounts and known records. Compare allowed and denied requests, collect evidence, and retest the fix.",
     category: "API security",
-    answer: "Broken object level authorization (BOLA) happens when an API lets a caller access or change an object they are not entitled to use. Test the permission decision for the object and action, using records created by separate authorized test accounts.",
-    updated: UPDATED,
+    answer: "Broken object level authorization (BOLA) happens when an API lets a caller access or change an object they are not entitled to use. IDOR describes a related failure involving an unprotected direct reference. Test the caller, action and object using records owned by separate authorized test accounts.",
+    updated: "2026-10-29",
     sections: [
       { title: "Start with an ownership model", paragraphs: ["For an invoice API, decide who may read an invoice, download its attachment, or change its status. A random identifier can make a record harder to guess, but the server still needs to enforce the permission rule when that identifier arrives."], source: 0 },
       { title: "Create a paired account check", paragraphs: ["Create one invoice for account A and a different invoice for account B. Record a normal request from each. With permission to test both accounts, check whether A's session can reach B's test record and compare the result against the intended policy."], checklist: ["Use harmless records whose owner and contents you know.", "Cover read, update, download, and nested resource routes separately.", "Check that shared records remain accessible to their intended collaborators."] },
+      { title: "Compare an allowed request with a denied request", paragraphs: ["For example, account A can view its own test invoice, but the policy denies A access to B's private invoice. With both accounts in scope, use B's known test identifier in A's request. Check the returned record, not just the response status, and compare it with A's allowed request and B's own access.", "A customer-support user or a collaborator may legitimately access another person's record. Record those exceptions and the intended action separately; ownership alone is not always the full access policy."], source: 1 },
       { title: "Prove the permission failure", paragraphs: ["A successful HTTP status is insufficient. A response might contain an empty result, a generic page, or A's own data. Evidence should connect the authenticated caller, the specific test object, its owner, the forbidden action, and the data returned or state changed."], checklist: ["Redact session tokens and customer data from saved requests.", "Record the expected denial as well as the observed response.", "Use an allowed same-owner request as a control."] },
       { title: "Retest every route to the object", paragraphs: ["A fix on the main invoice route can leave the PDF export or a batch route exposed. Add regression cases for the same ownership boundary through each access path. Preserve a positive case so the fix does not block a user from their own invoices."] },
     ],
@@ -85,7 +86,7 @@ export const SECURITY_GUIDES: SecurityGuide[] = [
       { question: "Do UUIDs prevent BOLA?", answer: "No. Knowing or receiving an object identifier must not give a caller permission to use the object. Unpredictable IDs complement access checks but do not replace them." },
       { question: "Does a 200 response prove BOLA?", answer: "No. Verify the response contains the other test account's protected record or that the forbidden state change occurred. Status codes alone do not establish impact." },
     ],
-    sources: [{ title: "OWASP API1:2023 Broken Object Level Authorization", url: "https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/" }],
+    sources: [{ title: "OWASP API1:2023 Broken Object Level Authorization", url: "https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/" }, { title: "OWASP Insecure Direct Object Reference Prevention Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html" }],
     related: ["access-control-testing", "saas-tenant-isolation", "security-testing-report"],
   },
   {

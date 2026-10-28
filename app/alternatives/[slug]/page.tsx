@@ -37,10 +37,10 @@ export default async function AlternativeGuide({ params }: Params) {
       <PageHeader
         crumbs={[{ name: "Alternatives", path: "/alternatives" }, { name: `${tool.name} alternatives`, path: alternativePath(page.slug) }]}
         eyebrow={`Selection guide · ${tool.category}`}
-        title={`${tool.name} alternatives: choose by workflow.`}
+        title={tool.slug === "detectify" ? page.title : `${tool.name} alternatives: choose by workflow.`}
         lead={page.answer}
       >
-        <p className="text-sm text-muted-2">Vendor sources reviewed {formatCheckedOn(page.updated)}. Selection criteria are editorial, with no claim of a measured detection ranking.</p>
+        <p className="text-sm text-muted-2">Vendor sources reviewed {formatCheckedOn(tool.checkedOn)}. Selection criteria are editorial, with no claim of a measured detection ranking.</p>
         <div className="mt-5 flex flex-wrap gap-4 text-sm text-accent">
           <Link href={versusPath(tool.slug)} className="inline-flex items-center gap-2 hover:underline">MyPentest vs {tool.name} <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
           <Link href="#sources" className="hover:underline">Review primary sources</Link>
