@@ -29,19 +29,19 @@ export function InvestigationCheck({ hostname, onResult }: { hostname: string; o
     setResult(answer); onResult(answer); setBusy(false); cooldown.start(answer.retryAfterSeconds);
   }
   const data = result?.evidence;
-  return <section aria-labelledby="deep-title" className="overflow-hidden rounded-2xl border border-white/[.09] bg-[#0c141b]">
+  return <section aria-labelledby="deep-title" className="overflow-hidden rounded-2xl border border-emerald-300/15 bg-gradient-to-br from-emerald-400/[.065] to-[#0c141b] shadow-[0_18px_55px_-35px_rgba(0,0,0,.8)]">
     <div className="p-5 sm:p-6">
       <div className="flex items-start gap-4">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-cyan-300/15 bg-cyan-300/[.07] text-cyan-300"><Fingerprint aria-hidden="true" className="h-5 w-5" /></span>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300"><Fingerprint aria-hidden="true" className="h-5 w-5" /></span>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-cyan-300">Domain investigation</p><span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-medium text-zinc-400">Optional</span></div>
+          <div className="flex flex-wrap items-center gap-2"><p className="font-mono text-[10px] uppercase tracking-[.16em] text-emerald-300">Domain investigation</p><span className="rounded-full border border-emerald-300/20 bg-emerald-300/[.07] px-2.5 py-1 text-[10px] font-semibold text-emerald-200">Optional</span></div>
           <h3 id="deep-title" className="mt-2 text-lg font-semibold text-zinc-100">Investigate the infrastructure</h3>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-400">Request registration, infrastructure and related-domain evidence from PhishDestroy. Availability varies by domain. Predictions are shown separately from listings.</p>
         </div>
       </div>
-      <div className="mt-5 flex flex-col items-start gap-4 border-t border-white/[.07] pt-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mt-5 flex flex-col items-start gap-4 rounded-xl border border-white/[.07] bg-black/20 p-4 lg:flex-row lg:items-center lg:justify-between">
         <p className="max-w-3xl text-xs leading-relaxed text-zinc-400">Shares <strong className="break-all font-medium text-zinc-200">{hostname}</strong> and your IP address with PhishDestroy. The provider may query DNS and registry RDAP services. Your full link is not sent, and PhishLens does not visit the website.</p>
-        <button type="button" disabled={busy || cooldown.remaining > 0} onClick={investigate} className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-cyan-300/25 bg-cyan-300/[.06] px-4 text-sm font-semibold text-cyan-200 transition-colors hover:bg-cyan-300/10 disabled:opacity-60 sm:w-auto">{busy && <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />}{busy ? "Gathering evidence…" : cooldown.remaining ? `Retry in ${cooldown.remaining}s` : result ? "Refresh investigation" : "Investigate with PhishDestroy"}</button>
+        <button type="button" disabled={busy || cooldown.remaining > 0} onClick={investigate} className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 text-sm font-semibold text-emerald-200 transition-colors hover:border-emerald-300/50 hover:bg-emerald-300/20 disabled:opacity-60 sm:w-auto">{busy && <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />}{busy ? "Gathering evidence…" : cooldown.remaining ? `Retry in ${cooldown.remaining}s` : result ? "Refresh investigation" : "Investigate with PhishDestroy"}</button>
       </div>
     </div>
     {result && <div className="space-y-4 border-t border-white/[.07] bg-black/10 p-5 sm:p-6">
