@@ -24,6 +24,23 @@ export interface Product {
 
 export const products: Product[] = [
   {
+    id: "phishlens",
+    name: "PhishLens",
+    tagline: "Free phishing link assessment",
+    summary:
+      "Inspect a link for common warning signs in your browser and understand what to check before opening it.",
+    href: "/phishing-detector",
+    external: false,
+    status: "available",
+    cta: "Check a link free",
+    capabilities: [
+      "Check URL structure for common warning signs",
+      "See the signals behind the assessment",
+      "Links are assessed locally in your browser",
+      "No account or payment required",
+    ],
+  },
+  {
     id: "mypentest",
     name: "MyPentest",
     tagline: "Automated penetration testing",

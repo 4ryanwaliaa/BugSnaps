@@ -1,16 +1,16 @@
 import { MyReconLinks } from "@/components/site/myrecon-promo";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Radar, ScanSearch } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Link2, Radar, ScanSearch } from "lucide-react";
 import { Section, SectionTitle } from "@/components/site/page-parts";
 import { products } from "@/lib/products";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
-const ICONS = { mypentest: ScanSearch, myrecon: Radar } as const;
+const ICONS = { mypentest: ScanSearch, myrecon: Radar, phishlens: Link2 } as const;
 
 export function HomeProducts() {
   return (
     <Section labelledBy="products-title" className="border-t border-white/[0.05]">
-      <SectionTitle id="products-title" eyebrow="Products" title="Security tools for your apps and your digital footprint." />
+      <SectionTitle id="products-title" eyebrow="Products" title="Security tools for your apps, links and digital footprint." />
 
       <ul className="mt-10 grid gap-4 sm:mt-12 md:grid-cols-2">
         {products.map((product) => {

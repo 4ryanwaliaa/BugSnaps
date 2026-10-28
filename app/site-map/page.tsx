@@ -40,6 +40,7 @@ const names = new Map<string, string>([
   ["/solutions/soc2-penetration-testing", "SOC 2 Penetration Testing"],
   ["/solutions/api-penetration-testing", "API Penetration Testing"],
   ["/myrecon", "MyRecon: OSINT & Attack Surface Intelligence"],
+  ["/phishing-detector", "PhishLens: Free Phishing Link Assessment"],
   ["/free-ai-pentesting", "Free AI Penetration Testing"],
   ["/website-pentesting-ai", "AI Website Penetration Testing"],
   ["/ai-penetration-testing", "AI Penetration Testing Platform"],

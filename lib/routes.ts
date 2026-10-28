@@ -26,6 +26,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
+  { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-28" },
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },

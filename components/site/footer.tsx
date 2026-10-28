@@ -38,6 +38,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       links: [
         { label: "MyPentest", href: routes.product },
         { label: "MyRecon", href: "/myrecon" },
+        { label: "PhishLens", href: "/phishing-detector" },
         { label: "Free AI Pentesting", href: "/free-ai-pentesting" },
         { label: "Website Pentesting AI", href: "/website-pentesting-ai" },
         { label: "AI Pentest Platform", href: "/ai-penetration-testing" },
