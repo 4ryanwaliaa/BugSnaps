@@ -1,4 +1,4 @@
-export type SecurityGuideCategory = "API security" | "Web security" | "Identity and access" | "Testing workflow";
+export type SecurityGuideCategory = "API security" | "Web security" | "Identity and access" | "Endpoint security" | "Cloud and network" | "Phishing and fraud" | "Digital footprint" | "Testing workflow";
 
 export type SecurityGuideSection = {
   title: string;
@@ -23,6 +23,29 @@ export type SecurityGuide = {
 };
 
 import { PRACTICAL_TEMPLATES } from "@/lib/practical-templates";
+import { ENDPOINT_FOUNDATION_GUIDES } from "@/lib/endpoint-guides-foundations";
+import { ENDPOINT_WORKFLOW_GUIDES } from "@/lib/endpoint-guides-workflow";
+import { ENDPOINT_EXPOSURE_GUIDES } from "@/lib/endpoint-guides-exposure";
+import { ENDPOINT_ADVANCED_GUIDES } from "@/lib/endpoint-guides-advanced";
+import { ENDPOINT_OPERATIONS_GUIDES } from "@/lib/endpoint-guides-operations";
+import { ENDPOINT_IDENTITY_GUIDES } from "@/lib/endpoint-guides-identity";
+import { ENDPOINT_RESILIENCE_GUIDES } from "@/lib/endpoint-guides-resilience";
+import { ENDPOINT_DETECTION_GUIDES } from "@/lib/endpoint-guides-detection";
+import { PRODUCT_SECURITY_GUIDES } from "@/lib/product-security-guides";
+import { SERVICE_SECURITY_GUIDES } from "@/lib/service-security-guides";
+import { WEBAPI_ADVANCED_GUIDES } from "@/lib/webapi-advanced-guides";
+import { WEBAPI_ASSESSMENT_GUIDES } from "@/lib/webapi-assessment-guides";
+import { WEBAPI_WORKFLOWS_GUIDES } from "@/lib/webapi-workflows-guides";
+import { RECON_PHISHING_GUIDES } from "@/lib/recon-phishing-guides";
+import { RECON_INVESTIGATION_GUIDES } from "@/lib/recon-investigation-guides";
+import { CLOUD_NETWORK_GUIDES } from "@/lib/cloud-network-guides";
+import { CLOUD_NETWORK_OPERATIONS_GUIDES } from "@/lib/cloud-network-operations-guides";
+import { ASSESSMENT_DELIVERY_GUIDES } from "@/lib/assessment-delivery-guides";
+import { ASSESSMENT_REMEDIATION_GUIDES } from "@/lib/assessment-remediation-guides";
+import { REMEDIATION_OPERATIONS_GUIDES } from "@/lib/remediation-operations-guides";
+import { SECURITY_PROGRAM_GUIDES } from "@/lib/security-program-guides";
+
+const phishingTopics = new Set(["suspicious-qr-code-response", "verify-payment-change-request", "phishing-email-evidence-preservation", "email-header-investigation-limits", "phishing-click-incident-triage", "lookalike-domain-triage", "redact-suspicious-url-before-sharing"]);
 
 const UPDATED = "2026-10-02";
 const cheatSheet = (name: string) => `https://cheatsheetseries.owasp.org/cheatsheets/${name}_Cheat_Sheet.html`;
@@ -30,6 +53,19 @@ const cheatSheet = (name: string) => `https://cheatsheetseries.owasp.org/cheatsh
 /** Editorial guides. Each route answers a different assessment question. */
 export const SECURITY_GUIDES: SecurityGuide[] = [
   ...PRACTICAL_TEMPLATES,
+  ...[...ENDPOINT_FOUNDATION_GUIDES, ...ENDPOINT_WORKFLOW_GUIDES, ...ENDPOINT_EXPOSURE_GUIDES, ...ENDPOINT_ADVANCED_GUIDES, ...ENDPOINT_OPERATIONS_GUIDES, ...ENDPOINT_IDENTITY_GUIDES, ...ENDPOINT_RESILIENCE_GUIDES, ...ENDPOINT_DETECTION_GUIDES].map((guide) => ({ ...guide, category: "Endpoint security" as const })),
+  ...PRODUCT_SECURITY_GUIDES.map((guide) => ({ ...guide, category: guide.slug === "how-to-assess-a-suspicious-url-safely" ? "Phishing and fraud" as const : "Digital footprint" as const })),
+  ...SERVICE_SECURITY_GUIDES,
+  ...WEBAPI_ADVANCED_GUIDES,
+  ...WEBAPI_ASSESSMENT_GUIDES,
+  ...WEBAPI_WORKFLOWS_GUIDES,
+  ...RECON_PHISHING_GUIDES.map((guide) => ({ ...guide, category: phishingTopics.has(guide.slug) ? "Phishing and fraud" as const : "Digital footprint" as const })),
+  ...RECON_INVESTIGATION_GUIDES.map((guide) => ({ ...guide, category: "Digital footprint" as const })),
+  ...[...CLOUD_NETWORK_GUIDES, ...CLOUD_NETWORK_OPERATIONS_GUIDES].map((guide) => ({ ...guide, category: "Cloud and network" as const })),
+  ...ASSESSMENT_DELIVERY_GUIDES,
+  ...ASSESSMENT_REMEDIATION_GUIDES,
+  ...REMEDIATION_OPERATIONS_GUIDES,
+  ...SECURITY_PROGRAM_GUIDES,
   {
     slug: "bola-testing",
     title: "BOLA testing: verify object ownership in APIs",
@@ -560,7 +596,7 @@ export const SECURITY_GUIDES: SecurityGuide[] = [
   },
 ];
 
-export const SECURITY_GUIDE_CATEGORIES: SecurityGuideCategory[] = ["API security", "Web security", "Identity and access", "Testing workflow"];
+export const SECURITY_GUIDE_CATEGORIES: SecurityGuideCategory[] = ["API security", "Web security", "Identity and access", "Endpoint security", "Cloud and network", "Phishing and fraud", "Digital footprint", "Testing workflow"];
 
 export function guidePath(slug: string): string {
   return `/guides/${slug}`;

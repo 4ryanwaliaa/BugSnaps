@@ -49,6 +49,11 @@ export default function PhishingDetectorPage() {
           <div className="flex flex-col justify-between rounded-3xl border border-violet-400/15 bg-gradient-to-br from-violet-400/[.07] to-transparent p-7 sm:p-9"><div><Sparkles className="h-6 w-6 text-violet-300" aria-hidden="true" /><p className="mt-6 font-mono text-xs uppercase tracking-[.2em] text-violet-300">Stay a step ahead</p><h3 className="mt-4 text-2xl font-semibold tracking-tight">When in doubt, go directly.</h3><p className="mt-4 text-sm leading-relaxed text-zinc-400">PhishLens does not visit the destination, follow redirects, inspect page content, or verify domain ownership. If a message is unexpected, contact the sender through a known channel or navigate to the service using an address you already trust.</p></div><div className="mt-7 flex flex-wrap gap-x-6 gap-y-3"><a href="https://github.com/4ryanwalia/Phishing-detection" className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">Original research <ArrowUpRight className="h-4 w-4" aria-hidden="true" /></a><a href="/privacy" className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">Privacy policy <ArrowUpRight className="h-4 w-4" aria-hidden="true" /></a></div></div>
         </div>
       </Section>
+      <Section labelledBy="url-guide-title" className="border-t border-white/[.07]">
+        <h2 id="url-guide-title" className="text-2xl font-semibold">Investigate without opening the link.</h2>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">Learn how to interpret an address, verify an unexpected request and respond if you have already interacted with it.</p>
+        <a href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</a>
+      </Section>
     </SiteShell>
   );
 }

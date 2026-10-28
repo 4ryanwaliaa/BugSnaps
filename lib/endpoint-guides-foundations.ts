@@ -1,0 +1,97 @@
+import type { SecurityGuide } from "@/lib/security-guides";
+
+/** Independent, practical Windows posture guides for authorized assessments. */
+export const ENDPOINT_FOUNDATION_GUIDES: SecurityGuide[] = [
+  {
+    slug: "windows-firewall-profile-review",
+    title: "Review Windows firewall profiles and active policy",
+    description: "Check the Domain, Private and Public firewall profiles, investigate an unexpected disabled state and verify the effective policy before changing a rule.",
+    category: "Testing workflow",
+    answer: "Review each Windows Firewall profile and its effective policy, then compare the result with the device's network context and approved baseline. An enabled profile is a starting point, not proof that every inbound rule is appropriately restricted.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Identify the profiles and network context", paragraphs: ["Windows Firewall has Domain, Private and Public profiles. The active network category matters: a laptop can move from an office network to a public hotspot, so a single profile's state does not describe every situation.", "Record the device, assessment time, network context and expected policy. On a managed device, ask the administrator which management system owns the policy before making changes."], source: 0 },
+      { title: "Inspect the effective profile settings", paragraphs: ["In PowerShell, run Get-NetFirewallProfile -PolicyStore ActiveStore and review the Name, Enabled, DefaultInboundAction and DefaultOutboundAction values. ActiveStore represents effective policy; the default query uses the persistent store, so the two can differ.", "A report that says a profile is off identifies a condition to investigate. Confirm the result locally and check whether the disabled profile is expected under the organization's approved configuration."], checklist: ["Record all three profile states, including a profile not currently in use.", "Compare with the approved baseline and the active network category.", "Treat missing or inaccessible data as unknown, not as an enabled firewall."], source: 1 },
+      { title: "Review the exception, not just the switch", paragraphs: ["An enabled profile can still allow a service through an inbound rule. Review the rule's program or port, protocol, profiles and remote address scope alongside the service's business need. A broad rule on a public network may need a narrower scope even when the firewall is on.", "Test access from an authorized network location and retain the expected allowed case as well as the denied case. Changes to remote access rules can interrupt administration, so agree a recovery route before changing managed systems."] },
+      { title: "Restore and retest", paragraphs: ["If an off profile is unintended, correct the owning policy or use the approved local management procedure. Microsoft documents Set-NetFirewallProfile for local configuration; do not assume a local change will persist if management policy overrides it.", "After the change, inspect ActiveStore again and test the required connection from the intended network. Record the applied rule, evidence and any exception owner."], source: 2 },
+    ],
+    limitations: "A point-in-time scan does not prove network reachability or inspect every effective firewall rule. Permissions, third-party firewall software and management policies can affect visibility and the appropriate fix.",
+    faqs: [
+      { question: "Does an enabled firewall profile mean a port is unreachable?", answer: "No. An applicable allow rule, network location and service binding can still permit access. Check effective rules and test reachability from an authorized location." },
+      { question: "Why might a local setting differ from the active policy?", answer: "The active policy combines applicable policy sources, while the default profile query reads the persistent store. Group Policy or other management can change the effective result." },
+      { question: "Should every inbound rule be removed?", answer: "No. Some services need inbound access. Keep approved access as narrow as practical and verify required workflows after changing a rule." },
+    ],
+    sources: [
+      { title: "Microsoft: Windows Firewall profiles", url: "https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ics/windows-firewall-profiles" },
+      { title: "Microsoft: Get-NetFirewallProfile", url: "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallprofile?view=windowsserver2022-ps" },
+      { title: "Microsoft: Manage Windows Firewall with the command line", url: "https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/windows-firewall/configure-with-command-line" },
+    ],
+    related: ["windows-listening-port-review", "windows-antivirus-state-review", "windows-update-posture-review"],
+  },
+  {
+    slug: "windows-antivirus-state-review",
+    title: "Check Windows antivirus provider and protection state",
+    description: "Identify the registered antivirus provider, interpret Microsoft Defender Antivirus modes and investigate unknown or disabled protection without assuming a device is compromised.",
+    category: "Testing workflow",
+    answer: "Identify the endpoint's intended antivirus provider, confirm its current protection state, and compare that state with the organization's policy. Microsoft Defender Antivirus can run in different modes, so an inactive Defender status alone does not prove the machine has no antivirus.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Find the intended security provider", paragraphs: ["Open Windows Security, choose Virus & threat protection, then Manage providers under Who's protecting me. Record the provider and compare it with the organization's endpoint inventory. A third-party antivirus may be the intended primary product.", "If a scan reports an unknown state, check whether the scan had sufficient access and whether the product reports its status through the relevant Windows interfaces. Unknown is a request for verification, not proof that protection is absent."], source: 0 },
+      { title: "Interpret Defender's running mode", paragraphs: ["For Microsoft Defender Antivirus, run Get-MpComputerStatus in PowerShell and inspect AMRunningMode. Microsoft describes Normal as active mode; passive modes can occur in supported configurations when another product is primary. Consult the provider's management console for the actual primary product's health.", "Also check the applicable protection and security intelligence status in the provider's interface. A provider name by itself does not establish that its protections are current or operating as intended."], source: 0 },
+      { title: "Investigate a mismatch", paragraphs: ["If the registered provider or running mode differs from policy, capture the device name, scan time, product name and reported mode. Check the management console for pending deployment, an expired license, stale reporting, policy conflicts or recent changes before attempting a fix."], checklist: ["Confirm the endpoint has the expected product and is checking in to its management service.", "Review protection alerts and security intelligence currency through the provider's supported interface.", "Escalate persistent errors to the endpoint owner; do not disable another product to force a particular mode." ] },
+      { title: "Verify the repair", paragraphs: ["Use the organization's approved deployment or support procedure to restore protection, then verify the provider, current status and management check-in. Record the before and after evidence and any outstanding alert. Schedule a fresh authorized posture scan to confirm what the scanner can observe."] },
+    ],
+    limitations: "A posture snapshot cannot establish that malware is absent, that every protection component is healthy or that detection will succeed. Provider registration, permissions and supported OS configurations affect what can be observed.",
+    faqs: [
+      { question: "Does Defender passive mode mean no antivirus is running?", answer: "Not necessarily. Passive mode can be part of a supported configuration with another primary antivirus. Verify that provider's health and the intended policy." },
+      { question: "Does an enabled antivirus prove a computer is clean?", answer: "No. An enabled status describes configuration at a point in time, not a complete compromise assessment or a guarantee of detection." },
+      { question: "What should I do with an unknown antivirus result?", answer: "Verify the provider locally and in the management console, check scan permissions and escalate unresolved visibility gaps. Do not silently interpret unknown as protected." },
+    ],
+    sources: [{ title: "Microsoft: Defender Antivirus on Windows and how to check its state", url: "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows" }],
+    related: ["windows-firewall-profile-review", "windows-update-posture-review", "windows-listening-port-review"],
+  },
+  {
+    slug: "windows-update-posture-review",
+    title: "Assess Windows update posture without relying on patch count",
+    description: "Check a Windows endpoint's edition, version, installed build and update history against the applicable release and support information.",
+    category: "Testing workflow",
+    answer: "Compare the device's Windows edition, version and build with Microsoft's applicable release and lifecycle information, then review update status and pending restarts. A low count of installed hotfixes or an old last-patch date is a signal to investigate, not a complete missing-update inventory.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Record the exact operating system", paragraphs: ["Record the Windows edition, feature version and OS build from Settings or the winver dialog, together with the device name and assessment date. Editions and servicing channels have different support timelines, so compare like with like.", "For Windows 11, Microsoft's release information lists current builds and end-of-update dates by edition and servicing option. Check the live page rather than assuming a date from an old report is still current."], source: 0 },
+      { title: "Compare version and update history", paragraphs: ["Open Settings, Windows Update and Update history. Review recent quality updates, failures, pending installations and restart requirements; compare the recorded build with the release information appropriate to the installed version and approved update policy.", "Windows 11 monthly security updates are cumulative. Therefore, simply counting hotfix entries or treating an old installation date as a list of missing patches can be misleading."], source: 0 },
+      { title: "Investigate before changing the device", paragraphs: ["A missing update can reflect a paused deployment, a failed installation, a pending restart, an unsupported release, connectivity or an organization-managed maintenance window. Record the precise error or update identifier and consult the device's update management system before retrying.", "Coordinate maintenance for business-critical systems: installation and restart can interrupt work. Obtain the owner's approval and follow the established deployment and rollback procedure."], checklist: ["Record edition, version, build and assessment time.", "Check failed or pending updates and whether a restart is required.", "Compare the effective state with the organization's approved deployment timeline." ] },
+      { title: "Retest after deployment", paragraphs: ["After the approved update and restart, check Windows Update and the OS build again. Record the new build, completion time and any remaining failure; repeat the posture scan to refresh the snapshot. Keep unsupported-version remediation separate from a single monthly update installation."] },
+    ],
+    limitations: "Update history and a scanner's last-patch or hotfix count do not provide a complete inventory of applicable security updates. Applicability, servicing channel, managed deployment state and application updates require separate review.",
+    faqs: [
+      { question: "Does a low hotfix count prove Windows is unpatched?", answer: "No. It can reflect inventory method or cumulative servicing. Check the OS build, applicable release information and update management status." },
+      { question: "Is a recent update enough to prove the version is supported?", answer: "No. Compare the specific edition, feature version and servicing option with Microsoft's current lifecycle and release information." },
+      { question: "Why check again after a restart?", answer: "An update may remain pending until a restart completes. Rechecking the build and update status confirms the state observed after the change." },
+    ],
+    sources: [{ title: "Microsoft: Windows 11 release information", url: "https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information" }],
+    related: ["windows-antivirus-state-review", "windows-firewall-profile-review", "windows-listening-port-review"],
+  },
+  {
+    slug: "windows-listening-port-review",
+    title: "Investigate a listening port on a Windows endpoint",
+    description: "Map a listening TCP port to a process, review its network exposure and decide whether to restrict it without disrupting a required service.",
+    category: "Testing workflow",
+    answer: "A listening port means a process is waiting for connections; it does not by itself prove internet exposure or a vulnerability. Identify the owning process and binding, review the firewall and network path, and verify the service's business need before changing it.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Capture the local listener", paragraphs: ["On the authorized Windows endpoint, run Get-NetTCPConnection -State Listen in PowerShell and record LocalAddress, LocalPort and OwningProcess for the listener. Look up the process using Get-Process -Id followed by the recorded process ID. Process IDs can change, so collect the process details close to the time of the listener check.", "A binding to a loopback address differs from one bound to a network interface or all interfaces. This command describes TCP listeners; review UDP separately where relevant."], source: 0 },
+      { title: "Find the service and its purpose", paragraphs: ["Identify the application, owner and expected workflow. A familiar port number can suggest a protocol, but it does not prove which application is listening or whether that application is vulnerable. Multiple services may share a process, so correlate the executable and service configuration with the owner's inventory.", "For example, TCP 445 is commonly associated with Windows file sharing. If a report flags it, first establish whether file sharing is needed and which systems are permitted to use it; do not assume that every listener requires disabling the service."] },
+      { title: "Determine who can reach it", paragraphs: ["Review the applicable Windows Firewall profile and inbound rules, then consider network controls such as segmentation and gateway rules. A local listening socket alone does not prove that traffic can reach it from another network.", "With explicit scope, test from the relevant trusted and untrusted test locations. Record source network, destination address, port, time and observed result. A successful connection shows reachability for that test path, not the safety of every exposed function."], checklist: ["Separate loopback, local network and external paths.", "Check the applicable rule's remote address scope and profile.", "Keep a positive test for a legitimate client before restricting access." ] },
+      { title: "Reduce unnecessary exposure and verify", paragraphs: ["If the service is unnecessary, use the owner's approved procedure to remove or disable it. If it is required, consider narrowing its binding or firewall access and applying relevant vendor hardening and updates. Agree a maintenance and recovery plan before changing remote-management services.", "Repeat the listener and authorized connectivity checks after the change. Record both the blocked test path and the legitimate access that remains available."] },
+    ],
+    limitations: "This workflow is a point-in-time review. TCP listener inventory does not cover UDP, all firewall rules, remote network paths or application vulnerabilities. A failed connection from one location does not prove the service is unreachable everywhere.",
+    faqs: [
+      { question: "Does a listening port mean a device is exposed to the internet?", answer: "No. Reachability depends on the binding, firewall, network routing and other controls. Test the relevant authorized path." },
+      { question: "Is every listener on port 445 a vulnerability?", answer: "No. File sharing may be intentional. Assess who can reach it, whether it is needed, and whether the service is appropriately configured and maintained." },
+      { question: "Why keep an allowed connection test?", answer: "A positive test helps confirm that a restriction did not break the legitimate workflow the service supports." },
+    ],
+    sources: [{ title: "Microsoft: Get-NetTCPConnection", url: "https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection?view=windowsserver2022-ps" }],
+    related: ["windows-firewall-profile-review", "windows-update-posture-review", "windows-antivirus-state-review"],
+  },
+];

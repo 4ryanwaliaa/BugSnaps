@@ -1,0 +1,93 @@
+import type { SecurityGuide } from "@/lib/security-guides";
+
+/** Practical endpoint reviews; observations are point-in-time evidence, not proof of safety. */
+export const ENDPOINT_EXPOSURE_GUIDES: SecurityGuide[] = [
+  {
+    slug: "windows-service-hardening-review",
+    title: "Windows service hardening: review accounts and dependencies",
+    description: "Review Windows service identities, startup settings and dependencies, then plan and validate safe service configuration changes.",
+    category: "Testing workflow",
+    answer: "A Windows service hardening review inventories service configuration, identifies the privileges and dependencies each service needs, and records a tested change plan. An unfamiliar service is a reason to investigate, not proof of malicious activity.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Record service configuration", paragraphs: ["On an authorised device, list services with their names, current state, startup mode, executable path, logon account and dependencies. A service can be stopped now yet configured to start later. Compare the inventory with the device role and approved software list, then identify a business or technical owner for entries that need review."], source: 0 },
+      { title: "Review the service identity", paragraphs: ["Determine which account runs each service and why it needs that level of access. For an internally developed background task that only reads a particular data folder, a dedicated identity with narrowly scoped permissions may be more appropriate than a broadly privileged account. Confirm access to network resources and credential management with the application owner before proposing a change. Never record service passwords in the review."], checklist: ["Distinguish built-in service identities from named local and directory accounts.", "Review the permissions required by the task and who can change the service configuration.", "Record unowned accounts and unexpected privilege for investigation rather than deleting them."] },
+      { title: "Check startup and recovery dependencies", paragraphs: ["Automatic, manual and disabled startup choices affect availability differently. Map services that depend on the candidate service and note configured recovery actions. A security agent or line-of-business application may need a service that looks unused during a short observation. Also identify whether Group Policy, device management or an installer owns the setting, since a local edit may be reversed by the next refresh."], source: 1 },
+      { title: "Pilot, verify and document", paragraphs: ["Before changing a service account or startup mode, document the original setting, dependencies, maintenance window, responsible owner and rollback steps. Test on a representative nonproduction device where possible. After the change, restart or refresh only as the approved procedure requires, confirm the service and dependent application work, review relevant errors, and recheck after policy refresh."], checklist: ["Keep a known-good functional test for the application and its recovery path.", "Record approved exceptions with an owner and review date."] },
+    ],
+    limitations: "A configuration snapshot does not reveal every runtime permission, dependency, scheduled trigger or centrally managed assignment. Service changes can interrupt security and business software, so review the applicable vendor documentation and test before rollout.",
+    faqs: [
+      { question: "Is an unfamiliar Windows service necessarily malicious?", answer: "No. Identify its publisher, executable, account, owner and purpose before deciding whether it is expected or needs investigation." },
+      { question: "Should all stopped services be disabled?", answer: "No. Some services start on demand or support recovery and management workflows. Check dependencies and the owner's requirements before a planned change." },
+      { question: "Why can a service setting revert after a local change?", answer: "A device-management policy, Group Policy or software installer may own the configuration. Identify and update the authoritative policy through the approved process." },
+    ],
+    sources: [{ title: "Microsoft: Get-Service", url: "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.5" }, { title: "Microsoft: Win32 service configuration", url: "https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-service" }],
+    related: ["windows-software-inventory-review", "windows-endpoint-hardening-baseline", "attack-surface-inventory"],
+  },
+  {
+    slug: "windows-software-inventory-review",
+    title: "Windows software inventory: identify and prioritise applications",
+    description: "Build a useful Windows application inventory, check versions and ownership, and handle gaps in device and per-user software records.",
+    category: "Testing workflow",
+    answer: "A software inventory lists known applications on an endpoint with enough context to decide whether each is needed, supported and maintained. Reconcile multiple sources because no single installation record necessarily captures every application.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Collect the right fields", paragraphs: ["Record the device, collection time, application name, publisher, version, installation scope and known owner. Separate device-wide installations from software installed for a particular user. Management platforms can provide inventory across enrolled devices; a local review is useful for checking one machine but cannot represent the entire fleet."], source: 0 },
+      { title: "Understand the blind spots", paragraphs: ["Windows application inventory can draw from uninstall registry entries and packaged-app records. Portable tools copied into a folder may not appear in either view, and some records omit version or publisher information. Compare important entries with the application's own version information or vendor records before treating an incomplete value as a finding."], checklist: ["Include 32-bit and 64-bit installation views and relevant user profiles where your tool supports them.", "Note offline devices and the last successful collection date.", "Avoid using Win32_Product as a routine inventory shortcut: Microsoft documents performance and repair side effects."], source: 1 },
+      { title: "Turn the list into a decision", paragraphs: ["For a remote support tool found on a finance laptop, ask who approved it, whether it is still used and how it receives updates. Compare the observed version against the vendor's support and advisory information rather than declaring it vulnerable by its name alone. Prioritise unsupported or exposed applications with a responsible owner and a target date."] },
+      { title: "Update and retest safely", paragraphs: ["Pilot an update or removal, confirm licensing and dependencies, and use the organisation's approved deployment method. Recollect inventory after the change and check that the application still performs its intended function. Where removal is deferred, document a compensating control, review date and the person accepting the exception."], checklist: ["Keep evidence of the installed and remediated versions.", "Protect exported inventories because they reveal device and user details."] },
+    ],
+    limitations: "Inventory completeness depends on collection method, permissions, user profiles and device connectivity. A recorded version alone does not prove a vulnerability is exploitable, and an absent entry does not prove the software is absent.",
+    faqs: [
+      { question: "Can one registry key list every Windows application?", answer: "No. Per-user, packaged and portable software can be missed by a single registry view. Combine sources and record coverage limitations." },
+      { question: "Is old software automatically vulnerable?", answer: "Not necessarily. Check the exact product and version against vendor support and advisory information, then consider configuration and exposure." },
+      { question: "Why track the inventory collection time?", answer: "An offline device or stale report may not reflect recent updates or removals. The timestamp helps distinguish current evidence from an old snapshot." },
+    ],
+    sources: [{ title: "Microsoft: Windows app inventory", url: "https://learn.microsoft.com/en-us/intune/app-management/deployment/enhanced-app-inventory" }, { title: "Microsoft: Working with software installations", url: "https://learn.microsoft.com/en-us/powershell/scripting/samples/working-with-software-installations?view=powershell-7.6" }],
+    related: ["windows-service-hardening-review", "windows-endpoint-hardening-baseline", "attack-surface-inventory"],
+  },
+  {
+    slug: "windows-local-administrator-review",
+    title: "Windows local administrator review: reduce standing privilege",
+    description: "Review local administrator membership, account ownership and group access on Windows while preserving a tested recovery path.",
+    category: "Testing workflow",
+    answer: "A local administrator review identifies accounts and groups that can administer a Windows device, checks why they need that access and reduces unnecessary standing privilege without removing the organisation's recovery path.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Enumerate the local group", paragraphs: ["On an authorised device, inspect members of the local Administrators group and record each principal's name, source and business owner. Get-LocalGroupMember can list local group members; its SID parameter avoids relying on a localised group name. The built-in Administrators group has the well-known SID S-1-5-32-544."], source: 0 },
+      { title: "Resolve indirect access", paragraphs: ["A listed directory group may contain multiple people or nested groups. Ask the identity administrator to review the relevant directory membership and any device-management assignments. The local list by itself is not a complete list of everyone who can obtain elevated access. Distinguish named administrator accounts, managed service accounts and emergency access accounts."], checklist: ["Record why access is required, who approved it and when it should be reviewed.", "Review departed staff and groups with broad or unclear membership.", "Check whether administrative work has an approved separate account or elevation process."] },
+      { title: "Plan a safe reduction", paragraphs: ["Suppose a support group was added for a migration that has ended. Confirm its use with support and device owners, identify any automation that depends on it, and arrange a managed change. Preserve a verified recovery method and test it before removal. Limit the duration of exceptions and avoid placing recovery passwords in shared documents."] },
+      { title: "Verify and monitor", paragraphs: ["After a change, verify the group membership and test both the intended administrative workflow and a standard user's normal work. A device-management policy can restore membership later, so check the source of the assignment and collect another snapshot after policy refresh. Schedule periodic review and after staff or role changes."], checklist: ["Keep the before-and-after membership record in an access-controlled location.", "Record unresolved principals for follow-up rather than silently treating them as safe."] },
+    ],
+    limitations: "Local group membership is only one route to privilege. Directory nesting, delegated rights, elevation tools, policy and available permissions affect the result. This review does not establish the complete effective privileges of every user.",
+    faqs: [
+      { question: "Does a directory group in Administrators represent one person?", answer: "No. A group can contain many users and nested groups. Review its membership and assignment separately with the identity owner." },
+      { question: "Can I remove every local administrator?", answer: "Keep an approved and tested administrative recovery path. Coordinate membership changes with device management and support owners to avoid losing access." },
+      { question: "Does User Account Control remove administrator membership?", answer: "No. Membership and elevation behaviour are distinct questions; review both the assigned access and how elevated tasks are approved." },
+    ],
+    sources: [{ title: "Microsoft: Get-LocalGroupMember", url: "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.localaccounts/get-localgroupmember?view=powershell-5.1" }],
+    related: ["windows-endpoint-hardening-baseline", "access-control-testing", "remediation-retesting"],
+  },
+  {
+    slug: "windows-endpoint-hardening-baseline",
+    title: "Windows endpoint hardening baseline: plan, deploy and verify",
+    description: "Use a Windows security baseline as a starting point, pilot policy changes, document exceptions and verify effective endpoint settings.",
+    category: "Testing workflow",
+    answer: "A Windows endpoint hardening baseline is an approved set of configuration expectations for a defined device group. Start with a maintained baseline, tailor it for the device's role, test the changes and verify the effective configuration over time.",
+    updated: "2026-10-28",
+    sections: [
+      { title: "Choose a baseline for the device", paragraphs: ["Document the Windows version, edition, management method and device role before choosing a baseline. A developer workstation, shared kiosk and server have different operational needs. Microsoft publishes recommended baselines for supported products, along with guidance and tools to compare policy. Check the current product and version applicability instead of copying settings from an unrelated device."], source: 0 },
+      { title: "Compare and prioritise", paragraphs: ["Record the expected setting, observed effective value, source policy, security reason and owner. Prioritise protection failures according to exposure and business impact; for example, a firewall profile disabled on a frequently mobile laptop can deserve earlier attention than a cosmetic mismatch. A recommended value is a starting point for a decision, not a substitute for understanding the device."], checklist: ["Review account privilege, patching, firewall and endpoint protection as separate control areas.", "Identify conflicting policies and whether a setting requires a restart.", "Document dependencies and a rollback method before changing policy."] },
+      { title: "Pilot the configuration", paragraphs: ["Apply an approved change to a small representative group, then exercise login, remote support, business applications and recovery. Expand only after the owners review the results. If an application requires an exception, record its rationale, scope, compensating controls, approver and expiry date instead of leaving an undocumented permanent gap."] },
+      { title: "Measure effective state", paragraphs: ["Compare the applied configuration with the intended baseline after policy refresh and any required restart. A successful deployment record is useful, but the effective device setting and a functional test provide stronger evidence. Repeat after operating-system upgrades, policy changes and exception expiry."], checklist: ["Record device and policy versions with the assessment date.", "Track devices that are offline, out of scope or unable to report.", "Retest a valid workflow as well as the restricted behaviour."] },
+    ],
+    limitations: "Baselines vary by Windows version, edition and management tool. A policy match does not prove that an endpoint is compromise-free or compliant with a specific standard; controls and exceptions need ongoing operational review.",
+    faqs: [
+      { question: "Is Microsoft's baseline a complete security program?", answer: "No. It is a starting point for configuration. Asset ownership, updates, monitoring, incident response and tested recovery also matter." },
+      { question: "Should every baseline setting be applied immediately?", answer: "Assess applicability and test a representative pilot first. Some settings can affect applications, device management or user workflows." },
+      { question: "Does a deployed policy prove the device is compliant?", answer: "Deployment status alone is insufficient. Verify the effective setting after policy refresh and investigate conflicts, offline devices and exceptions." },
+    ],
+    sources: [{ title: "Microsoft: Security baselines", url: "https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines" }, { title: "Microsoft: Security Compliance Toolkit", url: "https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/security-compliance-toolkit-10" }],
+    related: ["windows-local-administrator-review", "windows-software-inventory-review", "remediation-retesting"],
+  },
+];

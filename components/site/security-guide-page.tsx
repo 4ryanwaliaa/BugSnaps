@@ -7,6 +7,18 @@ import { PreferredSource } from "@/components/site/preferred-source";
 
 export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
   const path = guidePath(guide.slug);
+  const isEndpoint = guide.category === "Endpoint security";
+  const isPhishing = guide.category === "Phishing and fraud";
+  const isRecon = guide.category === "Digital footprint";
+  const cta = isEndpoint
+    ? { title: "Review your Windows endpoint.", body: "EndpointRadar provides a point-in-time view of an authorized Windows machine. Review the report alongside its collection limits and your organization's policy.", href: "/endpointradar", label: "Explore EndpointRadar" }
+    : isPhishing
+      ? { title: "Examine an unfamiliar link.", body: "PhishLens inspects URL structure locally in your browser. Verify the sender independently; a URL check cannot establish that a link is safe.", href: "/phishing-detector", label: "Explore PhishLens" }
+      : isRecon
+        ? { title: "Explore public-source context.", body: "MyRecon provides leads for further investigation. Verify the source, relevance and ownership before acting on a result.", href: "/myrecon", label: "Explore MyRecon" }
+        : guide.category === "Cloud and network"
+          ? { title: "Plan a scoped security assessment.", body: "Identify the assets, owners and permitted testing methods before assessing your cloud or network environment.", href: "/services", label: "Explore security services" }
+          : { title: "Apply the guide to your own assessment.", body: "Start with an authorized target, known test data, and a clear scope. Use the report's evidence and coverage limits to decide which checks need further review.", href: newAssessmentUrl(), label: "Open MyPentest" };
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -94,6 +106,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
               <p className="mt-3 text-sm leading-relaxed text-muted">
                 These guides combine published security guidance with practical assessment planning. Adapt checks to the owner&apos;s policy, environment, and authorized scope.
               </p>
+              {guide.updated === "2026-10-28" && <p className="mt-3 text-sm leading-relaxed text-muted">This guide was prepared with AI assistance using the linked sources and illustrative examples. Check current vendor guidance and your environment before making changes.</p>}
               <ul className="mt-4 space-y-3">
                 {guide.sources.map((source) => (
                   <li key={source.url}>
@@ -144,12 +157,12 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
       </Section>
 
       <Section labelledBy="guide-cta-title" className="border-t border-white/[0.06]">
-        <h2 id="guide-cta-title" className="text-2xl font-semibold tracking-tight">Apply the guide to your own application.</h2>
+        <h2 id="guide-cta-title" className="text-2xl font-semibold tracking-tight">{cta.title}</h2>
         <p className="mt-4 max-w-2xl text-muted leading-relaxed">
-          Start with an authorized target, known test data, and a clear scope. Use the report&apos;s evidence and coverage limits to decide which checks need further review.
+          {cta.body}
         </p>
-        <a href={newAssessmentUrl()} className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-accent">
-          Open MyPentest
+        <a href={cta.href} className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-accent">
+          {cta.label}
         </a>
       </Section>
     </SiteShell>
