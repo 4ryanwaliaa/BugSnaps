@@ -19,6 +19,8 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm ci
+      # Vercel's loader must be able to import the server SDK without require(ESM).
+      - run: node --no-experimental-require-module -e "require('firebase-admin/auth'); require('firebase-admin/database')"
       - run: node scripts/check-endpointradar-watchdog.cjs
       - run: node scripts/check-endpointradar-reports.cjs
       - run: node scripts/check-endpointradar-selection.cjs

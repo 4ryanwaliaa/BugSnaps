@@ -29,6 +29,8 @@ Then run `node scripts/check-endpointradar-managed.cjs`. Emulator data persists 
 
 ## Production setup
 
+The project pins Node 22 and Firebase Admin 13.10.0. The newer SDK's ESM dependency failed under Vercel's runtime loader even after a successful build; CI explicitly checks server imports with `require(ESM)` disabled. Dashboard entry links load a new document so Firebase receives the managed page's CSP.
+
 1. Sign in to a Vercel account with access to the `4ryanwaliaa` team and `bug-snaps` project using `vercel login --global-config <directory>`. The current account username is `4ryanwalia-4917`; the setup script verifies the project ID and linked GitHub repository.
 2. Confirm Firebase CLI authentication to `mypentest-bugsnaps`. Run `node scripts/configure-endpointradar.cjs <directory>`. This checks project access and current rules before creating an EndpointRadar service account/key, sends the key directly to encrypted Vercel production environment variables, and sets the GitHub scheduler secret. It never writes the key to disk or enables billing. The runtime service account has Firebase Auth viewer and Realtime Database admin roles; application access is scoped to `/endpointRadar`.
 3. Build and deploy the reviewed commit. The managed page shows a setup message until `ENDPOINTRADAR_DATABASE_LOCKED=true` is set at build time.
