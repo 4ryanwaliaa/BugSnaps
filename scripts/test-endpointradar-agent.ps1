@@ -14,15 +14,18 @@ $global:postIds = @()
 $global:scanCalls = 0
 $global:failPost = $true
 $global:obsoletePost = $false
+$global:obsoleteStatus = 409
+$global:failureEvents = 0
 function Invoke-WebRequest {
     param($Uri,$Headers,$Method,[switch]$UseBasicParsing,$MaximumRedirection,$TimeoutSec,$ContentType,$Body)
     if ($Uri -ne 'https://bugsnaps.in/endpointradar/api/device/workspace/device') { throw 'Incorrect host or endpoint' }
     if ($Method -eq 'Get') { return @{ StatusCode=200; Content=($global:fakeSchedule | ConvertTo-Json) } }
     $payload = [Text.Encoding]::UTF8.GetString($Body) | ConvertFrom-Json
+    if ($payload.event -eq 'scan_error') { $global:failureEvents++; return @{ StatusCode=200 } }
     $global:postIds += $payload.scanId
     if ($global:obsoletePost) {
         $obsoleteError = New-Object System.Exception('obsolete capture')
-        $obsoleteError | Add-Member -NotePropertyName Response -NotePropertyValue @{ StatusCode=409 }
+        $obsoleteError | Add-Member -NotePropertyName Response -NotePropertyValue @{ StatusCode=$global:obsoleteStatus }
         throw $obsoleteError
     }
     if ($global:failPost) { throw 'simulated lost response' }
@@ -65,7 +68,15 @@ try {
     $global:obsoletePost = $false
     & $runner
     if ($global:scanCalls -ne 4) { throw 'A fresh scan did not run after obsolete rejection' }
-    Write-Output 'PASS: retry, scan ID stability, interval, retest, disabled schedule, and obsolete capture recovery.'
+    $global:fakeSchedule.scanRequestedAt = [DateTimeOffset]::UtcNow.AddMinutes(3).ToString('o')
+    $global:obsoleteStatus = 422
+    $global:obsoletePost = $true
+    try { & $runner; throw 'Expected invalid timestamp rejection' } catch { if ($_.Exception.Message -notlike '*invalid timestamp*') { throw } }
+    if (Test-Path (Join-Path $base 'pending.json')) { throw 'Invalid timestamp blocks recovery after correcting the clock' }
+    $global:obsoletePost = $false
+    & $runner
+    if ($global:scanCalls -ne 6 -or $global:failureEvents -ne 3) { throw 'Clock recovery or generic failure reporting did not work' }
+    Write-Output 'PASS: retry, scan ID stability, interval, retest, disabled schedule, stale/clock recovery, and failure reporting.'
 } finally {
     $env:LOCALAPPDATA = $originalLocalAppData
     if (([IO.Path]::GetFullPath($testRoot)).StartsWith([IO.Path]::GetTempPath(), [StringComparison]::OrdinalIgnoreCase)) { Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue }

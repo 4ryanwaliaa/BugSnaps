@@ -21,6 +21,7 @@ jobs:
       - run: npm ci
       - run: node scripts/check-endpointradar-watchdog.cjs
       - run: node scripts/check-endpointradar-reports.cjs
+      - run: node scripts/check-endpointradar-selection.cjs
       - run: npx --yes firebase-tools@15.34.1 emulators:exec --config docs/endpointradar/firebase.test.json --project demo-endpointradar --only auth,database "node scripts/run-endpointradar-tests.cjs"
   windows-runner:
     runs-on: windows-latest

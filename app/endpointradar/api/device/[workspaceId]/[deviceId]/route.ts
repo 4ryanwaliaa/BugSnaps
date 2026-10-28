@@ -17,11 +17,28 @@ async function handle(request: Request, ctx: Params) {
   const credential = (await server().db.ref(`deviceCredentials/${workspaceId}/${deviceId}`).get()).val();
   if (!credential?.enabled || !secretMatches(secret, credential.secretHash || "")) throw new HttpError(401, "Device authentication failed.");
   if (request.method === "GET") { const [name, schedule, requested] = await Promise.all([ref.child("name").get(), ref.child("intervalMinutes").get(), ref.child("scanRequestedAt").get()]); return Response.json({deviceId,name:name.val(),enabled:true,intervalMinutes:schedule.val(),scanRequestedAt:requested.val() || null}); }
-  const input = await body(request); const scanId = typeof input.scanId === "string" ? input.scanId.toLowerCase() : "";
+  const input = await body(request);
+  if (input.event === "scan_error") {
+    const at = new Date().toISOString();
+    const recorded = await server().db.ref(`monitor/${workspaceId}/${deviceId}`).transaction(current => {
+      if (current === null) return null;
+      if (!current.enabled) return;
+      const id = `agent-error-${at.slice(0,10)}`;
+      const alerts = {...current.alerts};
+      if (!alerts[id]) alerts[id] = {kind:"agent_error",message:"The scheduled scan or upload failed. Check the device clock, scanner and Windows scheduled-task result.",createdAt:at};
+      const keys = Object.keys(alerts).sort((a,b) => String(alerts[b].createdAt).localeCompare(String(alerts[a].createdAt)));
+      for (const old of keys.slice(100)) delete alerts[old];
+      return {...current,alerts};
+    });
+    if (!recorded.committed || !recorded.snapshot.exists()) throw new HttpError(503,"Could not record device failure.");
+    // Failure events never count as successful scans or refresh reporting freshness.
+    return Response.json({ok:true});
+  }
+  const scanId = typeof input.scanId === "string" ? input.scanId.toLowerCase() : "";
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(scanId) || !plain(input.scan) || !Array.isArray(input.scan.vulnerabilities) || input.scan.vulnerabilities.length > 1000) throw new HttpError(400, "Invalid scan or scan ID.");
   const scan = input.scan; const at = new Date().toISOString(); const alertId = uid();
   const captured = typeof scan.last_scan_at === "string" ? Date.parse(scan.last_scan_at) : NaN;
-  if (!Number.isFinite(captured) || captured > Date.parse(at)) throw new HttpError(400, "A valid non-future scan capture timestamp is required.");
+  if (!Number.isFinite(captured) || captured > Date.parse(at)) throw new HttpError(422, "A valid non-future scan capture timestamp is required. Check the device clock before scanning again.");
   const result = await ref.transaction(device => {
     if (device === null) return null;
     if (!device.enabled || !secretMatches(secret,device.secretHash || "")) return;

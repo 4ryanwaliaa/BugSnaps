@@ -71,9 +71,9 @@ try {
     } catch {
         # A stale capture can never replace the newer accepted report. Keep one
         # rejected report for diagnosis and let the next invocation scan again.
-        if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 409) {
+        if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -in @(409, 422)) {
             Move-Item -LiteralPath $queuePath -Destination (Join-Path $base 'rejected-latest.json') -Force
-            throw 'The server rejected an obsolete capture. A fresh scan will run on the next check-in.'
+            throw 'The server rejected an obsolete capture or invalid timestamp. Check the device clock; a fresh scan will run on the next check-in.'
         }
         throw
     }
@@ -84,6 +84,11 @@ try {
     $state | ConvertTo-Json -Compress | Set-Content -LiteralPath $temp -Encoding UTF8
     Move-Item -LiteralPath $temp -Destination $statePath -Force
     Remove-Item -LiteralPath $queuePath -Force
+} catch {
+    # Report a generic failure without uploading exception text, paths or credentials.
+    # This event must never refresh the server's successful-scan timestamp.
+    try { $null = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes('{"event":"scan_error"}')) -UseBasicParsing -MaximumRedirection 0 -TimeoutSec 15 } catch { }
+    throw
 } finally {
     [Array]::Clear($secretBytes, 0, $secretBytes.Length)
     $secret = $null

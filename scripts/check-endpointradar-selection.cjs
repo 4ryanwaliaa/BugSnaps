@@ -1,0 +1,20 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const ts = require('typescript');
+const mod = {exports:{}};
+const code = ts.transpileModule(fs.readFileSync('lib/endpointradar/async-selection.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+vm.runInNewContext(code,{exports:mod.exports,module:mod,Map});
+const guard = mod.exports.asyncSelection();
+const deferred = () => {let resolve; const promise = new Promise(r=>{resolve=r});return {promise,resolve};};
+(async()=>{
+ let shown = null;
+ const a=deferred(),b=deferred();
+ const load=async(id,response)=>{const current=guard.start('device');const data=await response.promise;if(current())shown={id,data};};
+ const first=load('A',a),second=load('B',b);
+ b.resolve('B findings');await second;a.resolve('A findings');await first;
+ assert.deepEqual(shown,{id:'B',data:'B findings'},'a delayed result must not appear under the newly selected device');
+ const oldReport=guard.start('report');guard.invalidate();assert.equal(oldReport(),false,'switching workspace/account discards pending report');
+ const oldDevice=guard.start('device');guard.invalidate();guard.start('device');assert.equal(oldDevice(),false,'switching away and back must still discard the old result');
+ console.log('PASS delayed-device response and client/account selection isolation');
+})().catch(e=>{console.error(e);process.exitCode=1;});

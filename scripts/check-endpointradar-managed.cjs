@@ -34,9 +34,15 @@ async function call(path, token, method='GET', data) {
  const id=randomUUID(); assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()-120000).toISOString()},scanId:randomUUID()})).status,409);
- assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()+3600000).toISOString()},scanId:randomUUID()})).status,400);
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()+3600000).toISOString()},scanId:randomUUID()})).status,422);
  const scans=await call(`/service/workspaces/${wid}/devices/${deviceId}/scans`,b.token); assert.equal(scans.body.scans.length,1); assert.equal(scans.body.scans[0].scan.hostname,'TEST');
  const out=await call(`/service/workspaces/${wid}`,b.token); assert(!JSON.stringify(out.body).includes(secret)); assert(!JSON.stringify(out.body).includes('secretHash'));
+ const beforeFailure=out.body.devices.find(d=>d.id===deviceId).lastSeenAt;
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{event:'scan_error'})).status,200);
+ assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{event:'scan_error'})).status,200);
+ const failed=await call(`/service/workspaces/${wid}`,b.token);
+ assert.equal(failed.body.devices.find(d=>d.id===deviceId).lastSeenAt,beforeFailure,'failure must not refresh successful reporting');
+ assert.equal(failed.body.alerts.filter(a=>a.kind==='agent_error').length,1,'repeated agent errors should be deduplicated');
  const d2=await call(`/service/workspaces/${wid}/devices`,a.token,'POST',{name:'concurrency',intervalMinutes:15}); assert.equal(d2.status,201);
  const outcomes=await Promise.all(Array.from({length:6},()=>call(`/device/${wid}/${d2.body.deviceId}`,d2.body.secret,'POST',{scan,scanId:randomUUID()})));
  assert.equal(outcomes.filter(x=>x.status===200).length,1,JSON.stringify(outcomes)); assert.equal(outcomes.filter(x=>x.status===409).length,5,JSON.stringify(outcomes));
