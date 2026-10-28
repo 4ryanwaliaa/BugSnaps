@@ -120,7 +120,7 @@ async function audit(route) {
       if (url.origin !== SITE_URL) continue;
       const target = url.pathname.replace(/\/$/, "") || "/";
       if (expected.has(target === "/" ? SITE_URL : SITE_URL + target)) { linked.add(target); targets.add(target); }
-      else if (!/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
+      else if (target !== "/endpointradar/app" && !/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
     }
     pages.push({ path: route, status: response.status, title, canonical, schemaTypes: schema.map((d) => d["@type"]) });
   } catch (e) { fail(route, e.message); }
