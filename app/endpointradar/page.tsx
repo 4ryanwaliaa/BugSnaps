@@ -5,8 +5,8 @@ import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-
 import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "EndpointRadar - Windows Endpoint Security Posture",
-  description: "Understand Windows endpoint exposure with EndpointRadar. Run a local scan, then explore your report in a private browser workspace.",
+  title: "Windows Endpoint Security Scanner | EndpointRadar",
+  description: "Scan an authorized Windows device locally, then review firewall, antivirus, updates and other posture findings in the browser.",
   path: "/endpointradar",
 });
 
@@ -28,7 +28,7 @@ export default function EndpointRadarPage() {
           <div>
             <Breadcrumbs items={[{ name: "Products", path: "/products" }, { name: "EndpointRadar", path: "/endpointradar" }]} />
             <p className="mt-8 flex items-center gap-2 font-mono text-xs uppercase tracking-[.2em] text-blue-400"><Radar className="h-4 w-4" /> EndpointRadar · by BugSnaps</p>
-            <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">Know where your endpoints stand.</h1>
+            <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">Review Windows endpoint security posture.</h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">Review imported Windows device scans together, understand what needs attention, and turn findings into a practical fix list.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/endpointradar/app" className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-blue-500">Open free workspace <ArrowRight className="h-4 w-4" /></Link>

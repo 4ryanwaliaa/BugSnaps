@@ -5,8 +5,8 @@ import { PhishLensWorkspace } from "@/components/phishing-detector/workspace";
 import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "PhishLens - Phishing Link Investigation",
-  description: "Investigate suspicious links individually or in batches of 100. Review domain boundaries, threat intelligence, registration and DNS evidence, then export redacted reports.",
+  title: "PhishLens: Free Phishing Link Checker",
+  description: "Check suspicious URLs with PhishLens. Inspect link structure locally, add optional domain and DNS context, and export a redacted report.",
   path: "/phishing-detector",
 });
 
@@ -31,7 +31,7 @@ export default function PhishingDetectorPage() {
             <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-xs text-zinc-300">Free to use <span className="mx-1.5 text-zinc-600">·</span> No account required</span>
           </div>
           <div className="grid gap-6 pb-8 pt-7 sm:pb-10 sm:pt-8 lg:grid-cols-[1fr_21rem] lg:items-end lg:gap-12">
-            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Look closer <span className="text-emerald-300">before you click.</span></h1><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">A suspicious link deserves a second look. Unpack the address, explore the evidence, and make a more informed next move.</p></div>
+            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Investigate suspicious links <span className="text-emerald-300">before you click.</span></h1><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">A suspicious link deserves a second look. Unpack the address, explore the evidence, and make a more informed next move.</p></div>
             <div className="flex gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-400/[.05] p-4 text-sm leading-relaxed text-zinc-400"><LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" /><p>Your initial review stays in your browser. External checks run only when you choose them.</p></div>
           </div>
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/[.04] p-5"><div><p className="font-semibold text-zinc-100">Review suspicious messages with your team</p><p className="mt-1 text-sm leading-relaxed text-zinc-400">Submit messages, record decisions, and revisit previous reviews.</p></div><a href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">Open team inbox <ArrowUpRight className="h-4 w-4" /></a></div>

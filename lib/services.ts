@@ -204,10 +204,10 @@ export const servicePages: ServicePage[] = [
     slug: "api-security-testing",
     path: "/api-security-testing",
     name: "API security testing",
-    metaTitle: "API Security Testing and API Penetration Testing",
+    metaTitle: "API Penetration Testing for REST and GraphQL",
     metaDescription:
       "API penetration testing for REST and GraphQL: object- and function-level authorization, data exposure, rate limiting and auth, mapped to the OWASP API Top 10.",
-    h1: "API security testing.",
+    h1: "API penetration testing for REST and GraphQL.",
     lead:
       "APIs quietly hand out data to whoever asks correctly. We test that every endpoint checks who is asking - for every object, every function and every field.",
     tests: [

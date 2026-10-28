@@ -38,7 +38,7 @@ export default function SecurityGuidesIndex() {
       <PageHeader
         crumbs={[{ name: "Security guides", path: "/guides" }]}
         eyebrow="Security guides"
-        title="Understand the boundary. Test it. Keep the evidence."
+        title="Security testing guides and practical checklists."
         lead="Practical guides to application and endpoint security checks, what a result establishes, and which limits belong in the report. Choose a topic that matches the decision you need to make."
       >
         <nav aria-label="Guide categories" className="flex flex-wrap gap-3">
