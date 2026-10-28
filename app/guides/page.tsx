@@ -3,6 +3,7 @@ import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { SECURITY_GUIDES, SECURITY_GUIDE_CATEGORIES, guidePath } from "@/lib/security-guides";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
+import { GuideDirectory } from "@/components/site/guide-directory";
 
 export const metadata: Metadata = pageMetadata({
   title: "Security Testing Guides and Practical Checklists",
@@ -59,24 +60,7 @@ export default function SecurityGuidesIndex() {
           </p>
         </div>
       </Section>
-      {SECURITY_GUIDE_CATEGORIES.map((category) => (
-        <Section key={category} id={categoryId(category)} labelledBy={`${categoryId(category)}-title`}>
-          <h2 id={`${categoryId(category)}-title`} className="text-2xl font-semibold tracking-tight">{category}</h2>
-          <ul className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {SECURITY_GUIDES.filter((guide) => guide.category === category).map((guide) => (
-              <li key={guide.slug} className="rounded-2xl border border-white/[0.08] bg-surface/30 p-6">
-                <article>
-                  <p className="font-mono text-[11px] text-muted-2">Updated <time dateTime={guide.updated}>{new Date(`${guide.updated}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</time></p>
-                  <h3 className="mt-3 text-lg font-semibold leading-snug">
-                    <Link href={guidePath(guide.slug)} className="hover:text-accent">{guide.title}</Link>
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{guide.description}</p>
-                </article>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ))}
+      <GuideDirectory categories={SECURITY_GUIDE_CATEGORIES} guides={SECURITY_GUIDES.map(({ slug, title, description, category, updated }) => ({ slug, title, description, category, updated }))} />
       <Section labelledBy="guide-next-title" className="border-t border-white/[0.06]">
         <h2 id="guide-next-title" className="text-2xl font-semibold tracking-tight">Compare coverage before choosing a tool.</h2>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
