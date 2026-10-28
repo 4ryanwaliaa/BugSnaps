@@ -1,4 +1,4 @@
-# EndpointRadar managed infrastructure (not yet production-ready)
+# EndpointRadar managed infrastructure (beta)
 
 The managed API is separate from the existing browser-only importer. All server data is scoped to `/endpointRadar` in the same Firebase project as the authenticated users. The existing database root rules must deny client reads and writes, and `/endpointRadar` must remain denied to all clients. Firebase rules cascade: a child denial cannot cancel an ancestor grant. Merge and verify rules carefully; do not overwrite other applications’ rules. Only after confirming the effective rules and testing direct client access, set `ENDPOINTRADAR_DATABASE_LOCKED=true`. `dedicated-database.rules.json` is an emulator-only deny-all fixture, not a replacement for production rules.
 
@@ -36,5 +36,7 @@ The project pins Node 22 and Firebase Admin 13.10.0. The newer SDK's ESM depende
 3. Build and deploy the reviewed commit. The managed page shows a setup message until `ENDPOINTRADAR_DATABASE_LOCKED=true` is set at build time.
 4. Run the watchdog workflow manually and verify it succeeds. GitHub requests it every 15 minutes (best effort); the Vercel daily cron is a backup. Both use the same random secret. Alerts are in-app; no email service is configured.
 5. With separate verified test accounts, create two client workspaces and verify viewer isolation, invitation acceptance, and revocation on the live service. Enroll an authorized Windows device, verify a scheduled report and retest request, and inspect an exported client PDF.
+
+Production API smoke verification passed on 28 October 2026 at `d332bdc`: synthetic client isolation, invitations, schedules, retest requests, scan changes, saved review baselines, credential revocation and direct database denial. Temporary accounts and records were removed and their cleanup checked. The authenticated [production watchdog run](https://github.com/4ryanwaliaa/BugSnaps/actions/runs/40726831364) also passed. This verifies the service using synthetic reports, not a physical device installation.
 
 The Windows helper runs under the signed-in installing account with limited privileges. It cannot run while that account is signed out. The scanner GitHub Windows self-scan and Linux/Windows matrix passed at revision `1cf2f97`. Local scheduled-task installation and local endpoint execution remain unverified: automatic approval review blocked the attempted local scan and ACL test, stating only `blocked by policy`. A user-run enrollment check is required before operational claims.
