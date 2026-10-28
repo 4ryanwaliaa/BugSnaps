@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check, Link2, Network, Radar, ScanSearch } from "lucide-react";
 import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
@@ -74,9 +75,13 @@ export default function ProductsPage() {
               <article className="relative flex w-full flex-col overflow-hidden rounded-[24px] border border-white/10 bg-surface p-6 sm:p-8">
                 <div aria-hidden="true" className={`pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full blur-3xl ${glow}`} />
                 <div className="relative flex items-start justify-between gap-4">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${iconBg} ${color}`}>
-                    <Icon className="h-6 w-6" strokeWidth={1.7} aria-hidden="true" />
-                  </div>
+                  {product.id === "myrecon" ? (
+                    <Image src="/myrecon-logo.svg" alt="" width={48} height={48} className="h-12 w-12" />
+                  ) : (
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${iconBg} ${color}`}>
+                      <Icon className="h-6 w-6" strokeWidth={1.7} aria-hidden="true" />
+                    </div>
+                  )}
                   <span className="font-mono text-xs text-muted-2">0{index + 1} / 04</span>
                 </div>
                 <div className="relative mt-7 flex flex-wrap items-center gap-2">
