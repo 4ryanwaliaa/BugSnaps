@@ -25,6 +25,8 @@ findings and recommended actions. It excludes the full software inventory.
    line. The installer verifies the credentials before creating the task.
 
 The task checks the server every 15 minutes and follows its device schedule.
+Intervals are measured from the successful scan's start, with a five-second
+tolerance for task scheduling jitter. A later retry retains that scan's start.
 It runs only while that account is signed in, at that account's normal limited
 privilege. Some checks may report limited visibility. Missed or failed runs must
 not be treated as a clean result. Scans and pending uploads are kept under the

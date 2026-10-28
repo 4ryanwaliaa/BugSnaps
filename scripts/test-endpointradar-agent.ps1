@@ -44,9 +44,13 @@ function Start-Process {
 try {
     try { & $runner; throw 'Expected a simulated failure' } catch { if ($_.Exception.Message -ne 'simulated lost response') { throw } }
     if (-not (Test-Path (Join-Path $base 'pending.json'))) { throw 'Failed upload did not preserve pending scan' }
+    $queuedStart = (Get-Content (Join-Path $base 'pending.json') -Raw | ConvertFrom-Json).scanStartedAt
+    if (-not $queuedStart) { throw 'Pending scan has no start anchor' }
     $global:failPost = $false
     & $runner
     if ($global:postIds.Count -ne 2 -or $global:postIds[0] -ne $global:postIds[1]) { throw 'Retry did not reuse the same scan ID' }
+    $savedState = Get-Content (Join-Path $base 'state.json') -Raw | ConvertFrom-Json
+    if ([DateTimeOffset]::Parse($savedState.lastScanStartedAt) -ne [DateTimeOffset]::Parse($queuedStart)) { throw 'Retry changed the original scan start anchor' }
     if ($global:scanCalls -ne 1 -or (Test-Path (Join-Path $base 'pending.json'))) { throw 'Retry state was not cleared' }
     & $runner
     if ($global:scanCalls -ne 1) { throw 'Interval was not respected' }
@@ -97,6 +101,36 @@ try {
     $savedId = (Get-Content (Join-Path $base 'pending.json') -Raw | ConvertFrom-Json).scanId
     & $runner
     if ($global:postIds[-1] -ne $savedId) { throw 'A temporary rate limit did not retry the same scan' }
+    # A previous scan starts about 15 minutes ago and takes a minute; the
+    # next tick is four seconds early. It is due despite recent upload time.
+    $global:fakeSchedule.intervalMinutes = 15
+    $global:fakeSchedule.scanRequestedAt = $null
+    $clock = [DateTimeOffset]::UtcNow
+    @{ lastScanStartedAt=$clock.AddMinutes(-15).AddSeconds(4).ToString('o'); lastSuccess=$clock.AddMinutes(-14).AddSeconds(4).ToString('o'); lastRequest='' } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $base 'state.json') -Encoding UTF8
+    $previousCount = $global:scanCalls
+    & $runner
+    if ($global:scanCalls -ne $previousCount + 1) { throw '15-minute tick skipped a scan due to completion time or small jitter' }
+    # A substantially early tick is not due.
+    $clock = [DateTimeOffset]::UtcNow
+    @{ lastScanStartedAt=$clock.AddMinutes(-14).AddSeconds(-40).ToString('o'); lastSuccess=$clock.AddMinutes(-13).ToString('o'); lastRequest='' } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $base 'state.json') -Encoding UTF8
+    $previousCount = $global:scanCalls
+    & $runner
+    if ($global:scanCalls -ne $previousCount) { throw 'Scan ran before the jitter tolerance' }
+    # An invalid or future start falls back to a valid legacy completion time.
+    $clock = [DateTimeOffset]::UtcNow
+    foreach ($badStart in @('invalid', $clock.AddDays(1).ToString('o'))) {
+        @{ lastScanStartedAt=$badStart; lastSuccess=$clock.ToString('o'); lastRequest='' } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $base 'state.json') -Encoding UTF8
+        & $runner
+        if ($global:scanCalls -ne $previousCount) { throw 'Bad start bypassed a valid legacy schedule anchor' }
+    }
+    @{ lastScanStartedAt=$clock.ToString('o'); lastSuccess=$clock.AddMinutes(-20).ToString('o'); lastRequest='' } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $base 'state.json') -Encoding UTF8
+    & $runner
+    if ($global:scanCalls -ne $previousCount + 1) { throw 'A start after upload incorrectly made an old scan fresh' }
+    $previousCount = $global:scanCalls
+    # A future completion is not a valid anchor that can suppress scans forever.
+    @{ lastScanStartedAt='invalid'; lastSuccess=$clock.AddDays(1).ToString('o'); lastRequest='' } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $base 'state.json') -Encoding UTF8
+    & $runner
+    if ($global:scanCalls -ne $previousCount + 1) { throw 'Invalid and future anchors suppressed a scan' }
     Write-Output 'PASS: retry, schedule, retest, disabled state, permanent validation recovery, temporary rate limits, and failure reporting.'
 } finally {
     $env:LOCALAPPDATA = $originalLocalAppData

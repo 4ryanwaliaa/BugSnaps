@@ -13,10 +13,11 @@ try {
     $headers = @{ Authorization = "Bearer $secret" }
     $queuePath = Join-Path $base 'pending.json'
     $statePath = Join-Path $base 'state.json'
-    $state = @{ lastSuccess = ''; lastRequest = '' }
+    $state = @{ lastSuccess = ''; lastScanStartedAt = ''; lastRequest = '' }
     if (Test-Path -LiteralPath $statePath) {
         $loaded = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
         $state.lastSuccess = [string]$loaded.lastSuccess
+        $state.lastScanStartedAt = [string]$loaded.lastScanStartedAt
         $state.lastRequest = [string]$loaded.lastRequest
     }
     # Reuse a queued scan ID after a failed or interrupted upload.
@@ -27,16 +28,27 @@ try {
         if (-not $schedule.enabled) { return }
         $interval = 0
         if (-not [int]::TryParse([string]$schedule.intervalMinutes, [ref]$interval) -or $interval -lt 15 -or $interval -gt 10080) { throw 'Server returned an invalid scan interval.' }
+        # Schedule against scanner start, not completion: a scan taking one
+        # minute must not cause the next 15-minute task tick to be skipped.
+        # A five-second tolerance absorbs small task-scheduler clock jitter.
+        $now = [DateTimeOffset]::UtcNow
         $last = [DateTimeOffset]::MinValue
-        $null = [DateTimeOffset]::TryParse($state.lastSuccess, [ref]$last)
+        $received = [DateTimeOffset]::MinValue
+        $hasReceived = [DateTimeOffset]::TryParse($state.lastSuccess, [ref]$received) -and $received -le $now
+        $hasLast = [DateTimeOffset]::TryParse($state.lastScanStartedAt, [ref]$last) -and $hasReceived -and $last -le $received
+        if (-not $hasLast) {
+            $last = $received
+            $hasLast = $hasReceived
+        }
         $requestTime = [DateTimeOffset]::MinValue
         $previousRequest = [DateTimeOffset]::MinValue
         $hasRequest = [DateTimeOffset]::TryParse([string]$schedule.scanRequestedAt, [ref]$requestTime)
         $null = [DateTimeOffset]::TryParse($state.lastRequest, [ref]$previousRequest)
         $requestDue = $hasRequest -and $requestTime -gt $previousRequest
-        if (-not $requestDue -and ([DateTimeOffset]::UtcNow - $last).TotalMinutes -lt $interval) { return }
+        if (-not $requestDue -and $hasLast -and ($now - $last).TotalSeconds -lt ($interval * 60 - 5)) { return }
         $output = Join-Path $base ("scan-" + [guid]::NewGuid().ToString('N') + '.json')
         try {
+            $scanStartedAt = [DateTimeOffset]::UtcNow.ToString('o')
             $process = Start-Process -FilePath $config.scannerPath -ArgumentList @('scan','--format','json','--no-save','--quiet','--output',("`"$output`"")) -PassThru -WindowStyle Hidden
             if (-not $process.WaitForExit(720000)) { $process.Kill(); throw 'The scan timed out.' }
             if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $output)) { throw 'The local scanner failed.' }
@@ -53,7 +65,7 @@ try {
                 antivirus = $scan.antivirus; firewall = $scan.firewall; patches = $scan.patches; device_protection = $scan.device_protection
                 posture_checks = $scan.posture_checks
             }
-            $pending = @{ scanId = [guid]::NewGuid().ToString(); scan = $scan; requestTime = if ($requestDue) { $requestTime.ToUniversalTime().ToString('o') } else { '' } }
+            $pending = @{ scanId = [guid]::NewGuid().ToString(); scan = $scan; scanStartedAt = $scanStartedAt; requestTime = if ($requestDue) { $requestTime.ToUniversalTime().ToString('o') } else { '' } }
             $candidate = @{ scanId = $pending.scanId; scan = $pending.scan } | ConvertTo-Json -Depth 40 -Compress
             if ([Text.Encoding]::UTF8.GetByteCount($candidate) -gt 120000) { throw 'Posture report exceeds the 120 KB upload limit; review and report the scanner output size.' }
             $temp = "$queuePath.tmp"
@@ -81,6 +93,13 @@ try {
     }
     if ($response.StatusCode -lt 200 -or $response.StatusCode -ge 300) { throw 'Scan upload failed.' }
     $state.lastSuccess = [DateTimeOffset]::UtcNow.ToString('o')
+    $started = [DateTimeOffset]::MinValue
+    if ([DateTimeOffset]::TryParse([string]$pending.scanStartedAt, [ref]$started) -and $started -le [DateTimeOffset]::UtcNow) {
+        $state.lastScanStartedAt = $started.ToUniversalTime().ToString('o')
+    } else {
+        # Old queued records or bad clock data have no trustworthy start.
+        $state.lastScanStartedAt = ''
+    }
     if ($pending.requestTime) { $state.lastRequest = [string]$pending.requestTime }
     $temp = "$statePath.tmp"
     $state | ConvertTo-Json -Compress | Set-Content -LiteralPath $temp -Encoding UTF8
