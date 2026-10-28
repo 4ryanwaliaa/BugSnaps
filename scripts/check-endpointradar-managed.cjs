@@ -30,11 +30,23 @@ async function call(path, token, method='GET', data) {
  assert.equal((await call('/service/invites/accept',b.token,'POST',{inviteId:reinvite.body.inviteId})).status,200);
  const d=await call(`/service/workspaces/${wid}/devices`,a.token,'POST',{name:'test',intervalMinutes:15}); assert.equal(d.status,201,JSON.stringify(d)); const {deviceId,secret}=d.body;
  assert.equal((await call(`/device/${wid}/${deviceId}`,'incorrect')).status,401); assert.equal((await call(`/device/${wid}/${deviceId}`,secret)).status,200);
+ const devicePath=`/service/workspaces/${wid}/devices/${deviceId}`;
+ assert.equal((await call(`${devicePath}/schedule`,b.token,'POST',{intervalMinutes:30})).status,403);
+ assert.equal((await call(`${devicePath}/retest`,b.token,'POST',{})).status,403);
+ assert.equal((await call(`${devicePath}/schedule`,a.token,'POST',{intervalMinutes:1})).status,400);
+ assert.equal((await call(`${devicePath}/schedule`,a.token,'POST',{intervalMinutes:30})).status,200);
+ assert.equal((await call(`${devicePath}/retest`,a.token,'POST',{})).status,200);
+ const deviceConfig=await call(`/device/${wid}/${deviceId}`,secret); assert.equal(deviceConfig.body.intervalMinutes,30); assert(Number.isFinite(Date.parse(deviceConfig.body.scanRequestedAt)));
  const scan={hostname:'TEST',last_scan_at:new Date(Date.now()-60000).toISOString(),vulnerabilities:[],firewall:{profiles:{Domain:{state:'ON'},Private:{state:'ON'},Public:{state:'ON'}}},antivirus:{status:'enabled'}};
  const id=randomUUID(); assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan,scanId:id})).status,200);
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()-120000).toISOString()},scanId:randomUUID()})).status,409);
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:{...scan,last_scan_at:new Date(Date.now()+3600000).toISOString()},scanId:randomUUID()})).status,422);
+ assert.equal((await call(`/service/workspaces/${wid}/review`,b.token,'POST',{})).status,403);
+ const review=await call(`/service/workspaces/${wid}/review`,a.token,'POST',{}); assert.equal(review.status,200,JSON.stringify(review));
+ const baseline=await call(`/service/workspaces/${wid}/review/${deviceId}`,b.token); assert.equal(baseline.status,200); assert.equal(baseline.body.at,review.body.at); assert.equal(baseline.body.revision,review.body.revision); assert.equal(baseline.body.scan.scan.firewall.profiles.Domain.state,'ON');
+ assert.equal((await call(`/service/workspaces/${wid}/review/${deviceId}`,c.token)).status,404);
+ const reviewed=await call(`/service/workspaces/${wid}`,b.token); assert.equal(reviewed.body.review.revision,review.body.revision); assert.deepEqual(reviewed.body.review.deviceIds,[deviceId]);
  const scans=await call(`/service/workspaces/${wid}/devices/${deviceId}/scans`,b.token); assert.equal(scans.body.scans.length,1); assert.equal(scans.body.scans[0].scan.hostname,'TEST');
  const out=await call(`/service/workspaces/${wid}`,b.token); assert(!JSON.stringify(out.body).includes(secret)); assert(!JSON.stringify(out.body).includes('secretHash'));
  const beforeFailure=out.body.devices.find(d=>d.id===deviceId).lastSeenAt;
@@ -51,7 +63,10 @@ async function call(path, token, method='GET', data) {
  assert.equal((await call(`/device/${wid}/${deviceId}`,secret,'POST',{scan:changed,scanId:randomUUID()})).status,200);
  const posture=await call(`/service/workspaces/${wid}`,a.token); assert(posture.body.alerts.some(alert=>alert.kind==='posture' && alert.message.includes('Profile off')),JSON.stringify(posture));
  assert.equal(posture.body.devices.find(item=>item.id===deviceId).latestScan.scan.firewall.profiles.Domain.state,'OFF');
+ const deleted=await fetch(`http://127.0.0.1:19100/endpointRadar/workspaces/${wid}/devices/${deviceId}/scans/${id.replaceAll('-','')}.json?ns=demo-endpointradar-default-rtdb`,{method:'DELETE',headers:{authorization:'Bearer owner'}}); assert.equal(deleted.status,200);
+ const saved=await call(`/service/workspaces/${wid}/review/${deviceId}`,b.token); assert.equal(saved.status,200); assert.equal(saved.body.scan.scan.firewall.profiles.Domain.state,'ON');
+
  assert.equal((await call(`/service/workspaces/${wid}/devices/${deviceId}/disable`,a.token,'POST',{})).status,200); assert.equal((await call(`/device/${wid}/${deviceId}`,secret)).status,401);
  const direct=await fetch(`http://127.0.0.1:19100/endpointRadar/workspaces/${wid}.json?ns=demo-endpointradar-default-rtdb`); assert.equal(direct.status,401);
- console.log('PASS managed: tenant isolation, verified invite, member revocation, invitation replay, device auth, idempotence, concurrent uploads, timestamps, posture alert, device revocation, direct database denial.');
+ console.log('PASS managed: tenant isolation, verified invite, member revocation, invitation replay, device auth, idempotence, concurrent uploads, timestamps, posture alert, persistent prior review, device revocation, direct database denial.');
 })().catch(e=>{console.error(e); process.exitCode=1});

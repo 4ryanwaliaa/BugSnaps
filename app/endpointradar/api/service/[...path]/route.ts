@@ -43,7 +43,7 @@ async function handle(request: Request, ctx: {params: Promise<{path: string[]}>}
   const wid = requireId(p[1]); const role = await membership(wid, identity.uid, method !== "GET"); const base = `workspaces/${wid}`;
   if (p.length === 2 && method === "GET") {
     const ref = db.ref(base);
-    const [nameSnap,slotsSnap,accessSnap] = await Promise.all([ref.child("name").get(),ref.child("deviceSlots").get(),role === "admin" ? ref.child("access/members").get() : Promise.resolve(null)]);
+    const [nameSnap,slotsSnap,accessSnap,reviewSnap] = await Promise.all([ref.child("name").get(),ref.child("deviceSlots").get(),role === "admin" ? ref.child("access/members").get() : Promise.resolve(null),ref.child("review/meta").get()]);
     const ids = Object.keys(slotsSnap.val() || {});
     const rows = await Promise.all(ids.map(async id => {
       if (!/^[a-f0-9]{36}$/.test(id)) return null;
@@ -57,7 +57,32 @@ async function handle(request: Request, ctx: {params: Promise<{path: string[]}>}
     const devices = rows.filter(Boolean).map(row => row!.device);
     const alerts = rows.filter(Boolean).flatMap(row => row!.alerts);
     const members = role === "admin" ? Object.entries(accessSnap?.val() || {}).map(([id, value]) => ({id,...(value as object)})) : [];
-    return Response.json({workspace:{id:wid,name:nameSnap.val(),role},devices,alerts,members});
+    const reviewMeta = reviewSnap.val();
+    const review = reviewMeta?.at ? {at:reviewMeta.at,revision:reviewMeta.revision,deviceIds:Object.keys(reviewMeta.deviceIds || {})} : null;
+    return Response.json({workspace:{id:wid,name:nameSnap.val(),role},devices,alerts,members,review});
+  }
+  if (p.length === 3 && p[2] === "review" && method === "POST") {
+    const ref = db.ref(base); const ids = Object.keys((await ref.child("deviceSlots").get()).val() || {}).filter(id => /^[a-f0-9]{36}$/.test(id));
+    const pairs = await Promise.all(ids.map(async did => {
+      const device = ref.child(`devices/${did}`); const latest = (await device.child("latestScanId").get()).val();
+      if (!latest || !/^[a-f0-9]{32}$/.test(latest)) return null;
+      const scan = (await device.child(`scans/${latest}`).get()).val();
+      if (!scan || typeof scan.scanJson !== "string" || Buffer.byteLength(scan.scanJson, "utf8") > 131072) return null;
+      return [did,{id:scan.id,receivedAt:scan.receivedAt,scanJson:scan.scanJson}] as const;
+    }));
+    const entries = pairs.filter((item): item is NonNullable<typeof item> => item !== null);
+    if (!entries.length) throw new HttpError(400, "There are no valid device results to include in the review.");
+    // Verify admin still holds access immediately before replacing the snapshot.
+    await membership(wid, identity.uid, true);
+    const at = new Date().toISOString(); const revision = uid();
+    await ref.child("review").set({meta:{at,revision,deviceIds:Object.fromEntries(entries.map(([did]) => [did,true]))},devices:Object.fromEntries(entries.map(([did, entry]) => [did,{...entry,at,revision}]))});
+    return Response.json({ok:true,at,revision,deviceCount:entries.length});
+  }
+  if (p.length === 4 && p[2] === "review" && method === "GET") {
+    const did = requireId(p[3]); const snapshot = (await db.ref(`${base}/review/devices/${did}`).get()).val();
+    if (!snapshot || typeof snapshot.scanJson !== "string") throw new HttpError(404, "No previous review for that device.");
+    try { return Response.json({at:snapshot.at,revision:snapshot.revision,scan:{id:snapshot.id,receivedAt:snapshot.receivedAt,scan:JSON.parse(snapshot.scanJson)}}); }
+    catch { throw new HttpError(500, "Saved review could not be read."); }
   }
   if (p.length === 3 && p[2] === "invites" && method === "POST") {
     const input = await body(request); const email = String(input.email || "").trim().toLowerCase(); const inviteRole = input.role;

@@ -20,7 +20,9 @@ const recordDate = (scan: ReportScan) => scan.date;
 const deviceKey = (scan: ReportScan) => JSON.stringify([scan.hostname.trim().toLowerCase(), scan.ip.trim().toLowerCase()]);
 const findingKey = (title: string) => title.trim().toLowerCase();
 
-export function buildReport(scans: ReportScan[]) {
+export type ReviewBaseline = { at: string; scans: Record<string, ReportScan> };
+
+export function buildReport(scans: ReportScan[], baseline?: ReviewBaseline | null) {
   const groups = new Map<string, ReportScan[]>();
   for (const scan of scans) {
     // Records without a reliable identity and timestamp cannot safely be matched.
@@ -31,7 +33,11 @@ export function buildReport(scans: ReportScan[]) {
   return [...groups.values()].map(group => {
     const dated = group.filter(scan => recordTime(scan) !== null).sort((a, b) => recordTime(b)! - recordTime(a)!);
     const current = dated[0] || group[group.length - 1];
-    const previous = dated.find(scan => recordTime(scan)! < recordTime(current)!);
+    const baselineScan = current.managedDeviceId && baseline ? baseline.scans[current.managedDeviceId] : undefined;
+    const baselineTime = baselineScan ? recordTime(baselineScan) : null;
+    const currentTime = recordTime(current);
+    const currentDated = currentTime !== null && currentTime <= Date.now();
+    const previous = !currentDated ? undefined : baseline ? (baselineScan && baselineTime !== null && baselineTime <= currentTime ? baselineScan : undefined) : dated.find(scan => recordTime(scan)! < currentTime);
     const currentTitles = new Set(current.findings.map(finding => findingKey(finding.title)));
     const previousTitles = new Set(previous?.findings.map(finding => findingKey(finding.title)) || []);
     const changes = previous ? [
@@ -39,18 +45,18 @@ export function buildReport(scans: ReportScan[]) {
       ...current.findings.filter(finding => !previousTitles.has(findingKey(finding.title))).map(finding => `Newly reported: ${finding.title}`),
       ...previous.findings.filter(finding => !currentTitles.has(findingKey(finding.title))).map(finding => `Not reported in the later scan: ${finding.title}`),
     ] : [];
-    return { current, previous, changes };
+    return { current, previous, changes, noNewScan: Boolean(baseline && previous && baselineTime === currentTime) };
   }).sort((a, b) => a.current.hostname.localeCompare(b.current.hostname));
 }
 
-export default function ClientReport({ scans, isDemo = false }: { scans: ReportScan[]; isDemo?: boolean }) {
+export default function ClientReport({ scans, isDemo = false, baseline = null }: { scans: ReportScan[]; isDemo?: boolean; baseline?: ReviewBaseline | null }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const [client, setClient] = useState("");
   const [consultant, setConsultant] = useState("");
   const [downloadError, setDownloadError] = useState("");
   const [downloading, setDownloading] = useState(false);
-  const report = useMemo(() => buildReport(scans), [scans]);
+  const report = useMemo(() => buildReport(scans, baseline), [scans, baseline]);
   const topFindings = report.flatMap(({ current }) => current.findings.map(finding => ({ finding, device: current.managedDeviceName || current.hostname })))
     .sort((a, b) => (priority[a.finding.severity] ?? 5) - (priority[b.finding.severity] ?? 5));
   const download = async () => {
@@ -58,7 +64,7 @@ export default function ClientReport({ scans, isDemo = false }: { scans: ReportS
     try {
       const [module, response] = await Promise.all([import("./report-pdf"), fetch("/fonts/DejaVuSans.ttf")]);
       if (!response.ok) throw new Error("Could not load the report font.");
-      const bytes = await module.makeReportPdf(report, client, consultant, new Uint8Array(await response.arrayBuffer()), isDemo);
+      const bytes = await module.makeReportPdf(report, client, consultant, new Uint8Array(await response.arrayBuffer()), isDemo, baseline?.at);
       const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "application/pdf" }));
       const link = document.createElement("a"); link.href = url; link.download = "endpointradar-client-report.pdf"; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 60_000);
     } catch (error) { setDownloadError(error instanceof Error ? error.message : "Could not generate the PDF."); }
@@ -106,8 +112,8 @@ export default function ClientReport({ scans, isDemo = false }: { scans: ReportS
       <h2>Priority issues and recommended actions</h2>
       {topFindings.length ? topFindings.slice(0, 30).map(({ finding, device }, index) => <article key={index}><h3>{finding.severity} · {finding.title}</h3><p><strong>Device:</strong> {device}</p><p><strong>Scanner description:</strong> {finding.description}</p><p><strong>Recommended action:</strong> {finding.fix}</p></article>) : <p>No findings were included in the latest imported records.</p>}
       {topFindings.length > 30 && <p className="report-note">Showing the first 30 issues by severity of {topFindings.length} reported issues. Review the workspace for the complete list.</p>}
-      <h2>Changes since the previous scan</h2>
-      {report.map(({ current, previous, changes }, index) => <article key={index}><h3>{current.managedDeviceName || current.hostname}</h3>{previous ? <><p className="report-note">Comparing {dateLabel(recordDate(previous))} with {dateLabel(recordDate(current))}.</p>{changes.length ? <ul>{changes.map((change, changeIndex) => <li key={changeIndex}>{change}</li>)}</ul> : <p>No changes detected in reported statuses or finding titles.</p>}</> : <p>No earlier dated scan is available for comparison.</p>}</article>)}
+      <h2>{baseline ? `Changes since review ${dateLabel(baseline.at)}` : "Changes since the previous scan"}</h2>
+      {report.map(({ current, previous, changes, noNewScan }, index) => <article key={index}><h3>{current.managedDeviceName || current.hostname}</h3>{previous ? <><p className="report-note">Comparing {dateLabel(recordDate(previous))} with {dateLabel(recordDate(current))}.</p>{noNewScan ? <p>No newer scan has been received since this review.</p> : changes.length ? <ul>{changes.map((change, changeIndex) => <li key={changeIndex}>{change}</li>)}</ul> : <p>No changes detected in reported statuses or finding titles.</p>}</> : <p>{baseline ? "No comparable scan was recorded for this device at the last review." : "No earlier dated scan is available for comparison."}</p>}</article>)}
       <p className="report-note">A finding absent from a later scan is not by itself proof of remediation. Confirm the same check ran with sufficient visibility. Managed devices are matched by enrolled device identifier and ordered by scan capture time. Imported records require the same reported hostname and address. Records with invalid or future scan times are not compared.</p>
     </div>, document.body)}
   </section>;

@@ -31,6 +31,13 @@ not be treated as a clean result. Scans and pending uploads are kept under the
 current user's local application data. The device secret is protected using
 Windows DPAPI for that user. Local administrators can still access the machine.
 
+If the server rejects an invalid, oversized, obsolete, or bad-timestamp report,
+the helper preserves it as rejected-latest.json in the agent directory and tries
+a fresh scan at the next check-in. Check the scanner output and device clock.
+Temporary network, rate-limit, and service errors retain the pending report for
+retry. The workspace receives a generic failure alert when reachable; it does
+not receive the rejected report or its detailed error message.
+
 The task is named EndpointRadar Agent. To stop reporting, disable or revoke the
 device in the workspace and unregister that task. Then remove the
 EndpointRadarAgent directory under the account's LOCALAPPDATA if it is no longer

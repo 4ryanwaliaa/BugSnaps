@@ -62,7 +62,7 @@ try {
     $global:fakeSchedule.enabled = $true
     $global:fakeSchedule.scanRequestedAt = [DateTimeOffset]::UtcNow.AddMinutes(2).ToString('o')
     $global:obsoletePost = $true
-    try { & $runner; throw 'Expected obsolete capture rejection' } catch { if ($_.Exception.Message -notlike '*obsolete capture*') { throw } }
+    try { & $runner; throw 'Expected obsolete capture rejection' } catch { if ($_.Exception.Message -notlike '*HTTP 409*') { throw } }
     if (Test-Path (Join-Path $base 'pending.json')) { throw 'Obsolete capture blocks future scans' }
     if (-not (Test-Path (Join-Path $base 'rejected-latest.json'))) { throw 'Rejected evidence was not preserved' }
     $global:obsoletePost = $false
@@ -71,12 +71,33 @@ try {
     $global:fakeSchedule.scanRequestedAt = [DateTimeOffset]::UtcNow.AddMinutes(3).ToString('o')
     $global:obsoleteStatus = 422
     $global:obsoletePost = $true
-    try { & $runner; throw 'Expected invalid timestamp rejection' } catch { if ($_.Exception.Message -notlike '*invalid timestamp*') { throw } }
+    try { & $runner; throw 'Expected invalid timestamp rejection' } catch { if ($_.Exception.Message -notlike '*HTTP 422*') { throw } }
     if (Test-Path (Join-Path $base 'pending.json')) { throw 'Invalid timestamp blocks recovery after correcting the clock' }
     $global:obsoletePost = $false
     & $runner
     if ($global:scanCalls -ne 6 -or $global:failureEvents -ne 3) { throw 'Clock recovery or generic failure reporting did not work' }
-    Write-Output 'PASS: retry, scan ID stability, interval, retest, disabled schedule, stale/clock recovery, and failure reporting.'
+    foreach ($status in @(400, 413)) {
+        $global:fakeSchedule.scanRequestedAt = [DateTimeOffset]::UtcNow.AddMinutes(4 + $status).ToString('o')
+        $global:obsoleteStatus = $status
+        $global:obsoletePost = $true
+        try { & $runner; throw 'Expected permanent validation rejection' } catch { if ($_.Exception.Message -notlike "*HTTP $status*") { throw } }
+        if (Test-Path (Join-Path $base 'pending.json')) { throw "HTTP $status blocks a fresh scan" }
+        if (-not (Test-Path (Join-Path $base 'rejected-latest.json'))) { throw "HTTP $status did not preserve the rejected report" }
+        $previousCount = $global:scanCalls
+        $global:obsoletePost = $false
+        & $runner
+        if ($global:scanCalls -ne $previousCount + 1) { throw "HTTP $status did not recover with a fresh scan" }
+    }
+    $global:fakeSchedule.scanRequestedAt = [DateTimeOffset]::UtcNow.AddDays(1).ToString('o')
+    $global:obsoleteStatus = 429
+    $global:obsoletePost = $true
+    try { & $runner; throw 'Expected rate-limit rejection' } catch { if ($_.Exception.Message -ne 'obsolete capture') { throw } }
+    if (-not (Test-Path (Join-Path $base 'pending.json'))) { throw 'A temporary rate limit discarded the queued scan' }
+    $global:obsoletePost = $false
+    $savedId = (Get-Content (Join-Path $base 'pending.json') -Raw | ConvertFrom-Json).scanId
+    & $runner
+    if ($global:postIds[-1] -ne $savedId) { throw 'A temporary rate limit did not retry the same scan' }
+    Write-Output 'PASS: retry, schedule, retest, disabled state, permanent validation recovery, temporary rate limits, and failure reporting.'
 } finally {
     $env:LOCALAPPDATA = $originalLocalAppData
     if (([IO.Path]::GetFullPath($testRoot)).StartsWith([IO.Path]::GetTempPath(), [StringComparison]::OrdinalIgnoreCase)) { Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue }

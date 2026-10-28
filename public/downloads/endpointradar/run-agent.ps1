@@ -69,11 +69,13 @@ try {
     try {
         $response = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -UseBasicParsing -MaximumRedirection 0 -TimeoutSec 60
     } catch {
-        # A stale capture can never replace the newer accepted report. Keep one
-        # rejected report for diagnosis and let the next invocation scan again.
-        if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -in @(409, 422)) {
+        # A malformed, oversized, stale or invalid-timestamp report will never
+        # become valid on retry. Keep it for diagnosis and allow a fresh scan.
+        # Rate limits, service failures and network errors remain queued.
+        if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -in @(400, 409, 413, 422)) {
+            $status = [int]$_.Exception.Response.StatusCode
             Move-Item -LiteralPath $queuePath -Destination (Join-Path $base 'rejected-latest.json') -Force
-            throw 'The server rejected an obsolete capture or invalid timestamp. Check the device clock; a fresh scan will run on the next check-in.'
+            throw "The server rejected the report (HTTP $status). Check the device clock and scanner output; a fresh scan will run on the next check-in."
         }
         throw
     }
