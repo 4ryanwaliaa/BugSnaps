@@ -17,7 +17,8 @@ findings and recommended actions. It excludes the full software inventory.
 2. From the managed workspace, create a device and copy its workspace ID,
    device ID and one-time device secret. Store the secret securely.
 3. Download install-agent.ps1 and run-agent.ps1 into the same directory.
-4. Open a normal, non-elevated PowerShell window as that account and run:
+4. Open Windows PowerShell 5.1 in a normal, non-elevated window as that account
+   and run:
 
    .\install-agent.ps1 -WorkspaceId YOUR_WORKSPACE_ID -DeviceId YOUR_DEVICE_ID -ScannerPath 'C:\path\to\endpointradar.exe'
 
@@ -32,6 +33,9 @@ privilege. Some checks may report limited visibility. Missed or failed runs must
 not be treated as a clean result. Scans and pending uploads are kept under the
 current user's local application data. The device secret is protected using
 Windows DPAPI for that user. Local administrators can still access the machine.
+The task permits scans on battery power and keeps the agent directory as its
+working directory. Battery use, sleep and Windows task policies can still affect
+when a run completes.
 
 If the server rejects an invalid, oversized, obsolete, or bad-timestamp report,
 the helper preserves it as rejected-latest.json in the agent directory and tries
