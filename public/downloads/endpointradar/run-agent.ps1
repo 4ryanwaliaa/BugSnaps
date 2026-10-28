@@ -37,7 +37,7 @@ try {
         if (-not $requestDue -and ([DateTimeOffset]::UtcNow - $last).TotalMinutes -lt $interval) { return }
         $output = Join-Path $base ("scan-" + [guid]::NewGuid().ToString('N') + '.json')
         try {
-            $process = Start-Process -FilePath $config.scannerPath -ArgumentList @('scan','--format','json','--no-save','--quiet','--output',("`"$output`"")) -PassThru -NoNewWindow
+            $process = Start-Process -FilePath $config.scannerPath -ArgumentList @('scan','--format','json','--no-save','--quiet','--output',("`"$output`"")) -PassThru -WindowStyle Hidden
             if (-not $process.WaitForExit(720000)) { $process.Kill(); throw 'The scan timed out.' }
             if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $output)) { throw 'The local scanner failed.' }
             $file = Get-Item -LiteralPath $output
@@ -66,7 +66,17 @@ try {
     $pending = Get-Content -LiteralPath $queuePath -Raw | ConvertFrom-Json
     $body = @{ scanId = $pending.scanId; scan = $pending.scan } | ConvertTo-Json -Depth 40 -Compress
     if ([Text.Encoding]::UTF8.GetByteCount($body) -gt 120000) { throw 'Posture report exceeds the 120 KB upload limit; review and report the scanner output size.' }
-    $response = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -UseBasicParsing -MaximumRedirection 0 -TimeoutSec 60
+    try {
+        $response = Invoke-WebRequest -Uri $url -Headers $headers -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -UseBasicParsing -MaximumRedirection 0 -TimeoutSec 60
+    } catch {
+        # A stale capture can never replace the newer accepted report. Keep one
+        # rejected report for diagnosis and let the next invocation scan again.
+        if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 409) {
+            Move-Item -LiteralPath $queuePath -Destination (Join-Path $base 'rejected-latest.json') -Force
+            throw 'The server rejected an obsolete capture. A fresh scan will run on the next check-in.'
+        }
+        throw
+    }
     if ($response.StatusCode -lt 200 -or $response.StatusCode -ge 300) { throw 'Scan upload failed.' }
     $state.lastSuccess = [DateTimeOffset]::UtcNow.ToString('o')
     if ($pending.requestTime) { $state.lastRequest = [string]$pending.requestTime }
