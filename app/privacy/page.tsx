@@ -64,6 +64,9 @@ export default function PrivacyPage() {
           IP address directly to Cloudflare’s DNS resolvers; the link’s path and query are not sent. DNS resolution
           can also involve the domain’s authoritative DNS provider. Cloudflare handles this data under its own{" "}
           <a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" className="text-accent hover:underline">DNS privacy policy</a>.
+          If you choose a PhishDestroy threat intelligence lookup, your browser sends the hostname and your IP address
+          directly to PhishDestroy’s API. It does not receive the link’s path or query. PhishDestroy processes requests
+          under its own <a href="https://phishdestroy.io/privacy" className="text-accent hover:underline">privacy policy</a>.
           Browser and network providers may handle their own request logs.
         </p>
       </section>

@@ -36,7 +36,7 @@ function csp(extra: { script?: string[]; style?: string[]; connect?: string[]; f
     ["style-src 'self' 'unsafe-inline'", ...(extra.style ?? [])].join(" "),
     ["img-src 'self' data:", ...googleAnalytics.img, ...(extra.img ?? [])].join(" "),
     "font-src 'self'",
-    ["connect-src 'self' https://api.web3forms.com https://security.cloudflare-dns.com https://cloudflare-dns.com", ...googleAnalytics.connect, ...(extra.connect ?? []), isDev ? "ws:" : ""]
+    ["connect-src 'self' https://api.web3forms.com https://security.cloudflare-dns.com https://cloudflare-dns.com https://api.destroy.tools", ...googleAnalytics.connect, ...(extra.connect ?? []), isDev ? "ws:" : ""]
       .join(" ")
       .trim(),
     "object-src 'none'",

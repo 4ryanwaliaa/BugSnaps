@@ -12,6 +12,8 @@ export type AnalysisResult =
       ok: true;
       hostname: string;
       normalizedUrl: string;
+      /** Hostnames found in redirect-like parameters, not followed or verified. */
+      embeddedHosts: string[];
       verdict: "high-risk" | "review" | "no-obvious-signals";
       findings: Finding[];
     };
@@ -70,6 +72,132 @@ function mentionedBrands(hostname: string): string[] {
   }).map((brand) => brand.name);
 }
 
+// Decode one bounded IDNA A-label for visual comparison. URL.hostname is ASCII
+// and browsers do not expose the Unicode form. This implements RFC 3492's
+// decoding algorithm without an external network call or Node-only module.
+function decodePunycodeLabel(label: string): string | null {
+  if (!label.startsWith("xn--") || label.length > 63) return null;
+  const encoded = label.slice(4);
+  if (!encoded) return null;
+  const codepoints: number[] = [];
+  const delimiter = encoded.lastIndexOf("-");
+  let cursor = 0;
+  if (delimiter >= 0) {
+    for (const char of encoded.slice(0, delimiter)) {
+      if (char.charCodeAt(0) >= 128) return null;
+      codepoints.push(char.charCodeAt(0));
+    }
+    cursor = delimiter + 1;
+  }
+  let n = 128, i = 0, bias = 72;
+  const adapt = (delta: number, length: number, first: boolean) => {
+    delta = Math.floor(delta / (first ? 700 : 2));
+    delta += Math.floor(delta / length);
+    let k = 0;
+    while (delta > 455) { delta = Math.floor(delta / 35); k += 36; }
+    return k + Math.floor(36 * delta / (delta + 38));
+  };
+  while (cursor < encoded.length) {
+    const old = i;
+    let weight = 1;
+    for (let k = 36; ; k += 36) {
+      if (cursor >= encoded.length) return null;
+      const char = encoded.charCodeAt(cursor++);
+      const digit = char >= 48 && char <= 57 ? char - 22 : char >= 97 && char <= 122 ? char - 97 : -1;
+      if (digit < 0 || digit > Math.floor((Number.MAX_SAFE_INTEGER - i) / weight)) return null;
+      i += digit * weight;
+      const t = k <= bias ? 1 : k >= bias + 26 ? 26 : k - bias;
+      if (digit < t) break;
+      if (weight > Math.floor(Number.MAX_SAFE_INTEGER / (36 - t))) return null;
+      weight *= 36 - t;
+    }
+    const length = codepoints.length + 1;
+    bias = adapt(i - old, length, old === 0);
+    n += Math.floor(i / length);
+    i %= length;
+    if (n > 0x10ffff || (n >= 0xd800 && n <= 0xdfff)) return null;
+    codepoints.splice(i, 0, n);
+    if (codepoints.length > 63) return null;
+    i++;
+  }
+  try { return String.fromCodePoint(...codepoints); } catch { return null; }
+}
+
+// A deliberately small set of common cross-script lookalikes, applied only
+// when the entire component maps to a curated brand. This is not a complete
+// implementation of Unicode confusable matching or an ownership lookup.
+const confusables: Record<string, string> = {
+  "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x",
+  "у": "y", "і": "i", "ј": "j", "ѕ": "s", "ӏ": "l", "ԁ": "d",
+  "ɑ": "a", "ɡ": "g", "ο": "o", "ρ": "p", "α": "a", "ε": "e",
+  "ι": "i", "κ": "k", "ν": "v", "τ": "t", "χ": "x", "υ": "y",
+};
+
+function unicodeBrandMatches(hostname: string): string[] {
+  const host = hostname.replace(/\.$/, "");
+  const labels = host.split(".").map(label => decodePunycodeLabel(label) ?? label);
+  const pieces = labels.flatMap(label => label.split("-"));
+  return brands.filter(brand => {
+    if (brand.domains.some(domain => host === domain || host.endsWith(`.${domain}`))) return false;
+    return pieces.some(piece => {
+      let hasConfusable = false;
+      const skeleton = Array.from(piece.toLowerCase()).map(char => {
+        if (confusables[char]) { hasConfusable = true; return confusables[char]; }
+        return char;
+      }).join("");
+      return hasConfusable && skeleton === brand.token;
+    });
+  }).map(brand => brand.name);
+}
+
+const redirectNames = new Set(["redirect", "redirect_uri", "redirect_url", "return", "returnurl", "return_url", "return_to", "continue", "next", "url", "dest", "destination"]);
+
+/** Inspect a bounded set of URL-valued parameters; never visit any URL. */
+function embeddedDestinations(start: URL): { hosts: string[]; layers: number; userinfo: boolean; truncated: boolean } {
+  const queue: Array<{ url: URL; depth: number }> = [{ url: start, depth: 0 }];
+  const hosts = new Set<string>();
+  const seen = new Set<string>([start.href]);
+  let examined = 0;
+  let layers = 0;
+  let userinfo = false;
+  let truncated = false;
+  while (queue.length && examined < 80) {
+    const current = queue.shift()!;
+    if (current.depth >= 3) {
+      if (Array.from(current.url.searchParams.keys()).some(key => redirectNames.has(key.toLowerCase()))) truncated = true;
+      continue;
+    }
+    for (const [key, value] of current.url.searchParams) {
+      if (++examined > 80) { truncated = true; break; }
+      if (!redirectNames.has(key.toLowerCase())) continue;
+      let candidate = value;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const target = candidate.startsWith("//") ? new URL(`${current.url.protocol}${candidate}`) : new URL(candidate);
+          if ((target.protocol === "http:" || target.protocol === "https:") && target.hostname) {
+            const host = target.hostname.toLowerCase().replace(/\.$/, "");
+            if (target.username || target.password) userinfo = true;
+            if (host !== current.url.hostname.toLowerCase().replace(/\.$/, "")) hosts.add(host);
+            layers = Math.max(layers, current.depth + 1);
+            if (!seen.has(target.href)) {
+              if (queue.length >= 8) truncated = true;
+              else { seen.add(target.href); queue.push({ url: target, depth: current.depth + 1 }); }
+            }
+            break;
+          }
+        } catch { /* Try bounded decoding below. Relative paths are not destinations. */ }
+        try {
+          const decoded = decodeURIComponent(candidate);
+          if (decoded === candidate) break;
+          candidate = decoded;
+        } catch { break; }
+      }
+    }
+  }
+  if (queue.length || hosts.size > 8) truncated = true;
+  return { hosts: Array.from(hosts).slice(0, 8), layers, userinfo, truncated };
+}
+
 /**
  * Review visible URL features, not the destination, reputation, or page content.
  * The result is not a determination that a URL is safe or malicious.
@@ -124,6 +252,9 @@ export function analyzePhishingUrl(input: string): AnalysisResult {
   if (hostname.split(".").some((label) => label.startsWith("xn--"))) {
     add("internationalized-domain", "Internationalized hostname", "This domain uses international characters. Some characters can resemble letters in another script; verify the spelling independently.", "moderate", 1);
   }
+  if (/[\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/u.test(raw)) {
+    add("invisible-characters", "Link includes invisible or directional characters", "Invisible or bidirectional characters can change how an address appears. Inspect the destination hostname carefully.", "moderate", 1);
+  }
   if (/%[\da-f]{2}/i.test(hostPart)) {
     add("encoded-host", "Encoded hostname", "The address contains encoded characters in its hostname, which can make it harder to read.", "moderate", 1);
   }
@@ -141,22 +272,25 @@ export function analyzePhishingUrl(input: string): AnalysisResult {
   if (mentioned.length > 0) {
     add("brand-lookalike", "Hostname resembles a known brand", `The hostname contains text similar to ${mentioned.join(", ")}, but is outside the limited domains recognized for that brand. This alone does not establish impersonation or ownership. Confirm the address through a trusted source.`, "moderate", 2);
   }
-  const redirectNames = new Set(["redirect", "redirect_uri", "redirect_url", "return", "returnurl", "return_url", "return_to", "continue", "next", "url", "dest", "destination"]);
-  let externalDestination = false;
-  for (const [key, value] of url.searchParams) {
-    if (!redirectNames.has(key.toLowerCase())) continue;
-    try {
-      const destination = new URL(value);
-      if (["http:", "https:"].includes(destination.protocol) && destination.hostname.toLowerCase().replace(/\.$/, "") !== hostname.replace(/\.$/, "")) {
-        externalDestination = true;
-        break;
-      }
-    } catch {
-      // Relative paths and non-URL values do not identify an external host.
-    }
+  const unicodeBrands = unicodeBrandMatches(hostname);
+  if (unicodeBrands.length) {
+    add("unicode-brand-lookalike", "Internationalized hostname resembles a brand", `Characters in the hostname can visually resemble ${unicodeBrands.join(", ")}. This is a limited visual comparison, not proof of impersonation. Check the spelling through a trusted source.`, "moderate", 2);
   }
-  if (externalDestination) {
-    add("external-redirect-parameter", "Link contains another destination", "A redirect-like parameter contains a different web hostname. This is common in legitimate sign-in and tracking links too; the site may not actually redirect there. No redirects were followed.", "moderate", 1);
+  const embedded = embeddedDestinations(url);
+  if (embedded.hosts.length) {
+    add("external-redirect-parameter", "Link contains another destination", "A redirect-like parameter contains a different hostname. This is common in legitimate sign-in and tracking links too; the site may not actually redirect there. No redirects were followed.", "moderate", 1);
+  }
+  if (embedded.layers >= 2 && embedded.hosts.length) {
+    add("nested-destinations", "Multiple embedded URL layers", "A URL inside a redirect-like parameter contains another URL. Nested links can obscure the final destination; this check did not follow them.", "moderate", 1);
+  }
+  if (embedded.userinfo) {
+    add("nested-url-userinfo", "Embedded URL contains user information", "A URL within a redirect-like parameter contains text before @. It may obscure that URL’s actual hostname. No destination was opened.", "high", 2);
+  }
+  if (embedded.truncated) {
+    add("embedded-analysis-limit", "Some embedded links were not examined", "This review limits how many URL parameters and destinations it processes. It may not show every embedded destination.", "info", 0);
+  }
+  if (url.port) {
+    add("nonstandard-port", "Unusual web port", "The address uses a port other than the standard web ports. This can be legitimate, especially for development or internal services.", "info", 0);
   }
   if (/(?:^|[.-])(login|signin|verify|verification|secure|account|password)(?:[.-]|$)/i.test(hostname)) {
     add("account-terms", "Account-related words in hostname", "Words such as login or verify can appear in both legitimate and deceptive domains. Confirm the organization through a trusted source.", "moderate", 1);
@@ -172,6 +306,7 @@ export function analyzePhishingUrl(input: string): AnalysisResult {
     ok: true,
     hostname,
     normalizedUrl: url.href,
+    embeddedHosts: embedded.hosts,
     verdict: risk >= 3 ? "high-risk" : risk > 0 ? "review" : "no-obvious-signals",
     findings,
   };
