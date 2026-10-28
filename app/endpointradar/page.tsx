@@ -17,6 +17,7 @@ const steps = [
 ];
 
 export default function EndpointRadarPage() {
+  const managedReady = process.env.ENDPOINTRADAR_DATABASE_LOCKED === "true";
   return (
     <SiteShell>
       <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "EndpointRadar", applicationCategory: "SecurityApplication", operatingSystem: "Windows, Web", url: `${SITE_URL}/endpointradar`, description: "Windows endpoint posture scanning with a browser-based report viewer.", publisher: { "@id": ORG_ID } }} />
@@ -31,6 +32,7 @@ export default function EndpointRadarPage() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">Review imported Windows device scans together, understand what needs attention, and turn findings into a practical fix list.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/endpointradar/app" className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-blue-500">Open free workspace <ArrowRight className="h-4 w-4" /></Link>
+              {managedReady && <Link href="/endpointradar/managed" className="inline-flex h-12 items-center gap-2 rounded-full border border-blue-400/30 px-6 text-sm font-semibold text-blue-200 hover:bg-blue-500/10">Manage clients <ArrowRight className="h-4 w-4" /></Link>}
               <a href="https://github.com/4ryanwalia/EndpointRadar" className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium hover:bg-white/5">Get the Windows scanner <ArrowUpRight className="h-4 w-4" /></a>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-muted-2">Free browser workspace · Multiple imported devices · No account needed</p>
@@ -53,6 +55,9 @@ export default function EndpointRadarPage() {
       <Section labelledBy="free-workspace" className="border-t border-white/[.07]">
         <div className="flex flex-col gap-8 rounded-3xl border border-blue-400/20 bg-blue-500/[.06] p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between"><div className="max-w-2xl"><p className="font-mono text-xs uppercase tracking-[.2em] text-blue-400">Free workspace</p><h2 id="free-workspace" className="mt-4 text-3xl font-semibold tracking-tight">Review your devices together.</h2><p className="mt-4 text-sm leading-relaxed text-muted">Import up to 100 scan records, compare dated results and print a client report. Data stays in the current browser tab. Scheduled scans, alerts and client accounts are not available in this workspace.</p></div><Link href="/endpointradar/app" className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold hover:bg-blue-500">Open workspace <ArrowRight className="h-4 w-4" /></Link></div>
       </Section>
+      {managedReady && <Section labelledBy="managed-workspace" className="border-t border-white/[.07] bg-surface/40">
+        <div className="max-w-3xl"><p className="font-mono text-xs uppercase tracking-[.2em] text-blue-400">Managed workspace · beta</p><h2 id="managed-workspace" className="mt-4 text-3xl font-semibold tracking-tight">Keep client device reviews together.</h2><p className="mt-4 leading-relaxed text-muted">Enroll Windows devices, set scan schedules, review posture changes and missing-report alerts, confirm checks on retest, and download client PDFs with changes since the last completed review. Each client has separate membership and administrator controls.</p><p className="mt-3 text-sm leading-relaxed text-muted-2">Requires a verified account and an enrolled Windows helper. The helper runs while its installing user is signed in. Alerts appear in the dashboard.</p><Link href="/endpointradar/managed" className="mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold hover:bg-blue-500">Open managed dashboard <ArrowRight className="h-4 w-4" /></Link></div>
+      </Section>}
       <Section labelledBy="endpoint-guides" className="border-t border-white/[.07]">
         <h2 id="endpoint-guides" className="text-2xl font-semibold tracking-tight">Put endpoint findings in context.</h2>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">Learn how to review Windows security posture, understand exposure, prioritize findings and verify changes.</p>
