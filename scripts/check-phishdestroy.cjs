@@ -8,7 +8,7 @@ const mod = {exports:{}};
 new Function('exports','module',compiled)(mod.exports,mod);
 const oldFetch = global.fetch;
 const health = { status:'degraded', last_sync:'2026-10-28T07:27:10Z', full_sync:{status:'degraded',ok:false,last:'2026-10-26T03:32:29Z'}, stale_lists:[] };
-const response = (obj, status=200) => ({ok:status >= 200 && status < 300,status,json:async()=>obj});
+const response = (obj, status=200) => new Response(JSON.stringify(obj), {status, headers: {'Content-Type': 'application/json'}});
 async function check(reply, expected, healthReply=response(health)) {
   const calls=[];
   global.fetch=async (url, options)=>{calls.push({url,options});if(String(url).endsWith('/v1/health'))return healthReply;if(reply instanceof Error)throw reply;return reply;};

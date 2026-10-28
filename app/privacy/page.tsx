@@ -68,6 +68,11 @@ export default function PrivacyPage() {
           directly to PhishDestroy’s API. It does not receive the link’s path or query. PhishDestroy processes requests
           under its own <a href="https://phishdestroy.io/privacy" className="text-accent hover:underline">privacy policy</a>.
           Browser and network providers may handle their own request logs.
+          Optional batch lookups send only the eligible hostnames shown in your batch. A deeper investigation may
+          cause PhishDestroy to query DNS and registry RDAP services. Local inputs and results remain in page memory;
+          PhishLens does not save them to your account or browser storage. Downloaded reports are saved to your device
+          and include hostnames, findings and available provider evidence, while omitting complete URLs, credentials,
+          paths, queries and fragments. Review exported evidence before sharing it.
         </p>
       </section>
       <section>

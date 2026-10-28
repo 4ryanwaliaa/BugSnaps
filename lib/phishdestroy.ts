@@ -2,6 +2,7 @@
 export type PhishDestroyResult = {
   status: "listed" | "unlisted" | "inconclusive" | "unavailable" | "rate-limited";
   message: string;
+  retryAfterSeconds?: number;
   details?: {
     sources: string[];
     matchedDomain?: string;
@@ -20,7 +21,7 @@ const TIMEOUT_MS = 7000;
 type Health = PhishDestroyResult["health"];
 const unknownHealth = (): Health => ({ status: "unavailable" });
 
-function publicHost(value: string): string | null {
+export function publicHost(value: string): string | null {
   const host = value.toLowerCase().replace(/\.$/, "");
   if (!host || host !== host.trim() || host.length > 253 || !/^[a-z0-9.-]+$/.test(host)) return null;
   const parts = host.split(".");
@@ -29,28 +30,49 @@ function publicHost(value: string): string | null {
   return host;
 }
 
-function timestamp(value: unknown): string | undefined {
+export function timestamp(value: unknown): string | undefined {
   if (typeof value !== "string" || value.length > 40 || !/^\d{4}-\d\d-\d\dT/.test(value) || !Number.isFinite(Date.parse(value))) return undefined;
   return new Date(value).toISOString();
 }
 
-type JsonReply = { kind: "ok"; body: Record<string, unknown> } | { kind: "rate-limited" | "unavailable" | "invalid" };
-async function getJson(url: string): Promise<JsonReply> {
+export type JsonReply = { kind: "ok"; body: Record<string, unknown> } | { kind: "rate-limited" | "unavailable" | "invalid"; retryAfterSeconds?: number };
+export async function getJson(url: string, body?: { domains: string[] }): Promise<JsonReply> {
+  // Only our fixed provider routes are allowed. Never fetch a submitted URL.
+  if (!/^https:\/\/api\.destroy\.tools\/v1\/(check(?:\/bulk)?|health|investigate)(?:\?|$)/.test(url)) return { kind: "invalid" };
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), url.includes("/v1/investigate?") ? 15000 : TIMEOUT_MS);
   try {
-    const response = await fetch(url, { method: "GET", credentials: "omit", referrerPolicy: "no-referrer", redirect: "error", cache: "no-store", signal: controller.signal });
-    if (response.status === 429) return { kind: "rate-limited" };
+    const response = await fetch(url, { method: body ? "POST" : "GET", ...(body ? { body: JSON.stringify(body), headers: { "Content-Type": "application/json" } } : {}), credentials: "omit", referrerPolicy: "no-referrer", redirect: "error", cache: "no-store", signal: controller.signal });
+    if (response.status === 429) {
+      const retry = response.headers?.get("Retry-After");
+      const seconds = retry && /^\d+$/.test(retry) ? Number(retry) : retry ? Math.ceil((Date.parse(retry) - Date.now()) / 1000) : 60;
+      return { kind: "rate-limited", retryAfterSeconds: Number.isFinite(seconds) ? Math.max(1, Math.min(86400, seconds)) : 60 };
+    }
     // Health uses 503 to signal an unhealthy service; still parse that status body.
     if (!response.ok && !(url === `${ORIGIN}/v1/health` && response.status === 503)) return { kind: "unavailable" };
-    const data: unknown = await response.json();
+    if (!response.body) return { kind: "invalid" };
+    // Bound provider payloads before parsing, including chunked responses.
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    for (;;) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      size += chunk.value.byteLength;
+      if (size > 524288) { await reader.cancel(); return { kind: "invalid" }; }
+      chunks.push(chunk.value);
+    }
+    const bytes = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+    const data: unknown = JSON.parse(new TextDecoder().decode(bytes));
     if (!data || typeof data !== "object" || Array.isArray(data)) return { kind: "invalid" };
     return { kind: "ok", body: data as Record<string, unknown> };
   } catch { return { kind: "unavailable" }; }
   finally { clearTimeout(timeout); }
 }
 
-function parseHealth(reply: JsonReply): Health {
+export function parseHealth(reply: JsonReply): Health {
   if (reply.kind !== "ok") return unknownHealth();
   const data = reply.body;
   if (data.status !== "ok" && data.status !== "healthy" && data.status !== "degraded") return unknownHealth();
@@ -72,10 +94,14 @@ export async function checkPhishDestroy(hostname: string): Promise<PhishDestroyR
   endpoint.searchParams.set("domain", host);
   const [reply, healthReply] = await Promise.all([getJson(endpoint.toString()), getJson(`${ORIGIN}/v1/health`)]);
   const health = parseHealth(healthReply);
-  if (reply.kind === "rate-limited") return { status: "rate-limited", message: "PhishDestroy is rate limiting this browser. Wait before trying again.", health };
+  if (reply.kind === "rate-limited") return { status: "rate-limited", message: "PhishDestroy is rate limiting this browser. Wait before trying again.", retryAfterSeconds: reply.retryAfterSeconds, health };
   if (reply.kind === "unavailable") return { status: "unavailable", message: "PhishDestroy could not be reached. Try again later.", health };
   if (reply.kind !== "ok") return { status: "inconclusive", message: "PhishDestroy returned an unexpected response. No result can be determined.", health };
-  const data = reply.body;
+  return parsePhishDestroy(reply.body, host, health);
+}
+
+/** Validate every per-domain result, including results returned by the bulk API. */
+export function parsePhishDestroy(data: Record<string, unknown>, host: string, health: Health): PhishDestroyResult {
   if (typeof data.domain !== "string" || ![host, ...(host.startsWith("www.") ? [host.slice(4)] : [])].includes(data.domain.toLowerCase().replace(/\.$/, "")) || typeof data.threat !== "boolean") {
     return { status: "inconclusive", message: "PhishDestroy returned an incomplete or mismatched response. No result can be determined.", health };
   }

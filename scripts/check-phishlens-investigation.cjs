@@ -1,0 +1,86 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const ts = require('typescript');
+const cache = new Map();
+function load(name) {
+  const file = path.resolve(__dirname, '..', 'lib', name + '.ts');
+  if (cache.has(file)) return cache.get(file);
+  const mod = { exports: {} };
+  const compiled = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  new Function('exports', 'module', 'require', compiled)(mod.exports, mod, id => id.startsWith('./') ? load(id.slice(2)) : require(id));
+  cache.set(file, mod.exports); return mod.exports;
+}
+module.exports = { load };
+if (require.main === module) (async () => {
+  const oldFetch = global.fetch;
+  let assertions = 0;
+  const eq = (a,b) => { assert.deepEqual(a,b); assertions++; };
+  const review = load('phishlens-review');
+  const intel = load('phishlens-intel');
+  const adapter = load('phishdestroy');
+  const health = { status: 'ok', last_sync: new Date().toISOString(), full_sync: { ok: true, last: new Date().toISOString() } };
+  const response = (body, status=200, headers={}) => new Response(JSON.stringify(body), { status, headers });
+  const fixture = { domain: 'example.com', verdict: {status:'not_listed',threat:false}, assessment: {type:'prediction',risk:'elevated', signals:[{signal:'newly_registered'},{signal:'<script>'},{signal:'newly_registered'}]}, registration: {created:'2020-02-29',registrar:'Example registrar',source:'rdap'}, infrastructure:{resolved_ips:['1.2.3.4','999.2.3.4','2001:db8::1','javascript:alert(1)'],source:'live_dns',shared_platform:true,known_phishing_on_ip:20}, related:[{domain:'related.example.com',relation:'lookalike'},{domain:'evil.example.com/path',relation:'lookalike'},{domain:'other.example.com',relation:'__proto__'}] };
+  try {
+    global.fetch = () => { throw Error('Local review must not use network'); };
+    const ordinary = review.inspectInput('https://example.com/secretpath?token=SECRET_TOKEN#SECRET_FRAGMENT');
+    eq(ordinary.ok,true);
+    const defanged = review.inspectInput('hxxps://example[.]com/a[.]b?redirect=abc[.]com');
+    eq(defanged.hostname,'example.com'); eq(new URL(defanged.normalizedUrl).pathname,'/a[.]b');
+    eq(review.inspectInput('hxxps://good[.]example@evil[.]com').hostname,'evil.com');
+    eq(review.inspectInput('javascript:alert(1)').ok,false);
+    eq(review.domainBoundary('login.example.co.uk').registrableDomain,'example.co.uk');
+    eq(review.domainBoundary('a.customer.pages.dev').registrableDomain,'customer.pages.dev');
+    eq(review.domainBoundary('a.customer.pages.dev').privateSuffix,true);
+    eq(review.domainBoundary('example.github.io').registrableDomain,'example.github.io');
+    eq(review.domainBoundary('127.0.0.1').registrableDomain,null);
+    eq(review.domainBoundary('example.unknownsuffix').registrableDomain,null);
+    eq(review.reviewBatch('').ok,false); eq(review.reviewBatch(Array(101).fill('example.com').join('\n')).ok,false);
+    const batch = review.reviewBatch('https://example.com/a\nhttps://example.com/a\nhttps://example.com/b\njavascript:foo');
+    const colliding = review.reviewBatch('https://example.com/\nhttps://%65xample.com/');
+    eq(colliding.rows.length,1); eq(colliding.rows[0].result.verdict,'review'); eq(colliding.rows[0].result.findings.some(f=>f.id==='encoded-host'),true);
+    eq(batch.rows.length,3); eq(batch.rows[0].occurrences,2); eq(batch.rows[2].result.ok,false);
+    eq(review.evidenceDecision(ordinary,{}).level,'unknown');
+    const listed = {status:'listed',message:'test',health:{status:'degraded'}};
+    eq(review.evidenceDecision(ordinary,{threat:{observedAt:'now',result:listed}}).level,'danger');
+    eq(review.evidenceDecision(ordinary,{dns:{observedAt:'now',result:{status:'unavailable',message:'test'}}}).gaps,true);
+    const evidence = intel.parseInvestigation(fixture,'example.com',{status:'healthy'});
+    eq(evidence.status,'complete'); eq(evidence.evidence.prediction.signals,['Recently registered domain']);
+    eq(evidence.evidence.infrastructure.addresses,['1.2.3.4','2001:db8::1']); eq(evidence.evidence.related.length,1);
+    eq(intel.parseInvestigation({...fixture,domain:'other.com'},'example.com',{status:'healthy'}).status,'inconclusive');
+    eq(intel.parseInvestigation({...fixture,verdict:{status:'listed',threat:false}},'example.com',{status:'healthy'}).status,'inconclusive');
+    eq(intel.parseInvestigation({...fixture,registration:{created:'2020-02-31',registrar:'<img src=x>',source:'rdap'}},'example.com',{status:'healthy'}).evidence.registration.created,undefined);
+    const decision = review.evidenceDecision(ordinary,{threat:{observedAt:'now',result:listed},investigation:evidence});
+    eq(decision.level,'danger'); assert.match(decision.title,/disagree/);
+    const secret = review.inspectInput('https://PRIVATE_USER:PRIVATE_PASS@example.com/PRIVATE_PATH?token=PRIVATE_TOKEN#PRIVATE_FRAGMENT');
+    const report = review.createReport(secret,{investigation:evidence},'2026-10-28T00:00:00.000Z');
+    const serialized = JSON.stringify(report) + review.reportMarkdown(report);
+    for (const word of ['PRIVATE_USER','PRIVATE_PASS','PRIVATE_PATH','PRIVATE_TOKEN','PRIVATE_FRAGMENT','normalizedUrl']) { assert.ok(!serialized.includes(word),word); assertions++; }
+    eq(report.checks.cloudflareDns.status,'not-run');
+    let calls = [];
+    global.fetch = async (url,options) => { calls.push({url,options}); return response(String(url).endsWith('/health') ? health : fixture); };
+    eq((await intel.investigateDomain('example.com')).status,'complete'); eq(calls.length,2);
+    for (const call of calls) { eq(new URL(call.url).hostname,'api.destroy.tools'); eq(call.options.credentials,'omit'); eq(call.options.redirect,'error'); eq(call.options.referrerPolicy,'no-referrer'); }
+    calls = [];
+    for (const host of ['https://example.com/path','127.0.0.1','name.internal','host.local','a@b.com']) eq((await intel.investigateDomain(host)).status,'inconclusive');
+    eq(calls.length,0);
+    global.fetch = async (url,options) => { calls.push({url,options}); return response(String(url).endsWith('/health') ? health : {results:{'example.com':{threat:true,lists:{primary:true}}}}); };
+    const bulk = await intel.checkBulkDomains(['example.com','www.example.com','missing.com','127.0.0.1','example.com']);
+    eq(bulk.status,'partial'); eq(bulk.results['example.com'].status,'listed'); eq(bulk.results['www.example.com'].status,'listed'); eq(bulk.results['missing.com'].status,'inconclusive');
+    eq(JSON.parse(calls[0].options.body).domains,['example.com','www.example.com','missing.com']);
+    eq(calls[0].options.method,'POST');
+    global.fetch = async url => response(String(url).endsWith('/health') ? health : {}, String(url).endsWith('/health') ? 200 : 429, {'Retry-After':'120'});
+    const limited = await intel.investigateDomain('example.com'); eq(limited.status,'rate-limited'); eq(limited.retryAfterSeconds,120);
+    eq((await intel.checkBulkDomains(['example.com'])).status,'rate-limited');
+    global.fetch = async () => response({message:'x'.repeat(524289)});
+    eq((await adapter.getJson('https://api.destroy.tools/v1/check?domain=example.com')).kind,'invalid');
+    global.fetch = async () => { throw Error('offline'); };
+    eq((await intel.investigateDomain('example.com')).status,'unavailable');
+    eq((await intel.checkBulkDomains(['example.com'])).status,'unavailable');
+    global.fetch = () => { throw Error('No other endpoints allowed'); };
+    eq((await adapter.getJson('https://example.com')).kind,'invalid');
+    eq((await intel.checkBulkDomains(Array.from({length:101},(_,i)=>`d${i}.com`))).status,'inconclusive');
+    console.log(`PhishLens investigation tests passed (${assertions} assertions).`);
+  } finally { global.fetch = oldFetch; }
+})().catch(error=>{console.error(error);process.exitCode=1});

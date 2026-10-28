@@ -4,17 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { Globe2, LoaderCircle } from "lucide-react";
 import { checkCloudflareDns, type DnsCheckResult } from "@/lib/phishlens-dns";
 
-export function DnsCheck({ hostname }: { hostname: string }) {
+export function DnsCheck({ hostname, onResult }: { hostname: string; onResult: (result: DnsCheckResult | undefined) => void }) {
   const [status, setStatus] = useState<DnsCheckResult | null>(null);
   const [busy, setBusy] = useState(false);
   const current = useRef(true);
   useEffect(() => { current.current = true; return () => { current.current = false; }; }, []);
 
   async function check() {
-    setBusy(true);
+    if (busy) return;
+    setBusy(true); onResult(undefined);
     setStatus(null);
     const result = await checkCloudflareDns(hostname);
-    if (current.current) { setStatus(result); setBusy(false); }
+    if (current.current) { setStatus(result); setBusy(false); onResult(result); }
   }
 
   return (

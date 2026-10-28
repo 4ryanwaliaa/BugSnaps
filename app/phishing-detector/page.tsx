@@ -6,14 +6,14 @@ import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "PhishLens - Phishing Link Investigation",
-  description: "Investigate suspicious links with PhishLens. Inspect the real destination, review URL signals and optionally check a domain intelligence source and DNS filtering.",
+  description: "Investigate suspicious links individually or in batches of 100. Review domain boundaries, threat intelligence, registration and DNS evidence, then export redacted reports.",
   path: "/phishing-detector",
 });
 
 const layers = [
-  { icon: ScanSearch, label: "01 / URL ANALYSIS", title: "Read the address", detail: "Parse the hostname and inspect suspicious structures, brand lookalikes and embedded destinations." },
-  { icon: Globe2, label: "02 / OPTIONAL CHECK", title: "Add external signals", detail: "Check the hostname against PhishDestroy’s domain list or Cloudflare’s malware-filtering resolver when you choose." },
-  { icon: Binary, label: "03 / REVIEW", title: "Decide with context", detail: "Review the evidence, its limitations and practical next steps. Export a summary without the full URL." },
+  { icon: ScanSearch, label: "01 / TRIAGE", title: "One link or a hundred", detail: "Review URLs and defanged indicators locally. Group duplicate links, identify domain boundaries and prioritize warning signals." },
+  { icon: Globe2, label: "02 / INVESTIGATE", title: "Follow the evidence", detail: "Request domain listings, registration, infrastructure and related indicators from PhishDestroy. Add an independent Cloudflare DNS observation." },
+  { icon: Binary, label: "03 / REPORT", title: "Keep an evidence record", detail: "Export JSON or Markdown with findings, provider observations, timestamps and missing coverage. Full URLs and queries stay out of the report." },
 ];
 
 export default function PhishingDetectorPage() {
