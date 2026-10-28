@@ -24,6 +24,11 @@ if (require.main === module) (async () => {
   const fixture = { domain: 'example.com', verdict: {status:'not_listed',threat:false}, assessment: {type:'prediction',risk:'elevated', signals:[{signal:'newly_registered'},{signal:'<script>'},{signal:'newly_registered'}]}, registration: {created:'2020-02-29',registrar:'Example registrar',source:'rdap'}, infrastructure:{resolved_ips:['1.2.3.4','999.2.3.4','2001:db8::1','javascript:alert(1)'],source:'live_dns',shared_platform:true,known_phishing_on_ip:20}, related:[{domain:'related.example.com',relation:'lookalike'},{domain:'evil.example.com/path',relation:'lookalike'},{domain:'other.example.com',relation:'__proto__'}] };
   try {
     global.fetch = () => { throw Error('Local review must not use network'); };
+    const message = load('phishlens-message').analyzePhishingMessage({ url: 'https://other.example/login', displayedLink: 'https://trusted.example/account', messageText: 'Urgent: send your one-time code and gift cards.' });
+    eq(message.ok, true);
+    for (const id of ['displayed-destination-mismatch', 'message-urgency', 'message-credentials', 'message-payment']) eq(message.findings.some(f => f.id === id), true);
+    eq(load('phishlens-message').analyzePhishingMessage({ url: 'example.com', displayedLink: 'Review account' }).findings.some(f => f.id === 'displayed-destination-mismatch'), false);
+    eq(load('phishlens-message').analyzePhishingMessage({ url: 'example.com', messageText: 'x'.repeat(10001) }).ok, false);
     const ordinary = review.inspectInput('https://example.com/secretpath?token=SECRET_TOKEN#SECRET_FRAGMENT');
     eq(ordinary.ok,true);
     const defanged = review.inspectInput('hxxps://example[.]com/a[.]b?redirect=abc[.]com');

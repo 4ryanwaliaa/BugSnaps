@@ -70,6 +70,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
 
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
+  { path: "/security-playbooks", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-28" },
   { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
   { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },

@@ -236,6 +236,13 @@ export default function MyReconPage() {
         </div>
       </Section>
 
+      <Section labelledBy="research-guides" className="border-t border-white/[0.05]">
+        <h2 id="research-guides" className="text-2xl font-semibold">Investigate leads with care.</h2>
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+          <Link href="/guides/how-to-corroborate-public-username-search-results" className="text-accent hover:underline">Corroborate username search results</Link>
+          <Link href="/guides/what-to-do-after-a-breach-exposure-result" className="text-accent hover:underline">Respond to a breach exposure result</Link>
+        </div>
+      </Section>
       <CtaBand
         title="Map your external attack surface today."
         lead="Access MyRecon at myrecon.xyz or launch an automated penetration test across your verified domains."

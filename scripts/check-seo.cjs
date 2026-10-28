@@ -120,7 +120,7 @@ async function audit(route) {
       if (url.origin !== SITE_URL) continue;
       const target = url.pathname.replace(/\/$/, "") || "/";
       if (expected.has(target === "/" ? SITE_URL : SITE_URL + target)) { linked.add(target); targets.add(target); }
-      else if (target !== "/endpointradar/app" && !/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
+      else if (target !== "/endpointradar/app" && target !== "/phishing-detector/team" && !/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
     }
     pages.push({ path: route, status: response.status, title, canonical, schemaTypes: schema.map((d) => d["@type"]) });
   } catch (e) { fail(route, e.message); }
@@ -193,6 +193,9 @@ async function audit(route) {
   const frameSources = (policy) => policy.split(";").map((part) => part.trim()).find((part) => part.startsWith("frame-src "))?.split(/\s+/).slice(1) ?? [];
   assert(frameSources(contact.csp).includes("https://www.openstreetmap.org"), "Contact map frame is blocked by CSP");
   const home = await get("/");
+  const teamInbox = await get("/phishing-detector/team");
+  assert.equal(teamInbox.status, 200, "PhishLens team inbox must be reachable");
+  assert(/noindex/i.test(teamInbox.robots), "PhishLens team inbox must remain noindex");
   for (const route of ["/?_rsc=seo-check", "/guides?source=check&_rsc=seo-check"]) {
     const variant = await get(route);
     assert.equal(variant.status, 200, "Navigation variants must stay fetchable");

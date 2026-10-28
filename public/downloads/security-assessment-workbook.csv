@@ -1,0 +1,5 @@
+record_type,asset_or_item,owner,expected_or_intended_state,observed_state,evidence_reference,assessment_time,priority,status,next_action,retest_condition,review_date
+scope,Example web application,Example owner,Authorized staging host and test accounts,Agreed scope,Reference to signed authorization,,Not applicable,Example,Replace with approved scope,Confirm exclusions before testing,
+finding,Example Windows laptop,Example owner,Firewall profile follows approved policy,Profile state requires verification,Restricted evidence location,,To be determined,Example,Confirm effective policy with owner,Compare effective setting after approved change,
+finding,Example API record,Example owner,Only authorized account can read its record,Record a controlled test result,Restricted evidence location,,To be determined,Example,Validate response using owned test records,Repeat allowed and denied cases,
+exception,Example legacy application,Example owner,Supported version deployed,Upgrade pending compatibility review,Change or exception reference,,To be determined,Example,Agree temporary controls and expiry,Verify installed version and application workflow,

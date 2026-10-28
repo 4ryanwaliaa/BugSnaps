@@ -53,6 +53,11 @@ export default function EndpointRadarPage() {
       <Section labelledBy="free-workspace" className="border-t border-white/[.07]">
         <div className="flex flex-col gap-8 rounded-3xl border border-blue-400/20 bg-blue-500/[.06] p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between"><div className="max-w-2xl"><p className="font-mono text-xs uppercase tracking-[.2em] text-blue-400">Free workspace</p><h2 id="free-workspace" className="mt-4 text-3xl font-semibold tracking-tight">Review your devices together.</h2><p className="mt-4 text-sm leading-relaxed text-muted">Import up to 100 scan records, compare dated results and print a client report. Data stays in the current browser tab. Scheduled scans, alerts and client accounts are not available in this workspace.</p></div><Link href="/endpointradar/app" className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold hover:bg-blue-500">Open workspace <ArrowRight className="h-4 w-4" /></Link></div>
       </Section>
+      <Section labelledBy="endpoint-guides" className="border-t border-white/[.07]">
+        <h2 id="endpoint-guides" className="text-2xl font-semibold tracking-tight">Put endpoint findings in context.</h2>
+        <p className="mt-4 max-w-2xl leading-relaxed text-muted">Learn how to review Windows security posture, understand exposure, prioritize findings and verify changes.</p>
+        <Link href="/guides#endpoint-security" className="mt-5 inline-flex text-sm font-medium text-blue-400 hover:underline">Explore Windows endpoint guides <ArrowRight className="ml-2 h-4 w-4" /></Link>
+      </Section>
     </SiteShell>
   );
 }

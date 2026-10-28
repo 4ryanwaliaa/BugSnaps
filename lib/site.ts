@@ -21,7 +21,7 @@ export const ORG = {
   legalName: "BugSnaps",
   slogan: "Find. Fix. Fortify.",
   description:
-    "BugSnaps is a cybersecurity company focused on penetration testing: MyPentest for automated testing, MyRecon for reconnaissance, and expert-led engagements.",
+    "BugSnaps provides cybersecurity tools and services, including MyPentest, MyRecon, PhishLens, EndpointRadar and expert-led security assessments.",
 };
 
 /** The social card every page shares (app/opengraph-image.png). */

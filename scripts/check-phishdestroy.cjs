@@ -21,14 +21,30 @@ async function check(reply, expected, healthReply=response(health)) {
   return result;
 }
 (async()=>{try {
-  const listed=await check(response({domain:'example.com',threat:true,lists:{primary:true,community:true},liveness:'serving',liveness_checked_at:'2026-10-27T21:21:52Z',checked_at:'2026-10-28T07:28:52Z'}),'listed');
+  const listed=await check(response({domain:'example.com',threat:true,risk_score:80,lists:{primary:true,community:true},liveness:'serving',liveness_checked_at:'2026-10-27T21:21:52Z',checked_at:'2026-10-28T07:28:52Z'}),'listed');
   assert.deepEqual(listed.details.sources,['PhishDestroy primary list','Community list']);
+  assert.deepEqual(listed.details.score,{value:80,kind:'listed'});
+  assert.equal(listed.details.checkedAt,'2026-10-28T07:28:52.000Z');
+  assert.ok(Number.isFinite(Date.parse(listed.details.receivedAt)));
   assert.equal(listed.details.liveness,'serving');assert.equal(listed.health.status,'degraded');assert.equal(listed.health.fullSyncAt,'2026-10-26T03:32:29.000Z');
-  await check(response({domain:'example.com',threat:false,whitelisted:true}),'unlisted');
+  const noScore=await check(response({domain:'example.com',threat:false,whitelisted:true}),'unlisted');
+  assert.equal(noScore.details.score,undefined);
+  assert.equal(noScore.details.checkedAt,undefined);
+  for (const bad of [-1, 101, 1.5, '10', null]) {
+    const invalid=await check(response({domain:'example.com',threat:true,risk_score:bad}),'listed');
+    assert.equal(invalid.details.score,undefined);
+  }
+  const zero=await check(response({domain:'example.com',threat:false,heuristic_score:0}),'unlisted');
+  assert.deepEqual(zero.details.score,{value:0,kind:'heuristic'});
+  const points=await check(response({domain:'example.com',threat:false,heuristic_score:105}),'unlisted');
+  assert.deepEqual(points.details.score,{value:105,kind:'heuristic'});
+  const excessive=await check(response({domain:'example.com',threat:false,heuristic_score:10001}),'unlisted');
+  assert.equal(excessive.details.score,undefined);
   await check(response({domain:'other.example',threat:true}),'inconclusive');
   await check(response({domain:'example.com',threat:'true'}),'inconclusive');
-  const heuristic = await check(response({domain:'example.com',threat:false,suspicious:true,heuristic_flags:['risky_tld','<script>']}),'unlisted');
+  const heuristic = await check(response({domain:'example.com',threat:false,suspicious:true,heuristic_score:10,heuristic_flags:['risky_tld','<script>']}),'unlisted');
   assert.deepEqual(heuristic.details.providerSignals,['Top-level domain associated with abuse']);
+  assert.deepEqual(heuristic.details.score,{value:10,kind:'heuristic'});
   const changed = await check(response({domain:'example.com',threat:true,matched_domain:'bad.other.com',liveness:'resolving'}),'listed');
   assert.equal(changed.details.matchedDomain,undefined);assert.equal(changed.details.liveness,'dns-active');
   global.fetch=async url=>String(url).endsWith('/v1/health')?response(health):response({domain:'example.com',threat:true,matched_domain:'example.com',liveness:'offline'});

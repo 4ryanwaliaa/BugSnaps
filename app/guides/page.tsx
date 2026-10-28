@@ -38,7 +38,7 @@ export default function SecurityGuidesIndex() {
         crumbs={[{ name: "Security guides", path: "/guides" }]}
         eyebrow="Security guides"
         title="Understand the boundary. Test it. Keep the evidence."
-        lead="Practical guides to application security checks, what a result establishes, and which limits belong in the report. Choose a topic that matches the decision you need to make."
+        lead="Practical guides to application and endpoint security checks, what a result establishes, and which limits belong in the report. Choose a topic that matches the decision you need to make."
       >
         <nav aria-label="Guide categories" className="flex flex-wrap gap-3">
           {SECURITY_GUIDE_CATEGORIES.map((category) => (
