@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, CircleDot, Fingerprint, Globe, Laptop, Link2, ScanSearch, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, Fingerprint, Laptop, Link2, ScanSearch, Sparkles } from "lucide-react";
 import { Breadcrumbs, Container, JsonLd, SiteShell } from "@/components/site/page-parts";
+import { ProductVideo } from "@/components/site/product-video";
 import { product } from "@/lib/products";
 import { MYRECON_ANDROID_URL, MYRECON_URL, ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 
@@ -14,48 +15,36 @@ export const metadata: Metadata = pageMetadata({
 
 const showcases = [
   {
-    id: "mypentest", number: "01", category: "WEB & API SECURITY", platform: "WEB", icon: ScanSearch,
+    id: "mypentest", videoId: "wZM29H-GTvU", number: "01", category: "WEB & API SECURITY", platform: "WEB", icon: ScanSearch,
     headline: "Your app has an attack surface. Get to know it.",
     why: "Built something? MyPentest helps you explore and test your verified web app, then understand what needs attention.",
     uses: ["Discover pages, APIs and exposed secrets", "Run defined checks on your verified domain", "Review evidence, severity and suggested fixes"],
     note: "For applications you own or are authorised to test.",
     color: "text-blue-300", border: "border-blue-400/20", tint: "bg-blue-400/[0.08]", glow: "bg-blue-500/15",
-    panelLabel: "FROM DOMAIN TO FINDINGS", panelTitle: "See the bigger picture.",
-    steps: [{ label: "01 / VERIFY", value: "Your domain" }, { label: "02 / DISCOVER", value: "Pages · APIs · assets" }, { label: "03 / REVIEW", value: "Evidence & fixes" }],
-    footer: "56 defined checks · free plan available",
   },
   {
-    id: "myrecon", number: "02", category: "DIGITAL FOOTPRINT", platform: "WEB + ANDROID", icon: Fingerprint,
+    id: "myrecon", videoId: "Elqf-OSSrSw", number: "02", category: "DIGITAL FOOTPRINT", platform: "WEB + ANDROID", icon: Fingerprint,
     headline: "There's more to your digital footprint.",
     why: "Follow the clues you can actually investigate. MyRecon brings public-source research and exposure checks into one place.",
     uses: ["Explore public username leads", "Check supported breach exposure", "Investigate domains, DNS and IP context"],
     note: "Matches are leads, not proof of identity. Coverage varies by platform and provider.",
     color: "text-cyan-300", border: "border-cyan-400/20", tint: "bg-cyan-400/[0.08]", glow: "bg-cyan-500/15",
-    panelLabel: "EXPLORE YOUR FOOTPRINT", panelTitle: "One question. More context.",
-    steps: [{ label: "LOOK UP", value: "Usernames" }, { label: "CHECK", value: "Breach exposure" }, { label: "EXPLORE", value: "Domains · DNS · IP" }],
-    footer: "Available on the web and Android",
   },
   {
-    id: "endpointradar", number: "03", category: "ENDPOINT SECURITY", platform: "WINDOWS + WEB", icon: Laptop,
+    id: "endpointradar", videoId: "oEqp80naqvY", number: "03", category: "ENDPOINT SECURITY", platform: "WINDOWS + WEB", icon: Laptop,
     headline: "Give your Windows endpoint a closer look.",
     why: "A scan is only useful if you know what to do next. Turn a local endpoint report into a clearer picture of what to review.",
     uses: ["Scan an authorised Windows machine locally", "Import a report or explore a sample", "Filter findings and review remediation guidance"],
     note: "A point-in-time view; the free workspace handles one endpoint at a time.",
     color: "text-violet-300", border: "border-violet-400/20", tint: "bg-violet-400/[0.08]", glow: "bg-violet-500/15",
-    panelLabel: "FROM SCAN TO NEXT STEP", panelTitle: "Make the report make sense.",
-    steps: [{ label: "01 / SCAN", value: "Windows endpoint" }, { label: "02 / IMPORT", value: "Open your JSON report" }, { label: "03 / PRIORITISE", value: "Findings & guidance" }],
-    footer: "Local scanner · browser workspace",
   },
   {
-    id: "phishlens", number: "04", category: "LINK SAFETY", platform: "WEB", icon: Link2,
+    id: "phishlens", videoId: "Q4S0Y2LtcUA", number: "04", category: "LINK SAFETY", platform: "WEB", icon: Link2,
     headline: "That link looks a little... off.",
     why: "Before you click, take a second look. PhishLens helps you inspect a link's destination and understand common warning signs.",
     uses: ["See the destination hostname", "Review URL signals in plain language", "Inspect a link in your browser with no account"],
     note: "Signals are not a safety guarantee. An optional DNS check shares the hostname with Cloudflare.",
     color: "text-emerald-300", border: "border-emerald-400/20", tint: "bg-emerald-400/[0.08]", glow: "bg-emerald-500/15",
-    panelLabel: "LOOK BEFORE YOU CLICK", panelTitle: "A little context goes a long way.",
-    steps: [{ label: "PASTE", value: "A suspicious link" }, { label: "INSPECT", value: "Host & URL signals" }, { label: "DECIDE", value: "What to check next" }],
-    footer: "Free to use · no account required",
   },
 ].map((item) => ({ ...item, product: product(item.id) }));
 
@@ -96,10 +85,10 @@ export default function ProductsPage() {
         <Container>
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4 sm:mb-14">
             <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">Four tools. Different jobs.</p><h2 id="showcase-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Pick your starting point.</h2></div>
-            <p className="max-w-xs text-sm leading-relaxed text-muted">Made for curious people who want useful context and a clear next step.</p>
+            <p className="max-w-xs text-sm leading-relaxed text-muted">Watch a quick product video and find the tool for your next step.</p>
           </div>
           <div className="space-y-5 sm:space-y-6">
-            {showcases.map(({ id, number, category, platform, icon: Icon, headline, why, uses, note, color, border, tint, glow, panelLabel, panelTitle, steps, footer, product }, index) => (
+            {showcases.map(({ id, number, category, platform, icon: Icon, headline, why, uses, note, color, border, tint, glow, videoId, product }, index) => (
               <article key={id} id={id} className="relative scroll-mt-24 overflow-hidden rounded-[28px] border border-white/10 bg-surface">
                 <div aria-hidden="true" className={`pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full blur-[100px] ${glow}`} />
                 <div className="relative grid gap-8 p-6 sm:p-9 lg:grid-cols-2 lg:items-center lg:gap-12 lg:p-12">
@@ -120,10 +109,7 @@ export default function ProductsPage() {
                     <p className="mt-5 max-w-lg text-xs leading-relaxed text-muted-2">{note}</p>
                   </div>
                   <div className={`relative overflow-hidden rounded-[24px] border ${border} bg-[#0c0e13] p-5 sm:p-7 ${index % 2 ? "lg:order-1" : ""}`}>
-                    <div aria-hidden="true" className={`absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl ${glow}`} />
-                    <div className="relative flex items-center justify-between border-b border-white/[0.08] pb-5"><div><p className={`font-mono text-[10px] tracking-[0.18em] ${color}`}>{panelLabel}</p><p className="mt-2 text-lg font-semibold">{panelTitle}</p></div><span className={`rounded-xl border p-3 ${border} ${tint} ${color}`}><Icon className="h-5 w-5" aria-hidden="true" /></span></div>
-                    <div className="relative mt-5 space-y-2.5">{steps.map((step, i) => <div key={step.label} className="flex items-center gap-4 rounded-xl border border-white/[0.07] bg-white/[0.035] p-4"><span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${tint} ${color}`}>{i === 0 ? <CircleDot className="h-4 w-4" aria-hidden="true" /> : i === 1 ? <Globe className="h-4 w-4" aria-hidden="true" /> : <ShieldCheck className="h-4 w-4" aria-hidden="true" />}</span><div><p className="font-mono text-[10px] tracking-[0.14em] text-muted-2">{step.label}</p><p className="mt-1 text-sm font-medium">{step.value}</p></div></div>)}</div>
-                    <div className="relative mt-5 flex flex-wrap items-center justify-between gap-2"><p className={`text-xs ${color}`}>{footer}</p><span className="font-mono text-[10px] uppercase tracking-wider text-muted-2">Illustrative workflow</span></div>
+                    <ProductVideo name={product.name} videoId={videoId} />
                   </div>
                 </div>
               </article>
