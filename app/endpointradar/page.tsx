@@ -1,3 +1,4 @@
+import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, FileJson, Laptop, LockKeyhole, Radar, ShieldCheck } from "lucide-react";
@@ -63,6 +64,7 @@ export default function EndpointRadarPage() {
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">Learn how to review Windows security posture, understand exposure, prioritize findings and verify changes.</p>
         <Link href="/guides#endpoint-security" className="mt-5 inline-flex text-sm font-medium text-blue-400 hover:underline">Explore Windows endpoint guides <ArrowRight className="ml-2 h-4 w-4" /></Link>
       </Section>
+      <ProductReading productId="endpointradar" />
     </SiteShell>
   );
 }

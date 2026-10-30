@@ -1,3 +1,4 @@
+import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
 import { ArrowUpRight, Binary, Eye, FileSearch, LockKeyhole, ScanSearch, ShieldAlert, Sparkles, Waypoints } from "lucide-react";
 import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-parts";
@@ -54,6 +55,7 @@ export default function PhishingDetectorPage() {
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">Learn how to interpret an address, verify an unexpected request and respond if you have already interacted with it.</p>
         <a href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</a>
       </Section>
+      <ProductReading productId="phishlens" />
     </SiteShell>
   );
 }

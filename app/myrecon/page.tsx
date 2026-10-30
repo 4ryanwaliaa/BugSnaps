@@ -1,3 +1,4 @@
+import { ProductReading } from "@/components/site/product-reading";
 import { MyReconLinks, MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -7,7 +8,7 @@ import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "MyRecon Website & Android App | Digital Footprint & OSINT",
+  title: "Username Search & Digital Footprint Tools | MyRecon",
   description:
     "Explore MyRecon on the web and Android. Search public usernames, check breach exposure and research domains, DNS and IPs. Visit the website or get the mobile app.",
   path: "/myrecon",
@@ -248,6 +249,7 @@ export default function MyReconPage() {
         lead="Access MyRecon at myrecon.xyz or launch an automated penetration test across your verified domains."
         secondary={{ label: "View all security products", href: "/products" }}
       />
+      <ProductReading productId="myrecon" />
     </SiteShell>
   );
 }

@@ -6,9 +6,9 @@ import { newAssessmentUrl } from "@/lib/mypentest";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Website Vulnerability Guides & Security Testing Blog",
+  title: "Security Blog: Windows, Phishing, OSINT & Web Testing",
   description:
-    "Understand web vulnerabilities, check affected software, plan patches and learn website security testing with practical guides from BugSnaps.",
+    "Practical Windows security, phishing link, digital footprint and web testing guides. Learn to interpret findings with EndpointRadar, PhishLens, MyRecon and MyPentest.",
   path: "/blog",
 });
 
@@ -47,8 +47,8 @@ export default function BlogIndex() {
       <PageHeader
         crumbs={[{ name: "Blog", path: "/blog" }]}
         eyebrow="Security field notes"
-        title="Understand the vulnerability. Know your next step."
-        lead="Practical guides to web application vulnerabilities, affected software, patching and security testing. Turn a security headline into a plan for your website."
+        title="Understand the evidence. Know your next step."
+        lead="Practical guides to Windows posture, suspicious links, digital footprints and web vulnerabilities. Learn what your results mean and what to check next."
       >
         <nav aria-label="Explore security articles" className="flex flex-wrap gap-3">
           <Link href="/vulnerability-guides" className="rounded-full border border-accent/30 px-5 py-3 text-sm font-medium text-accent hover:border-accent">
@@ -65,12 +65,18 @@ export default function BlogIndex() {
           </Link>
         </nav>
       </PageHeader>
+      <Section labelledBy="product-topics">
+        <h2 id="product-topics" className="text-2xl font-semibold">Explore by security task</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {[["Windows endpoint security", "/endpointradar"], ["Phishing link assessment", "/phishing-detector"], ["Username and breach research", "/myrecon"]].map(([label, href]) => <Link key={href} href={href} className="rounded-xl border border-white/10 bg-surface p-5 font-medium hover:text-accent">{label} →</Link>)}
+        </div>
+      </Section>
       <Section id="latest-guides" labelledBy="latest-title" className="scroll-mt-24">
         <div className="mb-8 max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">Latest articles</p>
-          <h2 id="latest-title" className="mt-3 text-3xl font-semibold tracking-tight">Vulnerability guides and practical checks</h2>
+          <h2 id="latest-title" className="mt-3 text-3xl font-semibold tracking-tight">Security guides and practical checks</h2>
           <p className="mt-4 leading-relaxed text-muted">
-            Start with the affected product and version, then follow the remediation advice.
+            Choose a question, review the evidence and follow the relevant workflow.
             Publication dates below refer to our guides, not the original vulnerability disclosures.
           </p>
         </div>
@@ -123,8 +129,9 @@ export default function BlogIndex() {
         </div>
       </Section>
       <CtaBand
-        title="Turn security reading into a check of your own site."
-        lead="Verify your domain, run MyPentest and review the evidence for supported checks. Use the relevant vendor advisory alongside your results when assessing a specific vulnerability."
+        title="Choose the tool for your next security question."
+        primary={{ label: "Explore all products", href: "/products" }}
+        lead="Review Windows posture, inspect suspicious links, research your footprint or assess a verified web application. Start with the scope and evidence each tool supports."
       />
     </SiteShell>
   );

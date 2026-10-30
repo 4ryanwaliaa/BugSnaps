@@ -12,6 +12,7 @@ export type Block =
   | { type: "callout"; text: string };
 
 export interface Post {
+  productId?: "endpointradar" | "phishlens" | "myrecon";
   slug: string;
   title: string;
   description: string;
@@ -23,6 +24,7 @@ export interface Post {
   related: { label: string; href: string }[];
 }
 
+import { productWorkflowPosts } from "@/lib/articles/product-workflows";
 import { whyPentestingPosts } from "@/lib/articles/why-pentesting";
 import { whyBugsnapsPosts } from "@/lib/articles/why-bugsnaps";
 import { vulnerabilityDeepdivePosts } from "@/lib/articles/vulnerability-deepdives";
@@ -242,6 +244,7 @@ export const vulnerabilityPosts: Post[] = [
 ];
 
 export const posts: Post[] = [
+  ...productWorkflowPosts,
   ...vulnerabilityPosts,
   ...originalPosts,
   ...whyPentestingPosts,

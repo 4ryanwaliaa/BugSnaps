@@ -186,10 +186,12 @@ export function Prose({ children, className }: { children: ReactNode; className?
 
 /** The closing call to action most pages end on. */
 export function CtaBand({
+  primary = { label: "Start your free pentest", href: newAssessmentUrl() },
   title = "Run a real pentest on your app - free.",
   lead = "Sign in, prove you own the domain, and MyPentest maps and tests it. No credit card.",
   secondary = { label: "Book a security consultation", href: "/contact" },
 }: {
+  primary?: { label: string; href: string };
   title?: string;
   lead?: string;
   secondary?: { label: string; href: string } | null;
@@ -213,10 +215,10 @@ export function CtaBand({
             <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-muted">{lead}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
-                href={newAssessmentUrl()}
+                href={primary.href}
                 className="shine inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
               >
-                Start your free pentest
+                {primary.label}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
               {secondary && (

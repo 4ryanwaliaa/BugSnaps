@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CtaBand, JsonLd, PageHeader, Prose, SiteShell } from "@/components/site/page-parts";
 import { post, posts, vulnerabilityPosts, type Block } from "@/lib/blog";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
+import { product } from "@/lib/products";
 import { PreferredSource } from "@/components/site/preferred-source";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -62,6 +63,7 @@ export default async function BlogPost({ params }: Params) {
   const found = post((await params).slug);
   if (!found) notFound();
   const path = `/blog/${found.slug}`;
+  const featuredProduct = found.productId ? product(found.productId) : undefined;
   const inVulnerabilityCollection = vulnerabilityPosts.some((article) => article.slug === found.slug);
   const sources = found.related.filter((link) => link.href.startsWith("https://"));
   const related = found.related.filter((link) => !link.href.startsWith("https://"));
@@ -132,9 +134,10 @@ export default async function BlogPost({ params }: Params) {
       </article>
 
       <CtaBand
-        title="Run a vulnerability scan on your website."
-        lead="Verify your domain and use MyPentest to check for supported web and API weaknesses. Review findings and coverage; a clean scan does not rule out every CVE."
-        secondary={{ label: "Discuss a specific vulnerability", href: "/contact" }}
+        title={featuredProduct ? `Put this guide into practice with ${featuredProduct.name}.` : "Run a vulnerability scan on your website."}
+        primary={featuredProduct ? { label: `Explore ${featuredProduct.name}`, href: featuredProduct.href } : undefined}
+        lead={featuredProduct ? featuredProduct.summary : "Verify your domain and use MyPentest to check for supported web and API weaknesses. Review findings and coverage; a clean scan does not rule out every CVE."}
+        secondary={featuredProduct ? { label: "Explore all security guides", href: "/blog" } : { label: "Discuss a specific vulnerability", href: "/contact" }}
       />
     </SiteShell>
   );
