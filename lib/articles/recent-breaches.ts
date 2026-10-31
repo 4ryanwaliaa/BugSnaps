@@ -4,11 +4,11 @@ export const recentBreachPosts: Post[] = [
   {
     slug: "binance-crypto-hack-october-2026-explained",
     title: "Binance crypto hack: what happened and what users should know",
-    description: "A clear explanation of the October 2026 Binance crypto theft, the reported impact, the ongoing investigation and practical steps for users.",
+    description: "Watch a step-by-step visual explanation of the reported Binance Ethereum attack: signed EIP-7702 permissions, contract code, wallet calls and asset transfers.",
     published: "2026-10-30",
     updated: "2026-10-31",
     author: "BugSnaps",
-    readingMinutes: 6,
+    readingMinutes: 8,
     body: [
       { type: "p", text: "On October 29, 2026, attackers moved cryptocurrency out of Binance wallets in a major security incident. Binance estimates that approximately $6.3 billion in assets was affected. The investigation is still developing: this article reflects public information available on October 31, and figures and findings may change." },
       { type: "h2", text: "What happened?" },
@@ -17,10 +17,14 @@ export const recentBreachPosts: Post[] = [
       { type: "h2", text: "How did attackers get in?" },
       { type: "p", text: "Binance said its initial investigation pointed to a compromised employee laptop, and that later work uncovered additional points of breach. It described a multi-stage attack that could not have been completed from one machine alone. The full sequence and how the attacker gained each form of access remain under investigation." },
       { type: "p", text: "Binance also said it had found no evidence that wallet private keys were leaked. That statement is an investigation finding as of its update, not proof that the attackers did not move funds. A private key is the secret used to authorize crypto transactions; systems that can initiate or approve transfers are also sensitive." },
+      { type: "h2", text: "How did the transaction point the wallet to code?" },
+      { type: "p", text: "Bitquery’s on-chain investigation describes an EIP-7702 delegation affecting the Binance 14 wallet on Ethereum. The attacker submitted 50 signed authorizations for different wallet transaction counts; Bitquery reports that one matched. The accepted permission pointed the wallet to attacker-controlled contract code already on Ethereum. How the attacker obtained those signatures is not established by the public investigation." },
+      { type: "p", text: "The contract program itself was not the authorization payload. EIP-7702 lets a signed authorization name a contract address whose code the wallet will use. Later calls to that wallet can execute the referenced program with the wallet’s authority. In this incident, investigators traced calls that moved ETH and tokens out. This explains one Ethereum mechanism, not every transfer across the affected blockchains." },
+      { type: "p", text: "The delegation remains in effect until replaced or cleared. Pausing an exchange’s withdrawal interface does not itself clear a delegation on Ethereum. Bitquery reports that Binance later revoked this wallet’s delegation. Revocation prevents further use of that delegation; it does not reverse transfers already recorded on the chain." },
       { type: "h2", text: "Who was responsible?" },
       { type: "p", text: "Elliptic assessed that North Korea-linked actors were likely responsible based on blockchain evidence, including links to another suspected attack. It said no government had confirmed attribution. Binance has not attributed responsibility to an individual. An assessment of likely involvement should not be treated as a final finding." },
       { type: "h2", text: "What happened to the funds?" },
-      { type: "p", text: "Binance said it paused withdrawals and that the outflows stopped. It also said roughly $3 billion had been frozen and that it was working with partners and law enforcement to trace the remaining assets. Freezing can prevent movement of certain assets; it does not mean they have been recovered or returned, and the amount may change as the investigation progresses." },
+      { type: "p", text: "Binance paused withdrawals while investigating. Its later update said the compromised infrastructure was contained and affected authorizations revoked. It also said roughly $3 billion had been frozen and that it was working with partners and law enforcement to trace the remaining assets. Freezing can prevent movement of certain assets; it does not mean they have been recovered or returned, and the amount may change as the investigation progresses." },
       { type: "p", text: "Binance says user losses will be fully covered by its Secure Asset Fund for Users (SAFU) and company funds. In its second update, Binance said it had set aside more than $6.34 billion in company funds, including $5 billion in the affected tokens. This is the exchange's stated funding plan, not independent confirmation that every affected user has already been reimbursed. Withdrawals were still suspended at the time of that update; check official announcements for the current status and any account-specific instructions." },
       { type: "h2", text: "What should Binance users do?" },
       { type: "ol", items: [
@@ -32,6 +36,8 @@ export const recentBreachPosts: Post[] = [
       { type: "callout", text: "Details are changing. Follow Binance's official incident updates and independent investigators, and be cautious of anyone promising guaranteed recovery or asking for a payment to unlock funds." },
     ],
     related: [
+      { label: "Bitquery: Ethereum delegation and the transfer sequence", href: "https://bitquery.io/investigations/binance-hack" },
+      { label: "Ethereum EIP-7702: how signed code delegation works", href: "https://eips.ethereum.org/EIPS/eip-7702" },
       { label: "Binance security incident update #2, October 30", href: "https://www.binance.com/en/support/announcement/detail/d3306d9dca5243548c813b605e1d1751" },
       { label: "Binance incident update, October 30", href: "https://www.binance.com/en/square/post/10-30-2026-binance-update-attack-began-with-a-compromised-laptop-and-spread-through-additional-entry-points-with-no-evidence-of-private-key-leaks-382820205797214" },
       { label: "Binance: initial security incident update", href: "https://www.binance.com/en/square/post/382724543277754" },
