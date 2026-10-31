@@ -32,7 +32,7 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
                 <h1>THE<br /><em>BINANCE</em><br />BREACH<span className={styles.heroPeriod}>.</span></h1>
                 <p className={styles.heroLead}>A reported <strong>$6.3 billion</strong> impact. A still unfolding investigation. Explore the sequence, then separate what is known from what is still being checked.</p>
                 <div className={styles.heroActions}>
-                  <a href="#reconstruction" className={styles.primaryAction}>EXPLORE THE INCIDENT <span aria-hidden="true">↓</span></a>
+                  <a href="#attack-explained" className={styles.primaryAction}>EXPLORE THE INCIDENT <span aria-hidden="true">↓</span></a>
                   <a href="#full-report" className={styles.secondaryAction}>READ THE FULL REPORT <span aria-hidden="true">↗</span></a>
                 </div>
               </div>
@@ -51,6 +51,31 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
             <div><span>02 / FROZEN ON-CHAIN</span><strong>~$3B</strong><p>Binance report; frozen is not returned</p></div>
             <div><span>03 / USER LOSSES</span><strong>PLEDGED</strong><p>Binance says it will cover losses</p></div>
           </div>
+
+          <section id="attack-explained" className={styles.attackSection} aria-labelledby="attack-heading">
+            <div className={styles.attackIntro}>
+              <p className={styles.kicker}>THE ATTACK, MADE SIMPLE</p>
+              <h2 id="attack-heading">How did the money move?</h2>
+              <p>Investigators have traced part of the attack on Ethereum. Think of it as an attacker getting a wallet to follow instructions from a program they controlled.</p>
+            </div>
+            <ol className={styles.attackSteps}>
+              <li><span>01</span><div><h3>An opening inside Binance</h3><p>Binance initially said a compromised DevOps engineer’s laptop may have allowed access to a service container and unauthorized withdrawals. It later found additional breach points. How the attacker gained each access is still being investigated.</p><a href="https://www.binance.com/en/support/announcement/detail/d3306d9dca5243548c813b605e1d1751" target="_blank" rel="noopener noreferrer">Binance investigation update ↗</a></div></li>
+              <li><span>02</span><div><h3>A program was already on Ethereum</h3><p>On-chain investigators describe an attacker-controlled smart contract: a program deployed on the blockchain. Its code could move assets when executed with the wallet’s authority.</p><a href="https://bitquery.io/investigations/binance-hack" target="_blank" rel="noopener noreferrer">See the on-chain investigation ↗</a></div></li>
+              <li><span>03</span><div><h3>A signed instruction pointed to it</h3><p>Bitquery reports that the attacker’s wallet submitted a transaction with 50 signed EIP-7702 authorizations for a Binance wallet. Each was for a different wallet transaction count; one matched. It pointed the Binance wallet to the attacker’s contract. How the signatures were obtained remains unknown.</p><a href="https://bitquery.io/investigations/binance-hack" target="_blank" rel="noopener noreferrer">Read the transaction analysis ↗</a></div></li>
+              <li><span>04</span><div><h3>Calls ran the program as the wallet</h3><p>Once delegated, calls to the wallet could execute the contract’s code in the wallet’s context. Investigators report that this was used to transfer ETH and tokens away. This describes an Ethereum part of the incident, not how every chain was affected.</p></div></li>
+            </ol>
+            <div className={styles.transactionExplainer}>
+              <div><p className={styles.kicker}>WAIT — WAS THE CODE INSIDE THE TRANSACTION?</p><h3>It pointed to code already deployed.</h3><p>The transaction carried a signed authorization referring to the contract’s address. The contract contained the instructions; later calls caused those instructions to run using the wallet’s authority.</p></div>
+              <div className={styles.transactionFlow} aria-label="Illustration: signed authorization points the wallet to an existing contract; calls then run the contract code in the wallet context">
+                <div><span>1 / AUTHORIZATION</span><strong>Wallet → contract address</strong><small>Signed permission points to the program</small></div>
+                <span className={styles.flowArrow} aria-hidden="true">↓</span>
+                <div><span>2 / EXECUTION</span><strong>Call → wallet runs code</strong><small>Contract instructions act in the wallet’s context</small></div>
+                <span className={styles.flowArrow} aria-hidden="true">↓</span>
+                <div><span>3 / RESULT</span><strong>Assets move out</strong><small>ETH and tokens transferred on Ethereum</small></div>
+              </div>
+              <p className={styles.attackCaveat}><strong>Still unknown:</strong> the exact entry path and how the authorization was obtained. Binance says it found no evidence of a wallet private-key leak; a valid signature alone does not tell us whether a key was copied or a signing process was misused. <a href="https://eips.ethereum.org/EIPS/eip-7702" target="_blank" rel="noopener noreferrer">How EIP-7702 works ↗</a></p>
+            </div>
+          </section>
 
           <BinanceIncidentJourney />
 
