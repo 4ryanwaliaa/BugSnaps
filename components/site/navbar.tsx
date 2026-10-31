@@ -48,7 +48,7 @@ export function Navbar() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-        scrolled || open
+        scrolled || open || pathname === "/blog/binance-crypto-hack-october-2026-explained"
           ? "border-b border-white/[0.06] bg-background/85 backdrop-blur-xl"
           : "border-b border-transparent bg-transparent",
       )}

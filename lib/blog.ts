@@ -33,6 +33,7 @@ import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
 import { securityResponsePosts } from "@/lib/articles/security-response";
 import { frameworkAdvisoryPosts } from "@/lib/articles/framework-advisories";
 import { vulnerabilityDecisionPosts } from "@/lib/articles/vulnerability-decisions";
+import { recentBreachPosts } from "@/lib/articles/recent-breaches";
 
 const originalPosts: Post[] = [
   {
@@ -244,6 +245,7 @@ export const vulnerabilityPosts: Post[] = [
 ];
 
 export const posts: Post[] = [
+  ...recentBreachPosts,
   ...productWorkflowPosts,
   ...vulnerabilityPosts,
   ...originalPosts,

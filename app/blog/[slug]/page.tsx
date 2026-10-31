@@ -6,6 +6,7 @@ import { post, posts, vulnerabilityPosts, type Block } from "@/lib/blog";
 import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 import { product } from "@/lib/products";
 import { PreferredSource } from "@/components/site/preferred-source";
+import { BinanceExplainerPage } from "@/components/site/binance-explainer-page";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -80,6 +81,10 @@ export default async function BlogPost({ params }: Params) {
     mainEntityOfPage: absoluteUrl(path),
     ...(sources.length ? { citation: sources.map((source) => source.href) } : {}),
   };
+
+  if (found.slug === "binance-crypto-hack-october-2026-explained") {
+    return <BinanceExplainerPage article={found} articleJsonLd={articleJsonLd} />;
+  }
 
   return (
     <SiteShell>

@@ -6,9 +6,9 @@ import { newAssessmentUrl } from "@/lib/mypentest";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Blog: Windows, Phishing, OSINT & Web Testing",
+  title: "Security Blog: Recent Breaches, Phishing & Web Testing",
   description:
-    "Practical Windows security, phishing link, digital footprint and web testing guides. Learn to interpret findings with EndpointRadar, PhishLens, MyRecon and MyPentest.",
+    "Clear explanations of recent breaches, plus practical Windows security, phishing, digital footprint and web testing guides from BugSnaps.",
   path: "/blog",
 });
 
@@ -48,7 +48,7 @@ export default function BlogIndex() {
         crumbs={[{ name: "Blog", path: "/blog" }]}
         eyebrow="Security field notes"
         title="Understand the evidence. Know your next step."
-        lead="Practical guides to Windows posture, suspicious links, digital footprints and web vulnerabilities. Learn what your results mean and what to check next."
+        lead="Clear explanations of recent breaches alongside practical guides to Windows posture, suspicious links, digital footprints and web vulnerabilities."
       >
         <nav aria-label="Explore security articles" className="flex flex-wrap gap-3">
           <Link href="/vulnerability-guides" className="rounded-full border border-accent/30 px-5 py-3 text-sm font-medium text-accent hover:border-accent">
@@ -74,10 +74,10 @@ export default function BlogIndex() {
       <Section id="latest-guides" labelledBy="latest-title" className="scroll-mt-24">
         <div className="mb-8 max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">Latest articles</p>
-          <h2 id="latest-title" className="mt-3 text-3xl font-semibold tracking-tight">Security guides and practical checks</h2>
+          <h2 id="latest-title" className="mt-3 text-3xl font-semibold tracking-tight">Recent incidents and practical security guides</h2>
           <p className="mt-4 leading-relaxed text-muted">
             Choose a question, review the evidence and follow the relevant workflow.
-            Publication dates below refer to our guides, not the original vulnerability disclosures.
+            Publication dates below refer to our articles, not necessarily the incident or disclosure dates.
           </p>
         </div>
         <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
