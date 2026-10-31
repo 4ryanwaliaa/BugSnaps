@@ -28,9 +28,9 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
             <div className={styles.heroRail}><span>BUGSNAPS / INCIDENT ATLAS</span><span>FIELD NOTE 001 — 31 OCT 2026</span></div>
             <div className={styles.heroGrid}>
               <div>
-                <p className={styles.kicker}>A CRYPTO INCIDENT, EXPLAINED IN PLAIN LANGUAGE</p>
-                <h1>THE<br /><em>BINANCE</em><br />BREACH<span className={styles.heroPeriod}>.</span></h1>
-                <p className={styles.heroLead}>How did a transaction make a wallet run an attacker’s program? Watch the reported Ethereum sequence, one step at a time.</p>
+                <p className={styles.kicker}>BINANCE HACK 2026 · EXPLAINED IN PLAIN LANGUAGE</p>
+                <h1>THE<br /><em>BINANCE</em><br />HACK<span className={styles.heroPeriod}>.</span></h1>
+                <p className={styles.heroLead}>How did the Binance hack happen? Follow the reported Ethereum hot wallet attack and see how an EIP-7702 authorization pointed the wallet to attacker-controlled code.</p>
                 <div className={styles.heroActions}>
                   <a href="#attack-explained" className={styles.primaryAction}>WATCH THE ATTACK UNFOLD <span aria-hidden="true">↓</span></a>
                   <a href="#full-report" className={styles.secondaryAction}>READ THE FULL REPORT <span aria-hidden="true">↗</span></a>
@@ -55,8 +55,9 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
           <BinanceAttackPlayer />
 
           <section className={styles.quickAnswers} aria-labelledby="questions-heading">
-            <div><p className={styles.kicker}>THE QUESTIONS BEHIND THE ANIMATION</p><h2 id="questions-heading">Make it make sense.</h2><p>Open a question for the plain-English answer.</p></div>
+            <div><p className={styles.kicker}>THE QUESTIONS BEHIND THE ANIMATION</p><h2 id="questions-heading">Binance hack and EIP-7702: your questions answered.</h2><p>Open a question for the plain-English answer.</p></div>
             <div className={styles.answerList}>
+              <details><summary>How did the Binance hack use EIP-7702?</summary><p>On Ethereum, investigators found a signed authorization that delegated the Binance 14 hot wallet to attacker-controlled contract code. Later calls ran that code in the wallet’s context and moved assets. This describes one part of the incident; other chains were also affected.</p><a href="https://bitquery.io/investigations/binance-hack" target="_blank" rel="noopener noreferrer">Read the on-chain investigation ↗</a></details>
               <details><summary>Did they hide a virus inside a payment?</summary><p>The reported Ethereum mechanism used a signed permission attached to a special transaction. That permission pointed the wallet to a program already on the blockchain. A later call made the wallet run the program. This does not establish that a virus was hidden inside an ordinary payment.</p><a href="https://eips.ethereum.org/EIPS/eip-7702" target="_blank" rel="noopener noreferrer">Read the Ethereum specification ↗</a></details>
               <details><summary>Why would the blockchain accept that?</summary><p>Ethereum checks the signature and the authorization’s other requirements. A valid signature proves that the permission was signed for that wallet; it does not explain how the attacker got it or prove that Binance intended the action. That gap is part of the investigation.</p></details>
               <details><summary>Could receiving coins make my wallet run someone’s code?</summary><p>Receiving coins alone does not give the sender permission to set your wallet’s EIP-7702 delegation. The mechanism shown here requires a valid authorization for the affected wallet. Review unfamiliar signing requests carefully; a permission can do more than send a single payment.</p><a href="https://eips.ethereum.org/EIPS/eip-7702#security-considerations" target="_blank" rel="noopener noreferrer">Read the security considerations ↗</a></details>

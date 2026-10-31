@@ -120,6 +120,6 @@ export const productWorkflowPosts: Post[] = [
       { type: "p", text: "HIBP's email records and Pwned Passwords service answer different questions. A password match alone does not identify whose account used it. Do not invent an email-and-password association from independent results, and never include a current password in a review report." },
       { type: "callout", text: "Use exposure as a reason to review security, not as proof of an active attacker or a complete history of your accounts." },
     ],
-    related: [{ label: "Explore MyRecon breach research", href: "/myrecon" }, { label: "Review your public username footprint", href: "/blog/username-search-digital-footprint-review" }, { label: "Have I Been Pwned: result types and coverage", href: "https://haveibeenpwned.com/FAQs" }],
+    related: [{ label: "Explore MyRecon breach research", href: "/myrecon" }, { label: "Review your public username footprint", href: "/blog/username-search-digital-footprint-review" }, { label: "Binance hack: how an Ethereum wallet was compromised", href: "/blog/binance-crypto-hack-october-2026-explained" }, { label: "Have I Been Pwned: result types and coverage", href: "https://haveibeenpwned.com/FAQs" }],
   },
 ];

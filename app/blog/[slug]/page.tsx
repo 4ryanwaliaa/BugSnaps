@@ -19,7 +19,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const found = post((await params).slug);
   if (!found) return {};
-  return pageMetadata({
+  const metadata = pageMetadata({
     title: found.title,
     description: found.description,
     path: `/blog/${found.slug}`,
@@ -27,6 +27,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     published: found.published,
     modified: found.updated ?? found.published,
   });
+  if (found.slug === "binance-crypto-hack-october-2026-explained") {
+    const image = { url: absoluteUrl("/images/binance-hack-2026-explained.png"), width: 1254, height: 1254, alt: "Binance hack explained: a signed permission, code and an asset transfer" };
+    return {
+      ...metadata,
+      openGraph: { ...metadata.openGraph, type: "article", images: [image] },
+      twitter: { card: "summary_large_image", title: `${found.title} - BugSnaps`, description: found.description, images: [image.url] },
+    };
+  }
+  return metadata;
 }
 
 function render(block: Block, index: number) {
@@ -79,6 +88,7 @@ export default async function BlogPost({ params }: Params) {
     author: { "@type": "Organization", name: found.author, url: absoluteUrl("/") },
     publisher: { "@id": ORG_ID },
     mainEntityOfPage: absoluteUrl(path),
+    ...(found.slug === "binance-crypto-hack-october-2026-explained" ? { image: absoluteUrl("/images/binance-hack-2026-explained.png") } : {}),
     ...(sources.length ? { citation: sources.map((source) => source.href) } : {}),
   };
 
