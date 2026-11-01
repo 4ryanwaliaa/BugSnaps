@@ -5,9 +5,9 @@ import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/si
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Penetration Testing for Startups: Automated Checks and Expert Scope",
+  title: "Startup Penetration Testing in India",
   description:
-    "Start with a free automated web security assessment, review evidence and fixes, and scope expert-led penetration testing for your startup when deeper review is needed.",
+    "Start with a free web security assessment or discuss expert-led penetration testing for your startup in India. Compare scope, reports and pricing.",
   path: "/solutions/startup-penetration-testing",
 });
 
@@ -39,8 +39,8 @@ export default function StartupPenetrationTestingPage() {
           { name: "Startup Penetration Testing", path: "/solutions/startup-penetration-testing" },
         ]}
         eyebrow="Startup Security"
-        title="Penetration Testing for Startups: Automated Checks and Expert Scope"
-        lead="Review your application with a free automated assessment, then choose paid scan packs or discuss expert-led testing as your needs grow. Confirm customer report requirements before selecting a testing scope."
+        title="Penetration testing for startups in India"
+        lead="Start with a free automated web assessment or discuss a remote, expert-led penetration test for your startup. Choose the scope and report around your product and your customer’s requirements."
       />
 
       <Section labelledBy="overview-title">
@@ -78,6 +78,16 @@ export default function StartupPenetrationTestingPage() {
               Ask the customer what testing and report evidence they require. Expert engagements and signed deliverables are agreed separately.
             </p>
           </div>
+        </div>
+      </Section>
+
+      <Section labelledBy="india-startup-title" className="border-t border-white/[0.05]">
+        <h2 id="india-startup-title" className="text-2xl font-semibold tracking-tight">Plan your startup security assessment in India</h2>
+        <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-muted">BugSnaps is based in Gurugram and offers remote website and API assessments. For an automated starting point, MyPentest has a free scan and India checkout in INR for paid scan packs. Expert-led testing is scoped separately: share your applications, roles, timeline and customer reporting requirements to discuss a quote.</p>
+        <div className="mt-5 flex flex-wrap gap-5 text-sm font-medium text-accent">
+          <Link href="/pricing" className="hover:underline">See current plans and pricing</Link>
+          <Link href="/blog/penetration-testing-for-startups" className="hover:underline">Read the startup pentest planning guide</Link>
+          <Link href="/contact?topic=pentest" className="hover:underline">Discuss your scope</Link>
         </div>
       </Section>
 

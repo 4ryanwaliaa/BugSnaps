@@ -51,7 +51,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Solutions
   { path: "/solutions/saas-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/solutions/fintech-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
-  { path: "/solutions/startup-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
+  { path: "/solutions/startup-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-01" },
   { path: "/solutions/soc2-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/solutions/api-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
 

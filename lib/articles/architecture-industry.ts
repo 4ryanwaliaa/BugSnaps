@@ -344,11 +344,11 @@ export const architectureIndustryPosts: Post[] = [
   },
   {
     slug: "devsecops-pipeline-penetration-testing",
-    title: "CI/CD Security Testing: Tools and Pipeline Checklist",
+    title: "CI/CD Security Testing: Tools for Every Pipeline Stage",
     description:
-      "Plan automated security testing in CI/CD with SAST, dependency and secret scanning, staging DAST, release gates, and a failed-scan policy.",
+      "Compare CodeQL, dependency review, Gitleaks, Trivy and ZAP for CI/CD security testing, with practical stage-by-stage selection and release gates.",
     published: "2026-10-05",
-    updated: "2026-10-29",
+    updated: "2026-11-01",
     author: "BugSnaps Security Research",
     readingMinutes: 8,
     body: [
@@ -372,6 +372,19 @@ export const architectureIndustryPosts: Post[] = [
       { type: "h2", text: "Which security testing solutions fit each stage?" },
       { type: "p", text: "Use a combination of methods that fits the application and available integration, rather than assuming one scanner covers every stage. SAST examines source or build artifacts for selected coding patterns; software composition analysis (SCA) compares dependencies with vulnerability information; and secret scanning looks for exposed credentials. Test these against a small known fixture before enforcing a gate." },
       { type: "p", text: "For a running staging application, DAST checks reachable behavior and configuration using the access and test data supplied. Add authorization regression tests for business-specific permissions and an expert review for cases automation cannot establish. Validate tool licensing, output format, authentication, operating costs, and access to a disposable staging environment before choosing a solution." },
+      { type: "h2", text: "A practical tool stack, from pull request to release" },
+      { type: "p", text: "These examples are starting points, not a universal ranking. Choose tools supported by your languages and build system, then verify their results and access requirements in your own pipeline. Official documentation for each example is linked below." },
+      { type: "ul", items: [
+        "Pull request, source code: GitHub CodeQL analyzes supported languages and can report code-scanning alerts on pull requests. It is convenient for eligible GitHub repositories, but check language and repository eligibility, build requirements and Actions usage. A passing scan is limited to the analyzed code and query coverage.",
+        "Pull request, dependency changes: GitHub Dependency Review can check changes in a pull request and enforce configured vulnerability or license policies. Confirm dependency graph and repository eligibility; reviewing only changes is not a complete inventory of existing vulnerabilities. Periodically assess the whole dependency set as well.",
+        "Commit and pull request, secrets: Gitleaks can scan repositories for patterns suggesting exposed credentials. Decide which history and changes to scan, tune exceptions and keep reports restricted. A pattern match requires investigation, and an exposed credential must be revoked or rotated even if it is later removed from a commit. Check the separate Gitleaks Action license for your account type.",
+        "Build, container image: Trivy can inspect supported OS and language packages in a built image for known vulnerabilities. Scan the image intended for release and retain its digest with the results. Database coverage, package detection and vulnerability applicability vary; an image scan does not prove application logic is secure.",
+        "Staging, running application: ZAP Baseline spiders a target and performs passive checks; rules can be configured to warn, fail or ignore. Run against an authorized staging deployment with disposable data and verify the authenticated routes actually reached. A short passive scan is not an active penetration test or proof of complete coverage.",
+        "Release and after deployment: review unresolved findings and scan failures before release, and rerun relevant checks as vulnerability information changes. Add app-specific access-control regression tests and periodic scoped human testing; no one tool above validates every business workflow."
+      ] },
+      { type: "h2", text: "How to select and roll out a CI/CD security tool" },
+      { type: "p", text: "First list the languages, package managers, build artifacts and environments that need coverage. Trial the candidate on a representative repository and a known test fixture; compare detected issues, missing coverage, runtime, triage effort and output. Check current pricing, license, supported languages, runner requirements and whether it can protect sensitive source code and results." },
+      { type: "p", text: "Start in reporting mode, assign a triage owner and establish a baseline. Once findings are understood, enforce a small, documented set of reliable checks for new issues and give exceptions an owner and expiry. Pin third-party actions to verified full commit SHAs, minimize workflow token permissions and avoid exposing credentials to untrusted pull-request code." },
       { type: "h2", text: "Preventing false positives from blocking releases" },
       {
         type: "p",
@@ -396,6 +409,13 @@ export const architectureIndustryPosts: Post[] = [
       { label: "BugSnaps pricing", href: "/pricing" },
       { label: "OWASP DevSecOps Guideline", href: "https://owasp.org/projects/devsecops-guideline/" },
       { label: "OWASP CI/CD Security Cheat Sheet", href: "https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html" },
+      { label: "GitHub: CodeQL code scanning", href: "https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning" },
+      { label: "GitHub: dependency review action", href: "https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-dependency-review-action" },
+      { label: "Gitleaks: secret scanning", href: "https://github.com/gitleaks/gitleaks" },
+      { label: "Gitleaks Action: configuration and licensing", href: "https://github.com/gitleaks/gitleaks-action" },
+      { label: "Trivy: vulnerability scanning", href: "https://trivy.dev/docs/latest/scanner/vulnerability/" },
+      { label: "ZAP: Baseline Scan", href: "https://www.zaproxy.org/docs/docker/baseline-scan/" },
+      { label: "GitHub Actions: secure use", href: "https://docs.github.com/en/actions/reference/security/secure-use" },
     ],
   },
   {
