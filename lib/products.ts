@@ -61,9 +61,9 @@ export const products: Product[] = [
   {
     id: "endpointradar",
     name: "EndpointRadar",
-    tagline: "Windows endpoint security posture",
+    tagline: "Free Windows endpoint security assessment",
     summary:
-      "Review EndpointRadar scan reports in your browser, or use the Windows command-line scanner locally for authorized security testing.",
+      "Run a point-in-time Windows security scan, then review firewall, antivirus and update findings in the free browser workspace.",
     href: "/endpointradar",
     external: false,
     status: "beta",
@@ -71,7 +71,7 @@ export const products: Product[] = [
     capabilities: [
       "Import a report or explore a sample in your browser",
       "Filter results and review remediation guidance",
-      "One endpoint at a time in the free workspace",
+      "Compare up to 100 imported scan records in the free workspace",
       "Run the Windows command-line scanner locally",
     ],
   },

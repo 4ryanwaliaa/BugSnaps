@@ -3,6 +3,65 @@ import type { SecurityGuide } from "@/lib/security-guides";
 /** Independent, practical Windows posture guides for authorized assessments. */
 export const ENDPOINT_FOUNDATION_GUIDES: SecurityGuide[] = [
   {
+    slug: "free-agentless-edr-vs-windows-security-assessment",
+    title: "Free agentless EDR vs Windows security assessment",
+    description: "Compare free EDR, agentless endpoint scans and Windows security assessments. Learn what each can detect, what setup requires and where EndpointRadar fits.",
+    category: "Endpoint security",
+    answer: "EDR helps investigate and respond to suspicious endpoint activity; an agentless security assessment checks selected settings and exposure at a point in time. EndpointRadar is a free, read-only Windows posture scanner, not an EDR or a substitute for continuous detection and response.",
+    updated: "2026-11-01",
+    sections: [
+      {
+        title: "What are you trying to find?",
+        paragraphs: [
+          "Choose EDR when you need to investigate suspicious activity and take response actions. For example, Microsoft describes Defender for Endpoint as collecting behavioral telemetry, generating alerts and offering response actions such as device isolation in supported plans. Coverage, licensing and response options vary by product.",
+          "Choose an endpoint security assessment when the immediate question is whether a machine's configuration matches its intended baseline: is the firewall enabled, which antivirus provider is visible, and what listening ports or software need review? A scan records observations at collection time; it does not show everything that happened between scans. Many organizations need both capabilities."
+        ],
+        source: 0,
+      },
+      {
+        title: "Does free EDR mean agentless EDR?",
+        paragraphs: [
+          "No. Free describes the price or available edition; agentless describes how a product collects information. A free EDR can require a sensor on each endpoint. For example, Aurora Lite is a free EDR agent whose publisher says it uses the open-source rule set and does not include central management. Check current licensing, supported operating systems and limits before choosing any tool.",
+          "An agentless scan avoids installing a persistent endpoint agent, but it still needs an execution or collection method. Depending on the tool, that may mean authorized remote credentials, network access and a management protocol; it does not automatically provide continuous behavioral telemetry or response. Ask the vendor exactly what runs on a target and when."
+        ],
+        source: 1,
+      },
+      {
+        title: "Where EndpointRadar fits",
+        paragraphs: [
+          "EndpointRadar is an open-source Windows posture scanner. Run its scanner on an authorized Windows machine to examine available antivirus state, firewall profiles, visible update information, listening ports, services and installed software. Its free browser workspace can import scan records for review; the website cannot scan a device on its own. A report helps prioritize follow-up but cannot prove a system is uncompromised.",
+          "For a remote assessment, EndpointRadar supports an agentless WinRM mode: it stages temporary scanner files and executes them on the target rather than installing a persistent endpoint service. The target needs Python and configured remote access; the scanning host needs the remote dependency and authorized credentials. Use a protected management channel and follow the current setup documentation. The optional managed workspace has a separate enrolled Windows helper; its automated scheduling remains unverified for production monitoring."
+        ],
+        source: 2,
+      },
+      {
+        title: "Choose the right tool for the job",
+        paragraphs: [
+          "For a one-time review, start with the asset owner, an approved baseline and the specific machines in scope. Record scan time, missing permissions and unknown results; validate a reported issue against the actual device and policy before assigning a fix. Repeat the check after an approved change.",
+          "For threat detection and response, evaluate an EDR's sensor requirements, supported systems, alert visibility, investigation workflow and actual response actions. Test a safe detection and the response workflow in an authorized environment. Assess whether the free edition includes the capabilities, retention and management your team needs."
+        ],
+        checklist: [
+          "Need to check firewall, antivirus state or visible software? Start with a posture assessment.",
+          "Need activity alerts, investigation and containment? Evaluate EDR and a response process.",
+          "Need both? Use assessment findings alongside EDR, keeping each tool's coverage and limitations clear."
+        ],
+      },
+    ],
+    limitations: "A posture scan is a snapshot, not a malware scan, continuous monitoring or proof of compliance. Visibility depends on permissions, the machine and collection method; unknown results require investigation. EDR products also differ in coverage and cannot guarantee every threat will be detected.",
+    faqs: [
+      { question: "Is EndpointRadar a free EDR?", answer: "No. EndpointRadar is a free Windows security posture scanner. It can help review selected settings and exposures, but it does not provide continuous EDR threat detection or automated containment." },
+      { question: "Is an agentless endpoint scan completely software-free?", answer: "Not necessarily. Agentless generally means no persistent endpoint agent is installed. EndpointRadar's WinRM mode stages and runs scanner files on the target and requires Python, remote access and authorized credentials." },
+      { question: "Can I use an endpoint scanner with EDR?", answer: "Yes. A posture scan can help review settings and exposure while EDR supports detection, investigation and response. Confirm coverage and permissions for each product separately." },
+      { question: "Does a clean scan mean a device is safe?", answer: "No. A scan covers selected observations at a particular time and may report unknowns. It cannot rule out compromise or assess every vulnerability." },
+    ],
+    sources: [
+      { title: "Microsoft: Overview of endpoint detection and response", url: "https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response" },
+      { title: "Nextron Systems: Aurora Lite", url: "https://github.com/NextronSystems/aurora-agent-lite" },
+      { title: "EndpointRadar: scanner, remote setup and requirements", url: "https://github.com/4ryanwalia/EndpointRadar" },
+    ],
+    related: ["windows-endpoint-security-assessment-checklist", "interpreting-local-endpoint-security-scan-reports", "windows-antivirus-state-review"],
+  },
+  {
     slug: "windows-firewall-profile-review",
     title: "Review Windows firewall profiles and active policy",
     description: "Check the Domain, Private and Public firewall profiles, investigate an unexpected disabled state and verify the effective policy before changing a rule.",

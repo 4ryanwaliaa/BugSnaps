@@ -22,20 +22,20 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-10-23" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-11-01" },
   { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
   { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-30" },
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
-  { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-30" },
+  { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-01" },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-30" },
-  { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
+  { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-01" },
   { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/ai-penetration-testing", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
   { path: "/mypentest/php2shell", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
-  { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
+  { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-01" },
   { path: "/pricing", changeFrequency: "monthly", priority: 0.7 },
 
   // Services
@@ -73,7 +73,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/security-playbooks", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-28" },
   { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
   { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
-  { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
+  { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-01" },
   ...SECURITY_GUIDES.map((g) => ({ path: guidePath(g.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: g.updated })),
   { path: "/use-cases", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
