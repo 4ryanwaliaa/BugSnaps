@@ -23,6 +23,7 @@ jobs:
       - run: node --no-experimental-require-module -e "require('firebase-admin/auth'); require('firebase-admin/database')"
       - run: node scripts/check-endpointradar-watchdog.cjs
       - run: node scripts/check-endpointradar-reports.cjs
+      - run: node scripts/check-endpointradar-defender.cjs
       - run: node scripts/check-endpointradar-selection.cjs
       - run: npx --yes firebase-tools@15.34.1 emulators:exec --config docs/endpointradar/firebase.test.json --project demo-endpointradar --only auth,database "node scripts/run-endpointradar-tests.cjs"
   windows-runner:

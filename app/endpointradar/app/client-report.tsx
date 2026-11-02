@@ -8,7 +8,7 @@ import { FileDown } from "lucide-react";
 export type ReportScan = {
   hostname: string; ip: string; level: string; score: number | null; date: string; connection: string;
   findings: { title: string; severity: string; description: string; fix: string }[];
-  antivirus: string; firewall: string; patches: string;
+  antivirus: string; defenderTamper?: string; firewall: string; patches: string;
   managedDeviceId?: string; managedDeviceName?: string; managedReceivedAt?: string;
 };
 
@@ -103,11 +103,11 @@ export default function ClientReport({ scans, isDemo = false, baseline = null }:
       <h1>{client.trim() || "Client"} security report</h1>
       <p>{consultant.trim() ? `Prepared by ${consultant.trim()} · ` : ""}Generated {new Date().toLocaleDateString(undefined, { dateStyle: "long" })}</p>
       {isDemo && <p><strong>Illustrative sample data; this is not a scan of a client device.</strong></p>}
-      <p className="report-note">Based on imported point-in-time scan records. Unknown and missing results are not evidence of a passing control.</p>
+      <p className="report-note">Based on imported point-in-time scan records. Unknown and missing results are not evidence of a passing control. Defender tamper protection applies to Microsoft Defender, not other antivirus products.</p>
       <h2>Devices</h2>
       <table><thead><tr><th>Device / last checked</th><th>Antivirus</th><th>Firewall</th><th>Updates</th><th>Findings</th></tr></thead><tbody>{report.map(({ current }, index) => {
         const time = recordTime(current); const age = time === null ? "Missing date" : time > Date.now() ? "Future date" : Date.now() - time > 7 * 86400000 ? "Older than 7 days" : "";
-        return <tr key={index}><td><strong>{current.managedDeviceName || current.hostname}</strong><br />{current.ip}<br />{dateLabel(recordDate(current))}{age && <><br /><strong>{age}</strong></>}</td><td>{current.antivirus}</td><td>{current.firewall}</td><td>{current.patches}</td><td>{current.findings.length}</td></tr>;
+        return <tr key={index}><td><strong>{current.managedDeviceName || current.hostname}</strong><br />{current.ip}<br />{dateLabel(recordDate(current))}{age && <><br /><strong>{age}</strong></>}</td><td>{current.antivirus}<br />Defender tamper: {current.defenderTamper ?? "Unknown"}</td><td>{current.firewall}</td><td>{current.patches}</td><td>{current.findings.length}</td></tr>;
       })}</tbody></table>
       <h2>Priority issues and recommended actions</h2>
       {topFindings.length ? topFindings.slice(0, 30).map(({ finding, device }, index) => <article key={index}><h3>{finding.severity} · {finding.title}</h3><p><strong>Device:</strong> {device}</p><p><strong>Scanner description:</strong> {finding.description}</p><p><strong>Recommended action:</strong> {finding.fix}</p></article>) : <p>No findings were included in the latest imported records.</p>}
