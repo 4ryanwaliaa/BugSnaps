@@ -9,9 +9,9 @@ import { pageMetadata } from "@/lib/site";
 const internationalPlusPrice = `US$${(INTERNATIONAL_PLUS_USD_CENTS / 100).toFixed(2)}`;
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pricing - MyPentest Plans and Manual Pentesting",
+  title: "Penetration Testing Pricing | MyPentest Plans",
   description:
-    `Try MyPentest once for free. Plus costs ₹499 in India or ${internationalPlusPrice} internationally for 2 deep scans with no expiry, full reports and priority support. Contact us for Enterprise manual audits.`,
+    `Compare MyPentest's free scan and Plus plan: ₹499 in India or ${internationalPlusPrice} internationally for 2 deep scans. Request a quote for manual pentesting.`,
   path: "/pricing",
 });
 

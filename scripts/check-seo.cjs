@@ -32,7 +32,7 @@ const { SITE_URL } = load("lib/site.ts");
 const { SITEMAP_PAGES } = load("lib/sitemap-pages.ts");
 const paths = [...INDEXABLE_ROUTES.map((r) => r.path), ...posts.map((p) => `/blog/${p.slug}`)];
 assert.equal(new Set(paths).size, paths.length, "Duplicate sitemap paths");
-assert(paths.every((p) => p.startsWith("/") && !/^\/mypentest\/(app|api)/.test(p)), "Private routes in sitemap");
+assert(paths.every((p) => p.startsWith("/") && !/^\/(?:mypentest\/(?:app|api)|endpointradar\/(?:app|managed)|phishing-detector\/team)(\/|$)/.test(p)), "Private routes in sitemap");
 const expected = new Set(paths.map((p) => p === "/" ? SITE_URL : SITE_URL + p));
 const decode = (s) => s.replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
   .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
@@ -145,6 +145,9 @@ async function audit(route) {
     }
   }
   const robots = await get("/robots.txt");
+  const endpointWorkspace = await get("/endpointradar/app");
+  assert.equal(endpointWorkspace.status, 200, "EndpointRadar workspace unavailable");
+  assert(/noindex/i.test(meta(endpointWorkspace.body, "robots") || ""), "EndpointRadar workspace must remain noindex");
   assert.equal(robots.status, 200, "robots.txt is unavailable");
   assert(robots.body.includes(`Sitemap: ${SITE_URL}/sitemap.xml`), "Missing sitemap discovery directive");
   assert(robots.body.includes("Disallow: /mypentest/app") && robots.body.includes("Disallow: /mypentest/api"), "Private areas must remain excluded");

@@ -47,7 +47,7 @@ export function HomeHero() {
             </span>
           </h1>
           <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty" style={delay(0.55)}>
-            Test your application with MyPentest, review vulnerability evidence and suggested fixes,
+            Run automated website security checks with MyPentest, review vulnerability evidence and suggested fixes,
             then retest after remediation. Start free or scope an expert-led assessment.
           </p>
 

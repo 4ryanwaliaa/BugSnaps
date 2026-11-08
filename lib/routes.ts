@@ -22,13 +22,13 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-11-01" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-11-08" },
   { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
-  { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-30" },
-  { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
-  { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-01" },
+  { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-08" },
+  { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-08" },
+  { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-08" },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-30" },
   { path: "/free-ai-pentesting", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-01" },
   { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
@@ -36,13 +36,13 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
   { path: "/mypentest/php2shell", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
   { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-01" },
-  { path: "/pricing", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/pricing", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-08" },
 
   // Services
   { path: "/services", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-08" },
   { path: "/penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/web-application-pentesting", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
-  { path: "/api-security-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
+  { path: "/api-security-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-08" },
   { path: "/network-pentesting", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-08" },
   { path: "/cloud-penetration-testing", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/reconnaissance", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },

@@ -6,8 +6,8 @@ import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-
 import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Free Windows Endpoint Security Scanner | EndpointRadar",
-  description: "Check Windows security posture for free. Scan locally or remotely over WinRM, then review firewall, antivirus and update findings in your browser.",
+  title: "Free Windows Security Posture Scanner | EndpointRadar",
+  description: "Review Windows security posture with a free read-only scanner. Scan locally or over WinRM, import device reports, and prioritize firewall, antivirus and update findings.",
   path: "/endpointradar",
 });
 

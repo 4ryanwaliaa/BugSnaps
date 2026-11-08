@@ -204,12 +204,12 @@ export const servicePages: ServicePage[] = [
     slug: "api-security-testing",
     path: "/api-security-testing",
     name: "API security testing",
-    metaTitle: "API Penetration Testing for REST and GraphQL",
+    metaTitle: "API Security Testing | REST, GraphQL & BOLA",
     metaDescription:
-      "API penetration testing for REST and GraphQL: object- and function-level authorization, data exposure, rate limiting and auth, mapped to the OWASP API Top 10.",
-    h1: "API penetration testing for REST and GraphQL.",
+      "Test REST and GraphQL APIs for BOLA, IDOR, authentication and data exposure. Get a scoped manual assessment, endpoint coverage, evidence and remediation guidance.",
+    h1: "API security testing for REST and GraphQL.",
     lead:
-      "APIs quietly hand out data to whoever asks correctly. We test that every endpoint checks who is asking - for every object, every function and every field.",
+      "Review object-level authorization (BOLA and IDOR), authentication, tenant isolation and data exposure with authorized test accounts. We test whether in-scope REST and GraphQL endpoints enforce the intended permissions for each object, function and field.",
     tests: [
       { title: "Object-level authorization", body: "Can user A read or change user B's records by changing an id? (BOLA)" },
       { title: "Function-level authorization", body: "Can a regular user call admin-only operations?" },

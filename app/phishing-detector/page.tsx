@@ -3,13 +3,19 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Binary, Eye, FileSearch, LockKeyhole, ScanSearch, ShieldAlert, Sparkles, Waypoints } from "lucide-react";
 import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-parts";
 import { PhishLensWorkspace } from "@/components/phishing-detector/workspace";
-import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
+import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "PhishLens: Free Phishing Link Checker",
-  description: "Check suspicious URLs with PhishLens. Inspect link structure locally, add optional domain and DNS context, and export a redacted report.",
+  title: "Free Phishing Link Checker | PhishLens",
+  description: "Check suspicious URLs without opening them. Use PhishLens for local URL analysis, optional domain and DNS context, and redacted reports. Free; no account needed.",
   path: "/phishing-detector",
 });
+
+const faqs = [
+  { question: "How can I check a suspicious link without opening it?", answer: "Copy the link address and paste it into PhishLens. The browser-based checker examines the URL text and highlights warning signs without visiting the destination. Verify unexpected requests through a known contact or the official app." },
+  { question: "Does a phishing link checker prove a URL is safe?", answer: "No. A URL can look ordinary and still lead to a phishing page. The local check does not visit the destination or follow redirects. Optional external domain, reputation and DNS checks provide additional signals only when you choose them. Treat highlighted patterns as investigation leads and do not enter credentials based on a clean result." },
+  { question: "Can an HTTPS link still be phishing?", answer: "Yes. HTTPS protects the connection to a hostname; it does not establish that the site or sender is trustworthy. Check the actual hostname and verify the request independently before entering passwords or payment details." },
+];
 
 const layers = [
   { icon: ScanSearch, label: "01", title: "Read the link", detail: "Review URL structures, domain boundaries and embedded destinations locally, one at a time or in batches of 100.", color: "text-emerald-300", surface: "border-emerald-400/20 bg-emerald-400/10" },
@@ -20,6 +26,7 @@ const layers = [
 export default function PhishingDetectorPage() {
   return (
     <SiteShell>
+      <JsonLd data={faqJsonLd(faqs)} />
       <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "PhishLens", applicationCategory: "SecurityApplication", operatingSystem: "Web", url: `${SITE_URL}/phishing-detector`, description: "A free tool for investigating suspicious links.", publisher: { "@id": ORG_ID }, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }} />
       <div className="relative isolate overflow-hidden border-b border-white/[.07] bg-[#080e11]">
         <div aria-hidden="true" className="dot-grid pointer-events-none absolute inset-0 opacity-60" />
@@ -32,7 +39,7 @@ export default function PhishingDetectorPage() {
             <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-xs text-zinc-300">Free to use <span className="mx-1.5 text-zinc-600">·</span> No account required</span>
           </div>
           <div className="grid gap-6 pb-8 pt-7 sm:pb-10 sm:pt-8 lg:grid-cols-[1fr_21rem] lg:items-end lg:gap-12">
-            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Investigate suspicious links <span className="text-emerald-300">before you click.</span></h1><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">A suspicious link deserves a second look. Unpack the address, explore the evidence, and make a more informed next move.</p></div>
+            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Free phishing link checker. <span className="text-emerald-300">before you click.</span></h1><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">Check a suspicious URL without opening it. Inspect the link locally, choose optional domain and DNS checks, and review the evidence before your next step.</p></div>
             <div className="flex gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-400/[.05] p-4 text-sm leading-relaxed text-zinc-400"><LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" /><p>Your initial review stays in your browser. External checks run only when you choose them.</p></div>
           </div>
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/[.04] p-5"><div><p className="font-semibold text-zinc-100">Review suspicious messages with your team</p><p className="mt-1 text-sm leading-relaxed text-zinc-400">Submit messages, record decisions, and revisit previous reviews.</p></div><a href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">Open team inbox <ArrowUpRight className="h-4 w-4" /></a></div>
@@ -56,6 +63,17 @@ export default function PhishingDetectorPage() {
         <a href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</a>
       </Section>
       <ProductReading productId="phishlens" />
+      <Section labelledBy="link-checker-faq" className="border-t border-white/[.07]">
+        <h2 id="link-checker-faq" className="text-2xl font-semibold">Questions about checking suspicious links</h2>
+        <div className="mt-6 space-y-6">
+          {faqs.map(({ question, answer }) => (
+            <div key={question}>
+              <h3 className="font-semibold">{question}</h3>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-400">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
     </SiteShell>
   );
 }

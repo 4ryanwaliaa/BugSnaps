@@ -15,10 +15,10 @@ import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
 import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Website & API Penetration Testing - BugSnaps",
+  title: "Website Security Testing & API Pentesting | BugSnaps",
   absoluteTitle: true,
   description:
-    "Automated website and API penetration testing with MyPentest. Review vulnerability evidence and fixes, start with a free trial, or scope an expert engagement.",
+    "Test your website with MyPentest, free to start. Review vulnerability evidence and fixes, explore API security testing, or scope an expert-led pentest.",
   path: "/",
 });
 
@@ -44,6 +44,26 @@ export default function Home() {
       <HomeStats />
       <HomeReport />
       <HomeProducts />
+
+      <Section labelledBy="choose-security-check" className="border-t border-white/5">
+        <h2 id="choose-security-check" className="text-2xl font-semibold">Choose the security check for your task.</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+          Testing a website you own, reviewing an API, and inspecting an unexpected link need different workflows. Start with the tool or service that matches your scope.
+        </p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {[
+            { path: "/mypentest", title: "Website vulnerability scanner", text: "Run automated web application checks on a verified domain. Review evidence, severity and remediation within your plan limits." },
+            { path: "/api-security-testing", title: "API security testing for REST and GraphQL", text: "Scope a manual review of BOLA, IDOR, authentication and tenant boundaries with authorized test accounts." },
+            { path: "/phishing-detector", title: "Free phishing link checker", text: "Inspect a suspicious URL for warning signs in your browser, without opening the destination. Results are signals, not a safety verdict." },
+            { path: "/endpointradar", title: "Windows security posture assessment", text: "Use EndpointRadar for read-only endpoint checks and review imported device reports in a browser workspace." },
+          ].map((item) => (
+            <Link key={item.path} href={item.path} className="rounded-2xl border border-white/10 bg-surface p-6 transition-colors hover:border-white/20">
+              <h3 className="font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{item.text}</p>
+            </Link>
+          ))}
+        </div>
+      </Section>
 
       {/* World-Ready Security & Trust Banner */}
       <Section labelledBy="world-ready-trust-title" className="border-t border-white/5">
