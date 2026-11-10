@@ -557,6 +557,9 @@ summary::-webkit-details-marker {
 .ink-drawing { overflow: visible; pointer-events: none; }
 .ink-stroke { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .ink-pen { opacity: 0; }
+.home-reading-pen .ink-pen { display: none; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) { .reading-pen { display: none; } }
+@media print { .reading-pen { display: none; } }
 .public-site nav[aria-label="Breadcrumb"] [aria-current="page"] { color: var(--color-coral); }
 .public-site .card-hover:hover { border-color: rgb(255 173 145 / 0.35); }
 @media (prefers-reduced-motion: reduce) {

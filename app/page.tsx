@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { JsonLd, Section, SiteShell } from "@/components/site/page-parts";
 import { SecurityReviewFigure } from "@/components/site/security-review-figure";
 import { HomeHero } from "@/components/home/hero";
+import { ReadingPen } from "@/components/home/reading-pen";
 import { TutorialVideo } from "@/components/site/tutorial-video";
 import { HomeProducts } from "@/components/home/products";
 import { HomeHowItRuns, HomeMarquee, HomeReport, HomeStats } from "@/components/home/sections";
@@ -24,7 +25,8 @@ export const metadata: Metadata = pageMetadata({
 
 export default function Home() {
   return (
-    <SiteShell>
+    <SiteShell className="home-reading-pen">
+      <ReadingPen />
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "ImageObject",
