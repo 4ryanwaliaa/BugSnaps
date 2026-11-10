@@ -533,7 +533,7 @@ summary::-webkit-details-marker {
   -webkit-text-fill-color: transparent;
 }
 .sketch-underline {
-  position: absolute; left: 0; bottom: -0.08em; width: 100%; height: 0.3em;
+  position: absolute; left: 0; bottom: -0.08em; width: 100%; height: 0.44em;
   overflow: visible; color: var(--color-coral); pointer-events: none;
 }
 .sketch-arrow path, .sketch-spark path {
@@ -555,14 +555,12 @@ summary::-webkit-details-marker {
 
 /* One ink treatment across public pages; security severity colors stay semantic. */
 .ink-drawing { overflow: visible; pointer-events: none; }
-.ink-stroke { stroke-dasharray: 1; animation: pen-ink 2.6s linear 0.5s both; }
-.ink-pen { opacity: 0; animation: pen-presence 2.6s linear 0.5s both; }
-@keyframes pen-ink { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes pen-presence { 0%, 94% { opacity: 1; } 100% { opacity: 0; } }
+.ink-stroke { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.ink-pen { opacity: 0; }
 .public-site nav[aria-label="Breadcrumb"] [aria-current="page"] { color: var(--color-coral); }
 .public-site .card-hover:hover { border-color: rgb(255 173 145 / 0.35); }
 @media (prefers-reduced-motion: reduce) {
-  .ink-stroke { animation: none; stroke-dashoffset: 0; }
+  .ink-stroke { animation: none; stroke-dashoffset: 0 !important; }
   .ink-pen { display: none; animation: none; }
 }
-@media print { .ink-pen { display: none; } .ink-stroke { animation: none; stroke-dashoffset: 0; } }
+@media print { .ink-pen { display: none; } .ink-stroke { animation: none; stroke-dashoffset: 0 !important; } }

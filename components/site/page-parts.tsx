@@ -163,6 +163,7 @@ export function SectionTitle({
       <h2 id={id} className={cn("text-3xl font-semibold tracking-tight text-balance sm:text-4xl", eyebrow && "mt-3")}>
         {title}
       </h2>
+      <SketchUnderline className="mt-2 h-7 w-40" />
       {lead && <p className="mt-4 text-[17px] leading-relaxed text-muted text-pretty">{lead}</p>}
     </div>
   );
@@ -217,6 +218,7 @@ export function CtaBand({
             <h2 id="cta-title" className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
               {title}
             </h2>
+            <SketchUnderline className="mx-auto mt-2 h-7 w-40" />
             <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-muted">{lead}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a

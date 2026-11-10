@@ -1,3 +1,4 @@
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/ui/reveal";
 import type { ReactNode } from "react";
@@ -38,6 +39,7 @@ export function SectionHeading({
       <h2 className="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-[2.75rem] sm:leading-[1.1]">
         {title}
       </h2>
+      <SketchUnderline className={cn("mt-2 h-7 w-40", centered && "mx-auto")} />
       {description && (
         <p className="mt-5 text-lg leading-relaxed text-muted text-pretty">{description}</p>
       )}

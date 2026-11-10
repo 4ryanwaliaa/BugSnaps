@@ -1,3 +1,4 @@
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Laptop, Link2, ScanSearch } from "lucide-react";
@@ -20,6 +21,7 @@ export function HomeProducts() {
         <div className="max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">Products · The BugSnaps toolkit</p>
           <h2 id="products-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Curiosity, meet clarity.</h2>
+          <SketchUnderline className="mt-2 h-7 w-40" />
           <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-muted">Four tools for the questions you want to answer, from suspicious links to your app's attack surface.</p>
         </div>
         <Link href="/products" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-accent hover:underline">Explore all four products <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
