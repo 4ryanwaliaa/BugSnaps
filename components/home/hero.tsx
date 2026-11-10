@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, ShieldCheck } from "lucide-react";
 import { ScanTheatre } from "@/components/home/scan-theatre";
-import { Magnetic } from "@/components/ui/motion";
 import { EXAMPLE_REPORT } from "@/lib/mypentest/example";
 import { theatreData } from "@/lib/mypentest/theatre";
 import { newAssessmentUrl } from "@/lib/mypentest";
@@ -19,7 +18,6 @@ export function HomeHero() {
         <div className="dot-grid absolute inset-0" />
         <div className="animate-glow-drift absolute -top-48 left-[12%] h-[560px] w-[760px] rounded-full bg-primary/[0.13] blur-[150px]" />
         <div className="animate-glow-drift absolute top-40 -right-40 h-[420px] w-[520px] rounded-full bg-sky-500/[0.07] blur-[140px] [animation-delay:-7s]" />
-        <div className="header-scan absolute inset-x-0 top-0 h-24" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
       </div>
 
@@ -37,9 +35,9 @@ export function HomeHero() {
           </p>
           <h1
             id="hero-title"
-            className="scan-reveal mt-6 text-[2.7rem] font-semibold leading-[1.02] tracking-tight text-balance sm:text-6xl lg:text-[4.3rem]"
+            className="mt-6 text-[2.7rem] font-semibold leading-[1.02] tracking-tight text-balance sm:text-6xl lg:text-[4.3rem]"
           >
-            <span className="scan-text">
+            <span className="block">
               Website & API{" "}
               <span className="bg-gradient-to-r from-white via-sky-200 to-accent bg-clip-text text-transparent">
                 penetration testing.
@@ -51,19 +49,17 @@ export function HomeHero() {
             then retest after remediation. Start free or scope an expert-led assessment.
           </p>
 
-          <div className="rise mt-9 flex flex-col gap-3 sm:flex-row sm:items-center" style={delay(0.7)}>
-            <Magnetic>
-              <a
-                href={newAssessmentUrl()}
-                className="shine inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_0_0_1px_rgb(255_255_255/0.1)_inset,0_10px_34px_-8px_rgb(37_99_235/0.7)] transition-colors hover:bg-accent sm:w-auto"
-              >
-                Run MyPentest free
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-            </Magnetic>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <a
+              href={newAssessmentUrl()}
+              className="site-button site-button-primary min-h-14 w-full px-7 text-[15px] sm:w-auto"
+            >
+              Run MyPentest free
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
             <a
               href={MYRECON_URL}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 text-[15px] font-medium text-foreground transition-colors hover:border-white/20 hover:bg-white/[0.07]"
+              className="site-button site-button-secondary min-h-14 px-6 text-[15px]"
             >
               Explore MyRecon
               <ArrowUpRight className="h-4 w-4 text-muted" aria-hidden="true" />

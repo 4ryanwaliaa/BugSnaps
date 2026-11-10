@@ -216,7 +216,7 @@ export function CtaBand({
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={primary.href}
-                className="shine inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[15px] font-medium text-white shadow-[0_8px_24px_-8px_rgb(37_99_235/0.5)] transition-colors hover:bg-accent"
+                className="site-button site-button-primary min-h-14 w-full px-7 text-[15px] sm:w-auto"
               >
                 {primary.label}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -224,7 +224,7 @@ export function CtaBand({
               {secondary && (
                 <Link
                   href={secondary.href}
-                  className="inline-flex h-12 items-center rounded-full px-5 text-[15px] text-muted transition-colors hover:text-foreground"
+                  className="site-button site-button-secondary min-h-14 w-full px-5 text-[15px] sm:w-auto"
                 >
                   {secondary.label}
                 </Link>
