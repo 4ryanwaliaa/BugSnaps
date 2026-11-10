@@ -209,6 +209,9 @@ export function CtaBand({
             className="absolute -top-32 left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.16] blur-[110px]"
           />
           <div className="relative">
+            <svg aria-hidden="true" viewBox="0 0 70 28" className="mx-auto mb-5 h-7 w-[70px] text-coral" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M8 23L17 11M35 18L36 3M54 22L64 12" />
+            </svg>
             <h2 id="cta-title" className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
               {title}
             </h2>

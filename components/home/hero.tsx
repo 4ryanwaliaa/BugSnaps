@@ -17,7 +17,7 @@ export function HomeHero() {
       <div aria-hidden="true" className="absolute inset-0">
         <div className="dot-grid absolute inset-0" />
         <div className="animate-glow-drift absolute -top-48 left-[12%] h-[560px] w-[760px] rounded-full bg-primary/[0.13] blur-[150px]" />
-        <div className="animate-glow-drift absolute top-40 -right-40 h-[420px] w-[520px] rounded-full bg-sky-500/[0.07] blur-[140px] [animation-delay:-7s]" />
+        <div className="animate-glow-drift absolute top-40 -right-40 h-[420px] w-[520px] rounded-full bg-coral/[0.09] blur-[140px] [animation-delay:-7s]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
       </div>
 
@@ -39,8 +39,12 @@ export function HomeHero() {
           >
             <span className="block">
               Website & API{" "}
-              <span className="bg-gradient-to-r from-white via-sky-200 to-accent bg-clip-text text-transparent">
-                penetration testing.
+              <span className="text-sky-200">penetration</span>{" "}
+              <span className="sketch-word">
+                <span className="testing-gradient">testing.</span>
+                <svg aria-hidden="true" viewBox="0 0 300 24" className="sketch-underline" fill="none">
+                  <path pathLength="1" d="M5 14C65 3 174 4 292 10M30 21C111 12 194 12 265 16" />
+                </svg>
               </span>
             </span>
           </h1>
@@ -79,6 +83,15 @@ export function HomeHero() {
         </div>
 
         <div className="rise relative min-w-0" style={delay(0.35)}>
+          <div aria-hidden="true" className="pointer-events-none mb-4 flex items-center justify-end gap-3 text-coral">
+            <span className="sketch-note">a closer look</span>
+            <svg className="sketch-arrow h-12 w-16" viewBox="0 0 70 50" fill="none">
+              <path d="M6 6C38 0 63 12 52 39M40 29L52 41L64 29" />
+            </svg>
+          </div>
+          <svg aria-hidden="true" className="sketch-spark pointer-events-none absolute -left-5 top-20 h-10 w-10 text-coral" viewBox="0 0 50 50" fill="none">
+            <path d="M25 3C24 18 20 23 5 25C20 26 24 31 25 46C27 31 31 27 46 25C31 23 27 18 25 3Z" />
+          </svg>
           <div aria-hidden="true" className="absolute -inset-6 rounded-[36px] bg-primary/[0.07] blur-3xl" />
           <ScanTheatre data={data} identities={EXAMPLE_REPORT.identities_count} className="relative" />
         </div>

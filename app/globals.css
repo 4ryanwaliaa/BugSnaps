@@ -11,6 +11,7 @@
   --color-muted-2: #71717a;
   --color-primary: #2563eb;
   --color-accent: #3b82f6;
+  --color-coral: #ffad91;
   --color-success: #22c55e;
   --color-critical: #ef4444;
   --color-high: #f97316;
@@ -520,4 +521,37 @@ summary::-webkit-details-marker {
   @media (prefers-reduced-motion: reduce) {
     .site-button { transition: none; }
   }
+}
+
+/* A warm ink accent: handmade strokes around the content, never over controls. */
+.sketch-word { position: relative; display: inline-block; padding-bottom: 0.12em; }
+.testing-gradient {
+  color: var(--color-coral);
+  background: linear-gradient(105deg, #bfdbfe 0%, #ffad91 55%, #ffd5c5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sketch-underline {
+  position: absolute; left: 0; bottom: -0.08em; width: 100%; height: 0.3em;
+  overflow: visible; color: var(--color-coral); pointer-events: none;
+}
+.sketch-underline path, .sketch-arrow path, .sketch-spark path {
+  stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.sketch-underline path {
+  stroke-dasharray: 1;
+  animation: ink-draw 1.1s ease-out 0.2s both;
+}
+.sketch-note { font-family: "Segoe Print", "Bradley Hand", cursive; font-size: 1rem; transform: rotate(-5deg); }
+.sketch-arrow { animation: sketch-nod 5s ease-in-out 3; transform-origin: 20% 20%; }
+.sketch-spark { animation: sketch-twinkle 5s ease-in-out 3; }
+@keyframes ink-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes sketch-nod { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes sketch-twinkle { 0%, 100% { opacity: 0.55; transform: rotate(-8deg) scale(0.92); } 50% { opacity: 1; transform: rotate(5deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .sketch-underline path, .sketch-arrow, .sketch-spark { animation: none; }
+}
+@media (forced-colors: active) {
+  .testing-gradient { -webkit-text-fill-color: CanvasText; background: none; }
 }
