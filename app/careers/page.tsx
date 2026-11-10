@@ -1,3 +1,5 @@
+
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import type { Metadata } from "next";
 import { Mail, Search, GraduationCap, HeartHandshake } from "lucide-react";
 import { Navbar } from "@/components/site/navbar";
@@ -45,6 +47,7 @@ export default function CareersPage() {
         <h1 className="mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
           Break things, legally. Help us build BugSnaps.
         </h1>
+              <SketchUnderline className="mt-3 h-8 w-48" />
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
           We&apos;re a new offensive security company - small team, no bureaucracy,
           plenty of interesting problems. If making the internet a little safer

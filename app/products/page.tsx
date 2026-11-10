@@ -1,3 +1,5 @@
+
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,13 +64,14 @@ export default function ProductsPage() {
       <JsonLd data={itemList} />
       <header className="relative overflow-hidden border-b border-white/[0.07]">
         <div aria-hidden="true" className="dot-grid absolute inset-0" />
-        <div aria-hidden="true" className="absolute -top-32 right-0 h-[500px] w-[600px] rounded-full bg-blue-600/10 blur-[130px]" />
+        <div aria-hidden="true" className="absolute -top-32 right-0 h-[500px] w-[600px] rounded-full bg-coral/[0.08] blur-[130px]" />
         <Container className="relative pt-28 pb-16 sm:pt-36 sm:pb-20">
           <Breadcrumbs items={[{ name: "Products", path: "/products" }]} />
           <div className="mt-10 grid gap-9 lg:grid-cols-[1fr_.7fr] lg:items-end">
             <div>
-              <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-blue-400"><Sparkles className="h-4 w-4" aria-hidden="true" /> The BugSnaps toolkit</p>
-              <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">Curiosity, meet <span className="text-blue-400">clarity.</span></h1>
+              <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-coral"><Sparkles className="h-4 w-4" aria-hidden="true" /> The BugSnaps toolkit</p>
+              <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">Curiosity, meet <span className="text-coral">clarity.</span></h1>
+              <SketchUnderline className="mt-3 h-8 w-48" />
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">From a suspicious link to your app's attack surface, there's a tool for the question you want to answer.</p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-7">
@@ -84,7 +87,7 @@ export default function ProductsPage() {
       <section aria-labelledby="showcase-title" className="py-16 sm:py-24">
         <Container>
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4 sm:mb-14">
-            <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">Four tools. Different jobs.</p><h2 id="showcase-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Pick your starting point.</h2></div>
+            <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-coral">Four tools. Different jobs.</p><h2 id="showcase-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Pick your starting point.</h2></div>
             <p className="max-w-xs text-sm leading-relaxed text-muted">Watch a quick product video and find the tool for your next step.</p>
           </div>
           <div className="space-y-5 sm:space-y-6">

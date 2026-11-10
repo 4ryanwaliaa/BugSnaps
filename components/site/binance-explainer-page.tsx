@@ -1,3 +1,5 @@
+
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "@/components/site/content-link";
 import { Breadcrumbs, JsonLd, Prose, SiteShell } from "@/components/site/page-parts";
 import type { Block, Post } from "@/lib/blog";
@@ -30,6 +32,7 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
               <div>
                 <p className={styles.kicker}>BINANCE HACK 2026 · EXPLAINED IN PLAIN LANGUAGE</p>
                 <h1>THE<br /><em>BINANCE</em><br />HACK<span className={styles.heroPeriod}>.</span></h1>
+              <SketchUnderline className="mt-3 h-8 w-48" />
                 <p className={styles.heroLead}>How did the Binance hack happen? Follow the reported Ethereum hot wallet attack and see how an EIP-7702 authorization pointed the wallet to attacker-controlled code.</p>
                 <div className={styles.heroActions}>
                   <a href="#attack-explained" className={styles.primaryAction}>WATCH THE ATTACK UNFOLD <span aria-hidden="true">↓</span></a>

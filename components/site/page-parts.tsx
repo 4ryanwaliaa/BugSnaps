@@ -1,3 +1,4 @@
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
@@ -30,7 +31,7 @@ export function SiteShell({
   return (
     <>
       <Navbar />
-      <main id="main" className={className}>
+      <main id="main" className={cn("public-site", className)}>
         {children}
       </main>
       <Footer brand={footer} />
@@ -88,21 +89,22 @@ export function PageHeader({
   return (
     <header className="relative overflow-hidden border-b border-white/[0.05]">
       <div aria-hidden="true" className="dot-grid absolute inset-0 opacity-70" />
-      <div aria-hidden="true" className="header-scan absolute inset-x-0 top-0 h-20" />
+      <div aria-hidden="true" className="absolute -right-32 top-0 h-80 w-96 rounded-full bg-coral/[0.07] blur-[100px]" />
       <div aria-hidden="true" className="absolute -top-40 left-1/3 h-[380px] w-[620px] rounded-full bg-primary/[0.08] blur-[130px]" />
       <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-14 sm:pt-36 sm:pb-20 lg:px-8">
         <Breadcrumbs items={crumbs} />
         {eyebrow && (
-          <p className="mt-8 font-mono text-[12px] font-medium uppercase tracking-[0.2em] text-accent">{eyebrow}</p>
+          <p className="mt-8 font-mono text-[12px] font-medium uppercase tracking-[0.2em] text-coral">{eyebrow}</p>
         )}
         <h1
           className={cn(
-            "scan-reveal max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight text-balance sm:text-5xl",
+            "max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight text-balance sm:text-5xl",
             eyebrow ? "mt-4" : "mt-8",
           )}
         >
-          <span className="scan-text">{title}</span>
+          <span>{title}</span>
         </h1>
+        <SketchUnderline className="mt-3 h-8 w-48" />
         {lead && (
           <p className="rise mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty" style={{ ["--d" as string]: "0.5s" }}>
             {lead}
@@ -156,7 +158,7 @@ export function SectionTitle({
   return (
     <div className={cn("max-w-2xl", className)}>
       {eyebrow && (
-        <p className="font-mono text-[12px] font-medium uppercase tracking-[0.2em] text-accent">{eyebrow}</p>
+        <p className="font-mono text-[12px] font-medium uppercase tracking-[0.2em] text-coral">{eyebrow}</p>
       )}
       <h2 id={id} className={cn("text-3xl font-semibold tracking-tight text-balance sm:text-4xl", eyebrow && "mt-3")}>
         {title}

@@ -1,3 +1,5 @@
+
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -30,6 +32,7 @@ export default function EndpointRadarPage() {
             <Breadcrumbs items={[{ name: "Products", path: "/products" }, { name: "EndpointRadar", path: "/endpointradar" }]} />
             <p className="mt-8 flex items-center gap-2 font-mono text-xs uppercase tracking-[.2em] text-blue-400"><Radar className="h-4 w-4" /> EndpointRadar · by BugSnaps</p>
             <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">Free Windows endpoint security scanner.</h1>
+              <SketchUnderline className="mt-3 h-8 w-48" />
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">Check firewall, antivirus, updates and more with a read-only Windows posture scan. Review findings in the free browser workspace and plan your next steps.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/endpointradar/app" className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-blue-500">Open free workspace <ArrowRight className="h-4 w-4" /></Link>

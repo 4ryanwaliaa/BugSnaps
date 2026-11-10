@@ -32,7 +32,7 @@ export function SectionHeading({
   const centered = align === "center";
   return (
     <Reveal className={cn("max-w-2xl", centered && "mx-auto text-center")}>
-      <p className="font-mono text-[13px] font-medium uppercase tracking-[0.2em] text-accent">
+      <p className="font-mono text-[13px] font-medium uppercase tracking-[0.2em] text-coral">
         {eyebrow}
       </p>
       <h2 className="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-[2.75rem] sm:leading-[1.1]">

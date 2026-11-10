@@ -1,3 +1,4 @@
+import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, ShieldCheck } from "lucide-react";
 import { ScanTheatre } from "@/components/home/scan-theatre";
@@ -42,9 +43,7 @@ export function HomeHero() {
               <span className="text-sky-200">penetration</span>{" "}
               <span className="sketch-word">
                 <span className="testing-gradient">testing.</span>
-                <svg aria-hidden="true" viewBox="0 0 300 24" className="sketch-underline" fill="none">
-                  <path pathLength="1" d="M5 14C65 3 174 4 292 10M30 21C111 12 194 12 265 16" />
-                </svg>
+                <SketchUnderline className="sketch-underline" />
               </span>
             </span>
           </h1>
