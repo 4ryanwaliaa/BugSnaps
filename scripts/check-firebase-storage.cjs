@@ -159,88 +159,6 @@ function testClientExports(exportMod) {
   assert.throws(() => exportMod.clientExportContent(emptyReport, "pdf"), /Unsupported client export format/);
 }
 
-async function testHistoryModule(historyMod, firebaseState) {
-  assert.equal("saveToHistory" in historyMod, false, "saveToHistory must be removed so no reports save to Firebase");
-
-  // Slim live snapshot converts cleanly without target arrays or discovery.endpoints
-  const slimJob = historyMod.liveToJob(
-    "scan-live-1",
-    {
-      id: "scan-live-1",
-      asset: "app.example.com",
-      state: "running",
-      phase: "testing",
-      progress: "Running 10/50 checks",
-      error: null,
-      started_at: "2026-11-13T01:00:00Z",
-      finished_at: null,
-      target_count: 145,
-      checks_done: 10,
-      checks_total: 50,
-      eta_seconds: 32,
-      estimated_completion_at: "2026-11-13T01:00:42Z",
-      elapsed_seconds: 8,
-      discovery: {
-        pages_fetched: 20,
-        stopped_early: false,
-        endpoint_count: 145,
-        attack_surface: { pages: 12, endpoints: 130, forms: 4, auth_surfaces: 1 },
-        out_of_scope: 2,
-        targets_added: 140,
-      },
-      history: true, // even if an old record claims history:true, client forces false
-      saved: true,
-    },
-  );
-  assert.equal(slimJob.history, false);
-  assert.equal(slimJob.target_count, 145);
-  assert.deepEqual(slimJob.targets, []);
-  assert.deepEqual(slimJob.discovery.endpoints, []);
-
-  // watchLive subscribes only to users/{uid}/live/{id} and cleans up when unsubscribed
-  let latest = null;
-  let err = null;
-  const unsub = await historyMod.watchLive(
-    "scan-live-2",
-    (live) => {
-      if (live) {
-        latest = historyMod.liveToJob("scan-live-2", live);
-      }
-    },
-    (e) => {
-      err = e;
-    },
-  );
-  assert.equal(err, null);
-  assert.equal(firebaseState.refPaths.at(-1), "users/alice/live/scan-live-2");
-  firebaseState.emit({
-    id: "scan-live-2",
-    asset: "app.example.com",
-    state: "running",
-    phase: "testing",
-    progress: "Testing",
-    target_count: 12,
-  });
-  assert.equal(latest.state, "running");
-  assert.equal(latest.target_count, 12);
-  assert.equal(firebaseState.activeListeners, 1);
-
-  firebaseState.emit({
-    id: "scan-live-2",
-    asset: "app.example.com",
-    state: "done",
-    phase: "finished",
-    progress: "Finished",
-    finished_at: "2026-11-13T01:02:00Z",
-    email_status: "sent",
-    saved: false,
-    history: false,
-  });
-  assert.equal(latest.state, "done");
-  unsub();
-  assert.equal(firebaseState.activeListeners, 0, "watchLive unsubscribe must detach onValue listener");
-}
-
 async function testPlansModule(plansMod) {
   assert.ok(Array.isArray(plansMod.FALLBACK_PLANS) && plansMod.FALLBACK_PLANS.length >= 2);
   for (const plan of plansMod.FALLBACK_PLANS) {
@@ -324,7 +242,8 @@ function testUiComponentWiring() {
   );
   assert.ok(!assessmentSrc.includes("saveToHistory"), "assessment.tsx must not reference saveToHistory");
   assert.ok(!assessmentSrc.includes("firebase/database"), "assessment.tsx must not directly import firebase/database");
-  assert.ok(assessmentSrc.includes("watchLive"), "assessment.tsx must use watchLive for slim real-time progress");
+  assert.ok(assessmentSrc.includes("await api.scan(id)"), "progress must poll the memory API");
+  assert.ok(!assessmentSrc.includes("@/lib/mypentest/history"));
 
   const dashboardSrc = fs.readFileSync(
     path.join(ROOT, "components/mypentest/app/dashboard.tsx"),
@@ -337,7 +256,7 @@ function testUiComponentWiring() {
     !/refreshHistory|listHistory/.test(mountEffectMatch[0]),
     "dashboard.tsx must not auto-read Firebase history on mount",
   );
-  assert.ok(dashboardSrc.includes("deleteFromHistory"), "dashboard.tsx must keep deleteFromHistory cleanup");
+  assert.ok(!/deleteFromHistory|listHistory|loadFromHistory/.test(dashboardSrc), "no legacy reads or deletes");
 
   const resultViewSrc = fs.readFileSync(
     path.join(ROOT, "components/mypentest/app/result-view.tsx"),
@@ -354,74 +273,20 @@ function testUiComponentWiring() {
 }
 
 async function main() {
-  const firebaseState = {
-    refPaths: [],
-    activeListeners: 0,
-    listener: null,
-    emit(val) {
-      if (this.listener) {
-        this.listener({ exists: () => val !== null, val: () => val });
-      }
-    },
-  };
-
   const restore = createTsLoader({
     "server-only": {},
-    "@/lib/firebase-auth": {
-      loadApp: () => Promise.resolve({ name: "mock-app" }),
-      realtimeDatabase: () => ({}),
-    },
-    "firebase/auth": {
-      getAuth: () => ({ currentUser: { uid: "alice" } }),
-    },
-    "firebase/database": {
-      getDatabase: () => ({ name: "mock-db" }),
-      ref(_db, p) {
-        firebaseState.refPaths.push(p);
-        return { path: p };
-      },
-      onValue(_ref, cb) {
-        firebaseState.activeListeners += 1;
-        firebaseState.listener = cb;
-        return () => {
-          firebaseState.activeListeners = Math.max(0, firebaseState.activeListeners - 1);
-          firebaseState.listener = null;
-        };
-      },
-      get() {
-        return Promise.resolve({ exists: () => false, val: () => null });
-      },
-      query(r) {
-        return r;
-      },
-      orderByChild(c) {
-        return c;
-      },
-      limitToLast(n) {
-        return n;
-      },
-      remove() {
-        return Promise.resolve();
-      },
-      set() {
-        throw new Error("RTDB set() must never be called by report flows");
-      },
-      update() {
-        throw new Error("RTDB update() must never be called by report flows");
-      },
-    },
+    "@/lib/firebase-auth": {},
+    "firebase/database": new Proxy({}, { get() { throw new Error("Scan code must never access Firebase Database"); } }),
   });
 
   try {
     const exportMod = require(path.join(ROOT, "lib/mypentest/export-client.ts"));
-    const historyMod = require(path.join(ROOT, "lib/mypentest/history.ts"));
     const plansMod = require(path.join(ROOT, "lib/plans.ts"));
 
     testClientExports(exportMod);
-    await testHistoryModule(historyMod, firebaseState);
     await testPlansModule(plansMod);
     testUiComponentWiring();
-    console.log("check-firebase-storage: PASS (exports, slim live, non-storage plans, UI wiring verified)");
+    console.log("check-firebase-storage: PASS (local exports, non-storage plans, no history access verified)");
   } finally {
     restore();
   }

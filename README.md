@@ -8,7 +8,7 @@ The BugSnaps website (bugsnaps.in): the company, its products - **MyPentest**
 
 - **Next.js 15** (App Router) + **TypeScript**, statically rendered except the MyPentest API proxy
 - **Tailwind CSS v4** - design tokens in `app/globals.css`
-- **Firebase Auth + Realtime Database** (client SDK, lazy-loaded) - MyPentest sign-in and history
+- **Firebase Auth + Realtime Database** (client SDK, lazy-loaded) - MyPentest sign-in; essential account controls only
 - **Lucide** icons; Framer Motion only on `/personal`
 
 ```bash
