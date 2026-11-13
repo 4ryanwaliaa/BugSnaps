@@ -94,7 +94,7 @@ const faqs = [
   {
     question: "Are scheduled retests and automatic assessment comparisons available?",
     answer:
-      "Scheduled retests and automatic diffing between assessments are on the MyPentest roadmap. Today, start another assessment yourself and compare the findings and evidence from your saved reports. Plan limits and available scan credits apply.",
+      "Scheduled retests and automatic diffing between assessments are on the MyPentest roadmap. Today, download your report after an assessment finishes, start another assessment yourself after fixing issues, and compare the findings and evidence. Plan limits and available scan credits apply.",
   },
   {
     question: "Will AI penetration testing fix my application automatically?",
@@ -228,7 +228,7 @@ export default function ImprovementsPage() {
                 "Account-bound DNS verification and scoped assessment configuration.",
                 `${ENGINE_FACTS.checks} checks, with passive and deeper testing modes and optional test accounts.`,
                 "Findings with severity, confidence, evidence and remediation guidance.",
-                "Saved assessment history and reports, subject to your plan's access limits.",
+                "Direct post-scan report downloads (JSON, Markdown, HTML, SARIF, Print/PDF) without Firebase report storage.",
                 "A new assessment you start yourself after deploying a fix.",
               ].map((item) => (
                 <li key={item} className="flex gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" /><span>{item}</span></li>

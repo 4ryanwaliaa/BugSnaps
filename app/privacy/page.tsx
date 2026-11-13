@@ -43,12 +43,13 @@ export default function PrivacyPage() {
             in memory by the testing engine, and not included in reports.
           </li>
           <li>
-            Running assessments remain available while they are processed. Finished assessments become eligible
-            for engine cleanup after the configured retention period (24 hours by default); cleanup runs on subsequent
-            assessment activity, so this is not a guaranteed deletion deadline. Saved reports remain in your
-            account-scoped Firebase Realtime Database history until deleted. Database rules restrict customer access
-            to the matching authenticated account; privileged administrative and provider access is separate.
-            You can delete saved reports from your dashboard.
+            Running assessments remain available while they are processed, and live progress uses Firebase
+            Realtime Database while a scan is active. Finished assessments are kept temporarily in the engine for
+            the configured retention period (24 hours by default) so you can view and download your report from the
+            website; cleanup runs on subsequent assessment activity, so this is not a guaranteed deletion deadline.
+            New finished assessment reports are not saved in Firebase Realtime Database. Any legacy saved reports
+            from earlier plans can still be viewed or deleted from your dashboard. Database rules restrict customer
+            access to the matching authenticated account; privileged administrative and provider access is separate.
           </li>
           <li>
             We do not sell assessment results or publish them. Our service providers process data to deliver the
@@ -115,7 +116,7 @@ export default function PrivacyPage() {
         <h2>Infrastructure and data protection</h2>
         <p className="mt-3">
           Vercel hosts the website and API proxy, Render runs the hosted assessment engine, and Google Firebase
-          provides authentication and saved assessment storage. Connections to these services use HTTPS/TLS;
+          provides authentication and real-time assessment progress. Connections to these services use HTTPS/TLS;
           Firebase Authentication and Realtime Database provide provider-managed encryption at rest. MyPentest
           processes assessment data and does not provide end-to-end encryption. Provider logs and backups follow
           their own retention policies. Read our <a href="/security" className="text-accent hover:underline">security page</a>{" "}

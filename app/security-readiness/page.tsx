@@ -208,7 +208,7 @@ export default function SecurityReadinessPage() {
             />
             <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted">
               <p>
-                MyPentest findings include severity, confidence, evidence and remediation. Paid plans offer downloadable reports and saved history. These records can support follow-up work, but an automated assessment does not certify compliance or guarantee acceptance.
+                MyPentest findings include severity, confidence, evidence and remediation, and every completed report can be downloaded directly from the website. These records can support follow-up work, but an automated assessment does not certify compliance or guarantee acceptance.
               </p>
               <p>
                 Expert-led testing can focus on business logic, custom roles and tenant boundaries beyond automated coverage. Confirm the applicable methodology, retesting, schedule and any signed deliverables in the engagement scope.

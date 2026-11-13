@@ -33,9 +33,10 @@ export default async function PricingPage() {
         </h2>
         <PricingPlans plans={plans} />
         <p className="mt-6 text-[13px] text-muted-2">
-          Free includes 1 scan per account, up to 200 URLs and 500 discovered pages. Plus includes all finding details
-          and report downloads, with no plan cap on URLs or discovery. Service limits of 10,000 tested URLs, 50,000
-          discovered pages and one hour per scan still apply. India checkout uses INR; international PayPal checkout uses USD.
+          Both Free and Plus include direct report downloads right after each scan. Free includes 1 scan per account,
+          up to 200 URLs and 500 discovered pages. Plus includes all finding details with no plan cap on URLs or
+          discovery. Service limits of 10,000 tested URLs, 50,000 discovered pages and one hour per scan still apply.
+          India checkout uses INR; international PayPal checkout uses USD.
         </p>
       </Section>
 

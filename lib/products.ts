@@ -55,7 +55,7 @@ export const products: Product[] = [
       "56 checks across web, API, auth and configuration",
       "Authenticated testing with your test accounts",
       "CVSS 3.1 severity, confidence and remediation for every finding",
-      "Paid-plan exports: PDF, HTML, Markdown, JSON, SARIF",
+      "Direct downloads: PDF, HTML, Markdown, JSON, SARIF",
     ],
   },
   {
@@ -108,7 +108,7 @@ export const products: Product[] = [
       "Account-bound DNS TXT domain verification",
       "56 checks: 32 passive and 24 safe-active",
       "Evidence, severity, confidence and remediation",
-      "Report downloads available on paid plans",
+      "Direct report downloads after scan completion",
     ],
   },
   {

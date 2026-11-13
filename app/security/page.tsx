@@ -22,13 +22,13 @@ const protections = [
     icon: Database,
     title: "Encryption at rest",
     description:
-      "Firebase provides encryption at rest for Firebase Authentication and Realtime Database, where account information and saved assessment reports are stored.",
+      "Firebase provides encryption at rest for Firebase Authentication and Realtime Database, where account details and live assessment progress are stored.",
   },
   {
     icon: KeyRound,
     title: "Account isolation",
     description:
-      "Saved reports and scan progress are organized by account. Firebase database rules restrict customer access to the matching signed-in user, and the API verifies Firebase identity tokens.",
+      "Live scan progress and account paths are organized by user account. Firebase database rules restrict customer access to the matching signed-in user, and the API verifies Firebase identity tokens.",
   },
 ];
 
@@ -47,7 +47,7 @@ const providers = [
   },
   {
     name: "Google Firebase",
-    role: "Authentication and saved assessment data",
+    role: "Authentication and real-time progress",
     assurance: "SOC 2 evaluation; provider-managed encryption",
     href: "https://firebase.google.com/support/privacy",
   },
@@ -62,7 +62,7 @@ const faqs = [
   {
     question: "Can another customer read my assessment reports?",
     answer:
-      "Customer access to saved reports, exports and progress is restricted by Firebase rules to the matching authenticated account. The hosted API also checks the verified account identity when accessing assessments. This is logical access isolation on shared infrastructure, rather than a separate database for every customer.",
+      "Customer access to live scan progress and any legacy records is restricted by Firebase rules to the matching authenticated account. The hosted API also checks the verified account identity when accessing assessments. This is logical access isolation on shared infrastructure, rather than a separate database for every customer.",
   },
   {
     question: "Is my assessment data end-to-end encrypted?",
@@ -168,11 +168,11 @@ export default function SecurityPage() {
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
               <p>
                 Firebase Authentication handles sign-in. The hosted API verifies identity tokens and checks the
-                assessment owner. Saved reports, exports and scan progress use account-scoped database paths
-                protected by Firebase access rules.
+                assessment owner. Live scan progress uses account-scoped database paths protected by Firebase access rules,
+                and completed reports are downloaded directly from the website rather than stored in Firebase.
               </p>
               <p>
-                You can delete saved assessment reports from your dashboard. For account deletion or a wider
+                You can remove any legacy saved records from your dashboard. For account deletion or a wider
                 data request, contact <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent hover:underline">{CONTACT_EMAIL}</a>.
                 Provider logs and backups have their own retention; deleting a dashboard report does not promise
                 immediate removal from every provider system.

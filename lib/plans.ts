@@ -95,7 +95,7 @@ export const FALLBACK_PLANS: Plan[] = [
       "Optional email summary on completion"
     ],
     "yearlyPrice": 0,
-    "exports": [],
+    "exports": ["json", "md", "html", "sarif", "pdf"],
     "highlight": false,
     "public": true,
     "lifetimeScans": true,
@@ -123,7 +123,7 @@ export const FALLBACK_PLANS: Plan[] = [
     "crawlPages": 50000,
     "scanHours": 1,
     "manualTesting": false,
-    "history": true,
+    "history": false,
     "perks": [
       "Everything Operator shows, for one scan",
       "Full attack-chain analysis, critical findings included",
@@ -164,7 +164,7 @@ export const FALLBACK_PLANS: Plan[] = [
     "crawlPages": 50000,
     "scanHours": 1,
     "manualTesting": false,
-    "history": true,
+    "history": false,
     "perks": [
       "Unused scans carry over when you buy another pack",
       "No monthly subscription or automatic charge",
@@ -206,7 +206,7 @@ export const FALLBACK_PLANS: Plan[] = [
     "crawlPages": 50000,
     "scanHours": 1,
     "manualTesting": false,
-    "history": true,
+    "history": false,
     "perks": [
       "Everything in Hunter",
       "Full attack-chain analysis, critical findings included",
@@ -248,7 +248,7 @@ function planFrom(id: string, raw: Record<string, unknown>, base?: Plan): Plan {
   const severities = list(raw.severities)?.filter((s): s is Severity => SEVERITIES.includes(s as Severity));
   const exports =
     raw.exports === "none"
-      ? []
+      ? (id === "free" ? fallback.exports : [])
       : list(raw.exports)?.filter((f): f is ExportFormat => EXPORT_FORMATS.includes(f as ExportFormat));
   const perks = list(raw.perks)?.filter((p): p is string => typeof p === "string" && p.trim().length > 0);
   return {
@@ -271,8 +271,8 @@ function planFrom(id: string, raw: Record<string, unknown>, base?: Plan): Plan {
     crawlPages: num(raw.crawlPages, fallback.crawlPages),
     scanHours: num(raw.scanHours, fallback.scanHours),
     manualTesting: typeof raw.manualTesting === "boolean" ? raw.manualTesting : fallback.manualTesting,
-    history: typeof raw.history === "boolean" ? raw.history : fallback.history,
-    exports: exports ? EXPORT_FORMATS.filter((f) => exports.includes(f)) : fallback.exports,
+    history: false,
+    exports: exports && exports.length ? EXPORT_FORMATS.filter((f) => exports.includes(f)) : fallback.exports,
     perks: perks ?? fallback.perks,
     highlight: typeof raw.highlight === "boolean" ? raw.highlight : fallback.highlight,
   };
@@ -325,8 +325,8 @@ export function withEngine(plan: Plan, engine?: EnginePlan): Plan {
     scanWindowDays: engine.scan_window_days,
     concurrentScans: engine.max_concurrent_scans,
     severities: SEVERITIES.filter((s) => engine.severities.includes(s)),
-    history: engine.history,
-    exports: EXPORT_FORMATS.filter((f) => engine.exports.includes(f)),
+    history: false,
+    exports: engine.exports.length ? EXPORT_FORMATS.filter((f) => engine.exports.includes(f)) : plan.exports,
   };
 }
 
@@ -377,7 +377,7 @@ const FORMAT_LABEL: Record<ExportFormat, string> = {
 
 /** "Download reports as JSON, Markdown, HTML and SARIF" - or what the plan lacks. */
 export function exportsLabel(exports: ExportFormat[]): string {
-  if (!exports.length) return "Read reports in the app (downloads on paid plans)";
+  if (!exports.length) return "Read reports in the app";
   const files = exports.filter((f) => f !== "pdf").map((f) => FORMAT_LABEL[f]);
   if (exports.includes("pdf")) {
     return files.length ? `PDF reports, plus ${joinWords(files)} downloads` : "PDF reports";
@@ -386,7 +386,9 @@ export function exportsLabel(exports: ExportFormat[]): string {
 }
 
 export function historyLabel(history: boolean): string {
-  return history ? "Scan history saved to your account" : "Results kept for 24 hours, not saved to history";
+  return history
+    ? "Real-time progress only; download reports directly (not saved to Firebase)"
+    : "Real-time progress only; kept 24h on engine for direct download (not saved to Firebase)";
 }
 
 const LABEL: Record<Severity, string> = {

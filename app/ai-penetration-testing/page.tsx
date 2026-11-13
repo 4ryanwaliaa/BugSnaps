@@ -53,7 +53,7 @@ const pillars = [
   { icon: BrainCircuit, title: "Attack-surface discovery", body: "Maps pages, forms, APIs, JavaScript-referenced endpoints and login surfaces within the scope you configure." },
   { icon: ShieldCheck, title: "Defined security checks", body: ENGINE_FACTS.checks + " checks: " + ENGINE_FACTS.passiveChecks + " passive checks and " + ENGINE_FACTS.activeSafeChecks + " safe-active checks. Coverage depends on discovered routes, configuration and access." },
   { icon: Layers, title: "Supplied test accounts", body: "Tests signed-in behavior with accounts you supply, including whether one user can read another test user's records (IDOR / BOLA)." },
-  { icon: Terminal, title: "Evidence and remediation", body: "Review the finding's severity, confidence, supporting observations and fix guidance. Paid plans add report downloads and saved history." },
+  { icon: Terminal, title: "Evidence and remediation", body: "Review the finding's severity, confidence, supporting observations and fix guidance, then download the report when your assessment completes." },
 ];
 
 export default function AiPenetrationTestingPage() {
