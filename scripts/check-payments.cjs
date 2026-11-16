@@ -69,7 +69,7 @@ function runner(component, props) {
   };
 }
 
-function fixture({ uid = "alice", providers = true, paypalEnabled = true, payment = null, storage = new Map() } = {}) {
+function fixture({ uid = "alice", providers = true, paypalEnabled = true, payment = null, region = "intl", storage = new Map() } = {}) {
   const calls = [];
   let captureStatus = 200;
   let captureResponder = null;
@@ -133,7 +133,7 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, paymen
   const plans = load("lib/plans.ts", "@/lib/plans");
   const apiModule = load("lib/mypentest/api.ts", "@/lib/mypentest/api");
   const Billing = load("components/mypentest/app/billing.tsx").Billing;
-  const view = runner(Billing, { plans: plans.FALLBACK_PLANS.filter((plan) => ["free", "plus"].includes(plan.id)) });
+  const view = runner(Billing, { region, plans: plans.FALLBACK_PLANS.filter((plan) => ["free", "plus"].includes(plan.id)) });
   return {
     calls, storage, state, plans, modules, context, load, view, apiModule,
     setCaptureStatus: (status) => { captureStatus = status; },
@@ -143,8 +143,9 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, paymen
     button: (text) => nodes(view.tree).find((node) => node.type === "button" && copy(node).includes(text)),
     async startInternational() {
       view.render(); await flush(); view.render();
-      assert.ok(this.find("PayPalCheckout"), "PayPal checkout is primary");
-      assert.ok(this.button("For India:"), "India checkout is available below PayPal");
+      assert.ok(this.find("PayPalCheckout"), "international visitors get PayPal");
+      assert.equal(this.button("Buy 2 more scans"), undefined, "international visitors see one checkout, not two");
+      assert.ok(this.button("Pay in INR with Razorpay"), "a misdetected Indian buyer can switch to Razorpay");
       return this.find("PayPalCheckout").props;
     },
   };
@@ -158,10 +159,28 @@ async function main() {
   const unavailable = fixture({ paypalEnabled: false });
   unavailable.view.render(); await flush(); unavailable.view.render();
   assert.equal(unavailable.find("PayPalCheckout"), undefined, "disabled PayPal must be hidden");
+  assert.equal(unavailable.button("Buy 2 more scans").props.disabled, false, "international visitors fall back to Razorpay when PayPal is off");
+  assert.equal(unavailable.button("Pay in"), undefined, "no switch when only one provider is available");
 
-  const linked = fixture({ payment: "paypal" });
+  const india = fixture({ region: "in" });
+  india.view.render(); await flush(); india.view.render();
+  assert.equal(india.find("PayPalCheckout"), undefined, "Indian visitors see Razorpay only");
+  assert.equal(india.button("Buy 2 more scans").props.disabled, false);
+  const inrCard = nodes(india.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
+  assert.equal(inrCard.props.plan.currency, "INR"); assert.equal(inrCard.props.plan.price, 49900);
+  assert.equal(inrCard.props.discount, 25, "India card shows the server-matched 25 percent discount");
+  india.button("Pay in USD with PayPal").props.onClick(); india.view.render(); await flush(); india.view.render();
+  assert.ok(india.find("PayPalCheckout"), "the switch moves an Indian visitor to PayPal");
+  assert.equal(india.button("Buy 2 more scans"), undefined);
+
+  const forcedRazorpay = fixture({ payment: "razorpay" });
+  forcedRazorpay.view.render(); await flush(); forcedRazorpay.view.render();
+  assert.equal(forcedRazorpay.find("PayPalCheckout"), undefined, "?payment=razorpay overrides the detected region");
+  assert.ok(forcedRazorpay.button("Buy 2 more scans"));
+
+  const linked = fixture({ payment: "paypal", region: "in" });
   linked.view.render(); await flush(); linked.view.render();
-  assert.ok(linked.find("PayPalCheckout"), "international pricing link selects PayPal automatically");
+  assert.ok(linked.find("PayPalCheckout"), "?payment=paypal overrides an Indian region");
   assert.ok(linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "plus")).includes("Priority support for paid users"));
   assert.ok(!linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "free")).includes("Priority support for paid users"));
 
@@ -169,20 +188,16 @@ async function main() {
   const checkout = await success.startInternational();
   const usdCard = nodes(success.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
   assert.equal(usdCard.props.plan.currency, "USD"); assert.equal(usdCard.props.plan.price, 499);
-  assert.ok(copy(success.button("For India:")).includes("374"), "India checkout shows the server-matched 25 percent discount");
-  const standard = fixture(); standard.state.offer = null;
-  await standard.startInternational();
-  assert.ok(copy(standard.button("For India:")).includes("499"), "India list price remains INR 499");
-  assert.equal(success.button("For India:").props.disabled, false);
+  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, false);
   const orderId = await checkout.createOrder();
   success.view.render();
-  assert.equal(success.button("For India:").props.disabled, true, "PayPal checkout blocks a simultaneous Razorpay payment");
+  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, true, "PayPal checkout blocks switching to a simultaneous Razorpay payment");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("create-order")).body, { plan: "plus", cycle: "monthly" }, "browser cannot submit a price");
   await checkout.onApprove(orderId); success.view.render();
   assert.equal(success.find("Notice").props.tone, "ok");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("capture-order")).body, { order_id: orderId });
   assert.equal(success.storage.size, 0, "confirmed order clears recovery storage");
-  assert.equal(success.button("For India:").props.disabled, false, "confirmed checkout restores the India payment option");
+  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, false, "confirmed checkout restores the India payment option");
 
   const cancelled = fixture();
   const cancelCheckout = await cancelled.startInternational();
@@ -197,7 +212,7 @@ async function main() {
   assert.equal(failure.find("Notice").props.tone, "warn", "approval must not show success when capture confirmation fails");
   assert.equal(failure.find("PayPalCheckout").props.disabled, true, "unconfirmed order blocks a second purchase");
   assert.ok(failure.storage.has("mypentest:pending-paypal-payment:alice"), "recovery is scoped to the owner");
-  assert.equal(failure.button("India").props.disabled, true);
+  assert.equal(failure.button("Pay in INR with Razorpay").props.disabled, true);
   failure.setCaptureStatus(200); failure.button("Retry PayPal confirmation").props.onClick(); await flush(); failure.view.render();
   assert.equal(failure.find("Notice").props.tone, "ok");
   assert.equal(failure.calls.filter((call) => call.url.endsWith("create-order")).length, 1, "recovery never starts another charge");
@@ -289,7 +304,7 @@ async function main() {
   assert.equal(sdkAttempts, 2, "SDK load failure clears the failed loading promise");
   assert.equal(nodes(brokenView.tree).some((node) => node.props?.role === "alert"), false);
   brokenView.dispose();
-  console.log("PASS: provider gating, server-priced USD checkout, cancellation, same-order recovery, reload recovery, account isolation, currency rounding, and SDK lifecycle.");
+  console.log("PASS: region-based single checkout, provider gating, server-priced USD checkout, cancellation, same-order recovery, reload recovery, account isolation, currency rounding, and SDK lifecycle.");
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

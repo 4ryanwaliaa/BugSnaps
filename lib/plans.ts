@@ -27,6 +27,13 @@ export type Cycle = "monthly" | "yearly";
 /** Public list price; the backend owns the amount charged. */
 export const INTERNATIONAL_PLUS_USD_CENTS = 499;
 
+/**
+ * Which checkout a visitor is shown: "in" is Razorpay in INR, "intl" is
+ * PayPal in USD. Detected on the server (lib/region.ts); it only picks what
+ * is displayed, never what is charged.
+ */
+export type Region = "in" | "intl";
+
 export interface Plan {
   id: string;
   order: number;

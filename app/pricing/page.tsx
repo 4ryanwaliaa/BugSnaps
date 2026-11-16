@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { CtaBand, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { PricingPlans } from "@/components/mypentest/plan-cards";
 import { INTERNATIONAL_PLUS_USD_CENTS, LAUNCH_OFFER, SERVICE_PRICING, getPlans } from "@/lib/plans";
+import { visitorRegion } from "@/lib/region";
 import { pageMetadata } from "@/lib/site";
 
 const internationalPlusPrice = `US$${(INTERNATIONAL_PLUS_USD_CENTS / 100).toFixed(2)}`;
@@ -15,8 +16,11 @@ export const metadata: Metadata = pageMetadata({
   path: "/pricing",
 });
 
-export default async function PricingPage() {
-  const plans = await getPlans();
+export default async function PricingPage({ searchParams }: { searchParams: Promise<{ region?: string | string[] }> }) {
+  // Plus shows one checkout: Razorpay for visitors in India, PayPal elsewhere.
+  // ?region= is the visitor's own correction (VPN, travelling) and wins.
+  const [plans, region] = await Promise.all([getPlans(), searchParams.then((p) => visitorRegion(p.region))]);
+  const international = region === "intl";
 
   return (
     <SiteShell>
@@ -31,12 +35,17 @@ export default async function PricingPage() {
         <h2 id="plans-title" className="sr-only">
           MyPentest plans
         </h2>
-        <PricingPlans plans={plans} />
+        <PricingPlans plans={plans} region={region} />
         <p className="mt-6 text-[13px] text-muted-2">
           Both Free and Plus include direct report downloads right after each scan. Free includes 1 scan per account,
           up to 200 URLs and 500 discovered pages. Plus includes all finding details with no plan cap on URLs or
           discovery. Service limits of 10,000 tested URLs, 50,000 discovered pages and one hour per scan still apply.
-          India checkout uses INR; international PayPal checkout uses USD.
+          {international
+            ? " Prices are shown in USD with PayPal checkout. "
+            : " Prices are shown in INR with Razorpay checkout (UPI, cards and netbanking). "}
+          <a href={`/pricing?region=${international ? "in" : "intl"}`} rel="nofollow" className="text-accent hover:underline">
+            {international ? "Paying from India? See INR pricing." : "Paying from outside India? See USD pricing."}
+          </a>
         </p>
       </Section>
 
