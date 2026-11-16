@@ -24,8 +24,16 @@ export type ExportFormat = "json" | "md" | "html" | "sarif" | "pdf";
 export const EXPORT_FORMATS: ExportFormat[] = ["json", "md", "html", "sarif", "pdf"];
 export type Cycle = "monthly" | "yearly";
 
-/** Public list price; the backend owns the amount charged. */
-export const INTERNATIONAL_PLUS_USD_CENTS = 499;
+/**
+ * Public international list prices in US cents, shown to visitors outside
+ * India. The engine owns the amount actually charged (its PayPal price
+ * table); in the app, its prices replace these.
+ */
+export const INTERNATIONAL_USD_CENTS: Record<string, number> = { plus: 499, operator: 1499, unlock: 299 };
+export const INTERNATIONAL_PLUS_USD_CENTS = INTERNATIONAL_USD_CENTS.plus;
+
+/** Unlocking one free report's hidden findings: ₹299 (paise). The engine owns the charge. */
+export const UNLOCK_PRICE_INR = 29_900;
 
 /**
  * Which checkout a visitor is shown: "in" is Razorpay in INR, "intl" is
@@ -153,7 +161,7 @@ export const FALLBACK_PLANS: Plan[] = [
     "id": "plus",
     "order": 2,
     "title": "Plus",
-    "description": "Two detailed automated pentests for one payment. Your scans stay available until used. Buy another pack whenever you need it.",
+    "description": "Two full pentests with every finding shown, critical included. Buy it after a free scan and it unlocks that report too.",
     "price": 49900,
     "currency": "INR",
     "periodDays": 30,
@@ -174,8 +182,7 @@ export const FALLBACK_PLANS: Plan[] = [
     "history": false,
     "perks": [
       "Unused scans carry over when you buy another pack",
-      "No monthly subscription or automatic charge",
-      "Optional email report on completion",
+      "No subscription, no automatic charge",
       "Priority support for paid users"
     ],
     "yearlyPrice": 0,
@@ -231,6 +238,35 @@ export const FALLBACK_PLANS: Plan[] = [
     "public": false,
     "lifetimeScans": false,
     "scanPack": false
+  },
+  {
+    "id": "operator",
+    "order": 3,
+    "title": "Operator",
+    "description": "Ten full pentests for teams that ship often: test every release and retest every fix. Also unlocks the free report you just ran.",
+    "price": 149900,
+    "currency": "INR",
+    "periodDays": 30,
+    "scans": 10,
+    "scanWindowDays": 30,
+    "concurrentScans": 2,
+    "severities": ["critical", "high", "medium", "low", "info"],
+    "targetsPerScan": 10000,
+    "crawlPages": 50000,
+    "scanHours": 1,
+    "manualTesting": false,
+    "history": false,
+    "perks": [
+      "Retest after every fix without counting the cost",
+      "No subscription, no automatic charge",
+      "Priority support for paid users"
+    ],
+    "yearlyPrice": 0,
+    "exports": ["json", "md", "html", "sarif", "pdf"],
+    "highlight": false,
+    "public": true,
+    "lifetimeScans": true,
+    "scanPack": true
   }
 ];
 
@@ -392,10 +428,8 @@ export function exportsLabel(exports: ExportFormat[]): string {
   return `Download reports as ${joinWords(files)}`;
 }
 
-export function historyLabel(history: boolean): string {
-  return history
-    ? "Real-time progress only; download reports directly (not saved to Firebase)"
-    : "Real-time progress only; kept 24h on engine for direct download (not saved to Firebase)";
+export function historyLabel(_history: boolean): string {
+  return "Private by design: results are deleted 24 hours after the scan";
 }
 
 const LABEL: Record<Severity, string> = {
@@ -438,7 +472,7 @@ export function reachLabel(severities: Severity[]): string {
 export function hiddenLabel(severities: Severity[]): string | null {
   const hidden = SEVERITIES.filter((s) => !severities.includes(s) && s !== "info");
   if (!hidden.length) return null;
-  return `${capitalise(joinWords(hidden.map((s) => LABEL[s])))} findings counted, detailed on a higher plan`;
+  return `${capitalise(joinWords(hidden.map((s) => LABEL[s])))} findings counted; unlock them from your report`;
 }
 
 function sizeLabel(plan: Plan): string {
@@ -462,7 +496,6 @@ export function planFeatures(plan: Plan): string[] {
     historyLabel(plan.history),
     exportsLabel(plan.exports),
     sizeLabel(plan),
-    ...(plan.scanPack ? ["Scans follow the service time and safety limits"] : []),
     ...(plan.manualTesting ? ["A custom manual penetration test by BugSnaps testers"] : []),
     ...plan.perks,
     ...(plan.price > 0 && !plan.perks.some((perk) => /priority.*support/i.test(perk)) ? ["Priority support for paid users"] : []),

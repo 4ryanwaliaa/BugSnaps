@@ -84,6 +84,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       links: [
         { label: "Privacy policy", href: "/privacy" },
         { label: "Terms of service", href: "/terms" },
+        { label: "Refund policy", href: "/refund-policy" },
         { label: "Responsible disclosure", href: "/responsible-disclosure" },
         { label: "Site map", href: "/site-map" },
       ],
@@ -129,6 +130,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       links: [
         { label: "Privacy policy", href: "/privacy" },
         { label: "Terms of service", href: "/terms" },
+        { label: "Refund policy", href: "/refund-policy" },
         { label: "Site map", href: "/site-map" },
       ],
     },
