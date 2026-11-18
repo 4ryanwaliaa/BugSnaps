@@ -2,7 +2,7 @@ import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "next/link";
 import { FileText, ShieldCheck } from "lucide-react";
 import { ScanTheatre } from "@/components/home/scan-theatre";
-import { ScanTrustPoints } from "@/components/home/scan-start";
+import { ScanTrustPoints } from "@/components/mypentest/trust-points";
 import { ScanForm } from "@/components/mypentest/scan-form";
 import { EXAMPLE_REPORT } from "@/lib/mypentest/example";
 import { theatreData } from "@/lib/mypentest/theatre";

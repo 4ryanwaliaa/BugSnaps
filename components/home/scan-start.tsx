@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Check, CreditCard, FileText, ListChecks, ShieldCheck, ShieldOff, X } from "lucide-react";
+import { Check, FileText, X } from "lucide-react";
+import { ScanTrustPoints } from "@/components/mypentest/trust-points";
 import { Container, Section, SectionTitle } from "@/components/site/page-parts";
 import { ScanForm } from "@/components/mypentest/scan-form";
 import { SketchUnderline } from "@/components/ui/sketch-underline";
 import { BOUNDARIES } from "@/lib/mypentest/content";
-import { ENGINE_FACTS, routes } from "@/lib/mypentest";
+import { routes } from "@/lib/mypentest";
 import { LAUNCH_OFFER } from "@/lib/plans";
 
 /*
@@ -12,26 +13,6 @@ import { LAUNCH_OFFER } from "@/lib/plans";
  * from ENGINE_FACTS, BOUNDARIES or the plan copy, so it stays true as the
  * engine changes. No invented numbers, logos or quotes.
  */
-
-/** Short, true reasons it is safe to type your domain in. */
-export function ScanTrustPoints({ className = "" }: { className?: string }) {
-  const points = [
-    { icon: ShieldCheck, text: "Ownership checked first" },
-    { icon: ShieldOff, text: "Non-destructive checks" },
-    { icon: ListChecks, text: `${ENGINE_FACTS.checks} checks per scan` },
-    { icon: CreditCard, text: "No credit card" },
-  ];
-  return (
-    <ul className={`grid grid-cols-2 gap-x-5 gap-y-2.5 text-[13.5px] max-[379px]:grid-cols-1 text-muted sm:flex sm:flex-wrap ${className}`}>
-      {points.map(({ icon: Icon, text }) => (
-        <li key={text} className="flex items-center gap-2">
-          <Icon className="h-4 w-4 flex-none text-emerald-400" aria-hidden="true" />
-          {text}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 /** "Will it break my site?" answered up front, from the engine's real boundaries. */
 export function HomeSafety() {
