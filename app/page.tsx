@@ -10,7 +10,7 @@ import { HomeProducts } from "@/components/home/products";
 import { HomeHowItRuns, HomeMarquee, HomeReport, HomeStats } from "@/components/home/sections";
 import { HomeWhy } from "@/components/home/why";
 import { HomeResearch } from "@/components/home/research";
-import { HomeClosing } from "@/components/home/closing";
+import { HomeSafety, HomeScanClosing, HomeScanPrompt } from "@/components/home/scan-start";
 import { LegacyHashRedirect } from "@/components/home/legacy-hash-redirect";
 import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
 import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
@@ -42,9 +42,11 @@ export default function Home() {
       <HomeHero />
       <HomeMarquee />
       <HomeHowItRuns />
+      <HomeSafety />
       <TutorialVideo />
       <HomeStats />
       <HomeReport />
+      <HomeScanPrompt />
       <HomeProducts />
 
       <Section labelledBy="choose-security-check" className="border-t border-white/5">
@@ -73,13 +75,13 @@ export default function Home() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <span className="font-mono text-xs uppercase tracking-wider text-emerald-400 font-semibold">
-                World-Ready Security
+                Trust &amp; methodology
               </span>
               <h2 id="world-ready-trust-title" className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                You don&apos;t need to be insecure about the world: We&apos;ve got your back.
+                Know exactly what a scan covers before you rely on it.
               </h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                Assess your authorized application, review finding evidence and retest fixes. Use the coverage and reporting limits to decide when you need a separately scoped expert engagement.
+                We publish how MyPentest is tested, what it can and can&apos;t find, and when you need a human pentester instead. Read it, then decide.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -87,7 +89,7 @@ export default function Home() {
                 href="/security-readiness"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent"
               >
-                World-Ready Trust Center <ArrowRight className="h-4 w-4" />
+                Visit the Trust Center <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/benchmarks"
@@ -164,7 +166,7 @@ export default function Home() {
         </div>
         <Link href="/vulnerability-guides" prefetch={false} className="mt-6 inline-block text-sm text-accent hover:underline">Explore the React2Shell and framework vulnerability guide collection</Link>
       </Section>
-      <HomeClosing />
+      <HomeScanClosing />
     </SiteShell>
   );
 }

@@ -1,12 +1,13 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { FileText, ShieldCheck } from "lucide-react";
 import { ScanTheatre } from "@/components/home/scan-theatre";
+import { ScanTrustPoints } from "@/components/home/scan-start";
+import { ScanForm } from "@/components/mypentest/scan-form";
 import { EXAMPLE_REPORT } from "@/lib/mypentest/example";
 import { theatreData } from "@/lib/mypentest/theatre";
-import { newAssessmentUrl } from "@/lib/mypentest";
+import { routes } from "@/lib/mypentest";
 import { LAUNCH_OFFER } from "@/lib/plans";
-import { MYRECON_URL } from "@/lib/site";
 
 const delay = (seconds: number) => ({ ["--d" as string]: `${seconds}s` });
 
@@ -52,32 +53,26 @@ export function HomeHero() {
             then retest after remediation. Start free or scope an expert-led assessment.
           </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <a
-              href={newAssessmentUrl()}
-              className="site-button site-button-primary min-h-14 w-full px-7 text-[15px] sm:w-auto"
-            >
-              Run MyPentest free
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              href={MYRECON_URL}
-              className="site-button site-button-secondary min-h-14 px-6 text-[15px]"
-            >
-              Explore MyRecon
-              <ArrowUpRight className="h-4 w-4 text-muted" aria-hidden="true" />
-            </a>
+          <div className="rise mt-9" style={delay(0.7)}>
+            <p className="mb-3 pl-1 text-sm font-medium text-foreground">
+              Enter your website to start a free scan
+            </p>
+            <ScanForm className="max-w-[34rem]" />
+            <ScanTrustPoints className="pl-1" />
           </div>
 
-          <p className="rise mt-6 text-sm text-muted" style={delay(0.82)}>
-            Need a manual engagement?{" "}
-            <Link href="/contact" className="text-foreground underline decoration-white/25 underline-offset-4 hover:decoration-foreground">
-              Book a security consultation
+          <p className="rise mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 pl-1 text-sm text-muted" style={delay(0.85)}>
+            <Link href={routes.exampleReport} className="inline-flex items-center gap-1.5 text-accent hover:underline">
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              See an example report
+            </Link>
+            <Link href="/contact" className="hover:text-foreground">
+              Manual pentest? Talk to us
             </Link>
           </p>
 
-          <p className="rise mt-8 font-mono text-[12px] tracking-wide text-muted-2" style={delay(0.92)}>
-            {LAUNCH_OFFER.headline} · No credit card · Only tests domains you prove you own
+          <p className="rise mt-6 pl-1 font-mono text-[12px] tracking-wide text-muted-2" style={delay(0.92)}>
+            {LAUNCH_OFFER.headline} · One full trial assessment · Only tests domains you prove you own
           </p>
         </div>
 
