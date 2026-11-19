@@ -560,6 +560,8 @@ summary::-webkit-details-marker {
 .home-reading-pen .ink-pen { display: none; }
 @media (prefers-reduced-motion: reduce), (forced-colors: active) { .reading-pen { display: none; } }
 @media print { .reading-pen { display: none; } }
+/* Drawing on the page is a mouse/stylus feature; touch screens keep the page simple and scrollable. */
+@media (hover: none), (pointer: coarse) { .pen-toolbar { display: none; } }
 .public-site nav[aria-label="Breadcrumb"] [aria-current="page"] { color: var(--color-coral); }
 .public-site .card-hover:hover { border-color: rgb(255 173 145 / 0.35); }
 @media (prefers-reduced-motion: reduce) {
