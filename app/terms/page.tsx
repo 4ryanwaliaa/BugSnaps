@@ -32,8 +32,8 @@ export default function TermsPage() {
         <h2>MyPentest: the service</h2>
         <p className="mt-3">
           MyPentest has a free plan and paid plans, with the prices, usage limits and inclusions shown on the pricing
-          page. Paid plans are bought through Razorpay for one period at a time and do not renew automatically; a plan
-          applies to assessments started while it is active. MyPentest runs non-destructive checks, but no
+          page. Purchases are one-time payments through Razorpay (in India) or PayPal (elsewhere) and never renew
+          automatically. Refunds follow our <a href="/refund-policy">refund policy</a>. MyPentest runs non-destructive checks, but no
           automated tool finds every vulnerability; results are provided as-is and do not replace a manual penetration
           test. Run assessments against staging environments where you can.
         </p>

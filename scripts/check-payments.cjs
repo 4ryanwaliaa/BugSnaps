@@ -69,19 +69,22 @@ function runner(component, props) {
   };
 }
 
-function fixture({ uid = "alice", providers = true, paypalEnabled = true, payment = null, region = "intl", storage = new Map() } = {}) {
+function fixture({ uid = "alice", providers = true, paypalEnabled = true, payment = null, storage = new Map(), region = "intl", scan = null, scanUnlockable = true } = {}) {
+  const visitor = { region };
   const calls = [];
   let captureStatus = 200;
   let captureResponder = null;
+  let captureBody = null;
   let owner = uid;
   const window = { confirm: () => true };
   const modules = {
     react,
     "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
-    "next/navigation": { useSearchParams: () => new URLSearchParams(payment ? { payment } : {}) },
-    "lucide-react": { CreditCard: marker("icon"), Loader2: marker("loader") },
+    "next/navigation": { useSearchParams: () => new URLSearchParams({ ...(payment ? { payment } : {}), ...(scan ? { scan } : {}) }) },
+    "lucide-react": { CreditCard: marker("icon"), Loader2: marker("loader"), LockOpen: marker("icon"), ShieldCheck: marker("icon") },
     "@/lib/firebase-auth": { firebaseConfig: { databaseURL: "https://fixture.invalid" }, idToken: async () => `test-${owner}` },
-    "@/lib/mypentest": { routes: { api: "/mypentest/api", consultation: "/contact" } },
+    "@/lib/mypentest": { routes: { api: "/mypentest/api", consultation: "/contact", newAssessment: "/mypentest/app/new",
+      assessment: (id) => `/mypentest/app/assessment?id=${id}`, unlock: (id) => `/mypentest/app/billing?scan=${id}` } },
     "@/lib/mypentest/checkout": { openCheckout: async () => ({ kind: "dismissed", lastError: null }) },
     "@/components/mypentest/plan-cards": { PlanCard: marker("PlanCard"), EnterpriseCard: marker("EnterpriseCard") },
     "@/components/mypentest/app/ui": { Notice: marker("Notice"), Panel: marker("Panel"), Spinner: marker("Spinner"), buttonClass: { primary: "primary", secondary: "secondary" } },
@@ -109,7 +112,9 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, paymen
       calls.push({ url, body, authorization: options.headers.Authorization });
       if (url.endsWith("capture-order") && captureResponder) return captureResponder();
       const status = url.endsWith("capture-order") ? captureStatus : 200;
-      const data = url.endsWith("/billing") ? state
+      const data = url.includes("/scans/") ? { id: scan, state: "done", unlockable: scanUnlockable }
+        : url.endsWith("capture-order") && status === 200 && captureBody ? captureBody
+        : url.endsWith("/billing") ? state
         : url.endsWith("create-order") ? { order_id: "FIXTUREORDER12345", amount: 374, list_amount: 499, currency: "USD", plan: { name: "plus", title: "Plus" } }
         : status === 200 ? { ok: true, subscription: { plan: "plus", title: "Plus", scan_pack: true, scan_credits: 2 } }
         : { error: "Confirmation is temporarily unavailable." };
@@ -133,19 +138,27 @@ function fixture({ uid = "alice", providers = true, paypalEnabled = true, paymen
   const plans = load("lib/plans.ts", "@/lib/plans");
   const apiModule = load("lib/mypentest/api.ts", "@/lib/mypentest/api");
   const Billing = load("components/mypentest/app/billing.tsx").Billing;
-  const view = runner(Billing, { region, plans: plans.FALLBACK_PLANS.filter((plan) => ["free", "plus"].includes(plan.id)) });
+  const view = runner(Billing, { plans: plans.FALLBACK_PLANS.filter((plan) => ["free", "plus"].includes(plan.id)), region });
   return {
     calls, storage, state, plans, modules, context, load, view, apiModule,
     setCaptureStatus: (status) => { captureStatus = status; },
     setCaptureResponder: (fn) => { captureResponder = fn; },
+    setCaptureBody: (body) => { captureBody = body; },
     setUid: (value) => { owner = value; },
+    /** Visitor region (India: Razorpay in ₹; elsewhere: PayPal in US$), then re-render. */
+    region(value) {
+      if (visitor.region === value) return;
+      const toggle = this.button(value === "in" ? "In India?" : "outside India?");
+      assert.ok(toggle, "the page offers a switch to the other checkout");
+      toggle.props.onClick(); visitor.region = value; view.render();
+    },
     find: (name) => nodes(view.tree).find((node) => node.type.displayName === name),
     button: (text) => nodes(view.tree).find((node) => node.type === "button" && copy(node).includes(text)),
     async startInternational() {
       view.render(); await flush(); view.render();
-      assert.ok(this.find("PayPalCheckout"), "international visitors get PayPal");
-      assert.equal(this.button("Buy 2 more scans"), undefined, "international visitors see one checkout, not two");
-      assert.ok(this.button("Pay in INR with Razorpay"), "a misdetected Indian buyer can switch to Razorpay");
+      assert.ok(this.find("PayPalCheckout"), "PayPal checkout is primary outside India");
+      assert.equal(this.button("Get 2 scans"), undefined, "one provider is offered at a time");
+      assert.ok(this.button("In India?"), "visitors can switch to India checkout");
       return this.find("PayPalCheckout").props;
     },
   };
@@ -155,32 +168,19 @@ async function main() {
   const legacy = fixture({ providers: false });
   legacy.view.render(); await flush(); legacy.view.render();
   assert.equal(legacy.button("International"), undefined, "old engine keeps domestic checkout available");
-  assert.equal(legacy.button("Buy 2 more scans").props.disabled, false);
+  assert.equal(legacy.button("Get 2 scans").props.disabled, false);
+  const indian = fixture({ region: "in" });
+  indian.view.render(); await flush(); indian.view.render();
+  assert.equal(indian.find("PayPalCheckout"), undefined, "visitors in India see Razorpay, not PayPal");
+  assert.ok(copy(indian.button("Get 2 scans")).includes("₹"), "India checkout is priced in rupees");
+  assert.ok(indian.button("Outside India?") || indian.button("outside India"), "visitors can switch to US$ checkout");
   const unavailable = fixture({ paypalEnabled: false });
   unavailable.view.render(); await flush(); unavailable.view.render();
   assert.equal(unavailable.find("PayPalCheckout"), undefined, "disabled PayPal must be hidden");
-  assert.equal(unavailable.button("Buy 2 more scans").props.disabled, false, "international visitors fall back to Razorpay when PayPal is off");
-  assert.equal(unavailable.button("Pay in"), undefined, "no switch when only one provider is available");
 
-  const india = fixture({ region: "in" });
-  india.view.render(); await flush(); india.view.render();
-  assert.equal(india.find("PayPalCheckout"), undefined, "Indian visitors see Razorpay only");
-  assert.equal(india.button("Buy 2 more scans").props.disabled, false);
-  const inrCard = nodes(india.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
-  assert.equal(inrCard.props.plan.currency, "INR"); assert.equal(inrCard.props.plan.price, 49900);
-  assert.equal(inrCard.props.discount, 25, "India card shows the server-matched 25 percent discount");
-  india.button("Pay in USD with PayPal").props.onClick(); india.view.render(); await flush(); india.view.render();
-  assert.ok(india.find("PayPalCheckout"), "the switch moves an Indian visitor to PayPal");
-  assert.equal(india.button("Buy 2 more scans"), undefined);
-
-  const forcedRazorpay = fixture({ payment: "razorpay" });
-  forcedRazorpay.view.render(); await flush(); forcedRazorpay.view.render();
-  assert.equal(forcedRazorpay.find("PayPalCheckout"), undefined, "?payment=razorpay overrides the detected region");
-  assert.ok(forcedRazorpay.button("Buy 2 more scans"));
-
-  const linked = fixture({ payment: "paypal", region: "in" });
+  const linked = fixture({ payment: "paypal" });
   linked.view.render(); await flush(); linked.view.render();
-  assert.ok(linked.find("PayPalCheckout"), "?payment=paypal overrides an Indian region");
+  assert.ok(linked.find("PayPalCheckout"), "international visitors get PayPal automatically");
   assert.ok(linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "plus")).includes("Priority support for paid users"));
   assert.ok(!linked.plans.planFeatures(linked.plans.FALLBACK_PLANS.find((plan) => plan.id === "free")).includes("Priority support for paid users"));
 
@@ -188,16 +188,25 @@ async function main() {
   const checkout = await success.startInternational();
   const usdCard = nodes(success.view.tree).find((node) => node.type.displayName === "PlanCard" && node.props.plan.id === "plus");
   assert.equal(usdCard.props.plan.currency, "USD"); assert.equal(usdCard.props.plan.price, 499);
-  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, false);
+  success.region("in");
+  assert.ok(copy(success.button("Get 2 scans")).includes("374"), "India checkout shows the server-matched 25 percent discount");
+  const standard = fixture(); standard.state.offer = null;
+  await standard.startInternational();
+  standard.region("in");
+  assert.ok(copy(standard.button("Get 2 scans")).includes("499"), "India list price remains INR 499");
+  assert.equal(success.button("Get 2 scans").props.disabled, false);
+  success.region("intl");
   const orderId = await checkout.createOrder();
-  success.view.render();
-  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, true, "PayPal checkout blocks switching to a simultaneous Razorpay payment");
+  success.region("in");
+  assert.equal(success.button("Get 2 scans").props.disabled, true, "PayPal checkout blocks a simultaneous Razorpay payment");
+  success.region("intl");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("create-order")).body, { plan: "plus", cycle: "monthly" }, "browser cannot submit a price");
   await checkout.onApprove(orderId); success.view.render();
   assert.equal(success.find("Notice").props.tone, "ok");
   assert.deepEqual(success.calls.find((call) => call.url.endsWith("capture-order")).body, { order_id: orderId });
   assert.equal(success.storage.size, 0, "confirmed order clears recovery storage");
-  assert.equal(success.button("Pay in INR with Razorpay").props.disabled, false, "confirmed checkout restores the India payment option");
+  success.region("in");
+  assert.equal(success.button("Get 2 scans").props.disabled, false, "confirmed checkout restores the India payment option");
 
   const cancelled = fixture();
   const cancelCheckout = await cancelled.startInternational();
@@ -212,7 +221,9 @@ async function main() {
   assert.equal(failure.find("Notice").props.tone, "warn", "approval must not show success when capture confirmation fails");
   assert.equal(failure.find("PayPalCheckout").props.disabled, true, "unconfirmed order blocks a second purchase");
   assert.ok(failure.storage.has("mypentest:pending-paypal-payment:alice"), "recovery is scoped to the owner");
-  assert.equal(failure.button("Pay in INR with Razorpay").props.disabled, true);
+  failure.region("in");
+  assert.equal(failure.button("Get 2 scans").props.disabled, true);
+  failure.region("intl");
   failure.setCaptureStatus(200); failure.button("Retry PayPal confirmation").props.onClick(); await flush(); failure.view.render();
   assert.equal(failure.find("Notice").props.tone, "ok");
   assert.equal(failure.calls.filter((call) => call.url.endsWith("create-order")).length, 1, "recovery never starts another charge");
@@ -241,6 +252,48 @@ async function main() {
   assert.equal(switched.calls.filter((call) => call.url.endsWith("capture-order")).length, 1, "changing account stops automatic retries");
   assert.ok(switched.storage.has("mypentest:pending-paypal-payment:alice"), "the original owner can still recover after signing back in");
   assert.equal(nodes(switched.view.tree).find((node) => node.type.displayName === "Notice" && node.props.title !== "PayPal sandbox"), undefined, "late payment results cannot appear to the new user");
+
+  const SCAN = "scan_0123456789ab";
+  const unlockIndia = fixture({ region: "in", scan: SCAN });
+  unlockIndia.view.render(); await flush(); unlockIndia.view.render(); await flush(); unlockIndia.view.render();
+  assert.ok(unlockIndia.button("Unlock this report"), "an unlockable report gets the unlock offer");
+  assert.ok(copy(unlockIndia.button("Unlock this report")).includes("₹299"), "the unlock is priced in rupees in India");
+  await unlockIndia.button("Unlock this report").props.onClick(); await flush();
+  assert.deepEqual(unlockIndia.calls.find((call) => call.url.endsWith("create-order")).body,
+    { plan: "unlock", cycle: "monthly", scan_id: SCAN }, "the unlock names its report and never a price");
+  await unlockIndia.button("Get 2 scans").props.onClick(); await flush();
+  assert.deepEqual(unlockIndia.calls.filter((call) => call.url.endsWith("create-order"))[1].body,
+    { plan: "plus", cycle: "monthly", scan_id: SCAN }, "a pack bought from the report unlocks it too");
+
+  const stale = fixture({ region: "in", scan: SCAN, scanUnlockable: false });
+  stale.view.render(); await flush(); stale.view.render(); await flush(); stale.view.render();
+  assert.equal(stale.button("Unlock this report"), undefined, "a report that can't be unlocked isn't sold");
+  await stale.button("Get 2 scans").props.onClick(); await flush();
+  assert.deepEqual(stale.calls.find((call) => call.url.endsWith("create-order")).body,
+    { plan: "plus", cycle: "monthly" }, "a stale report link never rides along on a pack order");
+
+  const unlockAbroad = fixture({ scan: SCAN });
+  unlockAbroad.state.providers.paypal.prices.unlock = 299;
+  unlockAbroad.view.render(); await flush(); unlockAbroad.view.render(); await flush(); unlockAbroad.view.render();
+  const unlockButton = unlockAbroad.find("PayPalCheckout").props;
+  const unlockOrder = await unlockButton.createOrder();
+  assert.deepEqual(unlockAbroad.calls.find((call) => call.url.endsWith("paypal/create-order")).body,
+    { plan: "unlock", cycle: "monthly", scan_id: SCAN });
+  unlockAbroad.setCaptureBody({ ok: true, subscription: null, unlocked: true, credited_scans: 0, scan_id: SCAN });
+  await unlockButton.onApprove(unlockOrder); unlockAbroad.view.render();
+  assert.equal(unlockAbroad.find("Notice").props.title, "Your report is unlocked");
+  assert.equal(unlockAbroad.find("Notice").props.children[1].props.href, `/mypentest/app/assessment?id=${SCAN}`);
+
+  const refused = fixture({ scan: SCAN });
+  refused.state.providers.paypal.prices.unlock = 299;
+  refused.view.render(); await flush(); refused.view.render(); await flush(); refused.view.render();
+  const refusedButton = refused.find("PayPalCheckout").props;
+  const refusedOrder = await refusedButton.createOrder();
+  refused.setCaptureResponder(() => ({ ok: false, status: 409, json: async () => ({ error: "That report is no longer available. PayPal did not charge you.", code: "not_charged" }) }));
+  await refusedButton.onApprove(refusedOrder); refused.view.render();
+  assert.equal(refused.find("Notice").props.title, "Not charged");
+  assert.equal(refused.storage.size, 0, "an order the engine will never capture is not kept for recovery");
+  assert.equal(refused.button("Retry PayPal confirmation"), undefined, "nothing is left blocking the next purchase");
 
   assert.equal(success.plans.discountedPrice(499, 50, "USD"), 250, "USD rounds half cents up");
   assert.equal(success.plans.discountedPrice(499, 25, "USD"), 374);
@@ -304,7 +357,7 @@ async function main() {
   assert.equal(sdkAttempts, 2, "SDK load failure clears the failed loading promise");
   assert.equal(nodes(brokenView.tree).some((node) => node.props?.role === "alert"), false);
   brokenView.dispose();
-  console.log("PASS: region-based single checkout, provider gating, server-priced USD checkout, cancellation, same-order recovery, reload recovery, account isolation, currency rounding, and SDK lifecycle.");
+  console.log("PASS: provider gating, region checkout, report unlocks, server-priced USD checkout, cancellation, same-order recovery, reload recovery, account isolation, currency rounding, and SDK lifecycle.");
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

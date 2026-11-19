@@ -95,5 +95,6 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Legal
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2, lastModified: "2026-10-16" },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/refund-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-16" },
   { path: "/responsible-disclosure", changeFrequency: "yearly", priority: 0.2 },
 ];
