@@ -34,6 +34,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/website-pentesting-ai", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/ai-penetration-testing", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-23" },
   { path: "/mypentest/example-report", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/mypentest/how-to-use", changeFrequency: "monthly", priority: 0.6 },
   { path: "/mypentest/php2shell", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-28" },
   { path: "/products", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-01" },
   { path: "/pricing", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-08" },

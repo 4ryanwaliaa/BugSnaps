@@ -24,6 +24,7 @@ const names = new Map<string, string>([
   ["/", "BugSnaps home"],
   ["/mypentest", "MyPentest"],
   ["/mypentest/example-report", "Example assessment report"],
+  ["/mypentest/how-to-use", "How to use MyPentest: step-by-step tutorial"],
   ["/guides", "Security guides"],
   ["/use-cases", "Security testing use cases"],
   ["/alternatives", "Security tool alternatives"],
