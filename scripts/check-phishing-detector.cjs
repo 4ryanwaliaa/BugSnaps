@@ -7,7 +7,7 @@ const source = fs.readFileSync(require("node:path").join(__dirname, "../lib/phis
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
 const moduleObject = { exports: {} };
 new Function("exports", "module", compiled)(moduleObject.exports, moduleObject);
-const { analyzePhishingUrl } = moduleObject.exports;
+const { analyzePhishingUrl, analyzePhishingMessage } = moduleObject.exports;
 const originalFetch = global.fetch;
 global.fetch = () => { throw new Error("Review must not make network requests"); };
 
@@ -90,6 +90,21 @@ try {
   assert.equal(analyzePhishingUrl("https://bit.ly.example.com/").findings.some((finding) => finding.id === "shortener"), false);
   assert.equal(analyzePhishingUrl("https://example.com/?next=bit.ly").findings.some((finding) => finding.id === "shortener"), false);
   assert.equal(analyzePhishingUrl("example.com:8080").ok, true);
+
+  const message = analyzePhishingMessage({ url: "https://other.example/login", displayedLink: "https://trusted.example/account", messageText: "Urgent: send your one-time code and gift cards." });
+  assert.equal(message.ok, true);
+  assert.equal(message.verdict, "high-risk");
+  for (const id of ["displayed-destination-mismatch", "message-urgency", "message-credentials", "message-payment"]) {
+    assert.ok(message.findings.some((finding) => finding.id === id), `Missing ${id}`);
+  }
+  const sameMessageHost = analyzePhishingMessage({ url: "https://example.com/one", displayedLink: "EXAMPLE.COM/two" });
+  assert.equal(sameMessageHost.findings.some((finding) => finding.id === "displayed-destination-mismatch"), false);
+  const button = analyzePhishingMessage({ url: "https://example.com", displayedLink: "Review your account" });
+  assert.equal(button.findings.some((finding) => finding.id === "displayed-destination-mismatch"), false);
+  const context = analyzePhishingMessage({ url: "https://example.com", messageText: "Please send your verification code." });
+  assert.equal(context.verdict, "review");
+  assert.equal(analyzePhishingMessage({ url: "https://example.com", messageText: "x".repeat(10001) }).ok, false);
+  assert.equal(analyzePhishingMessage({ url: "javascript:alert(1)" }).ok, false);
   console.log("Phishing detector checks passed.");
 } finally {
   global.fetch = originalFetch;
