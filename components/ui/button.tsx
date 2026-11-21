@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { cn } from "@/lib/utils";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 

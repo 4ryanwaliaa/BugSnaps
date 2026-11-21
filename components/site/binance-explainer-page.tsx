@@ -3,13 +3,43 @@ import { SketchUnderline } from "@/components/ui/sketch-underline";
 import Link from "@/components/site/content-link";
 import { Breadcrumbs, JsonLd, Prose, SiteShell } from "@/components/site/page-parts";
 import type { Block, Post } from "@/lib/blog";
+import { faqJsonLd } from "@/lib/site";
 import { BinanceAttackPlayer } from "./binance-attack-player";
 import styles from "./binance-explainer.module.css";
+
+const BINANCE_FAQS = [
+  {
+    question: "How did the Binance hack use EIP-7702?",
+    answer:
+      "On Ethereum, investigators found a signed authorization that delegated the Binance 14 hot wallet to attacker-controlled contract code. Later calls ran that code in the wallet’s context and moved assets. This describes one part of the incident; other chains were also affected.",
+  },
+  {
+    question: "Did they hide a virus inside a payment?",
+    answer:
+      "The reported Ethereum mechanism used a signed permission attached to a special transaction. That permission pointed the wallet to a program already on the blockchain. A later call made the wallet run the program. This does not establish that a virus was hidden inside an ordinary payment.",
+  },
+  {
+    question: "Why would the blockchain accept that?",
+    answer:
+      "Ethereum checks the signature and the authorization’s other requirements. A valid signature proves that the permission was signed for that wallet; it does not explain how the attacker got it or prove that Binance intended the action. That gap is part of the investigation.",
+  },
+  {
+    question: "Could receiving coins make my wallet run someone’s code?",
+    answer:
+      "Receiving coins alone does not give the sender permission to set your wallet’s EIP-7702 delegation. The mechanism shown here requires a valid authorization for the affected wallet. Review unfamiliar signing requests carefully; a permission can do more than send a single payment.",
+  },
+  {
+    question: "Does a valid signature mean the private key was stolen?",
+    answer:
+      "It does not establish that. A signing process can potentially be misused without copying its key. Binance says it found no evidence of a wallet private-key leak. The full path from the intrusion to the signed authorizations remains unknown.",
+  },
+];
 
 function renderBlock(block: Block, index: number) {
   if (block.type === "h2") return <h2 key={index}>{block.text}</h2>;
   if (block.type === "p") return <p key={index}>{block.text}</p>;
   if (block.type === "callout") return <p key={index} className={styles.reportCallout}>{block.text}</p>;
+  if (block.type === "table") return null;
   const Tag = block.type === "ol" ? "ol" : "ul";
   return <Tag key={index}>{block.items.map((item) => <li key={item}>{item}</li>)}</Tag>;
 }
@@ -22,6 +52,7 @@ export function BinanceExplainerPage({ article, articleJsonLd }: { article: Post
   return (
     <SiteShell>
       <JsonLd data={articleJsonLd} />
+      <JsonLd data={faqJsonLd(BINANCE_FAQS)} />
       <div className={styles.page}>
         <div className={styles.grain} aria-hidden="true" />
         <div className={styles.frame}>

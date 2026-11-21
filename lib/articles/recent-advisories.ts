@@ -7,8 +7,8 @@ const nextOctober = "https://nextjs.org/blog/nextjs-security-update-october-14-2
 export const recentAdvisoryPosts: Post[] = [
   {
     slug: "react2shell-cve-2025-55182-website-check",
-    title: "React2Shell CVE-2025-55182: how to check your website's exposure",
-    description: "Understand React2Shell exposure, inspect deployed React Server Components dependencies, and combine patch verification with a scoped website security scan.",
+    title: "React2Shell CVE-2025-55182: Check Exposure",
+    description: "Check React2Shell (CVE-2025-55182) exposure: inspect deployed React Server Components dependencies, verify patches, and run a scoped website scan.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 4,
@@ -39,8 +39,8 @@ export const recentAdvisoryPosts: Post[] = [
   },
   {
     slug: "react-server-components-dos-source-code-exposure",
-    title: "React Server Components security: DoS and source code exposure after React2Shell",
-    description: "Why an early React2Shell patch may leave separate RSC issues unresolved: review CVE-2026-23864, denial of service and source code exposure remediation.",
+    title: "React Server Components DoS & Code Exposure",
+    description: "Why an early React2Shell patch may leave separate RSC issues open: review CVE-2026-23864, denial of service, and source code exposure fixes.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 4,
@@ -76,8 +76,8 @@ export const recentAdvisoryPosts: Post[] = [
   },
   {
     slug: "nextjs-october-2026-security-update-rce",
-    title: "Next.js October 2026 security update: RCE risks and deployment checks",
-    description: "Review the October 14 Next.js fixes for Cache Components RCE, CVE-2026-96889 image optimization RCE and Server Actions DoS, with a deployment checklist.",
+    title: "Next.js Oct 2026 Security Update: RCE Checks",
+    description: "Review the October 14 Next.js fixes for Cache Components RCE, CVE-2026-96889 image optimization RCE, and Server Actions DoS with a checklist.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 4,

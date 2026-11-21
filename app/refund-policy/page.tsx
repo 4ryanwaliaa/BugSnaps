@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { Breadcrumbs } from "@/components/site/page-parts";
 import { CONTACT_EMAIL, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Refund and Cancellation Policy",
   description:
-    "MyPentest payments are one-time with no subscription. If a paid scan can't complete or a report you paid to unlock is gone, you get the scan back or your money back.",
+    "MyPentest payments are one-time with no subscription. If a paid scan fails on our side or an unlocked report is unavailable, get a rescan or refund.",
   path: "/refund-policy",
 });
 
 export default function RefundPolicyPage() {
   return (
     <LegalPage title="Refund and Cancellation Policy" updated="November 2026">
+      <Breadcrumbs items={[{ name: "Refund Policy", path: "/refund-policy" }]} />
       <section>
         <h2>The short version</h2>
         <p className="mt-3">

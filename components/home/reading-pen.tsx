@@ -109,6 +109,7 @@ export function ReadingPen() {
     let frame = 0, width = 0, height = 0, previous = 0;
     let lastScroll = -2000, nextMark = performance.now() + 1400;
     let lastSafetyCheck = 0, lastHoverCheck = 0, lastPointer = -1e9;
+    let controlsDirty = true;
     let controls: DOMRect[] = [];
     let pointer: Point | null = null;
     let hoverKey = "";
@@ -176,13 +177,20 @@ export function ReadingPen() {
     };
 
     const resize = () => {
+      if (reduced.matches || !finePointer.matches) {
+        width = 0; height = 0;
+        canvas.width = 0; canvas.height = 0;
+        queue = []; move = null; active = null;
+        return;
+      }
       width = innerWidth; height = innerHeight;
       const dpr = Math.min(devicePixelRatio || 1, 2);
       canvas.width = width * dpr; canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      controlsDirty = true;
       queue = []; move = null; active = null;
     };
-    const scroll = () => { lastScroll = performance.now(); };
+    const scroll = () => { lastScroll = performance.now(); controlsDirty = true; };
     const pointerMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse" || !finePointer.matches) return;
       pointer = { x: event.clientX, y: event.clientY }; lastPointer = performance.now();
@@ -363,10 +371,11 @@ export function ReadingPen() {
 
     const draw = (now: number) => {
       const dt = Math.min(40, now - (previous || now)); previous = now;
-      if (!lastSafetyCheck || now - lastSafetyCheck > 250) {
+      if (controlsDirty && (!lastSafetyCheck || now - lastSafetyCheck > 250)) {
         controls = Array.from(document.querySelectorAll<HTMLElement>(CONTROLS))
           .map(el => el.getBoundingClientRect()).filter(r => r.width && r.height && r.bottom > 0 && r.top < height);
         lastSafetyCheck = now;
+        controlsDirty = false;
       }
       interactive = !!pointer && finePointer.matches && now - lastPointer < 2600;
       overControl = interactive && controls.some(c =>
@@ -432,8 +441,13 @@ export function ReadingPen() {
     };
     const sync = () => {
       cancelAnimationFrame(frame); previous = 0;
-      ctx.clearRect(0, 0, width, height);
-      if (!reduced.matches && !document.hidden) frame = requestAnimationFrame(draw);
+      if (!reduced.matches && finePointer.matches && !document.hidden) {
+        if (!width || !height) resize();
+        else ctx.clearRect(0, 0, width, height);
+        frame = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, width, height);
+      }
     };
     resize(); sync();
     window.addEventListener("scroll", scroll, { passive: true });
@@ -444,7 +458,9 @@ export function ReadingPen() {
     canvas.addEventListener("pointermove", userMove);
     canvas.addEventListener("pointerup", userUp);
     canvas.addEventListener("pointercancel", userUp);
-    reduced.addEventListener("change", sync); document.addEventListener("visibilitychange", sync);
+    reduced.addEventListener("change", sync);
+    finePointer.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", sync);
     return () => {
       cancelAnimationFrame(frame);
       controlRef.current = null;
@@ -452,7 +468,9 @@ export function ReadingPen() {
       window.removeEventListener("pointermove", pointerMove); document.removeEventListener("mouseout", pointerLeave);
       canvas.removeEventListener("pointerdown", userDown); canvas.removeEventListener("pointermove", userMove);
       canvas.removeEventListener("pointerup", userUp); canvas.removeEventListener("pointercancel", userUp);
-      reduced.removeEventListener("change", sync); document.removeEventListener("visibilitychange", sync);
+      reduced.removeEventListener("change", sync);
+      finePointer.removeEventListener("change", sync);
+      document.removeEventListener("visibilitychange", sync);
     };
   }, []);
 

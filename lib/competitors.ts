@@ -42,7 +42,7 @@ export const MYPENTEST_CELLS: Record<FeatureId,Cell> = {
 };
 export interface Competitor {
  slug:string;name:string;vendor:string;website:string;category:string;
- summary:string;metaDescription:string;lead:string;checkedOn:string;
+ summary:string;metaTitle:string;metaDescription:string;lead:string;checkedOn:string;
  sources:{label:string;url:string}[];cells:Record<FeatureId,Cell>;
  bestFor:string;mypentestBestFor:string;theirPros:string[];theirCons:string[];
  ourPros:string[];ourCons:string[];pricing:string[];chooseThem:string;chooseUs:string;
@@ -51,10 +51,93 @@ export interface Competitor {
 const yes=(note?:string):Cell=>({v:"yes",...(note?{note}:{})});
 const partial=(note:string):Cell=>({v:"partial",note});
 type Profile=Pick<Competitor,"slug"|"name"|"vendor"|"website"|"category"|"summary"|"sources"|"theirPros"|"theirCons"|"pricing"|"chooseThem"|"faq">&{cells:Partial<Record<FeatureId,Cell>>};
+const COMPARE_META: Record<string, { title: string; description: string }> = {
+ acunetix: {
+  title: "MyPentest vs Acunetix: Web DAST Comparison",
+  description: "Compare MyPentest and Acunetix web DAST: proof-based checks, SPA authentication, BOLA testing, and one-time scan packs vs annual licensing.",
+ },
+ nessus: {
+  title: "MyPentest vs Tenable Nessus: Web vs Infra",
+  description: "Compare MyPentest web and API pentesting with Tenable Nessus network and host vulnerability scanning: scope, auth checks, and pricing models.",
+ },
+ veracode: {
+  title: "MyPentest vs Veracode: Self-Serve vs Suite",
+  description: "Compare MyPentest self-serve web assessments with Veracode enterprise SAST, SCA, and DAST: onboarding speed, auth testing, and pricing model.",
+ },
+ checkmarx: {
+  title: "MyPentest vs Checkmarx: Runtime vs SAST",
+  description: "Compare MyPentest live runtime web and API testing with Checkmarx static source analysis (SAST) and Checkmarx One DAST: scope, proof, and cost.",
+ },
+ "cobalt-io": {
+  title: "MyPentest vs Cobalt.io: Instant vs PTaaS",
+  description: "Compare MyPentest on-demand automated web assessments with Cobalt.io human PTaaS credits: turnaround speed, manual logic coverage, and budget.",
+ },
+ strix: {
+  title: "MyPentest vs Strix: Hosted vs AI Agent",
+  description: "Compare MyPentest browser-based web checks with Strix open-source and cloud AI pentesting agents: Docker/LLM setup, exploit proof, and pricing.",
+ },
+ xbow: {
+  title: "MyPentest vs XBOW: Scope, Proof & Pricing",
+  description: "Compare MyPentest self-serve web and API checks with XBOW autonomous offensive testing: exploit evidence, DNS verification, and pricing models.",
+ },
+ "astra-security": {
+  title: "MyPentest vs Astra Security: Plans & Scope",
+  description: "Compare MyPentest one-time web scan packs with Astra Security DAST, API, and expert pentest subscriptions: free trial, auth checks, and limits.",
+ },
+ intruder: {
+  title: "MyPentest vs Intruder: App vs Surface Scan",
+  description: "Compare MyPentest authenticated web and API assessments with Intruder external infrastructure monitoring and paid DAST plans: scope and pricing.",
+ },
+ "pentest-tools": {
+  title: "MyPentest vs Pentest-Tools.com: Web vs Kit",
+  description: "Compare MyPentest focused web and API testing with Pentest-Tools.com network and web operator toolboxes: plan tiers, auth checks, and reporting.",
+ },
+ "burp-suite": {
+  title: "MyPentest vs Burp Suite: Pro & DAST Scope",
+  description: "Compare MyPentest hosted web assessments with Burp Suite Professional manual proxy tools and Burp Suite DAST: operator effort, scope, and cost.",
+ },
+ "owasp-zap": {
+  title: "MyPentest vs OWASP ZAP: Hosted vs Local",
+  description: "Compare MyPentest zero-setup browser scanning with self-hosted OWASP ZAP: authentication setup, API scans, maintenance effort, and evidence.",
+ },
+ nuclei: {
+  title: "MyPentest vs Nuclei: Browser vs Templates",
+  description: "Compare MyPentest hosted web assessments with ProjectDiscovery Nuclei YAML templates: custom regression checks, auth testing, and triage effort.",
+ },
+ stackhawk: {
+  title: "MyPentest vs StackHawk: Browser vs CI DAST",
+  description: "Compare MyPentest hosted browser scans with StackHawk HawkScan local and CI/CD runtime testing: YAML auth config, coding agents, and scan packs.",
+ },
+ invicti: {
+  title: "MyPentest vs Invicti: Proof & Deployment",
+  description: "Compare MyPentest self-serve web and API assessments with Invicti enterprise DAST: proof-based validation, SaaS vs on-prem deployment, and cost.",
+ },
+ detectify: {
+  title: "MyPentest vs Detectify: App vs EASM Scope",
+  description: "Compare MyPentest pay-as-you-go web assessments with Detectify surface monitoring and application scanning: authenticated fuzzing and asset fees.",
+ },
+ "qualys-was": {
+  title: "MyPentest vs Qualys WAS: Agile vs Inventory",
+  description: "Compare MyPentest on-demand web and API scans with Qualys Web Application Scanning (WAS): appliance placement, auth records, and licensing.",
+ },
+ "rapid7-insightappsec": {
+  title: "MyPentest vs Rapid7 InsightAppSec: DAST",
+  description: "Compare MyPentest instant browser web assessments with Rapid7 InsightAppSec: Attack Replay, private scan engines, auth setup, and pricing model.",
+ },
+ snyk: {
+  title: "MyPentest vs Snyk: API & Web DAST vs Code",
+  description: "Compare MyPentest vs Snyk Code and Snyk API & Web DAST: REST and GraphQL API testing, authenticated checks, free trial scope, and pricing.",
+ },
+ "hcl-appscan": {
+  title: "MyPentest vs HCL AppScan: Cloud vs Suite",
+  description: "Compare MyPentest hosted web assessments with HCL AppScan Standard, Cloud, and Enterprise editions: deployment models, auth setup, and licensing.",
+ },
+};
 function profile(input:Profile, checkedOn = "2026-10-02"):Competitor {
  const cells=Object.fromEntries(FEATURES.map(f=>[f.id,{v:"unstated"}])) as Record<FeatureId,Cell>;
  return {...input,cells:{...cells,...input.cells},checkedOn,
- metaDescription:`MyPentest vs ${input.name}: workflow, authentication, evidence, pricing model and limitations. Compare edition-specific features with primary vendor sources.`,
+ metaTitle:COMPARE_META[input.slug]?.title ?? `MyPentest vs ${input.name}`,
+ metaDescription:COMPARE_META[input.slug]?.description ?? `MyPentest vs ${input.name}: workflow, authentication, evidence, pricing model and limitations. Compare edition-specific features with primary vendor sources.`,
  lead:`${input.summary} Compare its workflow with MyPentest's hosted assessment of a verified application, including the limits of both approaches.`,
  bestFor:input.chooseThem,
  mypentestBestFor:"Teams assessing a verified web app without installing a scanner, who can supply scoped test accounts and review coverage limits.",
@@ -91,7 +174,7 @@ export const competitors:Competitor[]=[
     faq: [
       {
         question: "How does MyPentest compare to Acunetix?",
-        answer: "Acunetix is an established enterprise scanner requiring annual per-target licensing and configuration. BugSnaps MyPentest offers instant zero-setup browser testing, transparent scan packs, and automated dual-account BOLA verification.",
+        answer: "Acunetix is an established enterprise scanner requiring annual per-target licensing and configuration. BugSnaps MyPentest offers self-serve browser assessments, one-time scan packs, and supported paired-account BOLA read checks with supplied test accounts.",
       },
       {
         question: "Does Acunetix validate all vulnerabilities with proof?",
@@ -165,11 +248,11 @@ export const competitors:Competitor[]=[
     faq: [
       {
         question: "How does BugSnaps differ from Veracode?",
-        answer: "Veracode is a heavy enterprise governance platform requiring high-cost annual contracts and sales cycles. BugSnaps MyPentest gives developers instant, self-serve browser assessments with deterministic proof of exploit and pay-as-you-go pricing.",
+        answer: "Veracode is a broad enterprise governance platform covering SAST, SCA, and DAST under annual contracts. BugSnaps MyPentest gives developers self-serve browser assessments of verified web apps with reproducible HTTP probe evidence, confidence labels, and one-time scan packs.",
       },
       {
         question: "Does Veracode DAST test client-side single page applications?",
-        answer: "Veracode DAST can crawl web applications but requires complex login scripts and browser recording for SPAs. BugSnaps uses native headless browser instrumentation to crawl React, Next.js, and modern SPAs out of the box.",
+        answer: "Veracode DAST can crawl web applications with configured login scripts and browser recordings. BugSnaps MyPentest crawls reachable pages and inspects JavaScript bundles for referenced API endpoints within your verified scope; complex client-side workflows still benefit from manual review.",
       },
     ],
   }),
@@ -202,11 +285,11 @@ export const competitors:Competitor[]=[
     faq: [
       {
         question: "Can static code scanning (SAST) replace dynamic testing (DAST)?",
-        answer: "No. SAST analyzes uncompiled code without understanding runtime environments, authentication state, or cloud infrastructure configurations. BugSnaps DAST tests live running applications to verify that a flaw is truly exploitable.",
+        answer: "No. SAST analyzes uncompiled code without runtime environment state, authentication sessions, or deployed server configurations. BugSnaps MyPentest tests live running applications with non-destructive differential probes and supplied test accounts to observe runtime behavior.",
       },
       {
         question: "Can BugSnaps MyPentest complement Checkmarx?",
-        answer: "Yes. Many engineering teams use SAST in their IDEs for initial code feedback, and use BugSnaps MyPentest to validate deployed staging environments with proof-of-exploit verification before releasing to production.",
+        answer: "Yes. Many engineering teams use SAST in their IDEs for initial code feedback, and use BugSnaps MyPentest to assess deployed staging environments with reproducible HTTP evidence and confidence labels before releasing to production.",
       },
     ],
   }),
@@ -232,20 +315,20 @@ export const competitors:Competitor[]=[
       network: yes("External and internal human network pentesting"),
       cloud: yes("Cloud configuration audits by human testers"),
       pentestService: yes("Core PTaaS delivery model"),
-      compliance: yes("Auditor-ready penetration test reports and attestations"),
+      compliance: partial("Auditor-oriented penetration test reports; acceptance depends on the assessor"),
     },
     theirPros: ["Manual human testing for complex business logic and edge cases", "Centralized platform for managing findings, retests, and auditor reports", "Vetted community of certified offensive security specialists"],
-    theirCons: ["Expensive credit packages often requiring $20,000+ annual minimums", "Testing must be scheduled days or weeks in advance", "Human availability limits instant feedback on continuous code deployments"],
-    pricing: ["Cobalt uses Pentest Units sold through annual subscriptions.", "Small scopes typically consume multiple credits costing thousands of dollars."],
-    chooseThem: "You have a large compliance budget and require human-only penetration testing for annual audits.",
+    theirCons: ["Annual credit packages and multi-credit engagement scoping", "Testing must be scheduled days or weeks in advance", "Human availability limits instant feedback on continuous code deployments"],
+    pricing: ["Cobalt uses Pentest Units sold through annual subscriptions.", "Engagements consume credits according to target scope and complexity."],
+    chooseThem: "You have a dedicated PTaaS budget and want human penetration testing managed through an annual credit pool.",
     faq: [
       {
         question: "How does BugSnaps compare to Cobalt.io?",
-        answer: "Cobalt connects you with human testers through a credit system costing tens of thousands of dollars annually. BugSnaps MyPentest provides instant automated testing on demand, while BugSnaps expert services deliver scoped manual testing at transparent, affordable fixed rates.",
+        answer: "Cobalt connects you with human testers through an annual credit model. BugSnaps MyPentest provides on-demand automated web assessments with one-time scan packs, while BugSnaps expert services deliver separately scoped manual penetration tests with written fixed quotes.",
       },
       {
-        question: "Can BugSnaps provide human attestation like Cobalt?",
-        answer: "Yes. BugSnaps expert-led penetration testing services provide full human verification, executive attestation letters, and certified retesting that satisfy SOC 2, ISO 27001, and enterprise vendor risk audits.",
+        question: "Can BugSnaps provide human penetration testing like Cobalt?",
+        answer: "Yes. BugSnaps expert-led penetration testing services provide manual testing, technical and executive reports, and fix retesting to support SOC 2, ISO 27001, and customer security reviews; confirm specific deliverable requirements with your assessor.",
       },
     ],
   }),
@@ -402,7 +485,7 @@ export const competitors:Competitor[]=[
  theirCons:["Code tests do not replace runtime access control","Review entitlements by product","Check languages and authentication support"],
  pricing:["Snyk Code advertises a free offering with plan-dependent features.","Confirm API & Web entitlements separately; free Code does not imply free DAST."],
  chooseThem:"You need code and dependency feedback or its separate runtime scanner in a broader programme.",
- faq:[{question:"Is Snyk only a source-code scanner?",answer:"No. Snyk Code performs source analysis, but the current platform also lists Snyk API & Web DAST. Compare product-level scope."},{question:"Can MyPentest replace Snyk Code?",answer:"No. MyPentest does not read repositories or dependency manifests. Runtime and code tests can complement each other."}],
+ faq:[{question:"Does Snyk API & Web test REST and GraphQL APIs?",answer:"Snyk API & Web documents dynamic testing for running web applications and APIs, including REST and GraphQL surfaces, separate from Snyk Code static source analysis. Check your Snyk plan entitlements and authentication setup."},{question:"Is Snyk only a source-code scanner?",answer:"No. Snyk Code performs source analysis, but the current platform also lists Snyk API & Web DAST. Compare product-level scope."},{question:"Can MyPentest replace Snyk Code?",answer:"No. MyPentest does not read repositories or dependency manifests. Runtime and code tests can complement each other."}],
  }),
  profile({
  slug:"hcl-appscan",name:"HCL AppScan",vendor:"HCLSoftware",website:"https://www.hcl-software.com/appscan",category:"Application security product family",

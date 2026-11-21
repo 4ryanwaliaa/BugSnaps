@@ -11,12 +11,25 @@ type AnalyticsWindow = Window & {
 } & Partial<Record<`ga-disable-${string}`, boolean>>;
 
 const SCRIPT_ID = "bugsnaps-google-analytics";
+const PRIVATE_PATH_RE =
+  /^\/(?:mypentest\/(?:app|api)|endpointradar\/(?:app|managed|api)|phishing-detector\/team)(\/|$)/;
 const deniedConsent = {
   analytics_storage: "denied",
   ad_storage: "denied",
   ad_user_data: "denied",
   ad_personalization: "denied",
 };
+
+function isPublicPath(path: string, pages?: Record<string, string>) {
+  if (pages) return Object.hasOwn(pages, path);
+  return path.startsWith("/") && !PRIVATE_PATH_RE.test(path);
+}
+
+function isNoindexDocument() {
+  if (typeof document === "undefined") return false;
+  const metas = document.querySelectorAll<HTMLMetaElement>('meta[name="robots"], meta[name="googlebot"]');
+  return Array.from(metas).some((m) => /\bnoindex\b/i.test(m.content || ""));
+}
 
 function clearAnalyticsCookies() {
   const names = document.cookie.split(";").map((cookie) => cookie.trim().split("=")[0])
@@ -33,14 +46,14 @@ function clearAnalyticsCookies() {
   }
 }
 
-function publicReferrer(pages: Record<string, string>, origin: string) {
+function publicReferrer(origin: string, pages?: Record<string, string>) {
   try {
     const referrer = new URL(document.referrer);
     if (!/^https?:$/.test(referrer.protocol)) return "";
     // External traffic sources need only their origin. Private/internal paths
     // and every query string or fragment stay out of analytics.
     return referrer.origin === origin
-      ? (Object.hasOwn(pages, referrer.pathname) ? `${origin}${referrer.pathname}` : "")
+      ? (isPublicPath(referrer.pathname, pages) ? `${origin}${referrer.pathname}` : "")
       : `${referrer.origin}/`;
   } catch {
     return "";
@@ -50,7 +63,7 @@ function publicReferrer(pages: Record<string, string>, origin: string) {
 /** Basic consent mode: do not even load Google's tag before explicit opt-in. */
 export function GoogleAnalytics({ measurementId, pages, origin }: {
   measurementId: string;
-  pages: Record<string, string>;
+  pages?: Record<string, string>;
   origin: string;
 }) {
   const pathname = usePathname();
@@ -66,7 +79,7 @@ export function GoogleAnalytics({ measurementId, pages, origin }: {
     function sync() {
       const consent = readCookieConsent();
       const publicPage = window.location.hostname === new URL(origin).hostname
-        && pathname !== null && Object.hasOwn(pages, pathname);
+        && pathname !== null && isPublicPath(pathname, pages) && !isNoindexDocument();
       if (consent !== "all" || !publicPage) {
         // Set the kill switch synchronously before queuing a consent update.
         analytics[disableKey] = true;
@@ -81,8 +94,8 @@ export function GoogleAnalytics({ measurementId, pages, origin }: {
       const location = `${origin}${pathname}`;
       const page = {
         page_location: location,
-        page_title: pages[pathname],
-        page_referrer: lastPage.current ?? publicReferrer(pages, origin),
+        page_title: pages?.[pathname] || document.title || pathname,
+        page_referrer: lastPage.current ?? publicReferrer(origin, pages),
       };
 
       if (!configured.current) {

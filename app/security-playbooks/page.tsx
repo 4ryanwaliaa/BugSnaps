@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "@/components/site/content-link";
-import { PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { pageMetadata } from "@/lib/site";
+import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Playbooks for Websites, APIs, Endpoints and Phishing",
-  description: "Choose a practical security workflow for web applications, APIs, Windows endpoints, public exposure and suspicious links, with guides and BugSnaps tools.",
+  title: "Security Playbooks: Web, API & Endpoints",
+  description: "Choose a practical security playbook for web apps, APIs, Windows endpoints, public exposure, and suspicious links with BugSnaps tools.",
   path: "/security-playbooks",
 });
 
@@ -45,7 +45,15 @@ const playbooks = [
 export default function SecurityPlaybooks() {
   return (
     <SiteShell>
-      <PageHeader crumbs={[{ name: "Resources", path: "/resources" }, { name: "Security playbooks", path: "/security-playbooks" }]} eyebrow="Security playbooks" title="Start with the security question you need to answer." lead="Choose a workflow for your application, endpoint, public footprint or suspicious link. Each path connects practical guidance with the relevant BugSnaps tools and services." />
+      <JsonLd
+        data={collectionPageJsonLd({
+          name: "Security Playbooks for Web, APIs, Endpoints & Phishing",
+          description: "Practical security assessment playbooks for web applications, APIs, Windows endpoints, OSINT, and suspicious links.",
+          path: "/security-playbooks",
+          items: playbooks.map((p) => ({ name: p.title, path: p.links[0].href })),
+        })}
+      />
+      <PageHeader crumbs={[{ name: "Resources", path: "/resources" }, { name: "Security playbooks", path: "/security-playbooks" }]} eyebrow="Security playbooks" title="Security Playbooks for Web, APIs, Endpoints & Phishing" lead="Choose a workflow for your application, endpoint, public footprint or suspicious link. Each path connects practical guidance with the relevant BugSnaps tools and services." />
       <Section labelledBy="playbooks-title">
         <h2 id="playbooks-title" className="text-2xl font-semibold tracking-tight">Choose a starting point</h2>
         <div className="mt-8 grid gap-6 lg:grid-cols-2">

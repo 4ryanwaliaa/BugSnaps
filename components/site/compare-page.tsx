@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { CtaBand, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
 import { COLUMNS, ROWS, comparePages, type ComparePage } from "@/lib/compare";
 

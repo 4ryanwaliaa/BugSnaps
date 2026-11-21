@@ -3,8 +3,8 @@ import type { Post } from "@/lib/blog";
 export const recentBreachPosts: Post[] = [
   {
     slug: "binance-crypto-hack-october-2026-explained",
-    title: "Binance Hack 2026 Explained: EIP-7702 Wallet Attack",
-    description: "How did the Binance hack happen? Explore the 2026 Ethereum hot wallet attack, EIP-7702 transaction, signed authorization and stolen funds in plain English.",
+    title: "Binance Hack 2026: EIP-7702 Wallet Explained",
+    description: "How did the October 2026 Binance hack happen? Follow the reported Ethereum hot wallet attack, EIP-7702 delegation, and frozen funds in plain English.",
     published: "2026-10-30",
     updated: "2026-10-31",
     author: "BugSnaps",
@@ -47,7 +47,7 @@ export const recentBreachPosts: Post[] = [
   },
   {
     slug: "recent-data-breaches-october-2026",
-    title: "Recent security breaches in October 2026: what happened and what to do",
+    title: "October 2026 Breaches: Binance, So-net & More",
     description: "Understand the October 2026 Binance, So-net, Quest Diagnostics and LiteLLM incidents, what information is known and how affected users can respond.",
     published: "2026-10-30",
     author: "BugSnaps",

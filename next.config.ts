@@ -141,6 +141,7 @@ const nextConfig: NextConfig = {
       { source: "/:path*", has: [{ type: "query", key: "_rsc" }], headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
       // Only the contact page can load the optional city map frame.
       { source: "/contact", headers: [{ key: "Content-Security-Policy", value: csp({ frame: ["https://www.openstreetmap.org"] }) }] },
+      { source: "/endpointradar/app", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/endpointradar/managed", headers: [{ key: "Content-Security-Policy", value: csp(firebase) }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/endpointradar/api/:path*", headers: [{ key: "Cache-Control", value: "no-store" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       // Team pages need Firebase on the initial document; navigation into them

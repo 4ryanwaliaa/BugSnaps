@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Code2, Database, Braces } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "API Penetration Testing: REST, GraphQL & Microservices Security",
+  title: "API Penetration Testing: REST & GraphQL",
   description:
-    "Plan REST and GraphQL API penetration testing with BugSnaps. Compare MyPentest's discovered API checks with scoped expert authorization and business-logic testing.",
+    "Plan REST and GraphQL API pentesting with BugSnaps. Compare MyPentest API checks with scoped expert authorization and business-logic testing.",
   path: "/solutions/api-penetration-testing",
 });
 
@@ -32,6 +32,14 @@ const faqs = [
 export default function ApiPenetrationTestingPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "API Penetration Testing: REST & GraphQL",
+          description:
+            "REST and GraphQL API penetration testing combining automated discovered-surface checks with scoped expert authorization and logic testing.",
+          path: "/solutions/api-penetration-testing",
+        })}
+      />
       <JsonLd data={faqJsonLd(faqs)} />
       <PageHeader
         crumbs={[
@@ -98,6 +106,18 @@ export default function ApiPenetrationTestingPage() {
             <Link href="/us-vs-competitors" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">
               Compare security testing workflows <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
+          <div className="pt-4">
+            <h3 className="text-sm font-semibold text-foreground">Related API security guides and use cases</h3>
+            <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-accent">
+              <li><Link href="/use-cases/rest-apis" className="hover:underline">REST APIs testing plan</Link></li>
+              <li><Link href="/use-cases/graphql-apis" className="hover:underline">GraphQL APIs testing plan</Link></li>
+              <li><Link href="/guides/bola-testing" className="hover:underline">BOLA testing guide</Link></li>
+              <li><Link href="/guides/openapi-security-testing" className="hover:underline">OpenAPI security testing</Link></li>
+              <li><Link href="/guides/graphql-security-testing" className="hover:underline">GraphQL security testing</Link></li>
+              <li><Link href="/blog/graphql-security-testing-best-practices" className="hover:underline">GraphQL best practices</Link></li>
+              <li><Link href="/blog/bola-idor-vulnerability-prevention-guide" className="hover:underline">BOLA/IDOR prevention guide</Link></li>
+            </ul>
           </div>
         </div>
       </Section>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { JsonLd, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { SecurityReviewFigure } from "@/components/site/security-review-figure";
@@ -12,14 +12,14 @@ import { HomeWhy } from "@/components/home/why";
 import { HomeResearch } from "@/components/home/research";
 import { HomeSafety, HomeScanClosing, HomeScanPrompt } from "@/components/home/scan-start";
 import { LegacyHashRedirect } from "@/components/home/legacy-hash-redirect";
-import { absoluteUrl, ORG_ID, pageMetadata } from "@/lib/site";
+import { imageObjectJsonLd, pageMetadata } from "@/lib/site";
 import { recentAdvisoryPosts } from "@/lib/articles/recent-advisories";
 
 export const metadata: Metadata = pageMetadata({
   title: "Website Security Testing & API Pentesting | BugSnaps",
   absoluteTitle: true,
   description:
-    "Test your website with MyPentest, free to start. Review vulnerability evidence and fixes, explore API security testing, or scope an expert-led pentest.",
+    "Test your website with MyPentest, free to start. Review vulnerability evidence and fixes, explore API security testing, or scope a manual pentest.",
   path: "/",
 });
 
@@ -46,23 +46,25 @@ export default function Home() {
   return (
     <SiteShell className="home-reading-pen">
       <ReadingPen />
-      <JsonLd data={{
-        "@context": "https://schema.org",
-        "@type": "ImageObject",
-        "@id": absoluteUrl("/#security-review-image"),
-        contentUrl: absoluteUrl("/images/website-security-review.webp"),
+      <JsonLd data={imageObjectJsonLd({
+        id: "/#security-review-image",
+        contentUrl: "/images/website-security-review.webp",
         caption: "Review evidence, assign a fix and retest the affected path. AI-generated illustration; not a product screenshot or customer assessment.",
         width: 1600,
         height: 900,
-        creator: { "@id": ORG_ID },
         creditText: "BugSnaps; AI-generated illustration",
-      }} />
+      })} />
       <LegacyHashRedirect />
       <HomeHero />
       <HomeMarquee />
       <HomeHowItRuns />
       <HomeSafety />
       <TutorialVideo />
+      <div className="mx-auto -mt-10 mb-8 w-full max-w-6xl px-6 lg:px-8">
+        <Link href="/mypentest/how-to-use" className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline">
+          Open the full step-by-step MyPentest video tutorial with 13 chapters <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </div>
       <HomeStats />
       <HomeReport />
       <HomeScanPrompt />

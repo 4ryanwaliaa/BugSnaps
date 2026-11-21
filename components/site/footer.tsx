@@ -3,7 +3,7 @@ import { ArrowUpRight, Linkedin, Mail } from "lucide-react";
 import { Logo, LogoMark } from "@/components/site/logo";
 import { CookieSettingsButton } from "@/components/site/cookie-consent";
 import { PreferredSource } from "@/components/site/preferred-source";
-import { CONTACT_EMAIL, LINKEDIN_URL, MYRECON_URL, ORG } from "@/lib/site";
+import { CONTACT_EMAIL, LINKEDIN_URL, ORG } from "@/lib/site";
 import { routes } from "@/lib/mypentest";
 
 /*
@@ -43,6 +43,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
         { label: "Free AI Pentesting", href: "/free-ai-pentesting" },
         { label: "Website Pentesting AI", href: "/website-pentesting-ai" },
         { label: "AI Pentest Platform", href: "/ai-penetration-testing" },
+        { label: "How to use MyPentest", href: "/mypentest/how-to-use" },
         { label: "Example report", href: routes.exampleReport },
         { label: "All products", href: "/products" },
         { label: "Pricing", href: "/pricing" },
@@ -95,6 +96,7 @@ const COLUMNS: Record<FooterBrand, Column[]> = {
       heading: "Product",
       links: [
         { label: "Overview", href: routes.product },
+        { label: "How to use", href: "/mypentest/how-to-use" },
         { label: "Start a free scan", href: routes.newAssessment },
         { label: "Example report", href: routes.exampleReport },
         { label: "Plans and pricing", href: "/pricing" },

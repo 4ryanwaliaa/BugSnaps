@@ -1,14 +1,14 @@
 import { MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, BrainCircuit, Check, Layers, ShieldCheck, Terminal } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 import { ENGINE_FACTS, newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "AI Penetration Testing: Automated Web Security with Evidence",
-  description: "Compare AI penetration testing by evidence, scope and coverage. MyPentest runs 56 defined web security checks with confidence, CVSS scores and remediation.",
+  title: "AI Penetration Testing: Scope & Evidence",
+  description: "Evaluate AI penetration testing by evidence and scope. MyPentest runs 56 defined web checks with confidence labels, CVSS scores, and fixes.",
   path: "/ai-penetration-testing",
 });
 
@@ -40,6 +40,10 @@ const softwareJsonLd = {
   url: SITE_URL + "/ai-penetration-testing",
   description: "Automated web application security assessment with defined checks, observed evidence, severity, confidence and remediation guidance.",
   publisher: { "@id": ORG_ID },
+  offers: [
+    { "@type": "Offer", name: "Free Plan", price: "0", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Free Plan", price: "0", priceCurrency: "INR" },
+  ],
 };
 
 const approaches = [

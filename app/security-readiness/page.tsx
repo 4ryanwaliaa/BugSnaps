@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Check, CheckCircle2, Lock, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Readiness: Evidence, Scope and Remediation",
+  title: "Security Readiness: Scope, Evidence & Audits",
   description:
-    "Prepare for website security reviews with defined assessment scope, evidence, severity, confidence and remediation. Learn the limits of automated pentesting.",
+    "Prepare for website security reviews with defined scope, evidence, severity, confidence, and remediation. Learn automated pentesting limits.",
   path: "/security-readiness",
 });
 

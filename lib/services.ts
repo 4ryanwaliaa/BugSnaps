@@ -120,9 +120,9 @@ export const servicePages: ServicePage[] = [
     slug: "penetration-testing",
     path: "/penetration-testing",
     name: "Penetration testing",
-    metaTitle: "Penetration Testing Services",
+    metaTitle: "Manual Penetration Testing | Web, API & Network",
     metaDescription:
-      "Expert-led penetration testing for web apps, APIs and networks. Agree the scope and rules in writing, review finding evidence and plan remediation retesting.",
+      "Expert-led penetration testing for web apps, APIs, and networks. Agree scope in writing, verify findings with evidence, and retest fixes.",
     h1: "Penetration testing by people who explain what they found.",
     lead:
       "A BugSnaps penetration test is a scoped, manual attempt to break your application, API or network the way an attacker would - then a clear account of what worked, how bad it is, and how to fix it.",
@@ -168,12 +168,12 @@ export const servicePages: ServicePage[] = [
     slug: "web-application-pentesting",
     path: "/web-application-pentesting",
     name: "Web application pentesting",
-    metaTitle: "Web Application Penetration Testing",
+    metaTitle: "Web Application Penetration Testing Service",
     metaDescription:
-      "Manual web application penetration testing against the OWASP Top 10 and business logic: authentication, access control, injection, sessions - with fixes and retesting.",
-    h1: "Web application penetration testing.",
+      "Manual web app penetration testing service for OWASP Top 10, auth, IDOR, injection, and business logic, with fixed quotes and retesting.",
+    h1: "Web application penetration testing service.",
     lead:
-      "We test your web app the way an attacker would: every role, every workflow, every input - looking for the flaw that turns an ordinary account into access it should never have.",
+      "Our web app penetration testing service evaluates every role, workflow, and input the way an attacker would - looking for flaws that turn an ordinary account into unauthorized access.",
     tests: [
       { title: "Authentication", body: "Login, password reset, MFA and account recovery flows." },
       { title: "Access control", body: "Horizontal and vertical privilege checks across every role (IDOR/BOLA)." },
@@ -206,7 +206,7 @@ export const servicePages: ServicePage[] = [
     name: "API security testing",
     metaTitle: "API Security Testing | REST, GraphQL & BOLA",
     metaDescription:
-      "Test REST and GraphQL APIs for BOLA, IDOR, authentication and data exposure. Get a scoped manual assessment, endpoint coverage, evidence and remediation guidance.",
+      "Test REST and GraphQL APIs for BOLA, IDOR, broken auth, and data exposure. Scoped manual pentests with endpoint coverage, evidence, and fixes.",
     h1: "API security testing for REST and GraphQL.",
     lead:
       "Review object-level authorization (BOLA and IDOR), authentication, tenant isolation and data exposure with authorized test accounts. We test whether in-scope REST and GraphQL endpoints enforce the intended permissions for each object, function and field.",
@@ -240,9 +240,9 @@ export const servicePages: ServicePage[] = [
     slug: "network-pentesting",
     path: "/network-pentesting",
     name: "Network pentesting",
-    metaTitle: "Network Penetration Testing - External and Internal",
+    metaTitle: "External & Internal Network Pentesting",
     metaDescription:
-      "External and internal network penetration testing: attack-surface discovery, service and configuration testing, segmentation checks, and a clear path to hardening.",
+      "External and internal network penetration testing: map attack surfaces, test services and segmentation, and prioritize exploitable paths to fix.",
     h1: "Network penetration testing.",
     lead:
       "We map what your network exposes - to the internet and inside - and validate what an intruder could actually reach from each foothold.",
@@ -274,9 +274,9 @@ export const servicePages: ServicePage[] = [
     slug: "reconnaissance",
     path: "/reconnaissance",
     name: "Reconnaissance & OSINT",
-    metaTitle: "Reconnaissance Services: External Attack Surface & OSINT Assessments",
+    metaTitle: "External Reconnaissance & OSINT Services",
     metaDescription:
-      "Scoped external reconnaissance and OSINT assessments by BugSnaps. Review discovered domains, public exposure and potential shadow assets with evidence and limits.",
+      "Scoped external reconnaissance and OSINT assessments by BugSnaps. Review subdomains, public exposure, and shadow assets with documented limits.",
     h1: "Reconnaissance and external attack surface assessments.",
     lead:
       "Map the public exposure of your organization within agreed boundaries. We review discoverable domains, services and public information, record attribution uncertainty and prioritize assets for further investigation.",
@@ -321,9 +321,9 @@ export const servicePages: ServicePage[] = [
     slug: "cloud-penetration-testing",
     path: "/cloud-penetration-testing",
     name: "Cloud penetration testing",
-    metaTitle: "Cloud Penetration Testing Services: AWS, GCP & Azure Security",
+    metaTitle: "Cloud Pentesting: AWS, GCP & Azure",
     metaDescription:
-      "Expert cloud penetration testing across AWS, GCP, Azure, and Kubernetes. Audit IAM boundaries, container isolation, cloud metadata endpoints, and serverless architectures.",
+      "Expert cloud penetration testing across AWS, GCP, Azure, and Kubernetes. Review IAM privilege paths, exposed storage, and metadata protections.",
     h1: "Cloud penetration testing for modern infrastructure.",
     lead:
       "A misconfigured cloud role can turn a low-severity flaw into complete infrastructure takeover. We assess your AWS, GCP, and Azure environments for privilege escalation, exposed storage, and perimeter bypasses.",

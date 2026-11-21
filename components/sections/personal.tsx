@@ -31,8 +31,6 @@ const WEB3FORMS_ACCESS_KEY = "c74ca709-a8b6-45b8-8cad-a3b3bcc12d6a";
 // HERO
 
 export function PersonalHero() {
-  const reduceMotion = useReducedMotion();
-
   return (
     <div className="relative overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0">
@@ -40,44 +38,24 @@ export function PersonalHero() {
         <div className="animate-glow-drift absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-primary/[0.13] blur-[140px]" />
       </div>
 
-      <section className="relative mx-auto grid w-full max-w-6xl gap-12 px-6 pt-28 pb-16 sm:pt-40 sm:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
+      <section className="relative mx-auto grid w-full max-w-6xl gap-12 px-6 pt-10 pb-16 sm:pt-14 sm:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8">
         <div>
-          <motion.span
-            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[13px] font-medium text-muted"
-          >
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[13px] font-medium text-muted">
             <Fingerprint className="h-3.5 w-3.5 text-accent" />
             BugSnaps Personal · for individuals
-          </motion.span>
+          </span>
 
-          <motion.h1
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.08, ease: EASE }}
-            className="mt-6 text-5xl font-semibold leading-[1.04] tracking-tight text-balance sm:text-6xl lg:text-[4rem]"
-          >
+          <h1 className="mt-6 text-5xl font-semibold leading-[1.04] tracking-tight text-balance sm:text-6xl lg:text-[4rem]">
             Erase the accounts you forgot you had.
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.16, ease: EASE }}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty"
-          >
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty">
             Old profiles, dead forums, data-broker listings, breach leaks - your
             past is scattered across the internet. We find every account tied to
             your name, then help you delete it before someone else uses it.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.24, ease: EASE }}
-            className="mt-9 flex flex-wrap items-center gap-3"
-          >
+          <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button href="#start" size="lg">
               Start with a free scan
               <ArrowRight className="h-4 w-4" />
@@ -85,17 +63,12 @@ export function PersonalHero() {
             <Button href="#how" size="lg" variant="secondary">
               How it works
             </Button>
-          </motion.div>
+          </div>
 
-          <motion.p
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-8 flex items-center gap-2 font-mono text-[12px] tracking-wide text-muted-2"
-          >
+          <p className="mt-8 flex items-center gap-2 font-mono text-[12px] tracking-wide text-muted-2">
             <Lock className="h-3.5 w-3.5" />
             Consent-first · your data, your call · nothing without your say-so
-          </motion.p>
+          </p>
         </div>
 
         <FootprintVisual />

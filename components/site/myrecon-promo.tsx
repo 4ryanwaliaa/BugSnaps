@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowUpRight, Globe, Smartphone } from "lucide-react";
 import { Section, SectionTitle } from "@/components/site/page-parts";
 import { MYRECON_ANDROID_URL, MYRECON_URL } from "@/lib/site";

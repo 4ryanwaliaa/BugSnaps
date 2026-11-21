@@ -1,36 +1,28 @@
 import type { Metadata } from "next";
 import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { SECURITY_GUIDES, SECURITY_GUIDE_CATEGORIES, guidePath } from "@/lib/security-guides";
-import { absoluteUrl, pageMetadata } from "@/lib/site";
+import { SECURITY_GUIDES, SECURITY_GUIDE_CATEGORIES } from "@/lib/security-guides";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/site";
 import { GuideDirectory } from "@/components/site/guide-directory";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Testing Guides and Practical Checklists",
-  description: "Practical security testing guides and free CSV templates for APIs, access control, pentest reports and remediation. Check evidence, coverage and limitations.",
+  title: "Security Testing Guides & Checklists",
+  description: "Practical security testing guides and free CSV templates for APIs, access control, pentest reports, and fixes. Check evidence and coverage.",
   path: "/guides",
 });
 
 const categoryId = (category: string) => category.toLowerCase().replaceAll(" ", "-");
 
 export default function SecurityGuidesIndex() {
-  const collectionSchema = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
+  const collectionSchema = collectionPageJsonLd({
     name: "Security Testing Guides and Practical Checklists",
     description: "Practical guides for authorized security testing, evidence, and remediation.",
-    url: absoluteUrl("/guides"),
-    mainEntity: {
-      "@type": "ItemList",
-      numberOfItems: SECURITY_GUIDES.length,
-      itemListElement: SECURITY_GUIDES.map((guide, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: guide.title,
-        url: absoluteUrl(guidePath(guide.slug)),
-      })),
-    },
-  };
+    path: "/guides",
+    items: SECURITY_GUIDE_CATEGORIES.map((category) => ({
+      name: category,
+      path: `/guides#${categoryId(category)}`,
+    })),
+  });
 
   return (
     <SiteShell>

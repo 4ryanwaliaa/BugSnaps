@@ -1,6 +1,6 @@
 
 import { SketchUnderline } from "@/components/ui/sketch-underline";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";

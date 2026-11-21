@@ -29,6 +29,14 @@ const react = {
 };
 function loader(modules = {}) {
   const cache = new Map();
+  function resolveLocal(rel) {
+    for (const suffix of ["", ".ts", ".tsx", "/index.ts", "/index.tsx"]) {
+      const candidate = `${rel}${suffix}`;
+      const full = path.join(root, candidate);
+      if (fs.existsSync(full) && fs.statSync(full).isFile()) return candidate;
+    }
+    throw new Error(`Missing local dependency: ${rel}`);
+  }
   function load(relative) {
     if (cache.has(relative)) return cache.get(relative).exports;
     const module = { exports: {} }; cache.set(relative, module);
@@ -39,7 +47,8 @@ function loader(modules = {}) {
     vm.runInNewContext(code, { module, exports: module.exports, URL, URLSearchParams, console,
       require(id) {
         if (id in modules) return modules[id];
-        if (id.startsWith("@/")) return load(`${id.slice(2)}.ts`);
+        if (id.startsWith("@/")) return load(resolveLocal(id.slice(2)));
+        if (id.startsWith(".")) return load(resolveLocal(path.relative(root, path.resolve(path.dirname(path.join(root, relative)), id))));
         throw new Error(`Unexpected test dependency: ${id}`);
       },
     }, { filename: relative });
@@ -60,7 +69,8 @@ function wizard() {
     "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
     "next/navigation": { useSearchParams: () => new URLSearchParams({ target: "myrecon.xyz" }), useRouter: () => ({ push: (url) => redirects.push(url) }) },
     "next/link": { default: marker("Link") },
-    "lucide-react": { Check: marker("Check"), Copy: marker("Copy"), Loader2: marker("Loader2"), ShieldCheck: marker("ShieldCheck") },
+    "lucide-react": { ArrowRight: marker("ArrowRight"), Check: marker("Check"), Copy: marker("Copy"), Loader2: marker("Loader2"), Play: marker("Play"), ShieldCheck: marker("ShieldCheck") },
+    "@/lib/utils": { cn: (...values) => values.flat().filter(Boolean).join(" ") },
     "@/components/mypentest/app/auth": { useAuth: () => ({ status: "signed-in", user: { email: "fixture@example.test", emailVerified: true } }) },
     "@/components/mypentest/app/upgrade": { useUpgrade: () => ({ open: async () => false }) },
     "@/components/mypentest/app/ui": { Notice: marker("Notice"), Panel: marker("Panel"), inputClass: "input", buttonClass: { primary: "primary", secondary: "secondary", small: "small" } },
@@ -75,9 +85,9 @@ function wizard() {
   const view = runner(NewAssessment); view.render();
   return { view, calls, redirects,
     checkbox: (label) => nodes(view.tree).find((n) => n.props.label === label),
-    accounts: () => nodes(view.tree).find((n) => n.type.displayName === "TestAccounts"),
+    accounts: () => nodes(view.tree).find((n) => n.type?.displayName === "TestAccounts"),
     claim: async () => { await nodes(view.tree).find((n) => n.type === "form").props.onSubmit({ preventDefault() {} }); view.render(); },
-    start: async () => { await nodes(view.tree).find((n) => n.type === "button" && text(n).trim() === "Start assessment").props.onClick(); view.render(); },
+    start: async () => { await nodes(view.tree).find((n) => n.type === "button" && /^(Start assessment|Starting…)$/.test(text(n).trim())).props.onClick(); view.render(); },
   };
 }
 const load = loader();

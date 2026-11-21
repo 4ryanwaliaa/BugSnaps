@@ -1,12 +1,12 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Download, FlaskConical, ListChecks, ShieldCheck } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "AI Pentesting Benchmarks: MyPentest Evaluation Method",
+  title: "AI Pentesting Benchmarks & Evaluation Method",
   description:
-    "Compare MyPentest, Strix and DAST tools using reproducible AI pentesting benchmarks for precision, recall, evidence, coverage and cost. Download evaluation templates.",
+    "Reproducible AI pentesting benchmark protocol for MyPentest, Strix, and DAST tools. Measure precision, recall, evidence, and cost with CSVs.",
   path: "/benchmarks",
 });
 

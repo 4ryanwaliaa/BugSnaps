@@ -2,14 +2,26 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
 import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import Link from "@/components/site/content-link";
 import { ArrowUpRight, Binary, Eye, FileSearch, LockKeyhole, ScanSearch, ShieldAlert, Sparkles, Waypoints } from "lucide-react";
 import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-parts";
-import { PhishLensWorkspace } from "@/components/phishing-detector/workspace";
 import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
+
+const PhishLensWorkspace = dynamic(
+  () => import("@/components/phishing-detector/workspace").then((m) => m.PhishLensWorkspace),
+  {
+    loading: () => (
+      <div className="min-h-[340px] rounded-3xl border border-white/10 bg-[#0d1419]/80 p-6 text-sm text-zinc-400">
+        Loading interactive URL inspector…
+      </div>
+    ),
+  },
+);
 
 export const metadata: Metadata = pageMetadata({
   title: "Free Phishing Link Checker | PhishLens",
-  description: "Check suspicious URLs without opening them. Use PhishLens for local URL analysis, optional domain and DNS context, and redacted reports. Free; no account needed.",
+  description: "Check suspicious URLs in your browser without opening them. Inspect local signals, optional DNS and threat context, and redacted reports free.",
   path: "/phishing-detector",
 });
 
@@ -29,7 +41,7 @@ export default function PhishingDetectorPage() {
   return (
     <SiteShell>
       <JsonLd data={faqJsonLd(faqs)} />
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "PhishLens", applicationCategory: "SecurityApplication", operatingSystem: "Web", url: `${SITE_URL}/phishing-detector`, description: "A free tool for investigating suspicious links.", publisher: { "@id": ORG_ID }, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "PhishLens", applicationCategory: "SecurityApplication", operatingSystem: "Web", url: `${SITE_URL}/phishing-detector`, description: "A free tool for investigating suspicious links.", featureList: ["Local URL lexical and Punycode inspection", "Batch URL review up to 100 links", "Optional Cloudflare DNS and PhishDestroy domain context", "Redacted evidence report export"], publisher: { "@id": ORG_ID }, offers: [{ "@type": "Offer", price: "0", priceCurrency: "USD" }, { "@type": "Offer", price: "0", priceCurrency: "INR" }] }} />
       <div className="relative isolate overflow-hidden border-b border-white/[.07] bg-[#080e11]">
         <div aria-hidden="true" className="dot-grid pointer-events-none absolute inset-0 opacity-60" />
         <div aria-hidden="true" className="pointer-events-none absolute -top-32 right-[-10%] h-[520px] w-[620px] rounded-full bg-emerald-500/[.11] blur-[140px]" />
@@ -41,7 +53,7 @@ export default function PhishingDetectorPage() {
             <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-xs text-zinc-300">Free to use <span className="mx-1.5 text-zinc-600">·</span> No account required</span>
           </div>
           <div className="grid gap-6 pb-8 pt-7 sm:pb-10 sm:pt-8 lg:grid-cols-[1fr_21rem] lg:items-end lg:gap-12">
-            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Free phishing link checker. <span className="text-emerald-300">before you click.</span></h1>
+            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Free phishing link checker — <span className="text-emerald-300">before you click.</span></h1>
               <SketchUnderline className="mt-3 h-8 w-48" /><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">Check a suspicious URL without opening it. Inspect the link locally, choose optional domain and DNS checks, and review the evidence before your next step.</p></div>
             <div className="flex gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-400/[.05] p-4 text-sm leading-relaxed text-zinc-400"><LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" /><p>Your initial review stays in your browser. External checks run only when you choose them.</p></div>
           </div>
@@ -63,7 +75,7 @@ export default function PhishingDetectorPage() {
       <Section labelledBy="url-guide-title" className="border-t border-white/[.07]">
         <h2 id="url-guide-title" className="text-2xl font-semibold">Investigate without opening the link.</h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">Learn how to interpret an address, verify an unexpected request and respond if you have already interacted with it.</p>
-        <a href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</a>
+        <Link href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</Link>
       </Section>
       <ProductReading productId="phishlens" />
       <Section labelledBy="link-checker-faq" className="border-t border-white/[.07]">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { Check, CreditCard, LockOpen, Mail, RotateCcw, ScanSearch, ShieldCheck, Timer } from "lucide-react";
-import { CtaBand, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
+import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { PricingPlans } from "@/components/mypentest/plan-cards";
 import {
   FALLBACK_PLANS,
@@ -11,7 +11,7 @@ import {
   formatPrice,
   getPlans,
 } from "@/lib/plans";
-import { CONTACT_EMAIL, pageMetadata } from "@/lib/site";
+import { CONTACT_EMAIL, ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 import { routes } from "@/lib/mypentest";
 import { visitorRegion } from "@/lib/region";
 
@@ -22,27 +22,29 @@ const plusUsd = `US$${(INTERNATIONAL_USD_CENTS.plus / 100).toFixed(2)}`;
 
 export const metadata: Metadata = pageMetadata({
   title: "Penetration Testing Pricing | MyPentest Plans",
-  description: `Scan your website free. Unlock serious findings for ${unlockInr} (${unlockUsd}), or get Plus: 2 full pentests for ${formatPrice(plusInr, "INR")} (${plusUsd}). One-time payments, no subscription.`,
+  description: `Scan your website free. Unlock serious findings for ${unlockInr} (${unlockUsd}), or get Plus: 2 full pentests for ${formatPrice(plusInr, "INR")} (${plusUsd}). One-time payments only.`,
   path: "/pricing",
 });
 
-const STEPS = [
-  {
-    icon: ScanSearch,
-    title: "Scan free",
-    text: "Prove you own the domain and MyPentest maps and tests it. No card needed.",
-  },
-  {
-    icon: Timer,
-    title: "See what it found",
-    text: "Medium and low findings in full. Critical and high ones are counted, so you know they're there.",
-  },
-  {
-    icon: LockOpen,
-    title: "Unlock only if it matters",
-    text: `The unlock appears only when your scan found something serious. ${unlockInr} shows it all, with fixes.`,
-  },
-];
+function buildSteps(unlockPrice: string) {
+  return [
+    {
+      icon: ScanSearch,
+      title: "Scan free",
+      text: "Prove you own the domain and MyPentest maps and tests it. No card needed.",
+    },
+    {
+      icon: Timer,
+      title: "See what it found",
+      text: "Medium and low findings in full. Critical and high ones are counted, so you know they're there.",
+    },
+    {
+      icon: LockOpen,
+      title: "Unlock only if it matters",
+      text: `The unlock appears only when your scan found something serious. ${unlockPrice} shows it all, with fixes.`,
+    },
+  ];
+}
 
 const PROMISES = [
   { icon: RotateCcw, title: "No subscription", text: "Pay once. Nothing renews, nothing to cancel. Scan packs never expire." },
@@ -91,14 +93,42 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
   // Razorpay in ₹ for visitors in India, PayPal in US$ elsewhere (Vercel's
   // country header); ?region= is the visitor's own correction and wins.
   const [plans, region] = await Promise.all([getPlans(), searchParams.then((p) => visitorRegion(p.region))]);
+  const unlockPrice = region === "in" ? unlockInr : unlockUsd;
+  const plusPrice = region === "in" ? formatPrice(plusInr, "INR") : plusUsd;
+  const steps = buildSteps(unlockPrice);
+  const faqItems = FAQ.map(({ q, a }) => ({ question: q, answer: a }));
+  const operatorInr = FALLBACK_PLANS.find((p) => p.id === "operator")?.price ?? 149900;
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "MyPentest",
+    applicationCategory: "SecurityApplication",
+    operatingSystem: "Web",
+    url: `${SITE_URL}/pricing`,
+    description:
+      "Automated web application penetration testing with one free scan and one-time INR and USD scan packs.",
+    publisher: { "@id": ORG_ID },
+    offers: [
+      { "@type": "Offer", name: "MyPentest Free", price: "0", priceCurrency: "INR", description: "1 free scan per account, up to 200 URLs and 500 discovered pages." },
+      { "@type": "Offer", name: "MyPentest Free", price: "0", priceCurrency: "USD", description: "1 free scan per account, up to 200 URLs and 500 discovered pages." },
+      { "@type": "Offer", name: "MyPentest Report Unlock", price: (UNLOCK_PRICE_INR / 100).toFixed(0), priceCurrency: "INR", description: "Unlock critical and high findings in an existing free report." },
+      { "@type": "Offer", name: "MyPentest Report Unlock", price: (INTERNATIONAL_USD_CENTS.unlock / 100).toFixed(2), priceCurrency: "USD", description: "Unlock critical and high findings in an existing free report." },
+      { "@type": "Offer", name: "MyPentest Plus", price: (plusInr / 100).toFixed(0), priceCurrency: "INR", description: "2 full scans with no URL cap or expiry." },
+      { "@type": "Offer", name: "MyPentest Plus", price: (INTERNATIONAL_USD_CENTS.plus / 100).toFixed(2), priceCurrency: "USD", description: "2 full scans with no URL cap or expiry." },
+      { "@type": "Offer", name: "MyPentest Operator", price: (operatorInr / 100).toFixed(0), priceCurrency: "INR", description: "10 full scans with no URL cap or expiry." },
+      { "@type": "Offer", name: "MyPentest Operator", price: (INTERNATIONAL_USD_CENTS.operator / 100).toFixed(2), priceCurrency: "USD", description: "10 full scans with no URL cap or expiry." },
+    ],
+  };
 
   return (
     <SiteShell>
+      <JsonLd data={softwareJsonLd} />
+      <JsonLd data={faqJsonLd(faqItems)} />
       <PageHeader
         crumbs={[{ name: "Pricing", path: "/pricing" }]}
         eyebrow="Pricing"
-        title="Find out what's exposed. Free."
-        lead={`Run a free scan of your website. If it finds something serious, unlock the details for ${unlockInr}, or get Plus to unlock it and run 2 full pentests. One-time payments. Nothing renews.`}
+        title="MyPentest pricing: free scan and one-time packs."
+        lead={`Run a free scan of your website. If it finds something serious, unlock the details for ${unlockPrice}, or get Plus to unlock it and run 2 full pentests for ${plusPrice}. One-time payments. Nothing renews.`}
       />
 
       <Section labelledBy="plans-title">
@@ -120,7 +150,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           title="You only pay once you've seen there's a problem."
         />
         <ol className="mt-10 grid gap-5 md:grid-cols-3">
-          {STEPS.map(({ icon: Icon, title, text }, i) => (
+          {steps.map(({ icon: Icon, title, text }, i) => (
             <li key={title} className="min-w-0 rounded-2xl border border-white/[0.08] bg-surface p-6">
               <span className="font-mono text-[12px] text-muted-2">0{i + 1}</span>
               <Icon className="mt-3 h-5 w-5 text-accent" aria-hidden="true" />
@@ -176,7 +206,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           {FAQ.map(({ q, a }) => (
             <details key={q} className="group px-6 py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium">
-                {q}
+                <h3>{q}</h3>
                 <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">
                   +
                 </span>

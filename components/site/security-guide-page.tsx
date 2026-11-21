@@ -63,6 +63,36 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
               {guide.download && <a href={guide.download.path} download className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-accent">{guide.download.label}</a>}
             </section>
 
+            {guide.quickFacts && guide.quickFacts.length > 0 && (
+              <section aria-labelledby="quick-facts-title" className="mt-8 max-w-3xl">
+                <h2 id="quick-facts-title" className="text-lg font-semibold">At a glance</h2>
+                <div className="mt-4 overflow-x-auto rounded-2xl border border-white/[0.08]">
+                  <table className="w-full text-left text-sm">
+                    <tbody className="divide-y divide-white/[0.06]">
+                      {guide.quickFacts.map((fact) => (
+                        <tr key={fact.label}>
+                          <th scope="row" className="w-1/3 bg-surface/50 px-4 py-3 align-top font-medium text-foreground/90">{fact.label}</th>
+                          <td className="px-4 py-3 align-top leading-relaxed text-muted">{fact.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+
+            {guide.readNext && guide.readNext.length > 0 && (
+              <nav aria-label="Go deeper" className="mt-6 max-w-3xl text-sm">
+                <span className="text-muted">Go deeper: </span>
+                {guide.readNext.map((item, index) => (
+                  <span key={item.href}>
+                    {index > 0 && <span className="text-muted"> · </span>}
+                    <Link href={item.href} className="text-accent hover:underline">{item.label}</Link>
+                  </span>
+                ))}
+              </nav>
+            )}
+
             <Prose>
               {guide.sections.map((section, index) => {
                 const source = section.source === undefined ? undefined : guide.sources[section.source];

@@ -1,16 +1,16 @@
 import { ProductReading } from "@/components/site/product-reading";
 import { MyReconLinks, MyReconPromo } from "@/components/site/myrecon-promo";
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Check, Database, Globe, Key, Search, ShieldAlert } from "lucide-react";
+import Link from "@/components/site/content-link";
+import { ArrowRight, Check, Database, Globe, Key, ShieldAlert } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Username Search & Digital Footprint Tools | MyRecon",
+  title: "OSINT & Digital Footprint Tool | MyRecon",
   description:
-    "Explore MyRecon on the web and Android. Search public usernames, check breach exposure and research domains, DNS and IPs. Visit the website or get the mobile app.",
+    "Explore MyRecon on web and Android. Research public usernames, breach exposure, WHOIS, DNS, and IP context for authorized investigations.",
   path: "/myrecon",
 });
 
@@ -51,6 +51,10 @@ const softwareJsonLd = {
   description:
     "Open-source intelligence research for public usernames, breach exposure, domains, DNS and IPs.",
   publisher: { "@id": ORG_ID },
+  offers: [
+    { "@type": "Offer", name: "Free Web & Android OSINT Tool", price: "0", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Free Web & Android OSINT Tool", price: "0", priceCurrency: "INR" },
+  ],
 };
 
 const capabilities = [

@@ -275,20 +275,20 @@ const guides: Guide[] = [
   },
   {
     competitorSlug: "acunetix",
-    answer: "Acunetix alternatives depend on whether you need on-premises deployment, multi-target enterprise crawling, or an on-demand agile web assessment. Invicti Web + API provides the unified enterprise equivalent, while BugSnaps MyPentest fits teams needing instant headless-browser testing, deterministic proof-of-exploit verification, and transparent per-scan packs.",
+    answer: "Acunetix alternatives depend on whether you need on-premises deployment, multi-target enterprise crawling, or an on-demand web assessment. Invicti Web + API provides the unified enterprise equivalent, while BugSnaps MyPentest fits teams needing on-demand browser-based web assessments, differential probe evidence, and transparent one-time scan packs.",
     keepOriginal: "Keep Acunetix on your shortlist if your security programme mandates on-premises internal network scanning agents, established legacy crawling engines, or enterprise-wide DAST target management.",
     options: [
       { slug: "invicti", fit: "Evaluate for unified enterprise Web and API DAST with proof-based validation across large portfolios.", check: "Confirm engine packaging, on-premises agent licensing, and contract commitments." },
       { slug: "burp-suite", fit: "Evaluate Burp Suite DAST or Professional for deep manual request control and automated scanning.", check: "Confirm operator expertise requirements and pipeline automation fit." },
     ],
     checks: [
-      { title: "Modern SPA Crawling", body: "Test both tools against client-rendered JavaScript applications (React, Next.js, Vue). Confirm that DOM state, route hydration, and dynamic API calls are properly discovered." },
-      { title: "Proof of Exploit", body: "Check whether findings include reproducible HTTP request/response payloads or merely flag theoretical software versions." },
-      { title: "Procurement Flexibility", body: "Compare annual per-target seat lock-ins against on-demand credit or scan packs suited for modern agile release cycles." },
+      { title: "Modern SPA Crawling", body: "Test both tools against client-rendered JavaScript applications (React, Next.js, Vue). Confirm which routes and JavaScript-referenced API endpoints are discovered." },
+      { title: "Reproducible Evidence", body: "Check whether findings include reproducible HTTP request/response observations or merely flag theoretical software versions." },
+      { title: "Procurement Flexibility", body: "Compare annual per-target seat lock-ins against on-demand credit or scan packs suited for agile release cycles." },
     ],
-    transition: "Audit active scan profiles and authorized target exclusions before transitioning. Run parallel staging assessments across both tools on the same authorized build to benchmark crawl depth and false-positive rates.",
+    transition: "Audit active scan profiles and authorized target exclusions before transitioning. Run parallel staging assessments across both tools on the same authorized build to compare crawl depth and false-positive rates.",
     question: "Is BugSnaps MyPentest a drop-in replacement for Acunetix?",
-    response: "BugSnaps MyPentest replaces Acunetix's dynamic web and API scanning capabilities with faster setup, headless browser rendering, and proof-of-exploit validation, without requiring complex local appliance configuration or annual contract commitments.",
+    response: "No. Acunetix offers enterprise on-premises and cloud DAST across larger inventories. BugSnaps MyPentest provides a focused, self-serve hosted web and API assessment with 56 defined checks, differential probe evidence, and one-time scan packs without local appliance setup.",
   },
   {
     competitorSlug: "nessus",
@@ -300,8 +300,8 @@ const guides: Guide[] = [
     ],
     checks: [
       { title: "Scope Separation", body: "Separate network and host infrastructure assessments from layer 7 web application penetration testing. Infrastructure scanners often miss multi-step web authorization flaws." },
-      { title: "False Positive Ratio", body: "Evaluate banner-grabbing findings against verified proof-of-exploit demonstrations. Version-based alerts often report non-exploitable patched packages." },
-      { title: "Continuous CI/CD Delivery", body: "Assess how easily the testing engine integrates with web deployment hooks without slowing down developers." },
+      { title: "Signal and Evidence", body: "Evaluate banner-grabbing findings against reproducible HTTP request and response evidence. Version-based alerts can report non-applicable or backported packages." },
+      { title: "Continuous CI/CD Delivery", body: "Assess how easily the testing workflow fits release-candidate checks without slowing down developers." },
     ],
     transition: "Retain Nessus for perimeter host scanning and internal infrastructure patch audits, and introduce BugSnaps MyPentest for staging application releases. Compare finding quality between network banners and verified application flaws.",
     question: "Can BugSnaps replace Nessus for network vulnerability scans?",
@@ -309,66 +309,150 @@ const guides: Guide[] = [
   },
   {
     competitorSlug: "veracode",
-    answer: "Veracode alternatives depend on whether you need enterprise-wide static code governance (SAST) or rapid, actionable dynamic web testing (DAST). For organizations seeking to avoid heavy annual enterprise contracts and slow scan turnaround, BugSnaps MyPentest delivers instant browser-driven assessments with zero configuration, while Checkmarx and Invicti offer alternative enterprise AppSec platforms.",
+    answer: "Veracode alternatives depend on whether you need enterprise-wide static code governance (SAST) or rapid, actionable dynamic web testing (DAST). For organizations seeking to avoid heavy annual enterprise contracts and slow scan turnaround, BugSnaps MyPentest delivers self-serve browser assessments with zero local installation, while Checkmarx and Invicti offer alternative enterprise AppSec platforms.",
     keepOriginal: "Keep Veracode on your shortlist if your corporate governance mandates an all-in-one vendor for binary static analysis (SAST), software composition analysis (SCA), and vendor risk rating programs.",
     options: [
       { slug: "checkmarx", fit: "Evaluate for deep developer-centric SAST and supply-chain analysis in developer IDEs.", check: "Confirm developer seat licensing and triage management overhead." },
       { slug: "invicti", fit: "Evaluate for dedicated enterprise DAST with proof-based finding validation.", check: "Review deployment options (cloud vs on-premises) and portfolio scanning packages." },
     ],
     checks: [
-      { title: "Time to First Finding", body: "Benchmark how quickly each tool begins producing verified findings. Enterprise scanners often require hours for queueing and analysis." },
-      { title: "Single Page Application Support", body: "Verify how each scanner handles modern JavaScript frameworks without requiring complex macro recording scripts." },
-      { title: "Developer Actionability", body: "Ensure findings include exact reproduction requests and remediation diffs rather than theoretical static code paths." },
+      { title: "Time to First Finding", body: "Compare how quickly each tool begins producing verified findings on a staging target." },
+      { title: "Single Page Application Support", body: "Verify how each scanner discovers routes and JavaScript-referenced endpoints on your staging application." },
+      { title: "Developer Actionability", body: "Ensure findings include exact reproduction requests and remediation guidance rather than theoretical static code paths." },
     ],
     transition: "Maintain source-code scanning workflows while piloting BugSnaps on high-velocity staging applications. Measure developer remediation time and false positive rates before adjusting AppSec governance tiers.",
     question: "Does BugSnaps MyPentest replace Veracode's SAST engine?",
-    response: "No. BugSnaps MyPentest is a dynamic penetration testing engine (DAST) that tests running staging applications. It does not inspect static uncompiled source code or dependency manifests.",
+    response: "No. BugSnaps MyPentest is a dynamic web assessment tool that tests running applications. It does not inspect static uncompiled source code or dependency manifests.",
   },
   {
     competitorSlug: "checkmarx",
-    answer: "Checkmarx alternatives should differentiate between static code analysis (SAST) and runtime exploit verification (DAST). While Checkmarx focuses on scanning repositories and pull requests for code flaws, BugSnaps MyPentest validates deployed staging environments to verify whether theoretical vulnerabilities are genuinely reachable and exploitable from the web.",
+    answer: "Checkmarx alternatives should differentiate between static code analysis (SAST) and runtime application testing (DAST). While Checkmarx focuses on scanning repositories and pull requests for code flaws, BugSnaps MyPentest assesses deployed staging environments to check whether web and API weaknesses are observable over HTTP.",
     keepOriginal: "Keep Checkmarx if your AppSec program is anchored around static code analysis, software supply chain security (SCA), and deep developer pull-request automation.",
     options: [
       { slug: "snyk", fit: "Evaluate for developer-first code, container, and dependency scanning in CI/CD pipelines.", check: "Review runtime API & Web DAST entitlements separately from core code tools." },
       { slug: "stackhawk", fit: "Evaluate for developer-centric DAST running close to the application build.", check: "Verify YAML configuration requirements and local scanner runtime dependencies." },
     ],
     checks: [
-      { title: "Exploitability Verification", body: "Check whether reported vulnerabilities can be reproduced via live HTTP requests or exist only as theoretical code paths blocked by runtime middleware." },
-      { title: "Business Logic and Authorization", body: "Evaluate the tool's ability to identify multi-tenant authorization flaws (BOLA/IDOR) that static analysis often misses." },
+      { title: "Runtime Verification", body: "Check whether reported vulnerabilities can be observed via live HTTP requests or exist only as theoretical code paths blocked by runtime middleware." },
+      { title: "Business Logic and Authorization", body: "Evaluate the tool's ability to compare cross-account read access (BOLA/IDOR) with supplied test accounts, which static analysis cannot observe at runtime." },
       { title: "Deployment Friction", body: "Compare the complexity of onboarding a new repository versus testing a deployed staging URL." },
     ],
-    transition: "Retain repository code scanning for pull-request gating and run BugSnaps MyPentest against staging preview deployments to catch runtime configuration errors and authorization bypasses before production.",
+    transition: "Retain repository code scanning for pull-request gating and run BugSnaps MyPentest against staging deployments to catch runtime configuration errors and reachable access-control issues before production.",
     question: "Can BugSnaps MyPentest replace Checkmarx SAST?",
-    response: "No. SAST and DAST address different layers of security. BugSnaps verifies running web applications and APIs, ensuring live endpoints are secure, while Checkmarx scans static code syntax.",
+    response: "No. SAST and DAST address different layers of security. BugSnaps assesses running web applications and APIs, while Checkmarx scans static code syntax.",
   },
   {
     competitorSlug: "cobalt-io",
-    answer: "Cobalt.io alternatives depend on whether you need on-demand automated penetration testing for every release or scheduled human penetration tests for compliance audits. While Cobalt provides Pentest-as-a-Service (PTaaS) via human tester credits, BugSnaps offers a hybrid model: instant automated DAST via MyPentest for continuous coverage, and certified expert-led human penetration testing at transparent fixed pricing.",
+    answer: "Cobalt.io alternatives depend on whether you need on-demand automated web assessments for release candidates or scheduled human penetration tests for compliance audits. While Cobalt provides Pentest-as-a-Service (PTaaS) via human tester credits, BugSnaps offers both on-demand automated web checks via MyPentest and separately scoped expert-led manual penetration testing quoted per engagement.",
     keepOriginal: "Keep Cobalt if your organization has an established multi-year PTaaS subscription budget and prefers sourcing manual testing through a centralized freelance credit pool.",
     options: [
       { slug: "pentest-tools", fit: "Evaluate for a hosted operator toolkit with scheduled automation and reporting.", check: "Confirm report export formats and scope limitations on lower tiers." },
       { slug: "astra-security", fit: "Evaluate for combined automated scanning and scheduled manual penetration testing packages.", check: "Compare contracted retest terms, scoping limits, and annual commitment requirements." },
     ],
     checks: [
-      { title: "Cost Predictability", body: "Compare Cobalt's high annual credit minimums ($20,000+) against BugSnaps' transparent per-scan or fixed-scope service rates." },
+      { title: "Cost Predictability", body: "Compare Cobalt's annual PTaaS credit packages against BugSnaps' one-time automated scan packs or fixed-scope manual service quotes." },
       { title: "Speed and Availability", body: "Measure the time between requesting a test and receiving actionable findings. Automated tests start immediately, whereas manual engagements require scheduling." },
-      { title: "Compliance Attestation", body: "Ensure that penetration test reports include executive summaries, methodology documentation, and attestation letters accepted by SOC 2 and ISO 27001 auditors." },
+      { title: "Compliance Deliverables", body: "Confirm with your SOC 2 or ISO 27001 assessor which executive summaries, methodology documentation, and retest records are required before booking." },
     ],
-    transition: "Use BugSnaps MyPentest between scheduled manual audits to catch vulnerabilities introduced in agile sprints. For annual compliance certifications, engage BugSnaps expert penetration testing services for verified auditor attestations.",
+    transition: "Use BugSnaps MyPentest between scheduled manual audits to check release candidates for supported web exposures. When an audit or customer review requires manual testing, scope a separate BugSnaps expert engagement and confirm report requirements with your assessor.",
     question: "Does BugSnaps provide human penetration test reports like Cobalt?",
-    response: "Yes. In addition to the automated MyPentest platform, BugSnaps delivers expert-led manual penetration testing services that include thorough manual exploitation, executive attestations, and certified retesting for compliance.",
+    response: "Yes. In addition to the automated MyPentest product, BugSnaps offers separately scoped expert-led manual penetration testing with controlled verification, executive and technical reports, and retesting of fixes.",
   },
 ];
+
+const ALTERNATIVE_META: Record<string, { title: string; description: string }> = {
+  strix: {
+    title: "Strix Alternatives: AI Agent vs Web DAST",
+    description: "Compare Strix alternatives for web and API security testing: XBOW offensive validation, Nuclei YAML templates, and MyPentest hosted assessments.",
+  },
+  xbow: {
+    title: "XBOW Alternatives: Offensive & DAST Tools",
+    description: "Compare XBOW alternatives by exploit evidence and scope: Strix open-source and cloud agents, Invicti enterprise DAST, and MyPentest web checks.",
+  },
+  "astra-security": {
+    title: "Astra Security Alternatives: DAST & Pentest",
+    description: "Compare Astra Security alternatives for web DAST and manual pentests: Pentest-Tools.com, Rapid7 InsightAppSec, and MyPentest one-time scan packs.",
+  },
+  intruder: {
+    title: "Intruder Alternatives: Exposure & Web Scans",
+    description: "Compare Intruder alternatives across asset discovery and authenticated web DAST: Detectify, Qualys WAS, and MyPentest on-demand web assessments.",
+  },
+  "pentest-tools": {
+    title: "Pentest-Tools.com Alternatives: Web & Kit",
+    description: "Compare Pentest-Tools.com alternatives for operator toolkits and web scanning: Burp Suite Pro, Nuclei templates, and MyPentest hosted web checks.",
+  },
+  "burp-suite": {
+    title: "Burp Suite Alternatives: Proxy & DAST Tools",
+    description: "Compare Burp Suite alternatives for manual proxy testing and automated DAST: OWASP ZAP, Invicti enterprise scanning, and MyPentest browser tests.",
+  },
+  "owasp-zap": {
+    title: "OWASP ZAP Alternatives: Hosted & CI Scanners",
+    description: "Compare OWASP ZAP alternatives to reduce local setup and auth maintenance: Nuclei templates, StackHawk CI DAST, and MyPentest browser scanning.",
+  },
+  nuclei: {
+    title: "Nuclei Alternatives: Crawler & Web Scanners",
+    description: "Compare ProjectDiscovery Nuclei alternatives when you need crawler-led web and API testing: OWASP ZAP, Detectify, and MyPentest hosted scans.",
+  },
+  stackhawk: {
+    title: "StackHawk Alternatives: Dev & Hosted DAST",
+    description: "Compare StackHawk alternatives for runtime web and API security testing: OWASP ZAP automation, Snyk API & Web, and MyPentest browser assessments.",
+  },
+  invicti: {
+    title: "Invicti Alternatives: Enterprise & Web DAST",
+    description: "Compare Invicti alternatives by deployment model and proof-based validation: HCL AppScan, Rapid7 InsightAppSec, and MyPentest self-serve scans.",
+  },
+  detectify: {
+    title: "Detectify Alternatives: DAST & Surface Tools",
+    description: "Compare Detectify alternatives for web app scanning, attack surface monitoring and custom checks. See where Intruder, Nuclei and MyPentest fit.",
+  },
+  "qualys-was": {
+    title: "Qualys WAS Alternatives: Web App Scanners",
+    description: "Compare Qualys WAS alternatives for authenticated web and API scanning: Rapid7 InsightAppSec, HCL AppScan, and MyPentest on-demand assessments.",
+  },
+  "rapid7-insightappsec": {
+    title: "Rapid7 InsightAppSec Alternatives: Web DAST",
+    description: "Compare Rapid7 InsightAppSec alternatives for runtime web testing and evidence replay: Invicti, HCL AppScan, and MyPentest browser assessments.",
+  },
+  snyk: {
+    title: "Snyk Alternatives: Code SAST vs Runtime DAST",
+    description: "Compare Snyk alternatives across static code analysis and Snyk API & Web runtime testing: StackHawk, Invicti, and MyPentest live web assessments.",
+  },
+  "hcl-appscan": {
+    title: "HCL AppScan Alternatives: Cloud & Web Tests",
+    description: "Compare HCL AppScan alternatives by edition, login setup, and deployment: Invicti, Qualys WAS, and MyPentest self-serve web and API assessments.",
+  },
+  acunetix: {
+    title: "Acunetix Alternatives: Modern Web & API DAST",
+    description: "Compare Acunetix alternatives for SPA crawling, proof-based checks, and pricing: Invicti Web + API, Burp Suite, and MyPentest one-time scan packs.",
+  },
+  nessus: {
+    title: "Tenable Nessus Alternatives: Infra vs Web",
+    description: "Compare Tenable Nessus alternatives when shifting from host CVE audits to web and API testing: OWASP ZAP, Pentest-Tools.com, and MyPentest DAST.",
+  },
+  veracode: {
+    title: "Veracode Alternatives: AppSec Suite vs DAST",
+    description: "Compare Veracode alternatives for static analysis and faster dynamic web assessments: Checkmarx, Invicti, and MyPentest zero-setup browser scans.",
+  },
+  checkmarx: {
+    title: "Checkmarx Alternatives: SAST vs Live Web",
+    description: "Compare Checkmarx alternatives across repository code analysis and runtime exploit verification: Snyk, StackHawk, and MyPentest live web testing.",
+  },
+  "cobalt-io": {
+    title: "Cobalt.io Alternatives: PTaaS & Hybrid Scans",
+    description: "Compare Cobalt.io PTaaS alternatives for on-demand and compliance pentesting: Pentest-Tools.com, Astra Security, and BugSnaps hybrid assessments.",
+  },
+};
 
 export function alternativePath(slug: string): string { return `/alternatives/${slug}` }
 export const ALTERNATIVE_PAGES: AlternativePage[] = guides.map((guide) => {
   const item = competitor(guide.competitorSlug);
   if (!item) throw new Error(`Missing competitor: ${guide.competitorSlug}`);
+  const customMeta = ALTERNATIVE_META[item.slug];
   return {
     ...guide,
     slug: item.slug,
-    title: guide.title ?? `${item.name} Alternatives: Choose by Testing Workflow`,
-    description: guide.description ?? `Evaluate ${item.name} alternatives by test scope, authentication, deployment, evidence and migration effort. A practical shortlist with vendor sources and clear limits.`,
+    title: customMeta?.title ?? guide.title ?? `${item.name} Alternatives`,
+    description: customMeta?.description ?? guide.description ?? `Evaluate ${item.name} alternatives by test scope, authentication, deployment, evidence and migration effort.`,
     updated: guide.updated ?? item.checkedOn,
     faq: [
       { question: guide.question, answer: guide.response },

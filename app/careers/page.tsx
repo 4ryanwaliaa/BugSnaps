@@ -1,17 +1,15 @@
 
-import { SketchUnderline } from "@/components/ui/sketch-underline";
 import type { Metadata } from "next";
 import { Mail, Search, GraduationCap, HeartHandshake } from "lucide-react";
-import { Navbar } from "@/components/site/navbar";
-import { Footer } from "@/components/site/footer";
+import { JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { Button } from "@/components/ui/button";
-import { pageMetadata } from "@/lib/site";
+import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Careers at BugSnaps",
+  title: "Security Researcher & Pentester Careers - BugSnaps",
   absoluteTitle: true,
   description:
-    "Join BugSnaps - a new offensive security team building MyPentest and MyRecon. Send us your CV and tell us why you want to break things (legally) for a living.",
+    "Join BugSnaps in offensive security and engineering—building MyPentest, PhishLens, EndpointRadar, and MyRecon alongside CEH-led pentesting.",
   path: "/careers",
 });
 
@@ -24,9 +22,9 @@ const values = [
   },
   {
     icon: GraduationCap,
-    title: "Learn by doing",
+    title: "Direct engineering ownership",
     description:
-      "We're a young team, which means real responsibility from day one - real targets, real reports, real clients. You'll grow fast because you'll have to.",
+      "Small, practitioner-led security team—real ownership from day one across live tools, security research, and client assessments.",
   },
   {
     icon: HeartHandshake,
@@ -38,23 +36,27 @@ const values = [
 
 export default function CareersPage() {
   return (
-    <>
-      <Navbar />
-      <main id="main" className="mx-auto w-full max-w-4xl px-6 pt-36 pb-24 lg:px-8">
-        <p className="font-mono text-[13px] font-medium uppercase tracking-[0.2em] text-accent">
-          Careers
-        </p>
-        <h1 className="mt-4 max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-          Break things, legally. Help us build BugSnaps.
-        </h1>
-              <SketchUnderline className="mt-3 h-8 w-48" />
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          We&apos;re a new offensive security company - small team, no bureaucracy,
-          plenty of interesting problems. If making the internet a little safer
-          sounds like your kind of work, we&apos;d love to hear from you.
-        </p>
-
-        <div className="mt-14 grid gap-5 sm:grid-cols-3">
+    <SiteShell>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Security Researcher & Pentester Careers - BugSnaps",
+          description:
+            "Join BugSnaps in offensive security and engineering—building MyPentest, PhishLens, EndpointRadar, and MyRecon alongside CEH-led pentesting.",
+          url: absoluteUrl("/careers"),
+          about: { "@id": ORG_ID },
+        }}
+      />
+      <PageHeader
+        crumbs={[{ name: "Careers", path: "/careers" }]}
+        eyebrow="Careers"
+        title="Break things, legally. Help us build BugSnaps."
+        lead="An independent offensive security company in Gurugram—small team, zero bureaucracy, and direct engineering ownership across four live security tools."
+      />
+      <Section labelledBy="careers-values-title">
+        <h2 id="careers-values-title" className="sr-only">How we work</h2>
+        <div className="grid gap-5 sm:grid-cols-3">
           {values.map((value) => (
             <div
               key={value.title}
@@ -63,7 +65,7 @@ export default function CareersPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] text-accent">
                 <value.icon className="h-4.5 w-4.5" strokeWidth={1.75} />
               </div>
-              <h2 className="mt-4 text-base font-semibold tracking-tight">{value.title}</h2>
+              <h3 className="mt-4 text-base font-semibold tracking-tight">{value.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{value.description}</p>
             </div>
           ))}
@@ -91,8 +93,7 @@ export default function CareersPage() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
+      </Section>
+    </SiteShell>
   );
 }

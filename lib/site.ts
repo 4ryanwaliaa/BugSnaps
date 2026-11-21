@@ -32,11 +32,21 @@ export const OG_IMAGE = {
   alt: "BugSnaps - Find. Fix. Fortify. Penetration testing and offensive security.",
 };
 
+export interface OgImage {
+  url: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+}
+
 export function absoluteUrl(path = "/"): string {
   if (/^https?:\/\//.test(path)) return path;
   const clean = path === "/" ? "" : path.replace(/\/+$/, "");
   return `${SITE_URL}${clean.startsWith("/") || clean === "" ? clean : `/${clean}`}`;
 }
+
+const TITLE_SUFFIX = " - BugSnaps";
+const MAX_TITLE_LENGTH = 58;
 
 /**
  * Page metadata with a canonical URL and matching Open Graph / Twitter cards.
@@ -51,6 +61,9 @@ export function pageMetadata({
   type = "website",
   published,
   modified,
+  publishedTime,
+  modifiedTime,
+  image,
 }: {
   title: string;
   description: string;
@@ -60,9 +73,19 @@ export function pageMetadata({
   type?: "website" | "article";
   published?: string;
   modified?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  image?: OgImage;
 }): Metadata {
   const url = absoluteUrl(path);
-  const socialTitle = absoluteTitle ? title : `${title} - BugSnaps`;
+  // Search results truncate titles at roughly 60 characters. When the brand
+  // suffix would push the query-bearing words out of view, drop the suffix
+  // instead of the words people actually searched for.
+  if (!absoluteTitle && title.length + TITLE_SUFFIX.length > MAX_TITLE_LENGTH) absoluteTitle = true;
+  const socialTitle = absoluteTitle ? title : `${title}${TITLE_SUFFIX}`;
+  const ogImage = image ? { ...image, url: absoluteUrl(image.url) } : OG_IMAGE;
+  const pub = publishedTime ?? published;
+  const mod = modifiedTime ?? modified;
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
@@ -74,12 +97,12 @@ export function pageMetadata({
       title: socialTitle,
       description,
       locale: "en_US",
-      ...(type === "article" ? { publishedTime: published, modifiedTime: modified } : {}),
+      ...(type === "article" ? { publishedTime: pub, modifiedTime: mod } : {}),
       // Set explicitly: a page that defines its own openGraph replaces the
       // parent's, and would otherwise lose the file-based image.
-      images: [OG_IMAGE],
+      images: [ogImage],
     },
-    twitter: { card: "summary_large_image", title: socialTitle, description, images: [OG_IMAGE.url] },
+    twitter: { card: "summary_large_image", title: socialTitle, description, images: [ogImage.url] },
     robots: noindex ? { index: false, follow: false } : {
       index: true,
       follow: true,
@@ -91,6 +114,7 @@ export function pageMetadata({
 /* ── Structured data ───────────────────────────────────────── */
 
 export const ORG_ID = `${SITE_URL}/#organization`;
+export const FOUNDER_ID = `${SITE_URL}/#founder`;
 
 export function organizationJsonLd() {
   return {
@@ -102,11 +126,40 @@ export function organizationJsonLd() {
         name: ORG.name,
         legalName: ORG.legalName,
         url: SITE_URL,
-        logo: `${SITE_URL}/icon.svg`,
+        logo: `${SITE_URL}/apple-icon.png`,
         slogan: ORG.slogan,
         description: ORG.description,
         email: CONTACT_EMAIL,
-        sameAs: [LINKEDIN_URL, MYRECON_URL],
+        founder: {
+          "@type": "Person",
+          "@id": FOUNDER_ID,
+          name: "Aryan Walia",
+          jobTitle: "Founder & Penetration Tester",
+          hasCredential: {
+            "@type": "EducationalOccupationalCredential",
+            name: "Certified Ethical Hacker (CEH)",
+          },
+          worksFor: { "@id": ORG_ID },
+        },
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Gurugram",
+          addressRegion: "Haryana",
+          addressCountry: "IN",
+        },
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: CONTACT_EMAIL,
+          url: `${SITE_URL}/contact`,
+          availableLanguage: ["en"],
+        },
+        sameAs: [
+          LINKEDIN_URL,
+          MYRECON_URL,
+          "https://github.com/4ryanwalia/EndpointRadar",
+          "https://github.com/4ryanwalia/Phishing-detection",
+        ],
         knowsAbout: [
           "Penetration testing",
           "Automated penetration testing",
@@ -173,5 +226,262 @@ export function serviceJsonLd({ name, description, path }: { name: string; descr
     serviceType: name,
     areaServed: "Worldwide",
     provider: { "@id": ORG_ID, "@type": "Organization", name: ORG.name, url: SITE_URL },
+  };
+}
+
+export function imageObjectJsonLd({
+  id,
+  contentUrl,
+  caption,
+  width,
+  height,
+  creditText = "BugSnaps",
+}: {
+  id: string;
+  contentUrl: string;
+  caption: string;
+  width: number;
+  height: number;
+  creditText?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+    "@id": absoluteUrl(id),
+    contentUrl: absoluteUrl(contentUrl),
+    url: absoluteUrl(contentUrl),
+    caption,
+    width,
+    height,
+    creator: { "@id": ORG_ID },
+    creditText,
+    copyrightNotice: "© 2026 BugSnaps",
+    license: absoluteUrl("/terms"),
+    acquireLicensePage: absoluteUrl("/terms"),
+  };
+}
+
+export function videoObjectJsonLd({
+  name,
+  description,
+  thumbnailUrl,
+  uploadDate,
+  duration,
+  contentUrl,
+  embedUrl,
+  clips,
+}: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  duration?: string;
+  contentUrl?: string;
+  embedUrl?: string;
+  clips?: { name: string; startOffset: number; endOffset?: number; url: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name,
+    description,
+    thumbnailUrl: absoluteUrl(thumbnailUrl),
+    uploadDate,
+    ...(duration ? { duration } : {}),
+    ...(contentUrl ? { contentUrl: absoluteUrl(contentUrl) } : {}),
+    ...(embedUrl ? { embedUrl } : {}),
+    publisher: { "@id": ORG_ID },
+    ...(clips?.length
+      ? {
+          hasPart: clips.map((clip) => ({
+            "@type": "Clip",
+            name: clip.name,
+            startOffset: clip.startOffset,
+            ...(clip.endOffset !== undefined ? { endOffset: clip.endOffset } : {}),
+            url: absoluteUrl(clip.url),
+          })),
+        }
+      : {}),
+  };
+}
+
+export function howToJsonLd({
+  name,
+  description,
+  path,
+  totalTime,
+  steps,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  totalTime?: string;
+  steps: { name: string; text: string; url?: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    ...(totalTime ? { totalTime } : {}),
+    url: absoluteUrl(path),
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      ...(step.url ? { url: absoluteUrl(step.url) } : {}),
+    })),
+  };
+}
+
+export function techArticleJsonLd({
+  headline,
+  description,
+  path,
+  datePublished,
+  dateModified,
+  about,
+}: {
+  headline: string;
+  description: string;
+  path: string;
+  datePublished: string;
+  dateModified?: string;
+  about?: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline,
+    description,
+    url: absoluteUrl(path),
+    mainEntityOfPage: absoluteUrl(path),
+    datePublished,
+    ...(dateModified ? { dateModified } : {}),
+    author: { "@id": ORG_ID, "@type": "Organization", name: ORG.name, url: SITE_URL },
+    publisher: { "@id": ORG_ID },
+    ...(about?.length ? { about } : {}),
+  };
+}
+
+export function creativeWorkJsonLd({
+  name,
+  description,
+  path,
+  about,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  about?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name,
+    description,
+    url: absoluteUrl(path),
+    mainEntityOfPage: absoluteUrl(path),
+    creator: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+    ...(about ? { about } : {}),
+  };
+}
+
+export function aboutPageJsonLd({
+  name,
+  description,
+  path = "/about",
+}: {
+  name: string;
+  description: string;
+  path?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name,
+    description,
+    url: absoluteUrl(path),
+    mainEntity: { "@id": ORG_ID },
+  };
+}
+
+export function personJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": FOUNDER_ID,
+    name: "Aryan Walia",
+    jobTitle: "Founder & Penetration Tester",
+    email: CONTACT_EMAIL,
+    hasCredential: {
+      "@type": "EducationalOccupationalCredential",
+      name: "Certified Ethical Hacker (CEH)",
+    },
+    worksFor: { "@id": ORG_ID },
+    url: absoluteUrl("/about"),
+  };
+}
+
+export function blogJsonLd({
+  name,
+  description,
+  path = "/blog",
+  items,
+}: {
+  name: string;
+  description: string;
+  path?: string;
+  items?: { name: string; path: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name,
+    description,
+    url: absoluteUrl(path),
+    publisher: { "@id": ORG_ID },
+    ...(items?.length
+      ? {
+          blogPost: items.map((item) => ({
+            "@type": "BlogPosting",
+            headline: item.name,
+            url: absoluteUrl(item.path),
+          })),
+        }
+      : {}),
+  };
+}
+
+export function collectionPageJsonLd({
+  name,
+  description,
+  path,
+  items,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  items: { name: string; path: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description,
+    url: absoluteUrl(path),
+    mainEntity: {
+      "@type": "ItemList",
+      name,
+      numberOfItems: items.length,
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: absoluteUrl(item.path),
+      })),
+    },
   };
 }

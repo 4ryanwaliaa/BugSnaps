@@ -3,8 +3,8 @@ import type { Post } from "@/lib/blog";
 export const frameworkAdvisoryPosts: Post[] = [
   {
     slug: "nextjs-next-og-imageresponse-rce-september-2026",
-    title: "Next.js next/og ImageResponse RCE: review dynamic social images",
-    description: "Assess the September 2026 next/og ImageResponse advisory, its Node.js and SVG conditions, and a practical patch checklist for dynamic social image routes.",
+    title: "Next.js next/og ImageResponse RCE Checklist",
+    description: "Assess the September 2026 next/og ImageResponse RCE advisory, its Node.js and SVG input conditions, and how to patch dynamic social image routes.",
     published: "2026-10-22", author: "BugSnaps", readingMinutes: 4,
     body: [
       { type: "p", text: "A social preview image can involve server-side code, dependencies and untrusted input, even when its output looks like an ordinary picture. On September 22, 2026, Next.js published GHSA-vcvr-r3jv-pc5j, a critical remote code execution advisory for its next/og ImageResponse implementation. This review focuses on locating the relevant image-generation routes and verifying their deployment." },
@@ -25,8 +25,8 @@ export const frameworkAdvisoryPosts: Post[] = [
   },
   {
     slug: "nextjs-windows-server-rce-august-2026",
-    title: "Next.js Windows server RCE: check hosting and deployed versions",
-    description: "Review GHSA-p293-qw3h-jr36, the August 2026 Next.js Windows-hosted server RCE advisory, and distinguish a Windows development laptop from production hosting.",
+    title: "Next.js Windows Server RCE: Check Hosting",
+    description: "Review GHSA-p293-qw3h-jr36, the August 2026 Next.js Windows-hosted server RCE advisory, and distinguish a Windows dev laptop from server hosting.",
     published: "2026-10-22", author: "BugSnaps", readingMinutes: 4,
     body: [
       { type: "p", text: "A developer using Windows and a website running on a Windows server are different facts. Next.js published GHSA-p293-qw3h-jr36 on August 25, 2026 for unauthenticated remote code execution on Windows-hosted servers. The first useful question for an application owner is where the deployed server actually runs." },
@@ -47,8 +47,8 @@ export const frameworkAdvisoryPosts: Post[] = [
   },
   {
     slug: "nextjs-rewrites-ssrf-destination-hostname",
-    title: "Next.js rewrites SSRF: review dynamic destination hostnames",
-    description: "Understand the July 2026 Next.js rewrite SSRF and redirect advisory, affected versions, and how to audit request-derived destination hostnames safely.",
+    title: "Next.js Rewrites SSRF: Audit Hostnames",
+    description: "Understand the July 2026 Next.js rewrite SSRF and redirect advisory, affected versions, and how to audit dynamic destination hostnames safely.",
     published: "2026-10-22", author: "BugSnaps", readingMinutes: 4,
     body: [
       { type: "p", text: "A rewrite rule can look like routing configuration while deciding which external service your server contacts. Next.js published GHSA-p9j2-gv94-2wf4 on July 21, 2026 concerning destination hostnames derived from request-controlled values. Reviewing this issue requires looking at how a destination is constructed, not merely whether the application has rewrite rules." },
@@ -69,7 +69,7 @@ export const frameworkAdvisoryPosts: Post[] = [
   },
   {
     slug: "nextjs-middleware-authorization-bypass-cve-2025-29927",
-    title: "CVE-2025-29927: Next.js middleware authorization bypass checklist",
+    title: "CVE-2025-29927: Next.js Middleware Auth Check",
     description: "Review the March 2025 Next.js middleware authorization bypass, historical patch versions, and how to verify access controls beyond the login screen.",
     published: "2026-10-22", author: "BugSnaps", readingMinutes: 4,
     body: [

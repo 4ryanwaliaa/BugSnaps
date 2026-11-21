@@ -2,16 +2,31 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
 import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight, FileJson, Laptop, LockKeyhole, Radar, ShieldCheck } from "lucide-react";
-import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-parts";
-import { ORG_ID, SITE_URL, pageMetadata } from "@/lib/site";
+import { Breadcrumbs, JsonLd, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
+import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Free Windows Security Posture Scanner | EndpointRadar",
-  description: "Review Windows security posture with a free read-only scanner. Scan locally or over WinRM, import device reports, and prioritize firewall, antivirus and update findings.",
+  title: "Free Windows Posture Scanner | EndpointRadar",
+  description: "Check Windows security posture free with EndpointRadar. Scan locally or over WinRM, import JSON reports, and prioritize firewall and AV fixes.",
   path: "/endpointradar",
 });
+
+const faqs = [
+  {
+    question: "Is EndpointRadar free and open source?",
+    answer: "Yes. The Python 3.10+ Windows posture scanner is open source on GitHub, and the browser workspace imports up to 100 JSON scan records free without an account.",
+  },
+  {
+    question: "How does agentless WinRM scanning work?",
+    answer: "For an authorized remote Windows host, EndpointRadar can stage a temporary scanner over WinRM and retrieve a point-in-time JSON report when WinRM, credentials, and Python are available on the target.",
+  },
+  {
+    question: "Is EndpointRadar an EDR platform?",
+    answer: "No. EndpointRadar is a read-only Windows posture scanner for point-in-time configuration and exposure checks, not an endpoint detection and response (EDR) agent.",
+  },
+];
 
 const steps = [
   { n: "01", title: "Run a local scan", body: "Install the open-source Windows scanner and run it on a machine you are authorised to assess." },
@@ -23,7 +38,8 @@ export default function EndpointRadarPage() {
   const managedReady = process.env.ENDPOINTRADAR_DATABASE_LOCKED === "true";
   return (
     <SiteShell>
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "EndpointRadar", applicationCategory: "SecurityApplication", operatingSystem: "Windows, Web", url: `${SITE_URL}/endpointradar`, description: "Free, open-source Windows endpoint security posture scanner with local and agentless WinRM options and a browser-based report viewer.", publisher: { "@id": ORG_ID } }} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "EndpointRadar", applicationCategory: "SecurityApplication", operatingSystem: "Windows, Web", url: `${SITE_URL}/endpointradar`, codeRepository: "https://github.com/4ryanwalia/EndpointRadar", description: "Free, open-source Windows endpoint security posture scanner with local and agentless WinRM options and a browser-based report viewer.", publisher: { "@id": ORG_ID }, offers: [{ "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "USD" }, { "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "INR" }] }} />
+      <JsonLd data={faqJsonLd(faqs)} />
       <div className="relative overflow-hidden border-b border-white/[0.07]">
         <div aria-hidden="true" className="dot-grid absolute inset-0" />
         <div aria-hidden="true" className="absolute -top-28 right-0 h-96 w-96 rounded-full bg-blue-600/15 blur-[120px]" />
@@ -81,6 +97,20 @@ export default function EndpointRadarPage() {
         <h2 id="endpoint-guides" className="text-2xl font-semibold tracking-tight">Put endpoint findings in context.</h2>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">Learn how to review Windows security posture, understand exposure, prioritize findings and verify changes.</p>
         <Link href="/guides#endpoint-security" className="mt-5 inline-flex text-sm font-medium text-blue-400 hover:underline">Explore Windows endpoint guides <ArrowRight className="ml-2 h-4 w-4" /></Link>
+      </Section>
+      <Section labelledBy="faq-title" id="faq" className="border-t border-white/[.07]">
+        <SectionTitle id="faq-title" eyebrow="FAQ" title="Questions about EndpointRadar." />
+        <div className="mt-8 max-w-3xl divide-y divide-white/[0.06] rounded-2xl border border-white/[0.07] bg-surface">
+          {faqs.map((faq) => (
+            <details key={faq.question} className="group px-6 py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium">
+                <h3>{faq.question}</h3>
+                <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
       </Section>
       <ProductReading productId="endpointradar" />
     </SiteShell>

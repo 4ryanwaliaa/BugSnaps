@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { Check, FileText, X } from "lucide-react";
 import { ScanTrustPoints } from "@/components/mypentest/trust-points";
 import { Container, Section, SectionTitle } from "@/components/site/page-parts";

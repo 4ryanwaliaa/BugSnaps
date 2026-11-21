@@ -1,14 +1,14 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Check, ClipboardList, FileText, RotateCcw, ShieldCheck, Wrench } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { ENGINE_FACTS, newAssessmentUrl } from "@/lib/mypentest";
 import { ROADMAP } from "@/lib/mypentest/content";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, howToJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "Website Security Improvements: Find, Fix and Retest",
+  title: "Website Security Improvements: Fix & Retest",
   description:
-    "Turn web application pentest findings into practical security improvements. Prioritize vulnerability fixes, review evidence and retest with MyPentest by BugSnaps.",
+    "Turn web pentest findings into security fixes. Prioritize access control, secrets, and input issues, write checks, and retest with MyPentest.",
   path: "/improvements",
 });
 
@@ -112,6 +112,18 @@ export default function ImprovementsPage() {
   return (
     <SiteShell>
       <JsonLd data={faqJsonLd(faqs)} />
+      <JsonLd
+        data={howToJsonLd({
+          name: "How to Turn Pentest Findings into Website Security Improvements",
+          description:
+            "Review vulnerability evidence, fix the underlying cause with an acceptance test, and retest the same behavior on a comparable scope.",
+          path: "/improvements",
+          steps: workflow.map((step) => ({
+            name: step.title,
+            text: step.body,
+          })),
+        })}
+      />
       <PageHeader
         crumbs={[{ name: "Resources", path: "/resources" }, { name: "Security improvements", path: "/improvements" }]}
         eyebrow="Find. Fix. Fortify."

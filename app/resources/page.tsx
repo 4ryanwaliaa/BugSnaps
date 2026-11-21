@@ -5,8 +5,8 @@ import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/si
 import { absoluteUrl, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Testing Resources: Guides, Use Cases and Comparisons",
-  description: "Plan an authorized security assessment with practical guides, workflows for your application, and sourced comparisons of security testing tools.",
+  title: "Security Testing Resources, Guides & Templates",
+  description: "Plan an authorized security assessment with practical guides, app testing workflows, CSV templates, and sourced tool comparisons.",
   path: "/resources",
 });
 
@@ -39,6 +39,7 @@ export default function ResourcesPage() {
           url: absoluteUrl("/resources"),
           mainEntity: {
             "@type": "ItemList",
+            name: "BugSnaps security testing resources",
             itemListElement: collections.map((c, i) => ({
               "@type": "ListItem",
               position: i + 1,
@@ -51,7 +52,7 @@ export default function ResourcesPage() {
       <PageHeader
         crumbs={[{ name: "Resources", path: "/resources" }]}
         eyebrow="Security resources"
-        title="Make the next security decision with evidence."
+        title="Security Testing Resources, Guides & Comparisons"
         lead="Start with a question, follow a workflow for your application, and compare tools against the tests and evidence you need."
       />
       <Section labelledBy="collections-title">
@@ -84,7 +85,7 @@ export default function ResourcesPage() {
             <strong className="text-foreground">Scope first.</strong> Identify the owner, permitted hosts, test accounts and exclusions before an assessment. Only test systems you own or are authorized to test.
           </p>
           <p>
-            <strong className="text-foreground">Check the evidence.</strong> A tool's supported feature is not proof that every path in your application was tested. Read observed findings alongside unchecked paths and limitations.
+            <strong className="text-foreground">Check the evidence.</strong> A tool&apos;s supported feature is not proof that every path in your application was tested. Read observed findings alongside unchecked paths and limitations.
           </p>
           <p>
             <strong className="text-foreground">Read sources and dates.</strong> Our comparison pages cite vendor documentation and their review date. Guides link primary standards and testing references. Product availability can change.

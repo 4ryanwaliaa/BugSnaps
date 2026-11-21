@@ -8,7 +8,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Contact BugSnaps - Gurugram & Remote Penetration Testing",
   absoluteTitle: true,
   description:
-    "Contact BugSnaps in Gurugram, India for remote website penetration testing, API security assessments and scoped expert engagements. View our city-level map.",
+    "Contact BugSnaps in Gurugram, India for remote website penetration testing, API security assessments, and scoped expert engagements.",
   path: "/contact",
 });
 

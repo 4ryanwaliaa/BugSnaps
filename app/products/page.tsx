@@ -2,16 +2,16 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Fingerprint, Laptop, Link2, ScanSearch, Sparkles } from "lucide-react";
 import { Breadcrumbs, Container, JsonLd, SiteShell } from "@/components/site/page-parts";
 import { ProductVideo } from "@/components/site/product-video";
 import { product } from "@/lib/products";
-import { MYRECON_ANDROID_URL, MYRECON_URL, ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
+import { MYRECON_ANDROID_URL, MYRECON_URL, ORG_ID, absoluteUrl, pageMetadata, videoObjectJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Products - MyPentest, EndpointRadar, PhishLens and MyRecon",
-  description: "Explore BugSnaps products: MyPentest, EndpointRadar, PhishLens and MyRecon for security testing, phishing link assessment and digital footprint research.",
+  title: "Security Tools: MyPentest, PhishLens & More",
+  description: "Explore BugSnaps security tools: MyPentest web scanner, EndpointRadar Windows posture tool, PhishLens link checker, and MyRecon OSINT research.",
   path: "/products",
 });
 
@@ -54,14 +54,47 @@ const itemList = {
   "@context": "https://schema.org", "@type": "ItemList", name: "BugSnaps products",
   itemListElement: showcases.map(({ product }, index) => ({
     "@type": "ListItem", position: index + 1,
-    item: { "@type": "SoftwareApplication", name: product.name, description: product.summary, applicationCategory: "SecurityApplication", operatingSystem: product.id === "myrecon" ? "Web, Android" : product.id === "endpointradar" ? "Web, Windows" : "Web", url: absoluteUrl(product.href), publisher: { "@id": ORG_ID } },
+    item: {
+      "@type": "SoftwareApplication",
+      name: product.name,
+      description: product.summary,
+      applicationCategory: "SecurityApplication",
+      operatingSystem: product.id === "myrecon" ? "Web, Android" : product.id === "endpointradar" ? "Web, Windows" : "Web",
+      url: absoluteUrl(product.href),
+      publisher: { "@id": ORG_ID },
+      offers: product.id === "mypentest"
+        ? [
+            { "@type": "Offer", name: "Free", price: "0", priceCurrency: "INR" },
+            { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
+            { "@type": "Offer", name: "Plus", price: "499", priceCurrency: "INR" },
+            { "@type": "Offer", name: "Plus", price: "4.99", priceCurrency: "USD" },
+          ]
+        : [
+            { "@type": "Offer", name: "Free", price: "0", priceCurrency: "INR" },
+            { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
+          ],
+    },
   })),
 };
+
+const productVideos = showcases.map(({ product, headline, why, videoId }) =>
+  videoObjectJsonLd({
+    name: `${product.name}: ${headline}`,
+    description: why,
+    thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    uploadDate: "2026-10-08T00:00:00+05:30",
+    embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+    contentUrl: `https://www.youtube.com/watch?v=${videoId}`,
+  }),
+);
 
 export default function ProductsPage() {
   return (
     <SiteShell>
       <JsonLd data={itemList} />
+      {productVideos.map((video) => (
+        <JsonLd key={video.embedUrl} data={video} />
+      ))}
       <header className="relative overflow-hidden border-b border-white/[0.07]">
         <div aria-hidden="true" className="dot-grid absolute inset-0" />
         <div aria-hidden="true" className="absolute -top-32 right-0 h-[500px] w-[600px] rounded-full bg-coral/[0.08] blur-[130px]" />
@@ -70,12 +103,12 @@ export default function ProductsPage() {
           <div className="mt-10 grid gap-9 lg:grid-cols-[1fr_.7fr] lg:items-end">
             <div>
               <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-coral"><Sparkles className="h-4 w-4" aria-hidden="true" /> The BugSnaps toolkit</p>
-              <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">Curiosity, meet <span className="text-coral">clarity.</span></h1>
+              <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl lg:text-6xl">Security testing tools for websites, endpoints, links, and <span className="text-coral">OSINT.</span></h1>
               <SketchUnderline className="mt-3 h-8 w-48" />
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">From a suspicious link to your app's attack surface, there's a tool for the question you want to answer.</p>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">From a suspicious link to your app&apos;s attack surface, there&apos;s a tool for the question you want to answer.</p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-7">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">What's on your mind?</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">What&apos;s on your mind?</p>
               <nav aria-label="Jump to a product" className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {showcases.map(({ id, product, icon: Icon, color }) => <a key={id} href={`#${id}`} className="group flex min-h-12 items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-black/20 px-3 text-sm transition-colors hover:border-white/20 hover:bg-white/[0.05]"><span className="flex items-center gap-2"><Icon className={`h-4 w-4 ${color}`} aria-hidden="true" />{product.name}</span><ArrowDown className="h-3.5 w-3.5 text-muted-2 transition-transform group-hover:translate-y-1" aria-hidden="true" /></a>)}
               </nav>
@@ -102,7 +135,7 @@ export default function ProductsPage() {
                       <span className="ml-auto font-mono text-xs text-muted-2">{number} / 04</span>
                     </div>
                     <div className="mt-7"><span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-muted">{product.status === "beta" ? "Beta · free plan" : product.status === "available" ? "Available" : "Coming soon"}</span></div>
-                    <h4 className="mt-5 max-w-lg text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl">{headline}</h4>
+                    <p className="mt-5 max-w-lg text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl">{headline}</p>
                     <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-muted sm:text-base">{why}</p>
                     <ul className="mt-6 space-y-3">{uses.map((use) => <li key={use} className="flex gap-3 text-sm leading-relaxed text-zinc-300"><Check className={`mt-0.5 h-4 w-4 shrink-0 ${color}`} aria-hidden="true" />{use}</li>)}</ul>
                     <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">

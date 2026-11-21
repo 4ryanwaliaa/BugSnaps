@@ -13,6 +13,8 @@ const args = process.argv.slice(2);
 const option = (name, fallback) => args.includes(name) ? args[args.indexOf(name) + 1] : fallback;
 const base = new URL(option("--base", "http://localhost:3100"));
 const reportPath = option("--report", null);
+const strictBlog = args.includes("--strict-blog");
+const strictCatalog = args.includes("--strict-catalog");
 const cache = new Map();
 function load(file) {
   file = path.resolve(root, file);
@@ -30,6 +32,13 @@ const { INDEXABLE_ROUTES } = load("lib/routes.ts");
 const { posts } = load("lib/blog.ts");
 const { SITE_URL } = load("lib/site.ts");
 const { SITEMAP_PAGES } = load("lib/sitemap-pages.ts");
+const { competitors, versusPath } = load("lib/competitors.ts");
+const VERSUS_DYNAMIC_ROUTES = new Set(competitors.map((c) => versusPath(c.slug)));
+const LEGAL_ROUTES = new Set(["/privacy", "/terms", "/refund-policy", "/responsible-disclosure"]);
+const isBlogRoute = (route) => route.startsWith("/blog/");
+const isCatalogDynamicRoute = (route) =>
+  route.startsWith("/guides/") || route.startsWith("/alternatives/") || VERSUS_DYNAMIC_ROUTES.has(route);
+const nonEmpty = (v) => typeof v === "string" && v.trim().length > 0;
 const paths = [...INDEXABLE_ROUTES.map((r) => r.path), ...posts.map((p) => `/blog/${p.slug}`)];
 assert.equal(new Set(paths).size, paths.length, "Duplicate sitemap paths");
 assert(paths.every((p) => p.startsWith("/") && !/^\/(?:mypentest\/(?:app|api)|endpointradar\/(?:app|managed)|phishing-detector\/team)(\/|$)/.test(p)), "Private routes in sitemap");
@@ -64,9 +73,98 @@ assert.equal(text('<details><summary>Question</summary><p>Expandable answer</p><
 assert.equal(text('<div aria-hidden="true"><span>Decoration</span></div><p>Content</p>'), "Content", "Hidden descendants must stay excluded");
 const meta = (html, key) => [...html.matchAll(/<meta\b[^>]*>/gi)].map((m) => attributes(m[0])).find((a) => (a.name || a.property || "").toLowerCase() === key)?.content;
 const links = (html) => [...html.matchAll(/<a\b[^>]*>/gi)].map((m) => attributes(m[0]).href).filter(Boolean);
-const errors = [], pages = [], linked = new Set(), titles = new Map(), descriptions = new Map();
-const graph = new Map();
+const errors = [], warnings = [], pages = [], linked = new Set(), titles = new Map(), descriptions = new Map();
+const graph = new Map(), assets = new Map();
 const fail = (url, message) => errors.push({ url, message });
+const warn = (url, message) => warnings.push({ url, message });
+const checkLength = (route, message, enforce) => (enforce ? fail(route, message) : warn(route, message));
+const addAsset = (assetPath, route) => {
+  if (!assets.has(assetPath)) assets.set(assetPath, new Set());
+  assets.get(assetPath).add(route);
+};
+function validateItemList(route, d) {
+  if (!nonEmpty(d.name) || !Array.isArray(d.itemListElement) || d.itemListElement.length === 0) {
+    fail(route, "Invalid ItemList JSON-LD: missing name or itemListElement");
+    return;
+  }
+  for (const e of d.itemListElement) {
+    const validFlat = nonEmpty(e?.name) && nonEmpty(e?.url || e?.item);
+    const validNested = nonEmpty(e?.item?.name) && nonEmpty(e?.item?.url);
+    if (e?.["@type"] !== "ListItem" || !Number.isInteger(e.position) || e.position < 1 || (!validFlat && !validNested)) {
+      fail(route, "Invalid ItemList ListItem entry");
+      break;
+    }
+  }
+}
+function validateSchemaNode(route, d, mainText) {
+  const t = d?.["@type"];
+  if (!t) { fail(route, "JSON-LD node missing @type"); return; }
+  if (t === "Organization" || t === "WebSite") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.url)) fail(route, `Invalid ${t} JSON-LD: missing name or url`);
+  } else if (t === "BreadcrumbList") {
+    if (!Array.isArray(d.itemListElement) || d.itemListElement.length === 0) {
+      fail(route, "BreadcrumbList has no items");
+    } else {
+      for (const e of d.itemListElement) {
+        if (e?.["@type"] !== "ListItem" || !Number.isInteger(e.position) || e.position < 1 || !nonEmpty(e.name) || !nonEmpty(e.item || e.url)) {
+          fail(route, "BreadcrumbList ListItem is malformed");
+          break;
+        }
+      }
+    }
+  } else if (t === "SoftwareApplication") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.applicationCategory) || !nonEmpty(d.operatingSystem) || !nonEmpty(d.url)) {
+      fail(route, "SoftwareApplication JSON-LD missing required fields");
+    }
+  } else if (t === "Service") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.description) || !nonEmpty(d.url) || !d.provider) {
+      fail(route, "Service JSON-LD missing required fields");
+    }
+  } else if (t === "Article" || t === "TechArticle" || t === "BlogPosting") {
+    if (!nonEmpty(d.headline) || !nonEmpty(d.description) || !d.author || !d.publisher || !nonEmpty(d.datePublished || d.dateModified) || !nonEmpty(d.mainEntityOfPage || d.url)) {
+      fail(route, `${t} JSON-LD missing required fields`);
+    }
+  } else if (t === "VideoObject") {
+    const hasThumb = nonEmpty(d.thumbnailUrl) || (Array.isArray(d.thumbnailUrl) && d.thumbnailUrl.some(nonEmpty));
+    if (!nonEmpty(d.name) || !nonEmpty(d.description) || !hasThumb || !nonEmpty(d.uploadDate) || !nonEmpty(d.contentUrl || d.embedUrl)) {
+      fail(route, "VideoObject JSON-LD missing required fields");
+    }
+  } else if (t === "HowTo") {
+    if (!nonEmpty(d.name) || !Array.isArray(d.step) || d.step.length === 0) {
+      fail(route, "HowTo JSON-LD missing name or steps");
+    }
+  } else if (t === "CreativeWork") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.description) || !nonEmpty(d.url || d.mainEntityOfPage) || !(d.author || d.publisher || d.creator)) {
+      fail(route, "CreativeWork JSON-LD missing required fields");
+    }
+  } else if (t === "AboutPage") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.url) || !(d.mainEntity || d.about)) {
+      fail(route, "AboutPage JSON-LD missing required fields");
+    }
+  } else if (t === "Person") {
+    if (!nonEmpty(d.name)) fail(route, "Person JSON-LD missing name");
+  } else if (t === "Blog") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.url) || !d.publisher) fail(route, "Blog JSON-LD missing required fields");
+  } else if (t === "CollectionPage") {
+    if (!nonEmpty(d.name) || !nonEmpty(d.url)) fail(route, "CollectionPage JSON-LD missing name or url");
+    if (d.mainEntity?.["@type"] === "ItemList") validateItemList(route, d.mainEntity);
+  } else if (t === "ItemList") {
+    validateItemList(route, d);
+  } else if (t === "ImageObject") {
+    if (!nonEmpty(d.contentUrl || d.url)) fail(route, "ImageObject JSON-LD missing contentUrl");
+    if (route === "/" && (!nonEmpty(d.license) || !nonEmpty(d.acquireLicensePage) || !nonEmpty(d.copyrightNotice))) {
+      fail(route, "Homepage ImageObject JSON-LD missing license/acquireLicensePage/copyrightNotice");
+    }
+  } else if (t === "FAQPage") {
+    if (!Array.isArray(d.mainEntity) || d.mainEntity.length === 0) { fail(route, "FAQ has no questions"); return; }
+    for (const item of d.mainEntity) {
+      if (item?.["@type"] !== "Question" || item.acceptedAnswer?.["@type"] !== "Answer"
+          || typeof item.name !== "string" || typeof item.acceptedAnswer?.text !== "string"
+          || !text(item.name) || !text(item.acceptedAnswer.text)) { fail(route, "FAQ question or answer is empty or malformed"); continue; }
+      if (!mainText.includes(text(item.name)) || !mainText.includes(text(item.acceptedAnswer.text))) fail(route, "FAQ structured data differs from rendered main content");
+    }
+  }
+}
 async function get(route) {
   const response = await fetch(new URL(route, base), { redirect: "manual", signal: AbortSignal.timeout(30000) });
   return { status: response.status, type: response.headers.get("content-type") || "", robots: response.headers.get("x-robots-tag") || "", csp: response.headers.get("content-security-policy") || "", body: await response.text() };
@@ -80,17 +178,54 @@ async function audit(route) {
     const description = meta(html, "description");
     const canonical = [...html.matchAll(/<link\b[^>]*>/gi)].map((m) => attributes(m[0])).find((a) => a.rel === "canonical")?.href;
     const correct = route === "/" ? SITE_URL : SITE_URL + route;
+    const enforceSnippet = isBlogRoute(route) ? strictBlog : isCatalogDynamicRoute(route) ? strictCatalog : true;
     if (!title) fail(route, "Missing title");
-    else if (titles.has(title)) fail(route, `Duplicate title with ${titles.get(title)}`); else titles.set(title, route);
+    else {
+      if (titles.has(title)) fail(route, `Duplicate title with ${titles.get(title)}`); else titles.set(title, route);
+      if (title.length > 65) checkLength(route, `Title exceeds 65 chars (${title.length}): ${title}`, enforceSnippet);
+    }
     if (!description || description.length < 40) fail(route, "Missing or empty description");
-    else if (descriptions.has(description)) fail(route, `Duplicate description with ${descriptions.get(description)}`); else descriptions.set(description, route);
+    else {
+      if (descriptions.has(description)) fail(route, `Duplicate description with ${descriptions.get(description)}`); else descriptions.set(description, route);
+      const minDesc = LEGAL_ROUTES.has(route) ? 70 : 110;
+      if (description.length < minDesc || description.length > 165) {
+        checkLength(route, `Description length ${description.length} outside ${minDesc}-165 chars`, enforceSnippet);
+      }
+    }
     if (canonical !== correct) fail(route, `Canonical is ${canonical || "missing"}`);
-    if (meta(html, "og:url") !== correct || !meta(html, "og:image")) fail(route, "Missing or incorrect social metadata");
+    const ogImage = meta(html, "og:image");
+    if (meta(html, "og:url") !== correct || !ogImage) fail(route, "Missing or incorrect social metadata");
+    if (ogImage && !ogImage.startsWith("data:")) {
+      try {
+        const ogUrl = new URL(ogImage, SITE_URL + route);
+        if (ogUrl.origin === SITE_URL) addAsset(ogUrl.pathname + ogUrl.search, route);
+      } catch { /* invalid URL caught elsewhere */ }
+    }
     if (/noindex/i.test([meta(html, "robots"), meta(html, "googlebot"), response.robots].filter(Boolean).join(","))) fail(route, "Public page marked noindex");
-    const headingCount = [...html.matchAll(/<h1\b/gi)].length;
-    if (headingCount !== 1) fail(route, `Expected one H1; found ${headingCount}`);
+    const cleanedHtml = html
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ");
+    const headings = [...cleanedHtml.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => ({
+      level: Number(m[1]),
+      text: text(m[2]),
+    }));
+    const h1Count = headings.filter((h) => h.level === 1).length;
+    if (h1Count !== 1) fail(route, `Expected one H1; found ${h1Count}`);
+    if (headings.length && headings[0].level !== 1) fail(route, `First heading must be H1; found H${headings[0].level}`);
+    for (let i = 0; i < headings.length; i++) {
+      if (!headings[i].text) fail(route, `Empty H${headings[i].level} heading`);
+      if (i > 0 && headings[i].level > headings[i - 1].level + 1) {
+        fail(route, `Skipped heading level: H${headings[i - 1].level} -> H${headings[i].level}`);
+      }
+    }
     const mainText = text(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || "");
-    if (/^\/(guides|use-cases|alternatives)\//.test(route) && mainText.split(/\s+/).length < 300) fail(route, "Insufficient rendered explanatory content");
+    const wordCount = mainText ? mainText.split(/\s+/).filter(Boolean).length : 0;
+    if (/^\/(guides|use-cases|alternatives)\//.test(route) && wordCount < 300) fail(route, "Insufficient rendered explanatory content");
+    if (isBlogRoute(route) && wordCount < 300) {
+      if (strictBlog) fail(route, `Blog post under 300 words (${wordCount})`);
+      else warn(route, `Blog post under 300 words (${wordCount}); pass --strict-blog to enforce`);
+    }
     const schema = [];
     for (const m of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
       try {
@@ -98,14 +233,14 @@ async function audit(route) {
       } catch { fail(route, "Invalid JSON-LD"); }
     }
     if (!schema.length) fail(route, "Missing structured data");
-    for (const data of schema) if (data["@type"] === "FAQPage") {
-      if (!Array.isArray(data.mainEntity) || data.mainEntity.length === 0) { fail(route, "FAQ has no questions"); continue; }
-      for (const item of data.mainEntity) {
-        if (item?.["@type"] !== "Question" || item.acceptedAnswer?.["@type"] !== "Answer"
-            || typeof item.name !== "string" || typeof item.acceptedAnswer?.text !== "string"
-            || !text(item.name) || !text(item.acceptedAnswer.text)) { fail(route, "FAQ question or answer is empty or malformed"); continue; }
-        if (!mainText.includes(text(item.name)) || !mainText.includes(text(item.acceptedAnswer.text))) fail(route, "FAQ structured data differs from rendered main content");
-      }
+    for (const data of schema) validateSchemaNode(route, data, mainText);
+    for (const m of cleanedHtml.matchAll(/<(?:img|source|track)\b[^>]*\bsrc\s*=\s*(?:"([^"]*)"|'([^']*)')|<video\b[^>]*\bposter\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+      const raw = decode(m[1] ?? m[2] ?? m[3] ?? m[4] ?? "");
+      if (!raw || raw.startsWith("data:")) continue;
+      try {
+        const assetUrl = new URL(raw, SITE_URL + route);
+        if (assetUrl.origin === SITE_URL) addAsset(assetUrl.pathname + assetUrl.search, route);
+      } catch { /* ignore malformed */ }
     }
     const ids = new Set([...html.matchAll(/\bid=["']([^"']+)["']/g)].map((m) => decode(m[1])));
     const targets = new Set();
@@ -120,9 +255,10 @@ async function audit(route) {
       if (url.origin !== SITE_URL) continue;
       const target = url.pathname.replace(/\/$/, "") || "/";
       if (expected.has(target === "/" ? SITE_URL : SITE_URL + target)) { linked.add(target); targets.add(target); }
-      else if (target !== "/endpointradar/app" && target !== "/endpointradar/managed" && target !== "/phishing-detector/team" && !/^\/mypentest\/(app|api)(\/|$)/.test(target) && !/\.[a-z0-9]+$/i.test(target)) fail(route, `Unlisted internal page link: ${target}`);
+      else if (/\.[a-z0-9]+$/i.test(target)) addAsset(url.pathname + url.search, route);
+      else if (target !== "/endpointradar/app" && target !== "/endpointradar/managed" && target !== "/phishing-detector/team" && !/^\/mypentest\/(app|api)(\/|$)/.test(target)) fail(route, `Unlisted internal page link: ${target}`);
     }
-    pages.push({ path: route, status: response.status, title, canonical, schemaTypes: schema.map((d) => d["@type"]) });
+    pages.push({ path: route, status: response.status, title, wordCount, canonical, schemaTypes: schema.map((d) => d["@type"]) });
   } catch (e) { fail(route, e.message); }
 }
 (async () => {
@@ -236,8 +372,35 @@ async function audit(route) {
     const response = await get(route);
     if (response.status !== 404) fail(route, `Unknown content must return 404; found ${response.status}`);
   }
-  const report = { base: base.origin, checkedAt: new Date().toISOString(), sitemapEntries: entries.length, pagesChecked: pages.length, maxClickDepth: Math.max(...depths.values()), errors, pages };
+  addAsset("/favicon.ico", "/");
+  addAsset("/apple-icon.png", "/");
+  const assetList = [...assets.entries()];
+  let assetIndex = 0;
+  await Promise.all(Array.from({ length: 5 }, async () => {
+    while (assetIndex < assetList.length) {
+      const [assetPath, refRoutes] = assetList[assetIndex++];
+      try {
+        const res = await fetch(new URL(assetPath, base), { redirect: "manual", signal: AbortSignal.timeout(30000) });
+        await res.body?.cancel();
+        if (res.status !== 200) {
+          for (const refRoute of refRoutes) fail(refRoute, `Broken static asset ${assetPath} (HTTP ${res.status})`);
+        }
+      } catch (e) {
+        for (const refRoute of refRoutes) fail(refRoute, `Static asset fetch failed for ${assetPath}: ${e.message}`);
+      }
+    }
+  }));
+  const blogPages = pages.filter((p) => isBlogRoute(p.path));
+  const blogSummary = {
+    total: blogPages.length,
+    under300: blogPages.filter((p) => p.wordCount < 300).length,
+    minWords: blogPages.length ? Math.min(...blogPages.map((p) => p.wordCount)) : 0,
+  };
+  const report = { base: base.origin, checkedAt: new Date().toISOString(), sitemapEntries: entries.length, pagesChecked: pages.length, assetsChecked: assetList.length, maxClickDepth: Math.max(...depths.values()), blogSummary, warnings, errors, pages };
   if (reportPath) fs.writeFileSync(path.resolve(reportPath), JSON.stringify(report, null, 2) + "\n");
+  if (warnings.length) {
+    console.warn(`WARN: ${warnings.length} staged M2 warning(s) (blogSummary: total=${blogSummary.total}, under300=${blogSummary.under300}, minWords=${blogSummary.minWords}).`);
+  }
   if (errors.length) { for (const e of errors) console.error(`${e.url}: ${e.message}`); process.exitCode = 1; }
-  else console.log(`PASS: ${pages.length} public pages; sitemap, canonical URLs, unique metadata, headings, schema, FAQ text, internal discovery and unknown-route 404s.`);
+  else console.log(`PASS: ${pages.length} public pages (${assetList.length} static assets); sitemap, canonical URLs, unique metadata, headings, schema, FAQ text, internal discovery and unknown-route 404s. blogSummary: ${blogSummary.total} posts, ${blogSummary.under300} under 300w (min ${blogSummary.minWords}w).`);
 })().catch((e) => { console.error(e.message); process.exitCode = 1; });

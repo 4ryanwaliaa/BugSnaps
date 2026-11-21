@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight, FileText } from "lucide-react";
 import { JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { newAssessmentUrl, routes } from "@/lib/mypentest";
 import { useCasePath, type SecurityUseCase } from "@/lib/security-use-cases";
-import { ORG_ID, absoluteUrl, faqJsonLd } from "@/lib/site";
+import { OG_IMAGE, ORG_ID, absoluteUrl, faqJsonLd } from "@/lib/site";
 
 function formatDate(date: string): string {
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
@@ -24,6 +24,7 @@ export function SecurityUseCasePage({ item }: { item: SecurityUseCase }) {
     dateModified: item.updated,
     author: { "@type": "Organization", "@id": ORG_ID, name: "BugSnaps" },
     publisher: { "@id": ORG_ID },
+    image: absoluteUrl(OG_IMAGE.url),
     inLanguage: "en",
     citation: item.sources.map((source) => source.url),
   };

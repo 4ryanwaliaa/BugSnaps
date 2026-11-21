@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Check, Clock, GitCommit, RefreshCw, Shield } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
@@ -7,9 +7,9 @@ import { newAssessmentUrl } from "@/lib/mypentest";
 import { ROADMAP } from "@/lib/mypentest/content";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Continuous Penetration Testing: A Practical Release Workflow",
+  title: "Continuous Penetration Testing Workflow",
   description:
-    "Build a recurring penetration testing workflow with manually initiated MyPentest assessments, evidence review, remediation and scoped expert testing. Current limits explained.",
+    "Build a repeatable release pentest workflow using manually started MyPentest scans and scoped expert testing. Current roadmap limits explained.",
   path: "/continuous-penetration-testing",
 });
 
@@ -234,7 +234,7 @@ export default function ContinuousPenetrationTestingPage() {
           {faqs.map((faq) => (
             <details key={faq.question} className="group px-6 py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium">
-                <span>{faq.question}</span>
+                <h3>{faq.question}</h3>
                 <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
               </summary>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">{faq.answer}</p>

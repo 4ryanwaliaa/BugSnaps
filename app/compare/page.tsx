@@ -1,28 +1,43 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap } from "lucide-react";
-import { CtaBand, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
+import Link from "@/components/site/content-link";
+import { ArrowRight } from "lucide-react";
+import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { CompareTable } from "@/components/site/compare-page";
 import { AllToolsMatrix, SupportLegend } from "@/components/site/versus-page";
 import { comparePages } from "@/lib/compare";
 import { ALTERNATIVE_PAGES, alternativePath } from "@/lib/alternatives";
 import { HUB_FEATURES, competitors, formatCheckedOn, versusPath } from "@/lib/competitors";
-import { pageMetadata } from "@/lib/site";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Compare Security Testing Options",
+  title: "Compare Pentest Tools, DAST & AI Security",
   description:
-    "Compare MyPentest with 20 security tools, including Acunetix, Nessus, Veracode, Checkmarx, Cobalt, Nuclei, Burp, ZAP, and enterprise DAST. Sourced features, workflow fit and limitations.",
+    "Compare MyPentest with 20 security tools including Burp, ZAP, Nuclei, Acunetix, Nessus, Snyk, and Strix. Sourced features, pricing, and fit.",
   path: "/compare",
 });
+
+const compareItems = [
+  ...competitors.map((c) => ({ name: `MyPentest vs ${c.name}`, path: versusPath(c.slug) })),
+  ...comparePages.map((p) => ({ name: p.metaTitle, path: p.path })),
+  { name: "MyPentest vs ChatGPT, Claude & AI Tools", path: "/compare/mypentest-vs-ai-assistants" },
+];
 
 export default function CompareHub() {
   return (
     <SiteShell>
+      <JsonLd
+        data={collectionPageJsonLd({
+          name: "Compare Automated Pentesting, Scanners & AI Security Tools",
+          description:
+            "Sourced comparisons of MyPentest against 20 security tools, vulnerability scanners, traditional pentesting, and AI assistants.",
+          path: "/compare",
+          items: compareItems,
+        })}
+      />
       <PageHeader
         crumbs={[{ name: "Compare", path: "/compare" }]}
         eyebrow="Compare"
-        title="MyPentest vs the alternatives."
+        title="Compare Automated Pentesting, Scanners & AI Tools"
         lead="Honest, sourced comparisons with the tools you're probably weighing up - including where MyPentest is not the right answer."
       />
       <Section labelledBy="benchmarks-banner-title" className="pb-0">

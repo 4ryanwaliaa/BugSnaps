@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, FileCheck, Award, RefreshCw } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "SOC 2 Penetration Testing: Scope and Reports for Security Reviews",
+  title: "SOC 2 Penetration Testing Scope & Reports",
   description:
-    "Plan a penetration testing engagement for your SOC 2 security review. Agree on scope, methodology, reporting and retesting with your reviewer and BugSnaps.",
+    "Plan a penetration test for your SOC 2 security review. Agree on scope, methodology, reporting, and retesting with your reviewer and BugSnaps.",
   path: "/solutions/soc2-penetration-testing",
 });
 
@@ -32,6 +32,14 @@ const faqs = [
 export default function Soc2PenetrationTestingPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "SOC 2 Penetration Testing",
+          description:
+            "Expert-led penetration testing engagements scoped around SOC 2 security review requirements, documented methodology, and retesting.",
+          path: "/solutions/soc2-penetration-testing",
+        })}
+      />
       <JsonLd data={faqJsonLd(faqs)} />
       <PageHeader
         crumbs={[
@@ -93,6 +101,17 @@ export default function Soc2PenetrationTestingPage() {
             <Link href="/us-vs-competitors" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">
               Compare testing approaches and limitations <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
+          <div className="pt-4">
+            <h3 className="text-sm font-semibold text-foreground">Related audit and compliance planning guides</h3>
+            <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-accent">
+              <li><Link href="/use-cases/ci-release-validation" className="hover:underline">CI release validation plan</Link></li>
+              <li><Link href="/guides/security-testing-report" className="hover:underline">Security testing report guide</Link></li>
+              <li><Link href="/guides/remediation-retesting" className="hover:underline">Remediation &amp; retesting</Link></li>
+              <li><Link href="/guides/pentest-scope-authorization" className="hover:underline">Scope &amp; authorization</Link></li>
+              <li><Link href="/blog/penetration-testing-for-soc-2-compliance" className="hover:underline">Pentesting for SOC 2 compliance</Link></li>
+              <li><Link href="/blog/penetration-testing-for-iso-27001" className="hover:underline">Pentesting for ISO 27001</Link></li>
+            </ul>
           </div>
         </div>
       </Section>

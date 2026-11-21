@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { Breadcrumbs } from "@/components/site/page-parts";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Terms of Service",
-  description: "The terms governing use of the BugSnaps website, MyPentest and BugSnaps security services.",
+  description: "Terms governing the BugSnaps website, MyPentest authorized DNS-verified scans, one-time payments, and separately scoped security engagements.",
   path: "/terms",
 });
 
 export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" updated="September 2026">
+      <Breadcrumbs items={[{ name: "Terms of Service", path: "/terms" }]} />
       <section>
         <h2>Agreement</h2>
         <p className="mt-3">

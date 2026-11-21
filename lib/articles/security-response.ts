@@ -3,8 +3,8 @@ import type { Post } from "@/lib/blog";
 export const securityResponsePosts: Post[] = [
   {
     slug: "website-vulnerability-scan-clean-report-cve-coverage",
-    title: "Does a clean website vulnerability scan rule out a new CVE?",
-    description: "Read website vulnerability scan findings, passed checks and unchecked coverage correctly. Learn what evidence you need before ruling out a new framework CVE.",
+    title: "Does a Clean Web Scan Rule Out a New CVE?",
+    description: "Interpret website vulnerability scan findings, passed checks, and coverage limits accurately before ruling out a newly disclosed framework CVE.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 5,
@@ -38,8 +38,8 @@ export const securityResponsePosts: Post[] = [
   },
   {
     slug: "verify-react-nextjs-security-patch-production",
-    title: "How to verify a React or Next.js security patch is deployed",
-    description: "A practical React and Next.js patch verification checklist: resolved dependencies, build artifacts, production replicas, preview URLs and evidence for closing a CVE ticket.",
+    title: "Verify a React or Next.js Patch in Production",
+    description: "Practical React and Next.js patch verification checklist: check resolved lockfile dependencies, build artifacts, replicas, and preview URLs.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 5,
@@ -76,8 +76,8 @@ export const securityResponsePosts: Post[] = [
   },
   {
     slug: "suspected-rce-website-incident-response-checklist",
-    title: "Suspected RCE on your website: an incident response checklist",
-    description: "What website owners should do after suspected remote code execution: contain exposure, preserve evidence, review credentials, recover safely and verify the deployed fix.",
+    title: "Suspected Website RCE: Incident Checklist",
+    description: "What website owners should do after suspected remote code execution: contain exposure, preserve logs, rotate secrets, and verify the clean build.",
     published: "2026-10-22",
     author: "BugSnaps",
     readingMinutes: 5,

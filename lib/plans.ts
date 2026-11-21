@@ -428,7 +428,8 @@ export function exportsLabel(exports: ExportFormat[]): string {
   return `Download reports as ${joinWords(files)}`;
 }
 
-export function historyLabel(_history: boolean): string {
+export function historyLabel(history?: boolean): string {
+  void history;
   return "Private by design: results are deleted 24 hours after the scan";
 }
 

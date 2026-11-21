@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight, Check, FileText, HelpCircle, Minus, X } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import {
@@ -12,7 +12,7 @@ import {
   type FeatureId,
 } from "@/lib/competitors";
 import { ENGINE_FACTS, newAssessmentUrl, routes } from "@/lib/mypentest";
-import { formatPrice, isSingleScan, periodLabel, scansLabel, type Plan } from "@/lib/plans";
+import { INTERNATIONAL_USD_CENTS, formatPrice, isSingleScan, periodLabel, scansLabel, type Plan } from "@/lib/plans";
 import { faqJsonLd } from "@/lib/site";
 import { alternativePage, alternativePath } from "@/lib/alternatives";
 import { cn } from "@/lib/utils";
@@ -130,7 +130,9 @@ function ProsCons({ title, pros, cons, ours = false }: { title: string; pros: st
 
 function ourPriceLine(plan: Plan): string {
   if (plan.price === 0) return `Free - ${scansLabel(plan).toLowerCase()}`;
-  const price = formatPrice(plan.price, plan.currency);
+  const inr = formatPrice(plan.price, plan.currency);
+  const usdCents = INTERNATIONAL_USD_CENTS[plan.id];
+  const price = usdCents ? `${inr} / US$${(usdCents / 100).toFixed(2)}` : inr;
   const scans = scansLabel(plan).toLowerCase();
   return plan.scanPack || isSingleScan(plan) ? `${price} once - ${scans}` : `${price} per ${periodLabel(plan.periodDays)} - ${scans}`;
 }
@@ -262,7 +264,7 @@ export function VersusPageView({ them, plans }: { them: Competitor; plans: Plan[
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-[13px] text-muted-2">Paid through Razorpay, in rupees. Nothing renews automatically.</p>
+            <p className="mt-4 text-[13px] text-muted-2">Paid through Razorpay in INR or PayPal in USD. Nothing renews automatically.</p>
             <Link href="/pricing" className="mt-4 inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
               Full pricing
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

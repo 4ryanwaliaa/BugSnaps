@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { SiteShell } from "@/components/site/page-parts";
+import Link from "@/components/site/content-link";
+import { Logo } from "@/components/site/logo";
 import { newAssessmentUrl } from "@/lib/mypentest";
 
 export const metadata: Metadata = {
@@ -19,8 +19,13 @@ const LINKS = [
 
 export default function NotFound() {
   return (
-    <SiteShell>
-      <div className="mx-auto w-full max-w-3xl px-6 pt-36 pb-24 lg:px-8">
+    <div className="flex min-h-screen flex-col">
+      <header className="mx-auto flex w-full max-w-3xl items-center justify-between px-6 pt-8 lg:px-8">
+        <Link href="/" aria-label="BugSnaps - home" className="inline-flex">
+          <Logo />
+        </Link>
+      </header>
+      <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-6 pt-24 pb-24 lg:px-8">
         <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-accent">404</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight">That page doesn&apos;t exist.</h1>
         <p className="mt-4 text-lg text-muted">
@@ -45,7 +50,10 @@ export default function NotFound() {
           </a>{" "}
           while you&apos;re here.
         </p>
-      </div>
-    </SiteShell>
+      </main>
+      <footer className="mx-auto w-full max-w-3xl border-t border-white/[0.06] px-6 py-8 text-sm text-muted lg:px-8">
+        <Link href="/site-map" className="hover:text-foreground">Site map</Link>
+      </footer>
+    </div>
   );
 }

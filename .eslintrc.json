@@ -1,0 +1,54 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "overrides": [
+    {
+      "files": [
+        "app/endpointradar/api/**/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": [
+        "app/use-cases/*/page.tsx"
+      ],
+      "rules": {
+        "react-hooks/rules-of-hooks": "off"
+      }
+    },
+    {
+      "files": [
+        "components/mypentest/app/app-shell.tsx"
+      ],
+      "rules": {
+        "@next/next/no-html-link-for-pages": "off"
+      }
+    },
+    {
+      "files": [
+        "components/site/google-analytics.tsx"
+      ],
+      "rules": {
+        "prefer-rest-params": "off"
+      }
+    },
+    {
+      "files": [
+        "components/site/security-use-case-page.tsx"
+      ],
+      "rules": {
+        "react/no-unescaped-entities": "off"
+      }
+    },
+    {
+      "files": [
+        "lib/mypentest/report-presentation.ts"
+      ],
+      "rules": {
+        "prefer-const": "off"
+      }
+    }
+  ]
+}

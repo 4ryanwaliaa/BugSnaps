@@ -15,6 +15,10 @@ export type SecurityGuide = {
   answer: string;
   updated: string;
   download?: { path: string; label: string };
+  /** Short reference facts rendered as a table under the direct answer. */
+  quickFacts?: { label: string; value: string }[];
+  /** Longer site articles that go deeper on the same search intent. */
+  readNext?: { label: string; href: string }[];
   sections: SecurityGuideSection[];
   limitations: string;
   faqs: { question: string; answer: string }[];
@@ -44,14 +48,28 @@ import { ASSESSMENT_DELIVERY_GUIDES } from "@/lib/assessment-delivery-guides";
 import { ASSESSMENT_REMEDIATION_GUIDES } from "@/lib/assessment-remediation-guides";
 import { REMEDIATION_OPERATIONS_GUIDES } from "@/lib/remediation-operations-guides";
 import { SECURITY_PROGRAM_GUIDES } from "@/lib/security-program-guides";
+import { GUIDE_SEO_UPGRADES } from "@/lib/guide-seo-upgrades";
 
 const phishingTopics = new Set(["suspicious-qr-code-response", "verify-payment-change-request", "phishing-email-evidence-preservation", "email-header-investigation-limits", "phishing-click-incident-triage", "lookalike-domain-triage", "redact-suspicious-url-before-sharing"]);
 
 const UPDATED = "2026-10-02";
 const cheatSheet = (name: string) => `https://cheatsheetseries.owasp.org/cheatsheets/${name}_Cheat_Sheet.html`;
 
+function applyGuideSeoUpgrade(guide: SecurityGuide): SecurityGuide {
+  const up = GUIDE_SEO_UPGRADES[guide.slug];
+  if (!up) return guide;
+  return {
+    ...guide,
+    ...(up.title ? { title: up.title } : {}),
+    ...(up.description ? { description: up.description } : {}),
+    ...(up.quickFacts ? { quickFacts: up.quickFacts } : {}),
+    ...(up.readNext ? { readNext: up.readNext } : {}),
+    ...(up.extraFaqs?.length ? { faqs: [...guide.faqs, ...up.extraFaqs] } : {}),
+  };
+}
+
 /** Editorial guides. Each route answers a different assessment question. */
-export const SECURITY_GUIDES: SecurityGuide[] = [
+const RAW_SECURITY_GUIDES: SecurityGuide[] = [
   ...PRACTICAL_TEMPLATES,
   ...[...ENDPOINT_FOUNDATION_GUIDES, ...ENDPOINT_WORKFLOW_GUIDES, ...ENDPOINT_EXPOSURE_GUIDES, ...ENDPOINT_ADVANCED_GUIDES, ...ENDPOINT_OPERATIONS_GUIDES, ...ENDPOINT_IDENTITY_GUIDES, ...ENDPOINT_RESILIENCE_GUIDES, ...ENDPOINT_DETECTION_GUIDES].map((guide) => ({ ...guide, category: "Endpoint security" as const })),
   ...PRODUCT_SECURITY_GUIDES.map((guide) => ({ ...guide, category: guide.slug === "how-to-assess-a-suspicious-url-safely" ? "Phishing and fraud" as const : "Digital footprint" as const })),
@@ -596,6 +614,8 @@ export const SECURITY_GUIDES: SecurityGuide[] = [
     related: ["openapi-security-testing", "pentest-scope-authorization", "exposed-secrets"],
   },
 ];
+
+export const SECURITY_GUIDES: SecurityGuide[] = RAW_SECURITY_GUIDES.map(applyGuideSeoUpgrade);
 
 export const SECURITY_GUIDE_CATEGORIES: SecurityGuideCategory[] = ["API security", "Web security", "Identity and access", "Endpoint security", "Cloud and network", "Phishing and fraud", "Digital footprint", "Testing workflow"];
 

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight, Database, KeyRound, LockKeyhole, ShieldCheck } from "lucide-react";
 import { JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { CONTACT_EMAIL, faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security & Trust: Encryption, Access and Infrastructure",
+  title: "Security & Trust: Encryption & Infrastructure",
   description:
-    "How BugSnaps protects MyPentest accounts and assessment data: HTTPS, Firebase encryption, account isolation, infrastructure providers and security reporting.",
+    "How BugSnaps protects MyPentest accounts and assessment data: HTTPS, Firebase encryption, account isolation, infrastructure, and reporting.",
   path: "/security",
 });
 
@@ -83,7 +83,7 @@ export default function SecurityPage() {
       <PageHeader
         crumbs={[{ name: "Security & trust", path: "/security" }]}
         eyebrow="Security & trust"
-        title="How we protect your assessment data."
+        title="Security & Trust: How BugSnaps Protects Your Data"
         lead="A clear view of the safeguards behind BugSnaps and MyPentest, the infrastructure we use, and the scope of our security assurances."
       >
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">

@@ -1,10 +1,11 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "Why BugSnaps? Web and API Security Testing with Evidence",
-  description: "See why teams try BugSnaps MyPentest: a hosted assessment for verified web apps, authenticated checks, finding evidence, remediation and clear coverage limits.",
+  title: "Why BugSnaps: Evidence-First Web & API Pentesting",
+  absoluteTitle: true,
+  description: "See why teams try BugSnaps MyPentest: hosted testing for verified web apps, authenticated checks, finding evidence, and clear coverage limits.",
   path: "/why-bugsnaps",
 });
 
@@ -28,7 +29,7 @@ export default function WhyBugSnapsPage() {
   return (
     <SiteShell>
       <JsonLd data={faqJsonLd(faqs)} />
-      <PageHeader crumbs={[{ name: "Why BugSnaps", path: "/why-bugsnaps" }]} eyebrow="Find. Fix. Fortify." title="Security testing your team can act on." lead="BugSnaps MyPentest connects a verified web application with finding evidence and remediation. Give it a try when you want a hosted assessment with a clear path to review and fix.">
+      <PageHeader crumbs={[{ name: "Why BugSnaps", path: "/why-bugsnaps" }]} eyebrow="Find. Fix. Fortify." title="Why BugSnaps: Web and API Security Testing You Can Act On" lead="BugSnaps MyPentest connects a verified web application with finding evidence and remediation. Give it a try when you want a hosted assessment with a clear path to review and fix.">
         <div className="flex flex-wrap gap-3"><Link href="/mypentest" className="rounded-full bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-accent">Explore MyPentest</Link><Link href="/mypentest/example-report" className="rounded-full border border-white/15 px-5 py-3 text-sm font-medium hover:border-accent/50">View an example report</Link></div>
       </PageHeader>
 

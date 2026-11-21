@@ -9,7 +9,8 @@ export type Block =
   | { type: "h2"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "ol"; items: string[] }
-  | { type: "callout"; text: string };
+  | { type: "callout"; text: string }
+  | { type: "table"; caption: string; head: string[]; rows: string[][] };
 
 export interface Post {
   productId?: "endpointradar" | "phishlens" | "myrecon";
@@ -34,13 +35,34 @@ import { securityResponsePosts } from "@/lib/articles/security-response";
 import { frameworkAdvisoryPosts } from "@/lib/articles/framework-advisories";
 import { vulnerabilityDecisionPosts } from "@/lib/articles/vulnerability-decisions";
 import { recentBreachPosts } from "@/lib/articles/recent-breaches";
+import { searchIntentPosts } from "@/lib/articles/search-intent";
+
+/** Words in a block, counted the way a reader sees them. */
+function blockWords(block: Block): number {
+  const count = (s: string) => s.split(/\s+/).filter(Boolean).length;
+  switch (block.type) {
+    case "ul":
+    case "ol":
+      return block.items.reduce((n, item) => n + count(item), 0);
+    case "table":
+      return count(block.caption) + [block.head, ...block.rows].flat().reduce((n, cell) => n + count(cell), 0);
+    default:
+      return count(block.text);
+  }
+}
+
+/** Reading time derived from the body (about 200 words a minute), not hand-entered. */
+function withReadingTime(p: Post): Post {
+  const words = p.body.reduce((n, block) => n + blockWords(block), 0);
+  return { ...p, readingMinutes: Math.max(1, Math.round(words / 200)) };
+}
 
 const originalPosts: Post[] = [
   {
     slug: "vulnerability-assessment-vs-penetration-testing",
-    title: "Vulnerability assessment vs penetration testing: what's the difference?",
+    title: "Vulnerability Assessment vs Penetration Test",
     description:
-      "A vulnerability assessment lists weaknesses; a penetration test proves which ones an attacker could actually use. When you need each, and what to ask for.",
+      "A vulnerability assessment lists potential weaknesses; a penetration test verifies what is exploitable. Compare scope, proof, and when to use each.",
     published: "2026-09-23",
     author: "BugSnaps",
     readingMinutes: 6,
@@ -108,7 +130,7 @@ const originalPosts: Post[] = [
   },
   {
     slug: "penetration-testing-for-startups",
-    title: "Penetration Testing for Startups in India: Planning Guide",
+    title: "Startup Penetration Testing in India: Guide",
     description:
       "Plan a startup penetration test in India: choose scope, prepare accounts, compare automated and expert testing, and ask for the right report.",
     published: "2026-09-23",
@@ -189,9 +211,9 @@ const originalPosts: Post[] = [
   },
   {
     slug: "what-automated-penetration-testing-finds",
-    title: "What automated penetration testing can - and can't - find",
+    title: "What Automated Pentesting Can and Can't Find",
     description:
-      "An honest breakdown of the vulnerabilities automated pentesting reliably finds, the ones it finds only with help, and the ones that still need a human tester.",
+      "An honest breakdown of vulnerabilities automated pentesting reliably finds, those requiring test accounts, and logic flaws needing a human tester.",
     published: "2026-09-23",
     author: "BugSnaps",
     readingMinutes: 6,
@@ -254,9 +276,10 @@ export const vulnerabilityPosts: Post[] = [
   ...securityResponsePosts,
   ...frameworkAdvisoryPosts,
   ...vulnerabilityDecisionPosts,
-];
+].map(withReadingTime);
 
 export const posts: Post[] = [
+  ...searchIntentPosts,
   ...recentBreachPosts,
   ...productWorkflowPosts,
   ...vulnerabilityPosts,
@@ -265,7 +288,7 @@ export const posts: Post[] = [
   ...whyBugsnapsPosts,
   ...vulnerabilityDeepdivePosts,
   ...architectureIndustryPosts,
-];
+].map(withReadingTime);
 
 export function post(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug);

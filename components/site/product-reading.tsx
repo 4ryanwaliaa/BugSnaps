@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { Section } from "@/components/site/page-parts";
 import { productWorkflowPosts } from "@/lib/articles/product-workflows";
 

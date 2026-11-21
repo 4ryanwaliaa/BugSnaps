@@ -1,5 +1,5 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import type { ReactNode } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/site/navbar";
@@ -106,12 +106,12 @@ export function PageHeader({
         </h1>
         <SketchUnderline className="mt-3 h-8 w-48" />
         {lead && (
-          <p className="rise mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty" style={{ ["--d" as string]: "0.5s" }}>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty">
             {lead}
           </p>
         )}
         {children && (
-          <div className="rise mt-8" style={{ ["--d" as string]: "0.65s" }}>
+          <div className="mt-8">
             {children}
           </div>
         )}

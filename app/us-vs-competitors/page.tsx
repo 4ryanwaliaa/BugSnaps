@@ -1,10 +1,10 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { competitors, versusPath } from "@/lib/competitors";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { collectionPageJsonLd, faqJsonLd, pageMetadata } from "@/lib/site";
 export const metadata = pageMetadata({
-  title: "BugSnaps vs AI Tools, Strix and Web Security Scanners",
-  description: "Compare MyPentest with AI assistants, automation platforms, Strix, Burp and DAST tools. Choose by testing scope, evidence, setup, cost and limitations.",
+  title: "MyPentest vs AI Agents, Strix & DAST Scanners",
+  description: "Compare MyPentest with AI assistants, automation tools, Strix, Burp, and DAST scanners. Choose by scope, evidence, setup, cost, and limits.",
   path: "/us-vs-competitors",
 });
 const faqs = [
@@ -17,7 +17,13 @@ const ordered = [...competitors].sort((a, b) => Number(b.slug === "strix") - Num
 export default function UsVsCompetitorsPage() {
   return <SiteShell>
     <JsonLd data={faqJsonLd(faqs)} />
-    <PageHeader crumbs={[{ name: "Compare", path: "/compare" }, { name: "BugSnaps vs competitors", path: "/us-vs-competitors" }]} eyebrow="Sourced product comparisons" title="Which security testing workflow fits your app?" lead="Compare BugSnaps MyPentest with AI assistants, automation platforms, autonomous pentesting agents and web security scanners. Start with your scope, then compare the evidence you can act on.">
+    <JsonLd data={collectionPageJsonLd({
+      name: "BugSnaps vs AI Tools, Strix and Web Scanners",
+      description: "Sourced comparisons between MyPentest and 20 AI security agents, DAST scanners, and manual pentesting tools.",
+      path: "/us-vs-competitors",
+      items: ordered.map((c) => ({ name: `MyPentest vs ${c.name}`, path: versusPath(c.slug) })),
+    })} />
+    <PageHeader crumbs={[{ name: "Compare", path: "/compare" }, { name: "BugSnaps vs competitors", path: "/us-vs-competitors" }]} eyebrow="Sourced product comparisons" title="BugSnaps vs AI Tools, Strix and Web Scanners" lead="Compare BugSnaps MyPentest with AI assistants, automation platforms, autonomous pentesting agents and web security scanners. Start with your scope, then compare the evidence you can act on.">
       <div className="flex flex-wrap gap-3">
         <Link href="/compare/mypentest-vs-ai-assistants" className="rounded-full bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-accent">Compare AI assistants</Link>
         <Link href="/why-bugsnaps" className="rounded-full border border-white/15 px-5 py-3 text-sm font-medium hover:border-accent/50">Why try BugSnaps?</Link>

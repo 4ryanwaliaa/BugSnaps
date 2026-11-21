@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, FileText } from "lucide-react";
 import { Section, SectionTitle } from "@/components/site/page-parts";
 import { ProductPreview } from "@/components/mypentest/product-preview";

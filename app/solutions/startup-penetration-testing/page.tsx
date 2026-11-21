@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { Clock, DollarSign, ArrowRight, Rocket } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Startup Penetration Testing in India",
   description:
-    "Start with a free web security assessment or discuss expert-led penetration testing for your startup in India. Compare scope, reports and pricing.",
+    "Start with a free web security assessment or discuss expert-led penetration testing for your startup in India. Compare scope and pricing.",
   path: "/solutions/startup-penetration-testing",
 });
 
@@ -32,6 +32,14 @@ const faqs = [
 export default function StartupPenetrationTestingPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "Startup Penetration Testing in India",
+          description:
+            "Free automated web assessments and separately scoped expert penetration testing for startups preparing for launch or enterprise customer reviews.",
+          path: "/solutions/startup-penetration-testing",
+        })}
+      />
       <JsonLd data={faqJsonLd(faqs)} />
       <PageHeader
         crumbs={[
@@ -73,7 +81,7 @@ export default function StartupPenetrationTestingPage() {
           </div>
           <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
             <Rocket className="h-5 w-5 text-blue-400" />
-            <h3 className="mt-3 font-semibold">Prepare for Customer Reviews</h3>
+            <h3 className="mt-3 font-semibold">Prepare for Customer Questionnaires</h3>
             <p className="mt-2 text-sm text-muted">
               Ask the customer what testing and report evidence they require. Expert engagements and signed deliverables are agreed separately.
             </p>
@@ -87,6 +95,10 @@ export default function StartupPenetrationTestingPage() {
         <div className="mt-5 flex flex-wrap gap-5 text-sm font-medium text-accent">
           <Link href="/pricing" className="hover:underline">See current plans and pricing</Link>
           <Link href="/blog/penetration-testing-for-startups" className="hover:underline">Read the startup pentest planning guide</Link>
+          <Link href="/use-cases/startup-before-launch" className="hover:underline">Startup pre-launch test plan</Link>
+          <Link href="/use-cases/small-teams" className="hover:underline">Small teams workflow</Link>
+          <Link href="/guides/attack-surface-inventory" className="hover:underline">Attack surface inventory</Link>
+          <Link href="/guides/pentest-scope-authorization" className="hover:underline">Pentest scope &amp; authorization</Link>
           <Link href="/contact?topic=pentest" className="hover:underline">Discuss your scope</Link>
         </div>
       </Section>

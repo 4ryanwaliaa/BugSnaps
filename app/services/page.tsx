@@ -1,21 +1,47 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Check } from "lucide-react";
-import { CtaBand, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
+import { CtaBand, JsonLd, PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { serviceSummaries } from "@/lib/services";
 import { SERVICE_PRICING } from "@/lib/plans";
-import { pageMetadata } from "@/lib/site";
+import { ORG, ORG_ID, SITE_URL, absoluteUrl, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Testing Services",
+  title: "Manual Penetration Testing & Security Services",
   description:
-    "Expert-led security services from BugSnaps: penetration testing of web apps, APIs and networks, cloud and code review, and hands-on remediation support.",
+    "Expert-led penetration testing for web apps, APIs, networks, and cloud, plus code review and remediation retesting. Fixed quotes in writing.",
   path: "/services",
 });
+
+const servicesItemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "BugSnaps Security Testing Services",
+  itemListElement: serviceSummaries.map((service, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Service",
+      name: service.title,
+      description: service.description,
+      url: absoluteUrl(service.href ?? "/services"),
+      provider: { "@id": ORG_ID, "@type": "Organization", name: ORG.name, url: SITE_URL },
+    },
+  })),
+};
 
 export default function ServicesPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "BugSnaps Penetration Testing Services",
+          description:
+            "Expert-led penetration testing for web apps, APIs, networks, and cloud, plus code review and remediation retesting.",
+          path: "/services",
+        })}
+      />
+      <JsonLd data={servicesItemList} />
       <PageHeader
         crumbs={[{ name: "Services", path: "/services" }]}
         eyebrow="Services"

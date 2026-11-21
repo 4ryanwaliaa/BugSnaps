@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { Breadcrumbs } from "@/components/site/page-parts";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Responsible Disclosure",
-  description: "How to report a security vulnerability in BugSnaps's own systems, including MyPentest and MyRecon.",
+  title: "Responsible Disclosure Policy",
+  description: "Report a security vulnerability in BugSnaps, MyPentest, PhishLens, EndpointRadar, or MyRecon responsibly under our safe-harbor and security.txt rules.",
   path: "/responsible-disclosure",
 });
 
 export default function ResponsibleDisclosurePage() {
   return (
     <LegalPage title="Responsible Disclosure" updated="July 2026">
+      <Breadcrumbs items={[{ name: "Responsible Disclosure", path: "/responsible-disclosure" }]} />
       <section>
         <h2>We welcome reports</h2>
         <p className="mt-3">

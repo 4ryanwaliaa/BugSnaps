@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { ALTERNATIVE_GROUPS, ALTERNATIVE_PAGES, alternativePage, alternativePath } from "@/lib/alternatives";
@@ -7,8 +7,8 @@ import { competitor } from "@/lib/competitors";
 import { absoluteUrl, faqJsonLd, pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Security Testing Alternatives by Workflow",
-  description: "Explore 15 security-tool selection guides for DAST, open-source scanners, manual toolkits and AI pentesting. Compare scope, evidence, deployment and trade-offs.",
+  title: "20 Security Testing Tool Alternatives",
+  description: "Explore 20 security-tool selection guides for DAST, open-source scanners, manual toolkits, and AI pentesting. Compare scope, evidence, and fit.",
   path: "/alternatives",
 });
 const faq = [
@@ -31,8 +31,8 @@ export default function AlternativesHub() {
       <PageHeader
         crumbs={[{ name: "Alternatives", path: "/alternatives" }]}
         eyebrow="Selection guides"
-        title="Find the testing workflow your team needs."
-        lead="Fifteen practical guides for choosing a security tool by scope, evidence and operating effort. Each explains when to keep the original tool and where MyPentest has limits."
+        title="Compare 20 Security Testing Tool Alternatives"
+        lead="Twenty practical guides for choosing a security tool by scope, evidence and operating effort. Each explains when to keep the original tool and where MyPentest has limits."
       />
       <Section labelledBy="decision-title">
         <h2 id="decision-title" className="text-2xl font-semibold tracking-tight">Start with the job, then the product.</h2>

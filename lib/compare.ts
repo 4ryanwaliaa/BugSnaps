@@ -105,7 +105,7 @@ export const ROWS: Row[] = [
     dimension: "Cost model",
     values: {
       scanner: "Subscription or per-asset licence.",
-      mypentest: "One free trial; ₹499 for 2 detailed scans with no expiry.",
+      mypentest: "1 free scan per account (200 targets); Unlock ₹299 / US$2.99; Plus ₹499 / US$4.99 (2 scans); Operator ₹1,499 / US$14.99 (10 scans).",
       manual: "Per engagement.",
       bugsnaps: "Fixed quote per scope, in writing before work starts.",
     },
@@ -148,7 +148,7 @@ export const comparePages: ComparePage[] = [
     path: "/compare/mypentest-vs-vulnerability-scanners",
     metaTitle: "MyPentest vs Vulnerability Scanners",
     metaDescription:
-      "How an automated penetration test differs from a vulnerability scanner: discovery, validation, signed-in access-control testing, reporting and false positives.",
+      "How automated pentesting differs from a vulnerability scanner: discovery, differential validation, signed-in access checks, and reporting.",
     h1: "MyPentest vs vulnerability scanners.",
     lead:
       "Both are automated. The difference is what happens between sending a request and calling something a vulnerability.",
@@ -178,7 +178,7 @@ export const comparePages: ComparePage[] = [
     path: "/compare/bugsnaps-vs-traditional-pentest",
     metaTitle: "BugSnaps vs a Traditional Penetration Test",
     metaDescription:
-      "BugSnaps vs a traditional point-in-time pentest: automated coverage between engagements, fixed quotes, included retesting and reports built for engineers.",
+      "BugSnaps vs traditional point-in-time pentests: automated coverage between engagements, fixed quotes, included retesting, and engineer reports.",
     h1: "BugSnaps vs a traditional penetration test.",
     lead:
       "A traditional pentest is a snapshot: accurate on the day, then out of date with your next release. We pair expert testing with automation that keeps running.",
@@ -187,7 +187,7 @@ export const comparePages: ComparePage[] = [
       {
         heading: "The gap between tests",
         paragraphs: [
-          "Most organisations test once or twice a year, and ship many times in between. Every release in that gap is untested. MyPentest is free to run on every release, so the obvious regressions are caught between engagements and the manual test can focus on what only a person finds.",
+          "Most organisations test once or twice a year, and ship many times in between. Every release in that gap is untested. Start with 1 free MyPentest scan per account, then use one-time scan packs (Plus ₹499 / US$4.99 for 2 scans, Operator ₹1,499 / US$14.99 for 10 scans) to catch regressions between engagements so manual testing focuses on what only a person finds.",
         ],
       },
       {
@@ -207,7 +207,7 @@ export const comparePages: ComparePage[] = [
     path: "/compare/automated-vs-manual-penetration-testing",
     metaTitle: "Automated vs Manual Penetration Testing",
     metaDescription:
-      "Automated vs manual penetration testing: what each finds, what each misses, how long each takes, and how to combine them - from a company that does both.",
+      "Automated vs manual penetration testing: what each finds, what each misses, how long each takes, and how to combine them in practice.",
     h1: "Automated vs manual penetration testing.",
     lead:
       "They're not competitors. Automation gives you coverage and frequency; people give you judgement. Here's where each one wins.",

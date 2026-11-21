@@ -3,7 +3,7 @@ import type { Post } from "@/lib/blog";
 export const productWorkflowPosts: Post[] = [
   {
     slug: "windows-security-posture-checklist",
-    title: "Windows security posture checklist: review a PC with EndpointRadar",
+    title: "Windows Security Posture Review Checklist",
     description: "Review Windows antivirus, firewall, updates and exposed services. Use an EndpointRadar report to organize evidence and verify fixes with a fresh scan.",
     published: "2026-10-30", author: "BugSnaps", readingMinutes: 3, productId: "endpointradar",
     body: [
@@ -22,11 +22,11 @@ export const productWorkflowPosts: Post[] = [
   },
   {
     slug: "endpoint-posture-scanner-vs-edr",
-    title: "Endpoint posture scanner vs EDR: what each can tell you",
-    description: "Understand the difference between a Windows posture report and endpoint detection and response, and where EndpointRadar fits.",
+    title: "Endpoint Posture Scanner vs EDR Explained",
+    description: "Understand the difference between a point-in-time Windows posture report and endpoint detection and response (EDR), and where EndpointRadar fits.",
     published: "2026-10-30", author: "BugSnaps", readingMinutes: 3, productId: "endpointradar",
     body: [
-      { type: "p", text: "A posture scanner and an endpoint detection and response system answer different questions. A posture report describes collected settings at a particular time. EDR helps a team detect, investigate and respond to suspicious activity. Choose coverage based on the question you need answered." },
+      { type: "p", text: "A posture scanner and an endpoint detection and response system answer different questions. A posture report describes collected settings at a particular time. EDR helps a team detect, investigate and respond to suspicious activity. Choose coverage based on the question you need answered and document the date and scope of each check." },
       { type: "h2", text: "Posture: are expected controls in place?" },
       { type: "p", text: "EndpointRadar helps review Windows antivirus, firewall, patching, services, listening ports and installed software. Run the local scanner and inspect the report for a baseline review, a client handover or verification of an approved configuration change. Record collection failures alongside the findings." },
       { type: "h2", text: "EDR: what activity needs investigation?" },
@@ -62,7 +62,7 @@ export const productWorkflowPosts: Post[] = [
   },
   {
     slug: "phishing-link-checker-results-explained",
-    title: "Phishing link checker results: signals, unknowns and next steps",
+    title: "Phishing Link Checker Results Explained",
     description: "Understand local URL checks, domain intelligence and unavailable results in PhishLens. Learn what to verify before trusting a message.",
     published: "2026-10-30", author: "BugSnaps", readingMinutes: 3, productId: "phishlens",
     body: [
@@ -83,8 +83,8 @@ export const productWorkflowPosts: Post[] = [
   },
   {
     slug: "username-search-digital-footprint-review",
-    title: "Username search for a digital footprint review: a MyRecon workflow",
-    description: "Review your public username footprint with MyRecon. Separate profile leads from verified accounts and create a practical privacy cleanup list.",
+    title: "Find Your Username Footprint Online | MyRecon",
+    description: "Find your public username footprint across the internet with MyRecon. Separate profile leads from verified accounts and build a privacy cleanup list.",
     published: "2026-10-30", author: "BugSnaps", readingMinutes: 3, productId: "myrecon",
     body: [
       { type: "p", text: "A username search helps find public profile leads. It cannot prove every matching account is yours or discover every account you have created. Start with a specific privacy question and review your own footprint or work within explicit permission." },
@@ -103,11 +103,11 @@ export const productWorkflowPosts: Post[] = [
   },
   {
     slug: "breach-exposure-check-results-explained",
-    title: "What does a breach exposure result mean for your email?",
-    description: "Learn what an email breach result can establish, how to interpret missing results and what account security steps to review after a match.",
+    title: "What Email Breach Exposure Results Mean",
+    description: "Learn what an email breach lookup result can establish, how to interpret missing results and what account security steps to review after a match.",
     published: "2026-10-30", author: "BugSnaps", readingMinutes: 3, productId: "myrecon",
     body: [
-      { type: "p", text: "An email breach lookup concerns historical exposure in data available to a provider. It is not a live test of whether someone can currently sign in to an account. Review the context and exposed data types before deciding what action is needed." },
+      { type: "p", text: "An email breach lookup concerns historical exposure in data available to a provider. It is not a live test of whether someone can currently sign in to an account. Review the context, breach date and exposed data types before deciding what action is needed for your personal or work address." },
       { type: "h2", text: "Exposure is different from current compromise" },
       { type: "p", text: "An email appearing in breach data does not automatically mean its current password was exposed. Records may concern contact details, old credentials or other account data. Have I Been Pwned distinguishes verified, unverified and fabricated breach records; evidence labels matter." },
       { type: "h2", text: "Use MyRecon with coverage in mind" },

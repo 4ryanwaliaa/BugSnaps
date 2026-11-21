@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ShieldCheck } from "lucide-react";
 import {
   COOKIE_SETTINGS_EVENT,

@@ -1,5 +1,5 @@
 import { SketchUnderline } from "@/components/ui/sketch-underline";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { FileText, ShieldCheck } from "lucide-react";
 import { ScanTheatre } from "@/components/home/scan-theatre";
 import { ScanTrustPoints } from "@/components/mypentest/trust-points";

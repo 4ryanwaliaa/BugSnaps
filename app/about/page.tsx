@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { CtaBand, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
-import { MYRECON_URL, pageMetadata } from "@/lib/site";
+import Link from "@/components/site/content-link";
+import { CtaBand, JsonLd, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
+import { MYRECON_URL, aboutPageJsonLd, pageMetadata, personJsonLd } from "@/lib/site";
 import { SecurityReviewFigure } from "@/components/site/security-review-figure";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About BugSnaps - Penetration Testing Company",
+  title: "About BugSnaps: Automated & Expert Pentesting",
   absoluteTitle: true,
   description:
-    "BugSnaps is a young cybersecurity company focused on penetration testing. We build MyPentest and MyRecon and run expert-led engagements, without inflated claims.",
+    "BugSnaps builds MyPentest, PhishLens, EndpointRadar, and MyRecon, and runs CEH-led penetration tests grounded in verifiable evidence.",
   path: "/about",
 });
 
@@ -18,8 +18,8 @@ const PRINCIPLES = [
     body: "A finding needs evidence. Anything we can't show, we call a lead - not a vulnerability.",
   },
   {
-    title: "Honest about what we are",
-    body: "We're a new company. No inflated metrics, no borrowed logos, no testimonials we can't back.",
+    title: "Evidence over hype",
+    body: "Founded by CEH-certified tester Aryan Walia, we ship four live tools, publish security.txt, and maintain open-source EndpointRadar—with zero fabricated metrics or logos.",
   },
   {
     title: "Safe by default",
@@ -30,11 +30,19 @@ const PRINCIPLES = [
 export default function AboutPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={aboutPageJsonLd({
+          name: "About BugSnaps",
+          description:
+            "BugSnaps builds MyPentest, PhishLens, EndpointRadar, and MyRecon, and runs CEH-led penetration tests grounded in verifiable evidence.",
+        })}
+      />
+      <JsonLd data={personJsonLd()} />
       <PageHeader
         crumbs={[{ name: "About", path: "/about" }]}
         eyebrow="About"
         title="A penetration-testing company that builds its own tools."
-        lead="BugSnaps started as offensive security work for growing businesses. The tools we built to do that work well became products: MyPentest for automated testing, MyRecon for reconnaissance."
+        lead="BugSnaps combines CEH-led offensive security engagements with four live tools built in-house: MyPentest for web & API pentesting, PhishLens for link inspection, open-source EndpointRadar for Windows posture, and MyRecon for OSINT."
       />
 
       <Section labelledBy="story-title">
@@ -55,8 +63,9 @@ export default function AboutPage() {
             </li>
           </ul>
           <p>
-            Reconnaissance sits underneath both. <a href={MYRECON_URL}>MyRecon</a>, our OSINT platform at myrecon.xyz,
-            is where that work is available on its own.
+            BugSnaps also builds <Link href="/phishing-detector">PhishLens</Link> for browser-first suspicious URL review,
+            open-source <Link href="/endpointradar">EndpointRadar</Link> (Python 3.10+ Windows posture scanner), and{" "}
+            <a href={MYRECON_URL}>MyRecon</a> at myrecon.xyz for OSINT research.
           </p>
 
           <h2>Who&apos;s behind it</h2>
@@ -79,7 +88,8 @@ export default function AboutPage() {
         <Prose>
           <p>
             Found a vulnerability in something of ours? Please tell us - see our{" "}
-            <Link href="/responsible-disclosure">responsible disclosure policy</Link>.
+            <Link href="/responsible-disclosure">responsible disclosure policy</Link> or our{" "}
+            <a href="/.well-known/security.txt">RFC 9116 security.txt</a>.
           </p>
         </Prose>
       </Section>

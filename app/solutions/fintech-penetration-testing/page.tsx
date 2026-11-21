@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { DollarSign, ArrowRight, Lock, Activity } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Fintech Penetration Testing: Payment Gateway & Banking API Security",
+  title: "Fintech & Payment API Penetration Testing",
   description:
-    "Scope fintech application and payment API penetration testing around transaction integrity, price validation, webhook security and authorization boundaries.",
+    "Scope fintech app and payment API pentesting around transaction integrity, price validation, webhook security, and authorization boundaries.",
   path: "/solutions/fintech-penetration-testing",
 });
 
@@ -32,6 +32,14 @@ const faqs = [
 export default function FintechPenetrationTestingPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "Fintech & Payment API Penetration Testing",
+          description:
+            "Scoped fintech application and payment API penetration testing covering transaction integrity, webhook signatures, and authorization boundaries.",
+          path: "/solutions/fintech-penetration-testing",
+        })}
+      />
       <JsonLd data={faqJsonLd(faqs)} />
       <PageHeader
         crumbs={[
@@ -93,6 +101,18 @@ export default function FintechPenetrationTestingPage() {
             <Link href="/us-vs-competitors" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">
               Compare automated and expert-led testing <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
+          <div className="pt-4">
+            <h3 className="text-sm font-semibold text-foreground">Related fintech security guides and use cases</h3>
+            <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-accent">
+              <li><Link href="/use-cases/fintech" className="hover:underline">Fintech testing use case</Link></li>
+              <li><Link href="/use-cases/ecommerce" className="hover:underline">Ecommerce testing plan</Link></li>
+              <li><Link href="/guides/business-logic-testing" className="hover:underline">Business-logic testing guide</Link></li>
+              <li><Link href="/guides/api-idempotency-key-review" className="hover:underline">API idempotency key review</Link></li>
+              <li><Link href="/blog/pentesting-fintech-payment-gateways-guide" className="hover:underline">Fintech payment gateway pentesting</Link></li>
+              <li><Link href="/blog/race-conditions-business-logic-attacks" className="hover:underline">Race conditions &amp; logic attacks</Link></li>
+              <li><Link href="/blog/webhook-security-signature-verification" className="hover:underline">Webhook signature verification</Link></li>
+            </ul>
           </div>
         </div>
       </Section>

@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/site/legal-page";
+import { Breadcrumbs } from "@/components/site/page-parts";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
-  description: "How BugSnaps collects, uses and protects your information, including MyPentest accounts and assessment data.",
+  description: "How BugSnaps collects, uses, and protects your data across MyPentest, PhishLens, EndpointRadar, and security engagements, including retention.",
   path: "/privacy",
 });
 
 export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" updated="October 28, 2026">
+      <Breadcrumbs items={[{ name: "Privacy Policy", path: "/privacy" }]} />
       <section>
         <h2>Overview</h2>
         <p className="mt-3">

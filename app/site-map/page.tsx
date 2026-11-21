@@ -10,8 +10,8 @@ import { SITEMAP_PAGES } from "@/lib/sitemap-pages";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Site Map: BugSnaps Security Testing Pages",
-  description: "Browse every public BugSnaps product, service, security guide, use case, comparison, benchmark and article from one organized site map.",
+  title: "Site Map: All Security Pages & Guides",
+  description: "Browse every public BugSnaps product, service, security guide, use case, comparison, benchmark, and article from one organized site map.",
   path: "/site-map",
 });
 
@@ -25,6 +25,31 @@ const names = new Map<string, string>([
   ["/mypentest", "MyPentest"],
   ["/mypentest/example-report", "Example assessment report"],
   ["/mypentest/how-to-use", "How to use MyPentest: step-by-step tutorial"],
+  ["/mypentest/php2shell", "How MyPentest Checks for PHP2Shell (CVE-2026-109618 & CVE-2026-109619)"],
+  ["/products", "Security Tools: MyPentest, PhishLens, EndpointRadar & MyRecon"],
+  ["/pricing", "MyPentest Plans and Pricing"],
+  ["/services", "Security Testing Services"],
+  ["/penetration-testing", "Manual Penetration Testing Services"],
+  ["/web-application-pentesting", "Web Application Penetration Testing Service"],
+  ["/api-security-testing", "API Security Testing (REST, GraphQL & BOLA)"],
+  ["/network-pentesting", "External & Internal Network Penetration Testing"],
+  ["/compare", "Compare Pentest Tools, Scanners & AI Assistants"],
+  ["/compare/mypentest-vs-vulnerability-scanners", "MyPentest vs Vulnerability Scanners"],
+  ["/compare/bugsnaps-vs-traditional-pentest", "BugSnaps vs a Traditional Penetration Test"],
+  ["/compare/automated-vs-manual-penetration-testing", "Automated vs Manual Penetration Testing"],
+  ["/blog", "Security Blog: Breaches, CVEs & Pentest Guides"],
+  ["/vulnerability-guides", "Website Vulnerability Guides: React2Shell & CVEs"],
+  ["/security-playbooks", "Security Playbooks for Web, APIs, Endpoints & Phishing"],
+  ["/resources", "Security Testing Resources, Guides & Templates"],
+  ["/site-map", "BugSnaps Site Map"],
+  ["/about", "About BugSnaps"],
+  ["/contact", "Contact BugSnaps"],
+  ["/careers", "Careers at BugSnaps"],
+  ["/personal", "BugSnaps Personal: Digital Footprint Cleanup"],
+  ["/privacy", "Privacy Policy"],
+  ["/terms", "Terms of Service"],
+  ["/refund-policy", "Refund and Cancellation Policy"],
+  ["/responsible-disclosure", "Responsible Disclosure Policy"],
   ["/guides", "Security guides"],
   ["/use-cases", "Security testing use cases"],
   ["/alternatives", "Security tool alternatives"],
@@ -73,7 +98,7 @@ export default function SiteMapPage() {
       <PageHeader
         crumbs={[{ name: "Site map", path: "/site-map" }]}
         eyebrow="Browse BugSnaps"
-        title="Find the page you need."
+        title="BugSnaps Site Map: All Security Pages & Guides"
         lead="Every public guide, comparison, use case, benchmark, and service in one place. Search engines can also use our XML sitemap."
       />
       <Section>

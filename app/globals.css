@@ -8,7 +8,7 @@
   --color-surface-2: #17171b;
   --color-foreground: #fafafa;
   --color-muted: #a1a1aa;
-  --color-muted-2: #71717a;
+  --color-muted-2: #94949e;
   --color-primary: #2563eb;
   --color-accent: #3b82f6;
   --color-coral: #ffad91;
@@ -242,19 +242,17 @@ body::before {
   animation: scan-beam 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
 }
 
-/* Staggered rise for hero copy: set --d on each element. */
+/* Staggered rise for hero copy: kept immediately visible for LCP. */
 @keyframes rise {
   from {
-    opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 .rise {
-  animation: rise 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) var(--d, 0s) both;
+  animation: rise 0.6s cubic-bezier(0.21, 0.47, 0.32, 0.98) var(--d, 0s) both;
 }
 
 /* Blinking terminal caret. */
@@ -561,7 +559,7 @@ summary::-webkit-details-marker {
 @media (prefers-reduced-motion: reduce), (forced-colors: active) { .reading-pen { display: none; } }
 @media print { .reading-pen { display: none; } }
 /* Drawing on the page is a mouse/stylus feature; touch screens keep the page simple and scrollable. */
-@media (hover: none), (pointer: coarse) { .pen-toolbar { display: none; } }
+@media (hover: none), (pointer: coarse) { .reading-pen, .pen-toolbar { display: none; } }
 .public-site nav[aria-label="Breadcrumb"] [aria-current="page"] { color: var(--color-coral); }
 .public-site .card-hover:hover { border-color: rgb(255 173 145 / 0.35); }
 @media (prefers-reduced-motion: reduce) {

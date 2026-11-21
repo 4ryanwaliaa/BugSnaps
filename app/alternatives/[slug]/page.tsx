@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { ALTERNATIVE_PAGES, alternativePage, alternativePath } from "@/lib/alternatives";
 import { competitor, formatCheckedOn, versusPath } from "@/lib/competitors";
 import { routes } from "@/lib/mypentest";
-import { ORG_ID, absoluteUrl, faqJsonLd, pageMetadata } from "@/lib/site";
+import { OG_IMAGE, ORG_ID, absoluteUrl, faqJsonLd, pageMetadata } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -31,13 +31,14 @@ export default async function AlternativeGuide({ params }: Params) {
         mainEntityOfPage: absoluteUrl(alternativePath(page.slug)),
         dateModified: page.updated, inLanguage: "en",
         author: { "@id": ORG_ID }, publisher: { "@id": ORG_ID },
+        image: absoluteUrl(OG_IMAGE.url),
         about: { "@type": "SoftwareApplication", name: tool.name, url: tool.website },
         citation: tool.sources.map((source) => source.url),
       }} />
       <PageHeader
         crumbs={[{ name: "Alternatives", path: "/alternatives" }, { name: `${tool.name} alternatives`, path: alternativePath(page.slug) }]}
         eyebrow={`Selection guide · ${tool.category}`}
-        title={tool.slug === "detectify" ? page.title : `${tool.name} alternatives: choose by workflow.`}
+        title={page.title}
         lead={page.answer}
       >
         <p className="text-sm text-muted-2">Vendor sources reviewed {formatCheckedOn(tool.checkedOn)}. Selection criteria are editorial, with no claim of a measured detection ranking.</p>

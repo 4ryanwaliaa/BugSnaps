@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/site/content-link";
 import { ArrowRight, Users, Key, Zap } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
-import { faqJsonLd, pageMetadata } from "@/lib/site";
+import { faqJsonLd, pageMetadata, serviceJsonLd } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "SaaS Penetration Testing: Multi-Tenant & API Security Testing",
+  title: "SaaS Penetration Testing & Tenant Isolation",
   description:
-    "SaaS penetration testing for multi-tenant applications: review tenant isolation, BOLA/IDOR, roles and sessions with scoped automated assessments and expert testing.",
+    "SaaS penetration testing for multi-tenant apps: review tenant isolation, BOLA/IDOR, roles, and sessions with automated and expert testing.",
   path: "/solutions/saas-penetration-testing",
 });
 
@@ -42,6 +42,14 @@ const faqs = [
 export default function SaasPenetrationTestingPage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={serviceJsonLd({
+          name: "SaaS Penetration Testing",
+          description:
+            "SaaS penetration testing for multi-tenant applications covering tenant isolation, BOLA/IDOR, role authorization, and session handling.",
+          path: "/solutions/saas-penetration-testing",
+        })}
+      />
       <JsonLd data={faqJsonLd(faqs)} />
       <PageHeader
         crumbs={[
@@ -58,7 +66,7 @@ export default function SaasPenetrationTestingPage() {
           Why Multi-Tenant SaaS Requires Dedicated Security Testing
         </h2>
         <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted">
-          A multi-tenant application may share infrastructure while keeping each customer's records separate. Testing needs to check whether that separation holds across object access, roles and session boundaries. Give the assessment representative test accounts and existing records so it can reach the behavior you want reviewed.
+          A multi-tenant application may share infrastructure while keeping each customer&apos;s records separate. Testing needs to check whether that separation holds across object access, roles and session boundaries. Give the assessment representative test accounts and existing records so it can reach the behavior you want reviewed.
         </p>
 
         {/* Evaluation status is explicit until reproducible runs are published. */}
@@ -116,6 +124,17 @@ export default function SaasPenetrationTestingPage() {
           </div>
           <p>After a fix, start another assessment and compare the relevant evidence. Scheduled retests and automatic assessment diffing are planned rather than currently available.</p>
           <Link href="/improvements" className="inline-flex items-center gap-1.5 font-medium text-accent hover:underline">Use the remediation and retest checklist <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+          <div className="pt-4">
+            <h3 className="text-sm font-semibold text-foreground">Related SaaS testing guides and use cases</h3>
+            <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-accent">
+              <li><Link href="/use-cases/saas" className="hover:underline">SaaS testing use case</Link></li>
+              <li><Link href="/use-cases/multi-tenant-apps" className="hover:underline">Multi-tenant app test plan</Link></li>
+              <li><Link href="/guides/saas-tenant-isolation" className="hover:underline">SaaS tenant isolation guide</Link></li>
+              <li><Link href="/guides/access-control-testing" className="hover:underline">Access control testing</Link></li>
+              <li><Link href="/blog/pentesting-saas-applications-checklist" className="hover:underline">SaaS pentesting checklist</Link></li>
+              <li><Link href="/blog/automated-dual-account-access-control-testing" className="hover:underline">Dual-account IDOR testing</Link></li>
+            </ul>
+          </div>
         </div>
       </Section>
 

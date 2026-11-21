@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const them = fromSlug((await params).slug);
   if (!them) return {};
   return pageMetadata({
-    title: `MyPentest vs ${them.name}: Features, Pros & Cons, Pricing`,
+    title: them.metaTitle,
     description: them.metaDescription,
     path: versusPath(them.slug),
   });

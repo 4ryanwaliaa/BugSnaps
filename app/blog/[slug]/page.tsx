@@ -3,7 +3,7 @@ import Link from "@/components/site/content-link";
 import { notFound } from "next/navigation";
 import { CtaBand, JsonLd, PageHeader, Prose, SiteShell } from "@/components/site/page-parts";
 import { post, posts, vulnerabilityPosts, type Block } from "@/lib/blog";
-import { ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
+import { OG_IMAGE, ORG_ID, absoluteUrl, pageMetadata } from "@/lib/site";
 import { product } from "@/lib/products";
 import { PreferredSource } from "@/components/site/preferred-source";
 import { BinanceExplainerPage } from "@/components/site/binance-explainer-page";
@@ -66,6 +66,30 @@ function render(block: Block, index: number) {
           {block.text}
         </p>
       );
+    case "table":
+      return (
+        <div key={index} className="not-prose !my-8 overflow-x-auto rounded-xl border border-white/10">
+          <table className="w-full min-w-[34rem] text-left text-sm">
+            <caption className="px-4 pt-4 text-left text-sm font-semibold text-foreground/90">{block.caption}</caption>
+            <thead>
+              <tr className="border-b border-white/10">
+                {block.head.map((cell) => (
+                  <th key={cell} scope="col" className="px-4 py-3 font-semibold text-foreground/90">{cell}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/[0.06]">
+              {block.rows.map((row) => (
+                <tr key={row.join("|")}>
+                  {row.map((cell, cellIndex) => cellIndex === 0
+                    ? <th key={cellIndex} scope="row" className="px-4 py-3 align-top font-mono text-[13px] font-medium text-foreground/90">{cell}</th>
+                    : <td key={cellIndex} className="px-4 py-3 align-top leading-relaxed text-muted">{cell}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
   }
 }
 
@@ -88,7 +112,10 @@ export default async function BlogPost({ params }: Params) {
     author: { "@type": "Organization", name: found.author, url: absoluteUrl("/") },
     publisher: { "@id": ORG_ID },
     mainEntityOfPage: absoluteUrl(path),
-    ...(found.slug === "binance-crypto-hack-october-2026-explained" ? { image: absoluteUrl("/images/binance-hack-2026-explained.png") } : {}),
+    image:
+      found.slug === "binance-crypto-hack-october-2026-explained"
+        ? absoluteUrl("/images/binance-hack-2026-explained.png")
+        : absoluteUrl(OG_IMAGE.url),
     ...(sources.length ? { citation: sources.map((source) => source.href) } : {}),
   };
 
