@@ -117,6 +117,7 @@ export const searchIntentPosts: Post[] = [
       },
     ],
     related: [
+      { label: "Download the Windows Event Viewer evidence worksheet", href: "/guides/windows-endpoint-evidence-handling" },
       { label: "Windows Security Event ID 1102 investigation guide", href: "/guides/windows-security-event-1102-review" },
       { label: "Windows Event ID 5140 network share access guide", href: "/guides/windows-network-share-access-event-5140" },
       { label: "Windows Event ID 5145 detailed share access guide", href: "/guides/windows-detailed-share-access-event-5145" },

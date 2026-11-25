@@ -138,7 +138,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
               <p className="mt-3 text-sm leading-relaxed text-muted">
                 These guides combine published security guidance with practical assessment planning. Adapt checks to the owner&apos;s policy, environment, and authorized scope.
               </p>
-              {guide.updated === "2026-10-28" && <p className="mt-3 text-sm leading-relaxed text-muted">This guide was prepared with AI assistance using the linked sources and illustrative examples. Check current vendor guidance and your environment before making changes.</p>}
+              {(guide.published ?? guide.updated) === "2026-10-28" && <p className="mt-3 text-sm leading-relaxed text-muted">This guide was prepared with AI assistance using the linked sources and illustrative examples. Check current vendor guidance and your environment before making changes.</p>}
               <ul className="mt-4 space-y-3">
                 {guide.sources.map((source) => (
                   <li key={source.url}>

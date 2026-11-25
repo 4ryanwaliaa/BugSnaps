@@ -101,6 +101,7 @@ export default function PhishingDetectorPage() {
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">Learn how to interpret an address, verify an unexpected request and respond if you have already interacted with it.</p>
         <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-base font-medium text-emerald-300">
           <Link href="/guides/how-to-assess-a-suspicious-url-safely" className="hover:underline">Read the suspicious URL guide</Link>
+          <Link href="/guides/phishing-click-incident-triage" className="hover:underline">What to do after clicking a phishing link</Link>
           <Link href="/compare/phishing-link-checkers" className="hover:underline">Compare link checkers</Link>
           <Link href="/benchmarks/phishing-link-checker" className="hover:underline">See PhishLens benchmark results</Link>
         </div>

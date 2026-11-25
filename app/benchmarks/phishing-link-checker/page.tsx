@@ -1,9 +1,10 @@
 import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
-import { pageMetadata, techArticleJsonLd } from "@/lib/site";
+import { absoluteUrl, ORG, ORG_ID, pageMetadata, techArticleJsonLd } from "@/lib/site";
 import run from "@/public/benchmarks/phishlens-offline-2026-11-25.json";
 
 const path = "/benchmarks/phishing-link-checker";
+const resultsPath = "/benchmarks/phishlens-offline-2026-11-25.json";
 const headline = "Phishing link checker benchmark";
 const published = "2026-11-25";
 const description =
@@ -26,11 +27,28 @@ const outcomes = [
   { name: "Review", count: counts.review, meaning: "The local review found signals that warrant a closer look." },
   { name: "No obvious signals", count: counts.noObviousSignals, meaning: "The local review found no signal strong enough to flag the hostname." },
 ];
+const resultsJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": `${absoluteUrl(path)}#aggregate-results`,
+  url: absoluteUrl(path),
+  name: "PhishLens offline phishing link checker results",
+  description: "Aggregate verdict counts and run details from the 25 November 2026 PhishLens hostname-only evaluation. Includes counts for high concern, review, and no obvious signals.",
+  creator: { "@type": "Organization", "@id": ORG_ID, name: ORG.name },
+  datePublished: published,
+  isAccessibleForFree: true,
+  distribution: {
+    "@type": "DataDownload",
+    contentUrl: absoluteUrl(resultsPath),
+    encodingFormat: "application/json",
+  },
+};
 
 export default function PhishingLinkCheckerBenchmark() {
   return (
     <SiteShell>
       <JsonLd data={techArticleJsonLd({ headline, description, path, datePublished: published })} />
+      <JsonLd data={resultsJsonLd} />
       <PageHeader
         crumbs={[
           { name: "Benchmarks", path: "/benchmarks" },
@@ -40,7 +58,7 @@ export default function PhishingLinkCheckerBenchmark() {
         lead={`PhishLens flagged ${formatCount.format(flagged)} of ${formatCount.format(counts.parsed)} threat-listed hostnames (${formatRate.format(flagged / counts.parsed)}) in an offline evaluation. A dangerous link can produce a clean-looking result.`}
       >
         <a
-          href="/benchmarks/phishlens-offline-2026-11-25.json"
+          href={resultsPath}
           download
           className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50"
         >

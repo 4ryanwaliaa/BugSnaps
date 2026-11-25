@@ -7,6 +7,11 @@ export type GuideSeoUpgrade = {
   extraFaqs?: { question: string; answer: string }[];
 };
 
+const windowsEventWorksheet = {
+  label: "Use the Windows Event Viewer evidence worksheet",
+  href: "/guides/windows-endpoint-evidence-handling",
+};
+
 export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   // ── Top GSC High-Impression Guides (CTR + Search-Query Alignment + Depth) ──
   "secure-cookie-attribute-review": {
@@ -67,6 +72,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
       { label: "When to escalate", value: "Escalate a log clear that you cannot explain. Record any forwarding gap and preserve central copies before retention expires." },
     ],
     readNext: [
+      windowsEventWorksheet,
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Audit Windows endpoint posture with EndpointRadar", href: "/endpointradar" },
     ],
@@ -89,6 +95,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
       { label: "When 5145 helps", value: "On the same server, look for Event 5145 for the named file or folder and requested access. Use the account, logon ID and time to join the records." },
     ],
     readNext: [
+      windowsEventWorksheet,
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Event ID 5145 detailed share access guide", href: "/guides/windows-detailed-share-access-event-5145" },
       { label: "Explore EndpointRadar Windows posture tool", href: "/endpointradar" },
@@ -106,6 +113,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
       { label: "Start with what you expected", value: "Compare the matched logon type, account and source with the device’s approved service activity or maintenance. The privilege list identifies what the session received." },
     ],
     readNext: [
+      windowsEventWorksheet,
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Explore EndpointRadar Windows security workspace", href: "/endpointradar" },
     ],
@@ -122,6 +130,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
       { label: "Difference from 5140", value: "Event 5140 identifies the share at the first access attempt of a session. Event 5145 provides the object and access requested within the share." },
     ],
     readNext: [
+      windowsEventWorksheet,
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Event ID 5140 network share access guide", href: "/guides/windows-network-share-access-event-5140" },
       { label: "Explore EndpointRadar Windows posture tool", href: "/endpointradar" },

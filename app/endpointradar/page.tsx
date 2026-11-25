@@ -96,6 +96,11 @@ export default function EndpointRadarPage() {
       <Section labelledBy="endpoint-guides" className="border-t border-white/[.07]">
         <h2 id="endpoint-guides" className="text-2xl font-semibold tracking-tight">Put endpoint findings in context.</h2>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">Learn how to review Windows security posture, understand exposure, prioritize findings and verify changes.</p>
+        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-blue-400">
+          <li><Link href="/guides/windows-security-protection-history" className="hover:underline">Review Windows Security Protection History</Link></li>
+          <li><Link href="/guides/windows-smartscreen-warning-review" className="hover:underline">Understand a SmartScreen warning</Link></li>
+          <li><Link href="/guides/windows-security-event-1102-review" className="hover:underline">Review Windows Event ID 1102</Link></li>
+        </ul>
         <Link href="/guides#endpoint-security" className="mt-5 inline-flex text-sm font-medium text-blue-400 hover:underline">Explore Windows endpoint guides <ArrowRight className="ml-2 h-4 w-4" /></Link>
       </Section>
       <Section labelledBy="faq-title" id="faq" className="border-t border-white/[.07]">
