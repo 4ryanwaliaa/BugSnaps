@@ -1,0 +1,7 @@
+release_id,environment,check_id,check,asset,check_owner,checked_at,expected_result,observed_result,status,evidence_reference,follow_up_owner,follow_up_due,exception_approval_reference
+,,1,"Domain, hosting and admin ownership",,,,,,,,,,
+,,2,HTTPS and certificates,,,,,,,,,,
+,,3,Browser security headers and session cookies,,,,,,,,,,
+,,4,Production settings and private data,,,,,,,,,,
+,,5,"Backups, recovery and rollback",,,,,,,,,,
+,,6,Monitoring and incident ownership,,,,,,,,,,

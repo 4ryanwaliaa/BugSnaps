@@ -34,6 +34,7 @@ const names = new Map<string, string>([
   ["/api-security-testing", "API Security Testing (REST, GraphQL & BOLA)"],
   ["/network-pentesting", "External & Internal Network Penetration Testing"],
   ["/compare", "Compare Pentest Tools, Scanners & AI Assistants"],
+  ["/compare/phishing-link-checkers", "Phishing Link Checker Comparison"],
   ["/compare/mypentest-vs-vulnerability-scanners", "MyPentest vs Vulnerability Scanners"],
   ["/compare/bugsnaps-vs-traditional-pentest", "BugSnaps vs a Traditional Penetration Test"],
   ["/compare/automated-vs-manual-penetration-testing", "Automated vs Manual Penetration Testing"],
@@ -41,6 +42,7 @@ const names = new Map<string, string>([
   ["/vulnerability-guides", "Website Vulnerability Guides: React2Shell & CVEs"],
   ["/security-playbooks", "Security Playbooks for Web, APIs, Endpoints & Phishing"],
   ["/resources", "Security Testing Resources, Guides & Templates"],
+  ["/website-security-checklist", "Website Security Checklist Before Launch"],
   ["/site-map", "BugSnaps Site Map"],
   ["/about", "About BugSnaps"],
   ["/contact", "Contact BugSnaps"],
@@ -55,6 +57,7 @@ const names = new Map<string, string>([
   ["/alternatives", "Security tool alternatives"],
   ["/us-vs-competitors", "BugSnaps vs Competitors: Scope & Evidence"],
   ["/benchmarks", "Pentesting Benchmark Methodology"],
+  ["/benchmarks/phishing-link-checker", "Phishing Link Checker Benchmark"],
   ["/improvements", "Website Security Improvements and Fix Retesting"],
   ["/why-bugsnaps", "Why Try BugSnaps and MyPentest"],
   ["/compare/mypentest-vs-ai-assistants", "MyPentest vs ChatGPT, Claude and AI Automation"],
@@ -77,11 +80,11 @@ const names = new Map<string, string>([
 ]);
 
 const sections = [
-  { title: "Product, services and company", test: (p: string) => !/^\/(guides|use-cases|alternatives|compare|blog|solutions)(\/|$)/.test(p) && p !== "/us-vs-competitors" && p !== "/benchmarks" },
+  { title: "Product, services and company", test: (p: string) => !/^\/(guides|use-cases|alternatives|compare|blog|solutions|benchmarks)(\/|$)/.test(p) && p !== "/us-vs-competitors" },
   { title: "Solutions and industry security", test: (p: string) => p.startsWith("/solutions") },
   { title: "Security guides", test: (p: string) => p.startsWith("/guides") },
   { title: "Testing use cases", test: (p: string) => p.startsWith("/use-cases") },
-  { title: "Comparisons and benchmarks", test: (p: string) => p.startsWith("/compare") || p.startsWith("/alternatives") || p === "/us-vs-competitors" || p === "/benchmarks" },
+  { title: "Comparisons and benchmarks", test: (p: string) => /^\/(compare|alternatives|benchmarks)(\/|$)/.test(p) || p === "/us-vs-competitors" },
   { title: "Articles", test: (p: string) => p.startsWith("/blog") },
 ];
 

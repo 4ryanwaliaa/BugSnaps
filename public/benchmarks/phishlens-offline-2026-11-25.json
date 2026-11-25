@@ -1,0 +1,26 @@
+{
+  "evaluatedAt": "2026-11-25T14:07:22.159Z",
+  "publisher": "BugSnaps",
+  "test": "PhishLens local URL-pattern review on provider-listed hostnames",
+  "engineRevision": "773716f635ea9c2014ebf81e7729a313017eeceb",
+  "engineSha256": "6d5c39680700d380c38b006f666e11d881e89a0a1958b9d85c20d81137f8845e",
+  "engineGitBlobSha256": "46b6d2a7f14f228be06f3a9801d5b5eebb9e2f4525d63d5d193bf319bdcb911d",
+  "source": {
+    "provider": "PhishDestroy",
+    "dataset": "Archived DNS-active domain list",
+    "snapshotDate": "2026-10-27",
+    "sourceRevision": "2202d4cbb9cd17297fa839a874c0a456943ba1b6",
+    "sha256": "ad266435286aebbaefb33a935952158165aed6121053e3c0e0f083e009597a7d"
+  },
+  "counts": {
+    "inputEntries": 141480,
+    "duplicateInputs": 0,
+    "parsed": 141480,
+    "rejected": 0,
+    "highConcern": 175,
+    "review": 6361,
+    "noObviousSignals": 134944
+  },
+  "comparisonSample": null,
+  "scope": "Hostname strings only. No submitted domains were visited. DNS, external reputation, message context, full URL paths and competitor tools were outside the evaluation."
+}

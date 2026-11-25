@@ -8,6 +8,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const ts = require("typescript");
+const { parseLlmsTxt } = require("./e2e-seo/lib/xml-robots-llms.cjs");
 const root = path.resolve(__dirname, "..");
 const args = process.argv.slice(2);
 const option = (name, fallback) => args.includes(name) ? args[args.indexOf(name) + 1] : fallback;
@@ -313,11 +314,16 @@ async function audit(route) {
   const llms = await get("/llms.txt");
   assert.equal(llms.status, 200, "AI discovery directory unavailable");
   assert(llms.type.includes("text/plain"), "AI directory must be plain text");
-  for (const match of llms.body.matchAll(/\]\((https:\/\/[^)]+)\)/g)) {
-    const url = new URL(match[1]);
-    assert.equal(url.origin, SITE_URL, "AI directory must use the canonical origin");
-    const canonical = url.pathname === "/" ? url.origin : url.href;
-    assert(expected.has(canonical), `Unknown AI discovery URL: ${url.href}`);
+  const aiDirectory = parseLlmsTxt(llms.body);
+  assert(aiDirectory.sitemaps.includes(`${SITE_URL}/sitemap.xml`), "AI directory must point to the full sitemap");
+  const aiDirectoryUrls = new Set();
+  for (const { url: canonical } of aiDirectory.links) {
+    assert(expected.has(canonical), `AI discovery URL must match a canonical sitemap entry: ${canonical}`);
+    assert(!aiDirectoryUrls.has(canonical), `Duplicate AI discovery URL: ${canonical}`);
+    aiDirectoryUrls.add(canonical);
+  }
+  for (const path of ["/phishing-detector", "/endpointradar", "/benchmarks/phishing-link-checker", "/compare/phishing-link-checkers", "/website-security-checklist"]) {
+    assert(aiDirectoryUrls.has(`${SITE_URL}${path}`), `Missing AI directory link to ${path}`);
   }
   const csv = await get("/benchmarks/run-template.csv");
   assert.equal(csv.status, 200, "Benchmark record template unavailable");
@@ -325,6 +331,13 @@ async function audit(route) {
   const cases = await get("/benchmarks/case-template.csv");
   assert.equal(cases.status, 200, "Benchmark case-review template unavailable");
   assert(cases.body.includes("expected_behavior") && cases.body.includes("control_artifact"), "Case-review template missing comparison controls");
+  const launchChecklist = await get("/templates/website-security-release-checklist.csv");
+  assert.equal(launchChecklist.status, 200, "Website release checklist unavailable");
+  assert(launchChecklist.type.includes("csv"), "Website release checklist must be served as CSV");
+  const phishingResults = await get("/benchmarks/phishlens-offline-2026-11-25.json");
+  assert.equal(phishingResults.status, 200, "PhishLens aggregate results unavailable");
+  const { counts } = JSON.parse(phishingResults.body);
+  assert.equal(counts.highConcern + counts.review + counts.noObviousSignals, counts.parsed, "PhishLens outcome counts must match parsed inputs");
   const editorialImage = await fetch(new URL("/images/website-security-review.webp", base), { signal: AbortSignal.timeout(30000) });
   assert.equal(editorialImage.status, 200, "Editorial image is unavailable");
   assert((editorialImage.headers.get("content-type") || "").includes("image/webp"), "Editorial image must be served as WebP");

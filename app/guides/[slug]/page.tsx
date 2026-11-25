@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: guide.description,
     path: guidePath(guide.slug),
     type: "article",
-    published: guide.updated,
+    published: guide.published ?? guide.updated,
     modified: guide.updated,
   });
 }

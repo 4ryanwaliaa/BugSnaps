@@ -11,6 +11,9 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const collections = [
+  { title: "Website security checklist before launch", path: "/website-security-checklist", text: "Review HTTPS, access, backups and alerts. Download a CSV to record evidence and sign off on a release." },
+  { title: "Phishing link checker comparison", path: "/compare/phishing-link-checkers", text: "Compare PhishLens, Malwarebytes, VirusTotal and Google Safe Browsing by what they check and what you share." },
+  { title: "PhishLens offline benchmark", path: "/benchmarks/phishing-link-checker", text: "See how the local checker classified 141,480 threat-listed hostnames, with downloadable aggregate results." },
   { title: "Security playbooks", path: "/security-playbooks", text: "Choose a practical starting point for applications, APIs, Windows endpoints, digital footprints, suspicious links and broader assessments." },
   { title: "React2Shell and framework vulnerability guides", path: "/vulnerability-guides", text: "Check advisory names, affected deployments, framework patches and scan evidence across a connected collection of practical guides." },
   { title: "API security test cases (CSV)", path: "/guides/api-security-test-cases", text: "Download eight starting cases with positive controls, expected behavior and evidence fields." },

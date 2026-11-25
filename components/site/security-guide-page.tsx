@@ -25,7 +25,7 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
     "@id": `${absoluteUrl(path)}#article`,
     headline: guide.title,
     description: guide.description,
-    datePublished: guide.updated,
+    datePublished: guide.published ?? guide.updated,
     dateModified: guide.updated,
     inLanguage: "en",
     articleSection: guide.category,

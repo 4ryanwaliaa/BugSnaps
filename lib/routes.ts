@@ -26,7 +26,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
-  { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-08" },
+  { path: "/phishing-detector", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-25" },
   { path: "/mypentest", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-08" },
   { path: "/endpointradar", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-11-08" },
   { path: "/myrecon", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-30" },
@@ -58,11 +58,13 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
 
   // Comparisons
   { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
-  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
+  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-25" },
+  { path: "/benchmarks/phishing-link-checker", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-25" },
   { path: "/improvements", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/why-bugsnaps", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/compare/mypentest-vs-ai-assistants", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
-  { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-10-08" },
+  { path: "/compare", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-25" },
+  { path: "/compare/phishing-link-checkers", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-25" },
   { path: "/compare/mypentest-vs-vulnerability-scanners", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-21" },
   { path: "/compare/bugsnaps-vs-traditional-pentest", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-21" },
   { path: "/compare/automated-vs-manual-penetration-testing", changeFrequency: "monthly", priority: 0.6, lastModified: "2026-11-21" },
@@ -72,7 +74,8 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6, lastModified: "2026-11-21" },
   { path: "/security-playbooks", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-28" },
-  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-21" },
+  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-25" },
+  { path: "/website-security-checklist", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-25" },
   { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-01" },
   ...SECURITY_GUIDES.map((g) => ({ path: guidePath(g.slug), changeFrequency: "monthly" as const,
@@ -83,7 +86,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   { path: "/alternatives", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-02" },
   ...ALTERNATIVE_PAGES.map((a) => ({ path: alternativePath(a.slug), changeFrequency: "monthly" as const,
     priority: 0.6, lastModified: a.updated })),
-  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-10-22" },
+  { path: "/site-map", changeFrequency: "monthly", priority: 0.3, lastModified: "2026-11-25" },
 
   // Company
   { path: "/security", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-16" },

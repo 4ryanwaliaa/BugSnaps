@@ -1,6 +1,7 @@
 export type GuideSeoUpgrade = {
   title?: string;
   description?: string;
+  updated?: string;
   quickFacts?: { label: string; value: string }[];
   readNext?: { label: string; href: string }[];
   extraFaqs?: { question: string; answer: string }[];
@@ -25,45 +26,53 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
     ],
   },
   "windows-smartscreen-warning-review": {
-    title: "Windows SmartScreen Warning & .exe Review",
+    title: "Microsoft Defender SmartScreen Warning: What to Do",
     description:
-      "Investigate Microsoft Defender SmartScreen warnings, Store Win32 .exe code-signing reputation, and SmartScreen test ratings on Windows endpoints.",
+      "Seeing “Windows protected your PC”? Learn what a SmartScreen warning means, what to check before running a download, and how to report a false positive.",
+    updated: "2026-11-25",
     quickFacts: [
-      { label: "Trigger condition", value: "Downloaded files tagged with Mark-of-the-Web (Zone.Identifier=3) lacking established publisher or hash reputation." },
-      { label: "Microsoft Store .exe apps", value: "Win32 .exe installers listed in Store must be Authenticode signed; direct web downloads still check file and certificate reputation." },
-      { label: "Safe SmartScreen test", value: "Verify browser and endpoint blocking using Microsoft's official demo.smartscreen.msft.net test pages." },
-      { label: "Endpoint verification", value: "Inspect Windows Defender and SmartScreen posture locally with EndpointRadar." },
+      { label: "What the warning means", value: "SmartScreen checks reputation. A download can be flagged because it is known to be unsafe or because the file or publisher has limited reputation." },
+      { label: "First action", value: "Leave the file unopened. Check that you requested it and confirm the download through the vendor’s known site or your organization’s software catalog." },
+      { label: "What to record", value: "Save the warning text, file name, expected publisher and time. Keep private URLs, tokens and file contents out of shared tickets." },
+      { label: "Possible false positive", value: "Use the vendor or Microsoft reporting channel after confirming the source. On a managed device, ask IT to review the warning under its approved process." },
     ],
     readNext: [
-      { label: "SmartScreen .exe warnings & Microsoft Store signing guide", href: "/blog/microsoft-smartscreen-exe-warnings-and-code-signing" },
+      { label: "Review an unfamiliar download link", href: "/guides/how-to-assess-a-suspicious-url-safely" },
       { label: "Review Windows endpoint posture with EndpointRadar", href: "/endpointradar" },
     ],
     extraFaqs: [
       {
-        question: "Is uploading an app on Microsoft Store via .exe okay, or will it give SmartScreen warnings still?",
+        question: "What should I do when I see “Windows protected your PC”?",
         answer:
-          "Microsoft Store supports packaging Win32 (.exe and .msi) installers, provided the binaries and uninstaller are digitally signed with a trusted Authenticode certificate. Installs initiated through the Microsoft Store app run through the Store flow, whereas users downloading a brand-new .exe directly from a website browser can still encounter initial SmartScreen prompts until the signed certificate and binary hash build reputation.",
+          "Leave the download unopened and independently verify the publisher and source. On a work or school device, send the warning text and download context to the people who manage that device.",
       },
       {
-        question: "How do I check a SmartScreen test rating safely?",
+        question: "Can a signed installer still trigger a SmartScreen warning?",
         answer:
-          "Use Microsoft's official SmartScreen demonstration site (demo.smartscreen.msft.net) in an authorized test profile to verify that phishing, malware, and potentially unwanted application (PUA) test warnings are enforced without downloading real malicious files.",
+          "Yes. Microsoft considers the reputation of the particular file and its publisher. A valid signature identifies the signer and helps check integrity. Verify that the signer and source match the software you expected.",
       },
     ],
   },
   "windows-security-event-1102-review": {
     title: "Windows Event ID 1102: Audit Log Cleared",
     description:
-      "Investigate Windows Security Event ID 1102 (audit log cleared): inspect SubjectUserName and LogonId, preserve evidence, and rule out maintenance.",
+      "Event ID 1102 means the Windows Security audit log was cleared. Find the event, match its account and logon ID, and preserve forwarded evidence.",
+    updated: "2026-11-25",
     quickFacts: [
-      { label: "Event ID & Channel", value: "Event ID 1102 in the Windows Security event log (Microsoft-Windows-Eventlog)." },
-      { label: "What it indicates", value: "The Security audit log was cleared via Event Viewer, wevtutil cl Security, or PowerShell Clear-EventLog." },
-      { label: "Key fields to check", value: "SubjectUserName, SubjectDomainName, SubjectLogonId, and forwarded SIEM events right before the clear timestamp." },
-      { label: "Related Event IDs", value: "Correlate with 4624/4648 (logon), 4672 (special privileges), 4719 (audit policy change), and System Event 104." },
+      { label: "Where to find it", value: "In Event Viewer, filter Windows Logs → Security for Event ID 1102, or look for the same event in your central log archive." },
+      { label: "What to preserve", value: "Capture the host, timestamp and time zone, event record ID, SubjectUserName, SubjectDomainName and SubjectLogonId." },
+      { label: "How to correlate it", value: "Look in retained logs for a 4624 successful logon on the same host around the event time with the same logon ID. Then compare the account and time with the approved maintenance record." },
+      { label: "When to escalate", value: "Escalate a log clear that you cannot explain. Record any forwarding gap and preserve central copies before retention expires." },
     ],
     readNext: [
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Audit Windows endpoint posture with EndpointRadar", href: "/endpointradar" },
+    ],
+    extraFaqs: [
+      {
+        question: "What is the difference between Event ID 1102 and Event ID 4624?",
+        answer: "Event 1102 records that the Windows Security audit log was cleared. Event 4624 records a successful logon. On the same host, matching logon IDs can help identify the session associated with the clear.",
+      },
     ],
   },
   "windows-network-share-access-event-5140": {

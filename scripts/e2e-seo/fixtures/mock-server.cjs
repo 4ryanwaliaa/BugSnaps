@@ -1195,12 +1195,10 @@ function startMockSite(mutation = null) {
     }
 
     if (pathname === "/llms.txt") {
-      const lines = sitemapPaths
-        .filter((p) => !(mutation === "T1.1-LLMS" && p === "/blog/clean-post-two"))
-        .map((p) => {
-          const loc = p === "/" ? CANONICAL_ORIGIN : `${CANONICAL_ORIGIN}${p}`;
-          return `- [${p}](${loc})`;
-        })
+      const curatedPaths = ["/resources", "/blog/clean-post-two"];
+      if (mutation === "T1.1-LLMS") curatedPaths.push("/phishing-detector/team");
+      const lines = curatedPaths
+        .map((path) => `- [${path}](${CANONICAL_ORIGIN}${path})`)
         .join("\n");
       res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
       res.end(`# BugSnaps\n\n${lines}\n\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`);

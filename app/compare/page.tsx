@@ -17,6 +17,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const compareItems = [
+  { name: "Phishing link checker comparison", path: "/compare/phishing-link-checkers" },
   ...competitors.map((c) => ({ name: `MyPentest vs ${c.name}`, path: versusPath(c.slug) })),
   ...comparePages.map((p) => ({ name: p.metaTitle, path: p.path })),
   { name: "MyPentest vs ChatGPT, Claude & AI Tools", path: "/compare/mypentest-vs-ai-assistants" },
@@ -40,6 +41,15 @@ export default function CompareHub() {
         title="Compare Automated Pentesting, Scanners & AI Tools"
         lead="Honest, sourced comparisons with the tools you're probably weighing up - including where MyPentest is not the right answer."
       />
+      <Section labelledBy="phishing-comparison-title" className="!pb-0">
+        <h2 id="phishing-comparison-title" className="text-2xl font-semibold">Compare tools for checking suspicious links</h2>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
+          See how PhishLens, Malwarebytes, VirusTotal and Google Safe Browsing handle link analysis, reputation and submitted data.
+        </p>
+        <Link href="/compare/phishing-link-checkers" className="mt-4 inline-flex font-medium text-accent hover:underline">
+          Compare phishing link checkers
+        </Link>
+      </Section>
       <Section labelledBy="benchmarks-banner-title" className="pb-0">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-accent/25 bg-accent/[0.06] p-6 sm:p-8">

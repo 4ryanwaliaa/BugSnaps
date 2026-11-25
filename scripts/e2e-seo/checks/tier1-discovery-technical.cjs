@@ -471,6 +471,9 @@ async function runTier1(ctx) {
       if (!parsedLlms.sitemaps.includes(`${canonicalOrigin}/sitemap.xml`)) {
         fail("T1.1", "/llms.txt", `Missing Sitemap directive ${canonicalOrigin}/sitemap.xml`);
       }
+      if (!parsedLlms.links.length) {
+        fail("T1.1", "/llms.txt", "Missing curated public links");
+      }
       const llmsPathSet = new Set();
       for (const link of parsedLlms.links) {
         let u;
@@ -480,19 +483,17 @@ async function runTier1(ctx) {
           fail("T1.1", "/llms.txt", `Invalid URL in llms.txt: ${link.url}`);
           continue;
         }
-        if (u.origin !== canonicalOrigin) {
-          fail("T1.1", "/llms.txt", `Non-canonical origin in llms.txt: ${link.url}`);
+        if (u.origin !== canonicalOrigin || u.search || u.hash) {
+          fail("T1.1", "/llms.txt", `Non-canonical URL in llms.txt: ${link.url}`);
           continue;
         }
         const p = normalizePath(u.pathname);
+        if (llmsPathSet.has(p)) {
+          fail("T1.1", "/llms.txt", `Duplicate URL in llms.txt: ${p}`);
+        }
         llmsPathSet.add(p);
         if (!sitemapPathSet.has(p)) {
           fail("T1.1", "/llms.txt", `URL in llms.txt missing from sitemap.xml: ${p}`);
-        }
-      }
-      for (const sp of sitemapPathSet) {
-        if (!llmsPathSet.has(sp)) {
-          fail("T1.1", "/llms.txt", `Sitemap URL missing from llms.txt: ${sp}`);
         }
       }
     }

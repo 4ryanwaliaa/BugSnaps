@@ -21,13 +21,14 @@ const PhishLensWorkspace = dynamic(
 
 export const metadata: Metadata = pageMetadata({
   title: "Free Phishing Link Checker | PhishLens",
-  description: "Check suspicious URLs in your browser without opening them. Inspect local signals, optional DNS and threat context, and redacted reports free.",
+  description: "Check a suspicious link without opening it. PhishLens reviews URL warning signs in your browser, with optional domain checks. Free, no sign-up.",
   path: "/phishing-detector",
 });
 
 const faqs = [
   { question: "How can I check a suspicious link without opening it?", answer: "Copy the link address and paste it into PhishLens. The browser-based checker examines the URL text and highlights warning signs without visiting the destination. Verify unexpected requests through a known contact or the official app." },
   { question: "Does a phishing link checker prove a URL is safe?", answer: "No. A URL can look ordinary and still lead to a phishing page. The local check does not visit the destination or follow redirects. Optional external domain, reputation and DNS checks provide additional signals only when you choose them. Treat highlighted patterns as investigation leads and do not enter credentials based on a clean result." },
+  { question: "Should I submit a password reset link to a public URL checker?", answer: "Keep reset links, private invitations and sign-in links out of public lookup services. They can contain a token that grants access. If the message is unexpected, open the official app or use a trusted bookmark to verify the request." },
   { question: "Can an HTTPS link still be phishing?", answer: "Yes. HTTPS protects the connection to a hostname; it does not establish that the site or sender is trustworthy. Check the actual hostname and verify the request independently before entering passwords or payment details." },
 ];
 
@@ -75,7 +76,11 @@ export default function PhishingDetectorPage() {
       <Section labelledBy="url-guide-title" className="border-t border-white/[.07]">
         <h2 id="url-guide-title" className="text-2xl font-semibold">Investigate without opening the link.</h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">Learn how to interpret an address, verify an unexpected request and respond if you have already interacted with it.</p>
-        <Link href="/guides/how-to-assess-a-suspicious-url-safely" className="mt-5 inline-flex text-sm font-medium text-emerald-300 hover:underline">Read the suspicious URL guide</Link>
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-base font-medium text-emerald-300">
+          <Link href="/guides/how-to-assess-a-suspicious-url-safely" className="hover:underline">Read the suspicious URL guide</Link>
+          <Link href="/compare/phishing-link-checkers" className="hover:underline">Compare link checkers</Link>
+          <Link href="/benchmarks/phishing-link-checker" className="hover:underline">See PhishLens benchmark results</Link>
+        </div>
       </Section>
       <ProductReading productId="phishlens" />
       <Section labelledBy="link-checker-faq" className="border-t border-white/[.07]">

@@ -13,6 +13,7 @@ export type SecurityGuide = {
   description: string;
   category: SecurityGuideCategory;
   answer: string;
+  published?: string;
   updated: string;
   download?: { path: string; label: string };
   /** Short reference facts rendered as a table under the direct answer. */
@@ -62,6 +63,7 @@ function applyGuideSeoUpgrade(guide: SecurityGuide): SecurityGuide {
     ...guide,
     ...(up.title ? { title: up.title } : {}),
     ...(up.description ? { description: up.description } : {}),
+    ...(up.updated ? { published: guide.published ?? guide.updated, updated: up.updated } : {}),
     ...(up.quickFacts ? { quickFacts: up.quickFacts } : {}),
     ...(up.readNext ? { readNext: up.readNext } : {}),
     ...(up.extraFaqs?.length ? { faqs: [...guide.faqs, ...up.extraFaqs] } : {}),

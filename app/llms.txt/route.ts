@@ -1,40 +1,31 @@
-import { INDEXABLE_ROUTES } from "@/lib/routes";
-import { posts } from "@/lib/blog";
 import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-// An optional discovery aid, not a search-engine ranking or citation signal.
+// Keep this directory selective. The XML sitemap provides the full URL inventory.
 export function GET() {
   const body = [
     "# BugSnaps",
     "",
-    "> BugSnaps offers MyPentest, a hosted web application and API assessment product, and separately scoped expert penetration-testing engagements.",
+    "> BugSnaps publishes defensive security tools, practical checklists, and evaluation results for suspicious-link review, website releases, and Windows endpoint posture.",
     "",
-    "## Product and scope",
-    `- [MyPentest](${absoluteUrl("/mypentest")}): Hosted defined-check assessments of authorized applications. Findings include evidence, confidence and remediation; reachable endpoints and credentials limit coverage.`,
-    `- [Pricing](${absoluteUrl("/pricing")}): Current plan prices and free-trial limits.`,
-    `- [Example report](${absoluteUrl("/mypentest/example-report")}): An illustrative report, not a customer case study or measured benchmark.`,
+    "## Defensive tools",
+    `- [PhishLens phishing link checker](${absoluteUrl("/phishing-detector")}): Review URL structure and suspicious links locally without opening the destination. Optional external checks add domain context.`,
+    `- [EndpointRadar Windows security posture](${absoluteUrl("/endpointradar")}): Review read-only checks for Windows firewall, antivirus, and update settings.`,
     "",
-    "## Comparisons and evidence",
-    `- [Vulnerability guide collection](${absoluteUrl("/vulnerability-guides")}): React2Shell, Next.js advisories, dependency verification, scan interpretation and incident response. Advisory dates and sources are explicit; specific CVE detection by MyPentest is not established.`,
-    `- [Security and trust](${absoluteUrl("/security")}): Encryption, account isolation and provider assurance. BugSnaps has not completed its own SOC 2 examination and does not claim a CSA STAR listing.`,
-    `- [MyPentest vs Strix](${absoluteUrl("/compare/mypentest-vs-strix")}): Edition-specific comparison with primary vendor sources and limitations of both products.`,
-    `- [Strix alternatives](${absoluteUrl("/alternatives/strix")}): Alternative assessment workflows and migration considerations.`,
-    `- [Benchmarks](${absoluteUrl("/benchmarks")}): Reproducible evaluation protocol; no measured head-to-head detection results are published.`,
-    `- [Competitors](${absoluteUrl("/us-vs-competitors")}): Workflow comparison, not an independent performance ranking.`,
-    `- [AI assistants and automation](${absoluteUrl("/compare/mypentest-vs-ai-assistants")}): MyPentest compared with conversational AI, coding agents and workflow automation; tool integrations and editions affect capabilities.`,
-    `- [Why try BugSnaps](${absoluteUrl("/why-bugsnaps")}): Product fit, free-trial limits and a practical evaluation checklist.`,
-    `- [Security improvements](${absoluteUrl("/improvements")}): Prioritize fixes, capture evidence and manually rerun assessments to check remediation. Scheduled retests are a roadmap item.`,
+    "## Benchmarks and practical guides",
+    `- [Phishing link checker benchmark](${absoluteUrl("/benchmarks/phishing-link-checker")}): Measured PhishLens results and limitations for a local evaluation.`,
+    `- [Phishing link checker comparison](${absoluteUrl("/compare/phishing-link-checkers")}): Compare local URL review, public reputation lookups, and what a submission shares.`,
+    `- [Website security checklist](${absoluteUrl("/website-security-checklist")}): Pre-launch checks for applications, deployment settings, and incident readiness.`,
+    `- [How to read phishing link checker results](${absoluteUrl("/blog/phishing-link-checker-results-explained")}): Interpret local signals, external evidence, and unavailable checks.`,
+    `- [Phishing click incident triage](${absoluteUrl("/guides/phishing-click-incident-triage")}): Identify what happened, preserve relevant evidence, and route the incident to the right people.`,
+    `- [Windows firewall profile review](${absoluteUrl("/guides/windows-firewall-profile-review")}): Review which firewall profiles are enabled and document exceptions.`,
+    `- [Windows update posture review](${absoluteUrl("/guides/windows-update-posture-review")}): Review patch evidence and follow up on missing updates.`,
     "",
-    "## Interpretation",
-    "MyPentest does not provide general exploit chains, source-code analysis or automated fix pull requests. A clean scan does not prove an application is secure. Reports do not certify compliance. Vendor capabilities are edition-specific; consult each page's sources and review date.",
-    "",
-    "## Public page directory",
-    ...INDEXABLE_ROUTES.map(({ path }) => `- [${path === "/" ? "Home" : path.slice(1).replace(/[-/]/g, " ")}](${absoluteUrl(path)})`),
-    "",
-    "## Security articles",
-    ...posts.map((post) => `- [${post.title}](${absoluteUrl(`/blog/${post.slug}`)}): ${post.description}`),
+    "## About BugSnaps",
+    `- [About](${absoluteUrl("/about")}): Publisher, team, and contact information.`,
+    `- [Privacy policy](${absoluteUrl("/privacy")}): How BugSnaps handles information across its website and tools.`,
+    `- [Security and trust](${absoluteUrl("/security")}): Account, infrastructure, and data safeguards.`,
     "",
     `Sitemap: ${absoluteUrl("/sitemap.xml")}`,
     "",

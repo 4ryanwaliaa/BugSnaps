@@ -133,6 +133,16 @@ export default function BenchmarksPage() {
         </div>
       </PageHeader>
 
+      <Section labelledBy="phishlens-benchmark-title" className="!pb-0">
+        <h2 id="phishlens-benchmark-title" className="text-2xl font-semibold">PhishLens offline evaluation</h2>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
+          Review measured local link-checker results on an archived hostname dataset, with methods, limitations and aggregate counts.
+        </p>
+        <Link href="/benchmarks/phishing-link-checker" className="mt-4 inline-flex font-medium text-accent hover:underline">
+          Read the phishing link checker benchmark
+        </Link>
+      </Section>
+
       <Section labelledBy="results-title">
         <div className="rounded-2xl border border-primary/20 bg-primary/[0.04] p-6 sm:p-9">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 px-3 py-1 font-mono text-[11px] uppercase tracking-wide text-accent">
