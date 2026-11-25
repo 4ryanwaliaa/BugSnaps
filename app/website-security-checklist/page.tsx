@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Download } from "lucide-react";
+import Link from "@/components/site/content-link";
 import { PageHeader, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
 import { pageMetadata } from "@/lib/site";
 
@@ -83,6 +84,13 @@ const decisions = [
   },
 ];
 
+const headerObservations = [
+  { url: "http://bugsnaps.in/", status: 308, result: "Redirected to the HTTPS homepage." },
+  { url: "https://bugsnaps.in/", status: 200, result: "Returned the common browser protection headers." },
+  { url: "https://bugsnaps.in/contact", status: 200, result: "Returned the common headers with permission to load the contact page’s map." },
+  { url: "https://bugsnaps.in/website-security-checklist", status: 200, result: "Returned the common browser protection headers." },
+];
+
 export default function WebsiteSecurityChecklistPage() {
   return (
     <SiteShell>
@@ -135,6 +143,45 @@ export default function WebsiteSecurityChecklistPage() {
             OWASP Application Security Verification Standard
           </a>.
         </p>
+      </Section>
+
+      <Section id="http-security-headers-example" labelledBy="header-evidence-title" className="border-t border-white/[0.05]">
+        <SectionTitle
+          id="header-evidence-title"
+          title="How to verify HTTP security headers after deployment"
+          lead={<>On <time dateTime="2026-11-26">November 26, 2026</time>, BugSnaps made one anonymous GET request to each of these public production URLs and recorded the first response.</>}
+        />
+        <dl className="mt-8 divide-y divide-white/10 border-y border-white/10">
+          {headerObservations.map(({ url, status, result }) => (
+            <div key={url} className="grid gap-2 py-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6">
+              <dt className="break-all text-sm font-medium"><code>{url}</code></dt>
+              <dd className="text-sm leading-relaxed text-muted">
+                <span className="mr-2 font-mono font-semibold text-foreground">{status}</span>
+                {result}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-6 max-w-3xl space-y-4 text-sm leading-relaxed text-muted">
+          <p>
+            Each HTTPS response included <code>Strict-Transport-Security</code>, an enforced <code>Content-Security-Policy</code>,{" "}
+            <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code> and <code>Permissions-Policy</code>.
+            The contact page used <code>frame-src</code> to allow its map. All three used <code>frame-ancestors</code> to prevent other pages from embedding them. The two directives control opposite directions of framing.
+          </p>
+          <p>
+            To check your own site, open a private browser window and use the Network panel in developer tools. Reload a public page, choose the main document request and inspect Response headers. Repeat for a page with an expected integration. Record the URL, status, date and whether the expected headers are present. Keep cookie values out of shared records. If the browser already upgrades HTTP, confirm the redirect in your hosting configuration or logs.
+          </p>
+          <p>
+            These observations cover four initial requests. Sign-in, in-browser behavior and other routes require their own checks. For sign-in, use the{" "}
+            <Link href="/guides/secure-cookie-attribute-review" className="text-accent underline underline-offset-4">session cookie checklist</Link>.
+          </p>
+          <p>
+            See MDN’s references for{" "}
+            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-src" className="text-accent underline underline-offset-4"><code>frame-src</code></a>
+            {" and "}
+            <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors" className="text-accent underline underline-offset-4"><code>frame-ancestors</code></a>.
+          </p>
+        </div>
       </Section>
 
       <Section labelledBy="release-decision-title" className="border-t border-white/[0.05] bg-surface/40">

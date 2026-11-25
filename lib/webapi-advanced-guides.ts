@@ -166,11 +166,13 @@ const drafts: Draft[] = [
       { question: "Can one cookie use Secure, HttpOnly and SameSite together?", answer: "Yes. The flags control different browser behaviors and can be set together in one Set-Cookie response header." },
       { question: "Which SameSite setting should I choose?", answer: "Choose the narrowest setting compatible with your sign-in flow. Strict limits the cookie to same-site requests. Lax also allows ordinary top-level link navigation. If your documented flow needs the cookie in other cross-site contexts, None requires Secure and browser settings may still block it." },
       { question: "Why can my browser send a cookie that JavaScript cannot read?", answer: "HttpOnly limits access through JavaScript cookie APIs. The browser still sends the cookie when the request meets the cookie's host, path and other restrictions." },
+      { question: "Why does fetch return null for Set-Cookie when it appears in DevTools?", answer: "Browsers treat Set-Cookie as a forbidden response header, so response.headers.get('Set-Cookie') returns null in browser JavaScript even when the server sent it. This filtering applies to every Set-Cookie header. HttpOnly separately keeps an accepted cookie's value out of document.cookie. In your staging app, use DevTools Network to inspect the sign-in response headers, then check Application → Storage → Cookies to see whether the browser stored it." },
     ],
     source: sessions,
     additionalSources: [
       { title: "MDN Set-Cookie reference", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie" },
       { title: "Chrome DevTools cookie inspection", url: "https://developer.chrome.com/docs/devtools/application/cookies" },
+      { title: "WHATWG Fetch Standard on forbidden response headers", url: "https://fetch.spec.whatwg.org/#forbidden-response-header-name" },
     ],
     related: ["csrf-testing", "session-security-testing", "security-header-testing"],
   },
