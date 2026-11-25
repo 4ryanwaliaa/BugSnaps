@@ -79,9 +79,10 @@ export default function PhishingDetectorPage() {
               <h2 className="font-semibold text-zinc-100">Review suspicious messages with your team</h2>
               <p className="mt-1 text-sm leading-relaxed text-zinc-400">Submit messages, record decisions, and revisit previous reviews.</p>
             </div>
-            <Link href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">
+            {/* The team page needs its own document security policy for Firebase. */}
+            <a href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">
               Open team inbox <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            </a>
           </div>
         </div>
       </div>
