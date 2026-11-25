@@ -21,6 +21,7 @@ export function GET() {
     `- [Phishing click incident triage](${absoluteUrl("/guides/phishing-click-incident-triage")}): Identify what happened, preserve relevant evidence, and route the incident to the right people.`,
     `- [Windows firewall profile review](${absoluteUrl("/guides/windows-firewall-profile-review")}): Review which firewall profiles are enabled and document exceptions.`,
     `- [Windows update posture review](${absoluteUrl("/guides/windows-update-posture-review")}): Review patch evidence and follow up on missing updates.`,
+    `- [Windows Security Protection History](${absoluteUrl("/guides/windows-security-protection-history")}): Find recent Windows Security actions and record useful details for support.`,
     "",
     "## About BugSnaps",
     `- [About](${absoluteUrl("/about")}): Publisher, team, and contact information.`,

@@ -3,7 +3,7 @@ import { Inter, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/site/page-parts";
 import { CookieConsent } from "@/components/site/cookie-consent";
 import { GoogleAnalytics } from "@/components/site/google-analytics";
-import { SpotlightTracker } from "@/components/ui/motion";
+import { SpotlightTracker } from "@/components/site/spotlight-tracker";
 import { SITE_URL, organizationJsonLd } from "@/lib/site";
 import "./globals.css";
 

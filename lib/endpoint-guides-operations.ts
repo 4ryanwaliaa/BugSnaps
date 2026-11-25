@@ -5,6 +5,71 @@ const guide = (draft: Draft): SecurityGuide => ({ ...draft, category: "Endpoint 
 
 /** Operational workflows for managed Windows endpoints. */
 export const ENDPOINT_OPERATIONS_GUIDES: SecurityGuide[] = [
+  {
+    slug: "windows-security-protection-history",
+    title: "How to Check Windows Security Protection History",
+    description: "Find Microsoft Defender Antivirus detections in Windows Security, read Protection History cards, and see what to check if the list is empty.",
+    category: "Endpoint security",
+    published: "2026-11-25",
+    updated: "2026-11-25",
+    answer: "Open Windows Security from Start, choose Virus & threat protection, then select Protection history. Expand the card that matches your notification. Microsoft says the local view keeps events for two weeks and requires administrator access to see threat details.",
+    sections: [
+      {
+        title: "Open Protection History on the affected PC",
+        paragraphs: [
+          "Search for Windows Security in the Start menu and open the app. Choose Virus & threat protection (the shield icon), then open Protection history. Look for the approximate time of your notification. Microsoft documents this feature for Windows 11 and Windows 10. The layout can vary with the app version and the policies on a work or school device.",
+          "Expand the relevant card to read its status, time and any details available to you. The Actions menu offers controls for changing how some items are handled. For a review, leave the current protection state in place. If a card needs administrator access, send the notification to the person who manages the PC.",
+        ],
+        source: 0,
+      },
+      {
+        title: "Read the card before deciding what to do",
+        paragraphs: [
+          "Threat blocked means Defender says it blocked and removed the detected item. Threat quarantined means Defender isolated it. Remediation incomplete means Defender could not finish cleaning it. An action-needed notification or an incomplete result should go promptly to your IT team or antivirus support.",
+          "The same view can also show a block related to a potentially unwanted app or a notice about an important protection feature. For example, Microsoft documents some SmartScreen blocks in Protection History. Record the exact card wording so whoever reviews it can identify which protection acted.",
+        ],
+        source: 1,
+      },
+      {
+        title: "What to check if Protection History is empty",
+        paragraphs: [
+          "Check whether the notification came from this device and whether it is older than two weeks. If your view shows a filter, check which items it is displaying. In Windows Security, open Settings and select Manage providers to identify the antivirus provider. If another app handles antivirus, look for its notification or history in that app.",
+          "For a recent warning you still cannot find, save the notification text and time. On a managed PC, ask IT to review the device's central alerts. On a personal PC, contact the listed antivirus provider's support. An empty local list only tells you which records are visible in that view.",
+        ],
+        source: 2,
+      },
+      {
+        title: "What to give IT or antivirus support",
+        paragraphs: ["Leave the flagged file unopened. Send the context through your usual support channel and ask for a case reference if the alert recurs or the outcome is unclear."],
+        checklist: [
+          "Include the device name, date, approximate time and time zone of the warning.",
+          "Copy the detection name, card status and notification wording. Include the file name and what you were doing when the warning appeared, if known.",
+          "Use a cropped screenshot or text summary. Keep personal file paths, account details and file contents out of shared tickets.",
+        ],
+      },
+    ],
+    limitations: "Protection History is a short local record. Older events age out, threat details require administrator access, and managed devices may have additional records available to IT.",
+    faqs: [
+      {
+        question: "How long does Windows Security keep Protection History?",
+        answer: "Microsoft documents a two-week retention window for the local Protection History list. For older work-device events, ask your IT team whether it has a central record.",
+      },
+      {
+        question: "Why is Protection History empty after a warning?",
+        answer: "Check the device and time in the original notification, any filter on the view, and which antivirus provider Windows lists. If a recent alert still has no visible card, share the notification with IT or antivirus support.",
+      },
+      {
+        question: "Can a SmartScreen block show up in Protection History?",
+        answer: "Yes. Microsoft documents a Protection History event when SmartScreen blocks a potentially unwanted app. Capture the exact warning text to show whether you saw a reputation prompt, a blocked-app card or a Defender Antivirus detection.",
+      },
+    ],
+    sources: [
+      { title: "Microsoft Learn — Open the Windows Security app and review threat detection history", url: "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-security-center-antivirus#review-threat-detection-history-in-the-windows-security-app" },
+      { title: "Microsoft Support — Protection History retention and event cards", url: "https://support.microsoft.com/en-us/windows/security/windows-security/protection-history-in-the-windows-security-app" },
+      { title: "Microsoft Support — Find the registered antivirus provider", url: "https://support.microsoft.com/en-us/windows/security/windows-security/windows-security-app-settings" },
+    ],
+    related: ["windows-smartscreen-warning-review", "windows-antivirus-state-review", "windows-endpoint-evidence-handling"],
+  },
   guide({
     slug: "windows-supported-version-planning",
     title: "Plan for Windows version end of support",
@@ -233,6 +298,7 @@ export const ENDPOINT_OPERATIONS_GUIDES: SecurityGuide[] = [
 ];
 
 const operationScenarios: Record<string, { title: string; text: string }> = {
+  "windows-security-protection-history": { title: "Example of a useful support handoff", text: "A work laptop displays a threat notification at 9:14 a.m. local time. The user finds a card marked Threat quarantined and tells IT the device name, time zone, detection name and that it appeared just after a download. The file stays unopened. IT can use the device and timestamp to find the corresponding central record." },
   "windows-supported-version-planning": { title: "Handle an incompatible application", text: "If a laboratory application cannot run on the supported release, verify the vendor's version and replacement options with its owner. Record the affected device, data and network exposure, temporary protections, migration owner and deadline. Test the replacement using representative files before retiring the old machine; an exception should be reviewed as lifecycle dates or exposure change." },
   "defender-antivirus-exclusion-review": { title: "Example: narrow a legacy exception", text: "A vendor once requested an exclusion for an entire data drive, but the current application writes to one managed folder. Obtain the current vendor guidance, pilot the narrower location with its owner and monitor both the job and Defender alerts. Keep the original policy and a rollback route until the change is verified; do not publish sensitive internal paths." },
   "defender-tamper-protection-review": { title: "Distinguish policy from a failed command", text: "Suppose an approved deployment attempts to change a protected antivirus setting and reports inconsistent results. Preserve its error and the device's effective value, then compare the active security policy and management assignment with the endpoint team. A command's exit status alone is insufficient evidence that the setting changed or that protection should be disabled." },

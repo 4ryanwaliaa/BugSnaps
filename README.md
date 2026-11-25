@@ -4,6 +4,14 @@ The BugSnaps website (bugsnaps.in): the company, its products - **MyPentest**
 (automated penetration testing, hosted here at `/mypentest`) and **MyRecon**
 (reconnaissance, its own site at myrecon.xyz) - and its expert-led services.
 
+## Defensive security resources
+
+- [PhishLens link checker](https://bugsnaps.in/phishing-detector) reviews suspicious URL text locally in the browser.
+- [Phishing link checker benchmark](https://bugsnaps.in/benchmarks/phishing-link-checker) publishes the offline evaluation method and aggregate results.
+- [Website security checklist](https://bugsnaps.in/website-security-checklist) includes a release evidence template for HTTPS, access, backups, and monitoring.
+- [EndpointRadar](https://bugsnaps.in/endpointradar) reviews Windows security settings and evidence.
+- [Windows Security Protection History](https://bugsnaps.in/guides/windows-security-protection-history) explains where to find recent alerts and what details to share with IT.
+
 ## Stack
 
 - **Next.js 15** (App Router) + **TypeScript**, statically rendered except the MyPentest API proxy

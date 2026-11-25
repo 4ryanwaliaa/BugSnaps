@@ -10,19 +10,20 @@ export type GuideSeoUpgrade = {
 export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   // ── Top GSC High-Impression Guides (CTR + Search-Query Alignment + Depth) ──
   "secure-cookie-attribute-review": {
-    title: "Secure, HttpOnly & SameSite Cookie Review",
+    title: "Secure vs HttpOnly vs SameSite for Cookies",
     description:
-      "Review Secure, HttpOnly, SameSite, and __Host- cookie attributes across HTTPS, JavaScript, and cross-site requests with a web pentest checklist.",
+      "Compare Secure, HttpOnly and the SameSite settings. Use a Set-Cookie example and Chrome DevTools to find out why a login cookie is missing.",
+    updated: "2026-11-25",
     quickFacts: [
-      { label: "Secure attribute", value: "Transmits the cookie only over encrypted HTTPS connections; required for all session and auth cookies." },
-      { label: "HttpOnly attribute", value: "Prevents client-side JavaScript from reading the cookie via document.cookie during XSS." },
-      { label: "SameSite=Lax / Strict", value: "Controls whether the browser sends the cookie on cross-site subrequests and top-level navigations." },
-      { label: "__Host- prefix", value: "Enforces Secure, Path=/, and no Domain attribute to block subdomain cookie tossing." },
+      { label: "Secure", value: "Limits cookie transmission to HTTPS on ordinary web hosts. Localhost has a browser exception." },
+      { label: "HttpOnly", value: "Keeps the cookie value out of JavaScript cookie APIs. The browser can still attach the cookie to eligible requests." },
+      { label: "SameSite=Strict", value: "Sends the cookie in same-site contexts. The first visit from another site may arrive without it." },
+      { label: "SameSite=Lax", value: "Also permits certain top-level cross-site navigations, such as following a link with a GET request." },
+      { label: "SameSite=None", value: "Allows cross-site use under SameSite rules and requires Secure. Browser privacy settings can still block the cookie." },
+      { label: "__Host- prefix", value: "In browsers that support it, requires an HTTPS response, Secure, Path=/, and an omitted Domain attribute." },
     ],
     readNext: [
-      { label: "Secure cookie attributes & HTTP security headers guide", href: "/blog/secure-cookie-attributes-and-http-security-headers" },
-      { label: "Scan your website free with MyPentest", href: "/free-ai-pentesting" },
-      { label: "Explore MyPentest 56 automated checks", href: "/mypentest" },
+      { label: "Website security checklist before launch", href: "/website-security-checklist" },
     ],
   },
   "windows-smartscreen-warning-review": {
@@ -38,6 +39,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
     ],
     readNext: [
       { label: "Review an unfamiliar download link", href: "/guides/how-to-assess-a-suspicious-url-safely" },
+      { label: "Find recent actions in Windows Security Protection History", href: "/guides/windows-security-protection-history" },
       { label: "Review Windows endpoint posture with EndpointRadar", href: "/endpointradar" },
     ],
     extraFaqs: [
@@ -78,12 +80,13 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   "windows-network-share-access-event-5140": {
     title: "Windows Event ID 5140: Network Share Access",
     description:
-      "Investigate Windows Security Event ID 5140 (network share accessed): review ShareName, IpAddress, SubjectUserName, and ADMIN$ or C$ connections.",
+      "Event ID 5140 records the first network-share access attempt in a session. Find the source and account, then check Event 5145 for file-level detail.",
+    updated: "2026-11-25",
     quickFacts: [
       { label: "Event ID & Channel", value: "Event ID 5140 in the Windows Security log (Audit File Share subcategory)." },
-      { label: "What it records", value: "The initial SMB tree connection to a shared folder or administrative share (such as \\\\*\\ADMIN$, C$, or IPC$)." },
-      { label: "Key triage fields", value: "SubjectUserName, SubjectLogonId, IpAddress, IpPort, ShareName, ShareLocalPath, and AccessMask." },
-      { label: "Companion event", value: "Pair with Event ID 5145 to see the exact file or RPC named pipe accessed inside the share." },
+      { label: "What it records", value: "The first access attempt to a network share in a session. Start with the server, account, source address and share name." },
+      { label: "What to record", value: "Keep the timestamp with time zone, EventRecordID, ShareName, SubjectLogonId and IP address under your approved evidence policy." },
+      { label: "When 5145 helps", value: "On the same server, look for Event 5145 for the named file or folder and requested access. Use the account, logon ID and time to join the records." },
     ],
     readNext: [
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
@@ -94,11 +97,13 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   "windows-special-privileges-event-4672": {
     title: "Windows Event ID 4672: Special Privileges",
     description:
-      "Interpret Windows Security Event ID 4672 (special privileges assigned to new logon): filter baseline service logons and spot SeDebugPrivilege use.",
+      "Event ID 4672 records special privileges assigned at Windows logon. Match it with Event 4624 to check the account, logon type and source.",
+    updated: "2026-11-25",
     quickFacts: [
       { label: "Event ID & Channel", value: "Event ID 4672 in the Windows Security log (Audit Special Logon subcategory)." },
       { label: "What it records", value: "Assignment of sensitive administrative privileges (such as SeDebugPrivilege, SeBackupPrivilege, SeImpersonatePrivilege) to a new logon session." },
-      { label: "Key triage fields", value: "SubjectUserSid, SubjectUserName, SubjectLogonId, and PrivilegeList correlated with Event ID 4624 LogonType." },
+      { label: "Key triage fields", value: "Keep the device, time, SubjectUserSid, SubjectUserName, SubjectLogonId and PrivilegeList. Match the logon ID on the same device against a nearby Event 4624." },
+      { label: "Start with what you expected", value: "Compare the matched logon type, account and source with the device’s approved service activity or maintenance. The privilege list identifies what the session received." },
     ],
     readNext: [
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
@@ -108,11 +113,13 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   "windows-detailed-share-access-event-5145": {
     title: "Windows Event ID 5145: Detailed Share Access",
     description:
-      "Interpret Windows Security Event ID 5145 (detailed file share check): inspect RelativeTargetName, ShareName, AccessList, and SMB lateral movement.",
+      "Event ID 5145 records a Windows share access check. Read RelativeTargetName and AccessList, distinguish 5145 from 5140, and document the result.",
+    updated: "2026-11-25",
     quickFacts: [
       { label: "Event ID & Channel", value: "Event ID 5145 in the Windows Security log (Audit Detailed File Share subcategory)." },
-      { label: "Difference from 5140", value: "While 5140 logs the initial share connection, 5145 records each individual file, folder, or named pipe checked inside the share." },
-      { label: "Key triage fields", value: "ShareName, RelativeTargetName (exact file or RPC pipe), SubjectUserName, IpAddress, and AccessList." },
+      { label: "What it records", value: "A file or folder access check inside a particular share. Start with ShareName, RelativeTargetName, SubjectUserName, IpAddress and AccessList." },
+      { label: "How to read a failure", value: "Microsoft documents 5145 failure records for share-level denials. Review file-system permissions and other applicable logs separately when investigating an NTFS denial." },
+      { label: "Difference from 5140", value: "Event 5140 identifies the share at the first access attempt of a session. Event 5145 provides the object and access requested within the share." },
     ],
     readNext: [
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
@@ -143,16 +150,18 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
     ],
   },
   "suspicious-qr-code-response": {
-    title: "Suspicious QR Code Triage: Inspect Safely",
+    title: "Suspicious QR Code? What to Do Without Opening It",
     description:
-      "How to inspect an unexpected QR code in an email, parcel, or poster without opening the link: decode the URL text and check it in PhishLens.",
+      "Check an unexpected QR code using the official app or a trusted contact. Learn what to do if you already opened the link, paid, or entered a password.",
+    updated: "2026-11-25",
     quickFacts: [
-      { label: "Why QR codes hide risk", value: "A camera preview often shows only a shortened domain or launches a mobile browser before you can read the full hostname." },
-      { label: "Safe inspection step", value: "Extract the raw URL text without navigating, then paste the address into PhishLens (/phishing-detector)." },
+      { label: "Parking, payment or delivery", value: "Open the operator’s official app or use a number you already trust. For a code on a public sign, tell the venue where you found it." },
+      { label: "Opened the link", value: "Close the page. Note the time and what happened. If it downloaded a file, leave the file unopened and use your device’s approved support process." },
+      { label: "Entered a password or payment details", value: "Use the service’s official app or website to secure the account. For payments or card details, contact your bank or card issuer through its official number." },
     ],
     readNext: [
-      { label: "Inspect decoded QR links free in PhishLens", href: "/phishing-detector" },
-      { label: "Lookalike courier & store domain verification guide", href: "/blog/lookalike-domain-courier-and-ecommerce-phishing-check" },
+      { label: "Review an address you already have with PhishLens", href: "/phishing-detector" },
+      { label: "What to do after opening a phishing link", href: "/guides/phishing-click-incident-triage" },
     ],
   },
   "pentest-network-vantage-points": {

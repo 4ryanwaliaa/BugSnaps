@@ -7,7 +7,6 @@ import {
   useInView,
   useMotionValue,
   useReducedMotion,
-  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -16,39 +15,6 @@ import {
  * Small motion primitives the marketing pages share. Each one degrades to a
  * still, fully readable element under prefers-reduced-motion.
  */
-
-/**
- * One document-level listener that feeds the `.spot` cards their cursor
- * position (--mx / --my). Cheaper than a listener per card, and new cards get
- * the effect by adding the class.
- */
-export function SpotlightTracker() {
-  useEffect(() => {
-    if (window.matchMedia("(hover: none)").matches) return;
-    let frame = 0;
-    let last: PointerEvent | null = null;
-    const apply = () => {
-      frame = 0;
-      const event = last;
-      if (!event) return;
-      const card = (event.target as Element | null)?.closest?.(".spot") as HTMLElement | null;
-      if (!card) return;
-      const box = card.getBoundingClientRect();
-      card.style.setProperty("--mx", `${event.clientX - box.left}px`);
-      card.style.setProperty("--my", `${event.clientY - box.top}px`);
-    };
-    const onMove = (event: PointerEvent) => {
-      last = event;
-      if (!frame) frame = requestAnimationFrame(apply);
-    };
-    document.addEventListener("pointermove", onMove, { passive: true });
-    return () => {
-      document.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-  return null;
-}
 
 /** Pulls its child a little toward the cursor, and springs back. */
 export function Magnetic({ children, strength = 0.28 }: { children: ReactNode; strength?: number }) {
@@ -149,18 +115,5 @@ export function Tilt({ children, className, max = 7 }: { children: ReactNode; cl
         <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[22px]" style={{ background: glare }} />
       </motion.div>
     </div>
-  );
-}
-
-/** The thin beam under the navbar that fills as the page is read. */
-export function ScrollBeam() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.001 });
-  return (
-    <motion.div
-      aria-hidden="true"
-      style={{ scaleX }}
-      className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-gradient-to-r from-primary/0 via-accent to-sky-300 shadow-[0_0_12px_rgb(59_130_246/0.8)]"
-    />
   );
 }

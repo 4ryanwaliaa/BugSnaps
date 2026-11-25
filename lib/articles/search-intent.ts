@@ -6,9 +6,9 @@ export const searchIntentPosts: Post[] = [
     slug: "windows-security-event-ids-1102-4672-5140-5145-guide",
     title: "Windows Event IDs 1102, 4672, 5140 & 5145",
     description:
-      "Investigate Windows Security Event IDs 1102, 4648, 4672, 4719, 4720, 5140, 5145, and 7045 alongside Sysmon telemetry with triage tables.",
+      "Look up Windows Event IDs 1102, 4672, 5140 and 5145. See what each records, which fields to compare, and how to document a finding.",
     published: "2026-11-21",
-    updated: "2026-11-21",
+    updated: "2026-11-25",
     author: "BugSnaps",
     readingMinutes: 5,
     body: [
@@ -58,14 +58,14 @@ export const searchIntentPosts: Post[] = [
           [
             "5140",
             "Security",
-            "A network share object was accessed (first connection per tree connect).",
-            "SubjectUserName, IpAddress, ShareName (e.g., \\\\*\\ADMIN$, \\\\*\\C$, \\\\*\\IPC$), and AccessMask.",
+            "The first network share access attempt in a session.",
+            "SubjectUserName, SubjectLogonId, IpAddress, ShareName, and AccessMask.",
           ],
           [
             "5145",
             "Security",
-            "Detailed file or named-pipe object inside a network share was checked for access.",
-            "ShareName, RelativeTargetName (exact file or pipe),IpAddress, and AccessList.",
+            "A file or folder inside a network share was checked for access.",
+            "ShareName, RelativeTargetName, SubjectLogonId, IpAddress, and AccessList.",
           ],
           [
             "7045",
@@ -77,31 +77,31 @@ export const searchIntentPosts: Post[] = [
       },
       {
         type: "h2",
-        text: "How to correlate log tampering (1102 and 4719) with privilege assignment (4672 and 4648)",
+        text: "How to review a cleared log or an audit policy change",
       },
       {
         type: "p",
-        text: "Event ID 1102 and Event ID 4719 both affect audit visibility. Event 1102 is generated whenever the Security event log is cleared via Event Viewer, wevtutil cl Security, or PowerShell Clear-EventLog. Event 4719 records changes to audit policy subcategories—for example, disabling logon or file-share auditing before lateral movement. Neither event proves malicious compromise on its own if an administrator was performing a documented maintenance window, so always verify the SubjectUserName and LogonId against approved change tickets.",
+        text: "Event 1102 records a cleared Windows Security audit log. Event 4719 records a change to audit policy. Preserve any forwarded copy and look up the host, account and time against approved maintenance. If the log no longer contains earlier events, document the collection gap and ask the incident team to review central records.",
       },
       {
         type: "p",
-        text: "What does explicit credentials meaning cover in Event ID 4648, and why does Event ID 4672 fire so frequently? Event 4648 logs whenever a thread supplies a username and password explicitly rather than using its current token—common during legitimate scheduled tasks, RunAs commands, or RDP connections, but also during credential replay and lateral movement. Event 4672 fires every time a security principal with administrative rights (such as SeTakeOwnershipPrivilege, SeDebugPrivilege, or SeImpersonatePrivilege) establishes a session. Because service accounts and domain admins trigger 4672 routinely, filter out known baseline service logons and focus on 4672 events paired with interactive (Type 2), network (Type 3), or RemoteInteractive (Type 10) logons from unexpected workstations.",
+        text: "Event 4648 records an attempt to use explicit credentials, while 4672 records sensitive privileges assigned to a new logon. Match the logon ID with a nearby 4624 on the same device, then review the account, logon type and source against expected administrative or service activity. Document which facts you confirmed and any gaps in the records.",
       },
       {
         type: "h2",
-        text: "Lateral movement triage: Event ID 5140 vs 5145 and service persistence (4720 and 7045)",
+        text: "Event ID 5140 vs 5145",
       },
       {
         type: "p",
-        text: "When investigating SMB lateral movement or file exfiltration, Event ID 5140 and Event ID 5145 work as a pair. Event 5140 records the initial tree connection to a share such as ADMIN$, C$, or IPC$. However, 5140 does not tell you which file or RPC named pipe was opened inside that share. Enabling Detailed File Share auditing produces Event ID 5145, which adds the RelativeTargetName field—exposing whether a remote host wrote an executable to ADMIN$\\Temp, opened samr or lsarpc pipes, or copied sensitive documents.",
+        text: "On the server hosting the share, compare 5140 and 5145 by account, session, source address and time. The 5140 record identifies the share at first access. In a 5145 record, RelativeTargetName gives the object checked, and AccessList lists requested rights. Use approved file audit records when you need evidence of the actual operation. Microsoft documents that 5145 failures refer to share-level denials, so check file-system permission evidence separately for an NTFS denial.",
       },
       {
-        type: "ul",
-        items: [
-          "Correlate 5140 and 5145 with System Event ID 7045: remote execution tools often connect to ADMIN$ (5140), drop or reference a payload (5145), and register a temporary Windows service (7045) to execute it as SYSTEM.",
-          "Inspect the ImagePath in Event ID 7045 for cmd.exe /c, powershell.exe -enc, rundll32, or binaries running out of user-writable directories such as C:\\ProgramData or C:\\Users\\Public.",
-          "Pair Event ID 4720 (account created) with Event ID 4732 (member added to a local security-enabled group such as Administrators or Remote Desktop Users) within the same LogonId session.",
-        ],
+        type: "h2",
+        text: "Example evidence note for Event ID 1102",
+      },
+      {
+        type: "p",
+        text: "Fictional example: At 14:22 UTC, workstation LAB-07 recorded Security Event 1102, record 8512, for the lab maintenance account. The forwarded copy links to a matching 4624 on LAB-07. Change ticket LAB-21 covers that account and time. The reviewer confirms the maintenance window with its owner and stores the original record in the restricted case folder. If the ticket or forwarding history is missing, leave the reason open and escalate for review.",
       },
       {
         type: "h2",

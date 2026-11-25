@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { lazy, Suspense, useState, type FormEvent, type KeyboardEvent } from "react";
 import {
   AlertCircle, ArrowRight, ArrowUpRight, ChevronRight,
   Clipboard, Globe2, Info, Layers3, Link2, LockKeyhole,
@@ -9,11 +9,12 @@ import {
 import type { AnalysisResult } from "@/lib/phishing-detector";
 import { inspectInput, domainBoundary, evidenceDecision, type Evidence } from "@/lib/phishlens-review";
 import { analyzePhishingMessage } from "@/lib/phishlens-message";
-import { InvestigationCheck } from "./investigation-check";
-import { ReportActions } from "./report-actions";
-import { BatchReview } from "./batch-review";
-import { DnsCheck } from "./dns-check";
-import { ThreatCheck } from "./threat-check";
+
+const BatchReview = lazy(() => import("./batch-review").then(({ BatchReview }) => ({ default: BatchReview })));
+const DnsCheck = lazy(() => import("./dns-check").then(({ DnsCheck }) => ({ default: DnsCheck })));
+const InvestigationCheck = lazy(() => import("./investigation-check").then(({ InvestigationCheck }) => ({ default: InvestigationCheck })));
+const ReportActions = lazy(() => import("./report-actions").then(({ ReportActions }) => ({ default: ReportActions })));
+const ThreatCheck = lazy(() => import("./threat-check").then(({ ThreatCheck }) => ({ default: ThreatCheck })));
 
 const examples = [
   { label: "Deceptive address", value: "https://trusted.example@account-check.example/login" },
@@ -73,10 +74,12 @@ function Summary({ result }: { result: Extract<AnalysisResult, { ok: true }> }) 
       </div>
 
       <div className="flex flex-wrap items-end justify-between gap-3 pt-5"><div><p className="font-mono text-[10px] uppercase tracking-[.18em] text-cyan-300">Investigation / 02</p><h3 className="mt-2 text-xl font-semibold tracking-tight text-white">Add external context</h3><p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400">Choose the checks you want to run. Each one explains what it shares before you start.</p></div><span className="inline-flex items-center gap-1.5 rounded-full border border-violet-300/20 bg-violet-300/[.07] px-3 py-1.5 text-xs text-violet-200"><LockKeyhole className="h-3.5 w-3.5" /> Always optional</span></div>
-      <ThreatCheck key={result.hostname} hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, threat: value ? { result: value, observedAt: new Date().toISOString() } : undefined }))} />
-      <InvestigationCheck key={result.hostname} hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, investigation: value }))} />
-      <DnsCheck key={result.hostname} hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, dns: value ? { result: value, observedAt: new Date().toISOString() } : undefined }))} />
-      <ReportActions result={result} evidence={evidence} reviewedAt={reviewedAt} />
+      <Suspense fallback={<p role="status" className="text-sm text-zinc-300">Loading optional checks and report tools…</p>}>
+        <ThreatCheck hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, threat: value ? { result: value, observedAt: new Date().toISOString() } : undefined }))} />
+        <InvestigationCheck hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, investigation: value }))} />
+        <DnsCheck hostname={result.hostname} onResult={value => setEvidence(previous => ({ ...previous, dns: value ? { result: value, observedAt: new Date().toISOString() } : undefined }))} />
+        <ReportActions result={result} evidence={evidence} reviewedAt={reviewedAt} />
+      </Suspense>
       <div className="rounded-xl border border-white/[.07] bg-white/[.02] p-5"><p className="text-sm font-medium text-zinc-200">Before you interact</p><ul className="mt-3 grid gap-2 text-xs leading-relaxed text-zinc-400 sm:grid-cols-3"><li className="flex gap-2"><ChevronRight className="h-4 w-4 shrink-0 text-cyan-400" /> Compare the hostname with an address you already trust.</li><li className="flex gap-2"><ChevronRight className="h-4 w-4 shrink-0 text-cyan-400" /> Verify unexpected requests through a separate, known channel.</li><li className="flex gap-2"><ChevronRight className="h-4 w-4 shrink-0 text-cyan-400" /> Avoid entering credentials until you verify the destination.</li></ul></div>
     </div>
   );
@@ -87,25 +90,37 @@ export function PhishLensWorkspace() {
   const [displayedLink, setDisplayedLink] = useState("");
   const [messageText, setMessageText] = useState("");
   const [mode, setMode] = useState<"single" | "batch">("single");
+  const [batchOpened, setBatchOpened] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
   function inspect(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setResult(analyzePhishingMessage({ url: input, displayedLink, messageText })); }
   function reset() { setInput(""); setDisplayedLink(""); setMessageText(""); setResult(null); }
+  function selectMode(next: typeof mode) {
+    if (next === "batch") setBatchOpened(true);
+    setMode(next);
+  }
   function moveTab(event: KeyboardEvent<HTMLButtonElement>) {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
     const next = event.key === "Home" ? "single" : event.key === "End" ? "batch" : mode === "single" ? "batch" : "single";
-    setMode(next); document.getElementById(`tab-${next}`)?.focus();
+    selectMode(next);
+    document.getElementById(`tab-${next}`)?.focus();
   }
   const success = result?.ok ? result : null;
 
   return (
     <div id="checker" className="scroll-mt-24 overflow-hidden rounded-[1.5rem] border border-white/[.12] bg-[#101820] shadow-[0_32px_90px_-35px_rgba(0,0,0,.9)] sm:rounded-[1.75rem]">
       <div aria-hidden="true" className="h-1 bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-400" />
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[.08] bg-white/[.018] px-5 py-4 sm:px-7"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/[.08] text-cyan-300"><ScanSearch className="h-5 w-5" /></span><div><p className="text-sm font-semibold tracking-tight text-white">PhishLens workspace</p><p className="mt-0.5 text-xs text-zinc-500">A closer look at suspicious links</p></div></div><span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[.07] px-3 py-1.5 text-[11px] font-medium text-emerald-300"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Local review first</span></div>
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[.08] bg-white/[.018] px-5 py-4 sm:px-7"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/[.08] text-cyan-300"><ScanSearch className="h-5 w-5" /></span><div><p className="text-sm font-semibold tracking-tight text-white">PhishLens workspace</p><p className="mt-0.5 text-xs text-zinc-400">A closer look at suspicious links</p></div></div><span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[.07] px-3 py-1.5 text-[11px] font-medium text-emerald-300"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Local review first</span></div>
       <div className="p-4 sm:p-7">
-        <div role="tablist" aria-label="Investigation mode" className="grid grid-cols-2 gap-1 rounded-xl border border-white/[.07] bg-[#090f14] p-1 sm:max-w-md">{(["single", "batch"] as const).map(tab => <button key={tab} id={`tab-${tab}`} type="button" role="tab" aria-selected={mode === tab} tabIndex={mode === tab ? 0 : -1} onKeyDown={moveTab} aria-controls={`panel-${tab}`} onClick={() => setMode(tab)} className={`flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-xs font-medium transition-colors sm:text-sm ${mode === tab ? "bg-emerald-400/15 text-emerald-200 shadow-sm ring-1 ring-emerald-400/20" : "text-zinc-400 hover:bg-white/[.04] hover:text-zinc-200"}`}>{tab === "single" ? <><Link2 className="h-4 w-4" /> Single link</> : <><Layers3 className="h-4 w-4" /> Batch review <span className="hidden text-[10px] text-zinc-400 sm:inline">100</span></>}</button>)}</div>
-        <div id="panel-batch" role="tabpanel" aria-labelledby="tab-batch" hidden={mode !== "batch"} className="mt-6"><BatchReview onInspect={value => { setInput(value.normalizedUrl); setDisplayedLink(""); setMessageText(""); setResult(value); setMode("single"); }} /></div>
+        <div role="tablist" aria-label="Investigation mode" className="grid grid-cols-2 gap-1 rounded-xl border border-white/[.07] bg-[#090f14] p-1 sm:max-w-md">{(["single", "batch"] as const).map(tab => <button key={tab} id={`tab-${tab}`} type="button" role="tab" aria-selected={mode === tab} tabIndex={mode === tab ? 0 : -1} onKeyDown={moveTab} aria-controls={`panel-${tab}`} onClick={() => selectMode(tab)} className={`flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-xs font-medium transition-colors sm:text-sm ${mode === tab ? "bg-emerald-400/15 text-emerald-200 shadow-sm ring-1 ring-emerald-400/20" : "text-zinc-400 hover:bg-white/[.04] hover:text-zinc-200"}`}>{tab === "single" ? <><Link2 className="h-4 w-4" /> Single link</> : <><Layers3 className="h-4 w-4" /> Batch review <span className="hidden text-[10px] text-zinc-400 sm:inline">100</span></>}</button>)}</div>
+        <div id="panel-batch" role="tabpanel" aria-labelledby="tab-batch" hidden={mode !== "batch"} className="mt-6">
+          {batchOpened && (
+            <Suspense fallback={<p role="status" className="text-sm text-zinc-300">Loading batch review…</p>}>
+              <BatchReview onInspect={value => { setInput(value.normalizedUrl); setDisplayedLink(""); setMessageText(""); setResult(value); setMode("single"); }} />
+            </Suspense>
+          )}
+        </div>
         <div id="panel-single" role="tabpanel" aria-labelledby="tab-single" hidden={mode !== "single"}>
           <div className={`mt-6 grid gap-4 ${result ? "" : "lg:grid-cols-[minmax(0,1.2fr)_minmax(270px,.8fr)]"}`}>
             <form onSubmit={inspect} className="rounded-2xl border border-emerald-400/15 bg-gradient-to-br from-emerald-400/[.045] to-[#0a1116] p-5 sm:p-6">
@@ -124,7 +139,7 @@ export function PhishLensWorkspace() {
           <div aria-live="polite" className="sr-only">{success ? "Local link review complete. Review the evidence below." : ""}</div>
           <div className="mt-7">{result && !result.ok && <div role="alert" className="flex gap-3 rounded-xl border border-rose-400/20 bg-rose-400/[.07] p-4 text-sm text-rose-200"><AlertCircle className="h-5 w-5 shrink-0" />{result.error}</div>}{success && <Summary key={success.normalizedUrl} result={success} />}</div>
         </div>
-        <p className="mt-6 flex gap-2 border-t border-white/[.07] pt-5 text-xs leading-relaxed text-zinc-500"><Info className="mt-0.5 h-4 w-4 shrink-0" /> Results are signals to investigate, not proof that a link is safe or malicious. The destination is never visited.</p>
+        <p className="mt-6 flex gap-2 border-t border-white/[.07] pt-5 text-xs leading-relaxed text-zinc-400"><Info className="mt-0.5 h-4 w-4 shrink-0" /> Results are signals to investigate, not proof that a link is safe or malicious. The destination is never visited.</p>
       </div>
     </div>
   );

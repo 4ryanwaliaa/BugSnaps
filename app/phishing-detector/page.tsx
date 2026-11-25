@@ -4,7 +4,7 @@ import { ProductReading } from "@/components/site/product-reading";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "@/components/site/content-link";
-import { ArrowUpRight, Binary, Eye, FileSearch, LockKeyhole, ScanSearch, ShieldAlert, Sparkles, Waypoints } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Binary, Eye, LockKeyhole, ScanSearch, ShieldAlert, Sparkles, Waypoints } from "lucide-react";
 import { Breadcrumbs, JsonLd, Section, SiteShell } from "@/components/site/page-parts";
 import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
 
@@ -47,20 +47,42 @@ export default function PhishingDetectorPage() {
         <div aria-hidden="true" className="dot-grid pointer-events-none absolute inset-0 opacity-60" />
         <div aria-hidden="true" className="pointer-events-none absolute -top-32 right-[-10%] h-[520px] w-[620px] rounded-full bg-emerald-500/[.11] blur-[140px]" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-[-10%] h-[340px] w-[450px] rounded-full bg-indigo-500/[.08] blur-[120px]" />
-        <div className="relative mx-auto max-w-7xl px-5 pt-24 pb-12 sm:px-8 sm:pt-28 sm:pb-16 lg:px-10">
+        <div className="relative mx-auto max-w-7xl px-5 pt-20 pb-12 sm:px-8 sm:pt-28 sm:pb-16 lg:px-10">
           <Breadcrumbs items={[{ name: "Products", path: "/products" }, { name: "PhishLens", path: "/phishing-detector" }]} />
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 sm:mt-10">
-            <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[.07] px-3 py-2 font-mono text-[10px] uppercase tracking-[.18em] text-emerald-300"><Eye className="h-4 w-4" aria-hidden="true" /> PhishLens · by BugSnaps</p>
-            <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-xs text-zinc-300">Free to use <span className="mx-1.5 text-zinc-600">·</span> No account required</span>
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 sm:mt-10">
+            <p className="inline-flex items-center gap-2 font-mono text-xs text-emerald-300">
+              <Eye className="h-4 w-4" aria-hidden="true" /> PhishLens by BugSnaps
+            </p>
+            <p className="text-sm text-zinc-300">No account required</p>
           </div>
-          <div className="grid gap-6 pb-8 pt-7 sm:pb-10 sm:pt-8 lg:grid-cols-[1fr_21rem] lg:items-end lg:gap-12">
-            <div><h1 className="max-w-3xl text-[2.4rem] font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">Free phishing link checker — <span className="text-emerald-300">before you click.</span></h1>
-              <SketchUnderline className="mt-3 h-8 w-48" /><p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400 sm:text-lg">Check a suspicious URL without opening it. Inspect the link locally, choose optional domain and DNS checks, and review the evidence before your next step.</p></div>
-            <div className="flex gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-400/[.05] p-4 text-sm leading-relaxed text-zinc-400"><LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" /><p>Your initial review stays in your browser. External checks run only when you choose them.</p></div>
+          <div className="mt-5 mb-6 sm:mt-7 sm:mb-9">
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[1.06] tracking-[-.04em] text-zinc-50 sm:text-5xl lg:text-[3.65rem]">
+              Free phishing link checker
+            </h1>
+            <SketchUnderline className="mt-3 hidden h-8 w-48 sm:block" />
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">
+              Copy the suspicious link address and paste it below. PhishLens checks the address in your browser without opening the destination.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 sm:mt-6">
+              <a href="#checker" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-300 px-4 text-sm font-semibold text-[#071b17] transition-colors hover:bg-emerald-200">
+                Check a link <ArrowDown className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <p className="flex items-start gap-2 text-sm leading-relaxed text-zinc-300">
+                <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
+                External checks run only when you choose them.
+              </p>
+            </div>
           </div>
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/[.04] p-5"><div><p className="font-semibold text-zinc-100">Review suspicious messages with your team</p><p className="mt-1 text-sm leading-relaxed text-zinc-400">Submit messages, record decisions, and revisit previous reviews.</p></div><a href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">Open team inbox <ArrowUpRight className="h-4 w-4" /></a></div>
           <PhishLensWorkspace />
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-1 text-xs text-zinc-400"><p className="inline-flex items-center gap-2"><LockKeyhole className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" /> Local review first. Optional checks explain what they share.</p><p className="inline-flex items-center gap-2"><FileSearch className="h-3.5 w-3.5 text-sky-400" aria-hidden="true" /> Evidence to guide your next step</p></div>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/[.04] p-5">
+            <div>
+              <h2 className="font-semibold text-zinc-100">Review suspicious messages with your team</h2>
+              <p className="mt-1 text-sm leading-relaxed text-zinc-400">Submit messages, record decisions, and revisit previous reviews.</p>
+            </div>
+            <Link href="/phishing-detector/team" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cyan-300/30 px-4 text-sm font-semibold text-cyan-200 hover:bg-cyan-300/10">
+              Open team inbox <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </div>
       <Section labelledBy="how-title">

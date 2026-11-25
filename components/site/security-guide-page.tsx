@@ -10,7 +10,9 @@ export function SecurityGuidePage({ guide }: { guide: SecurityGuide }) {
   const isEndpoint = guide.category === "Endpoint security";
   const isPhishing = guide.category === "Phishing and fraud";
   const isRecon = guide.category === "Digital footprint";
-  const cta = isEndpoint
+  const cta = guide.slug === "secure-cookie-attribute-review"
+    ? { title: "Review the rest of your release.", body: "Use the pre-launch checklist to verify HTTPS, browser security headers, backups, and incident ownership alongside your session settings.", href: "/website-security-checklist", label: "Open the website security checklist" }
+    : isEndpoint
     ? { title: "Review your Windows endpoint.", body: "EndpointRadar provides a point-in-time view of an authorized Windows machine. Review the report alongside its collection limits and your organization's policy.", href: "/endpointradar", label: "Explore EndpointRadar" }
     : isPhishing
       ? { title: "Examine an unfamiliar link.", body: "PhishLens inspects URL structure locally in your browser. Verify the sender independently; a URL check cannot establish that a link is safe.", href: "/phishing-detector", label: "Explore PhishLens" }

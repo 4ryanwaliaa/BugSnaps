@@ -3,7 +3,8 @@ import type { SecurityGuide, SecurityGuideCategory } from "@/lib/security-guides
 type Draft = {
   slug: string; title: string; description: string; category: SecurityGuideCategory;
   answer: string; sections: SecurityGuide["sections"]; limitations: string;
-  faqs: SecurityGuide["faqs"]; source: { title: string; url: string }; related: string[];
+  faqs: SecurityGuide["faqs"]; source: SecurityGuide["sources"][number]; related: string[];
+  additionalSources?: SecurityGuide["sources"];
 };
 
 const rest = { title: "OWASP REST Security Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html" };
@@ -122,15 +123,56 @@ const drafts: Draft[] = [
   },
   {
     slug: "secure-cookie-attribute-review", title: "Review Secure, HttpOnly and SameSite cookie attributes", description: "Inspect session cookie attributes, their scope and real application behavior across HTTPS, scripts and cross-site requests.", category: "Web security",
-    answer: "Cookie attributes constrain how a browser sends or exposes a cookie. Review Secure, HttpOnly, SameSite, Domain and Path together with the application's actual authentication and cross-site workflows.",
+    answer: "Secure normally restricts a cookie to HTTPS requests. HttpOnly prevents JavaScript cookie APIs from reading its value. SameSite controls whether the browser sends the cookie in cross-site contexts. A session cookie can use all three together.",
     sections: [
-      { title: "Inventory the relevant cookies", paragraphs: ["Using a test account, identify which cookies establish the session and record their names, attributes and issuing host without capturing their values. Note cookies used before login, after login and after a privilege change."], source: 0 },
-      { title: "Review transport and script access", paragraphs: ["Secure instructs browsers to send the cookie over HTTPS; HttpOnly prevents ordinary client-side JavaScript from reading it. Verify each attribute is present where appropriate and check that the entire sensitive journey uses HTTPS, including login and redirects."], checklist: ["Inspect Set-Cookie on the actual response, not only a proxy configuration.", "Record the hostname and Domain and Path scope.", "Avoid exporting active cookies in screenshots."] },
-      { title: "Test cross-site behavior", paragraphs: ["SameSite affects when browsers include cookies in cross-site contexts and can change legitimate federated sign-in or embedded workflows. Agree the intended behavior and test supported browsers. SameSite is defense in depth and does not replace a suitable CSRF defense for state changes."] },
-      { title: "Confirm the application still works", paragraphs: ["After an attribute change, test login, logout, account settings and any documented cross-site integration. A narrower domain can reduce unnecessary exposure, but sibling-host dependencies need an owner-approved migration and functional validation."] },
+      {
+        title: "Find the session cookie in Chrome DevTools",
+        paragraphs: [
+          "Open your staging site with a test account. In Chrome DevTools, open Network, turn on Preserve log if sign-in redirects, then sign in normally. Select the login response or callback and find Set-Cookie under Response Headers. This shows what the server asked the browser to store.",
+          "Open Application → Storage → Cookies and select your site. Read the Secure, HttpOnly, SameSite, Domain and Path columns for the expected cookie. The Network panel's Cookies tab can show why a browser blocked a cookie. Save the browser version, hostname and attribute names in the ticket and redact cookie values.",
+        ],
+        source: 2,
+      },
+      {
+        title: "Read a host-only Set-Cookie example",
+        paragraphs: [
+          "An HTTPS app that serves its session from one host might send the following response header. REDACTED stands in for the session value.",
+          "Set-Cookie: __Host-session=REDACTED; Path=/; Secure; HttpOnly; SameSite=Lax",
+          "In a browser that supports the __Host- prefix, the cookie belongs to the issuing host and applies across its paths. Leaving Domain out keeps it off other hosts, including subdomains. Verify that this scope matches the app before narrowing a cookie currently shared with another host.",
+        ],
+        source: 1,
+      },
+      {
+        title: "Troubleshoot a missing cookie after sign-in",
+        paragraphs: ["Use the header, cookie storage and the next normal request to see where the session stopped. If sign-in involves two sites, note the page where the browser starts and the top-level destination. A browser setting can also affect cross-site cookies."],
+        checklist: [
+          "No Set-Cookie on the response. Check which redirect or callback issues it. Compare the response served in staging with the application and proxy configuration.",
+          "Set-Cookie is present and the cookie is missing in storage. Check the browser's warning, the HTTPS scheme, and whether Domain and Path meet the cookie prefix requirements. SameSite=None requires Secure.",
+          "The cookie appears in storage and is missing from the next request. Compare the request host and path with the cookie scope. Check SameSite, expiration and browser privacy settings before changing the flags.",
+        ],
+        source: 1,
+      },
+      {
+        title: "Retest the flows your app supports",
+        paragraphs: [
+          "Confirm normal sign-in, account navigation and logout. If an invitation link from another site is expected to preserve an existing session, try your usual test invitation in each supported browser. Also verify any supported federated sign-in or embedded flow using the test account and its normal entry point.",
+          "Review server-side session expiration and the app's CSRF defenses separately. Keep the narrowest cookie scope that supports the documented flows.",
+        ],
+        source: 0,
+      },
     ],
-    limitations: "Browser behavior, cookie prefixes and cross-site requirements vary. Attribute review does not prove immunity to XSS, session theft or CSRF, and cookies may not be the only credentials in use.",
-    faqs: [{ question: "Does HttpOnly prevent all XSS impact?", answer: "No. It can prevent scripts reading the cookie, but injected scripts may still act through the user's browser and access page data." }, { question: "Does SameSite replace a CSRF token?", answer: "Do not assume so. Its behavior depends on browser and request context; assess the application's complete CSRF defenses." }], source: sessions, related: ["csrf-testing", "session-security-testing", "security-header-testing"],
+    limitations: "A trace shows what happened for one browser, account and sign-in flow. Check other supported browsers and environments. Server-side session expiration and the handling of other credentials require separate checks.",
+    faqs: [
+      { question: "Can one cookie use Secure, HttpOnly and SameSite together?", answer: "Yes. The flags control different browser behaviors and can be set together in one Set-Cookie response header." },
+      { question: "Which SameSite setting should I choose?", answer: "Choose the narrowest setting compatible with your sign-in flow. Strict limits the cookie to same-site requests. Lax also allows ordinary top-level link navigation. If your documented flow needs the cookie in other cross-site contexts, None requires Secure and browser settings may still block it." },
+      { question: "Why can my browser send a cookie that JavaScript cannot read?", answer: "HttpOnly limits access through JavaScript cookie APIs. The browser still sends the cookie when the request meets the cookie's host, path and other restrictions." },
+    ],
+    source: sessions,
+    additionalSources: [
+      { title: "MDN Set-Cookie reference", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie" },
+      { title: "Chrome DevTools cookie inspection", url: "https://developer.chrome.com/docs/devtools/application/cookies" },
+    ],
+    related: ["csrf-testing", "session-security-testing", "security-header-testing"],
   },
   {
     slug: "logout-session-invalidation-testing", title: "Logout testing: verify server-side session invalidation", description: "Test whether an old session remains usable after logout and document what happens across devices, tabs and access-token lifetimes.", category: "Identity and access",
@@ -206,8 +248,8 @@ const drafts: Draft[] = [
   },
 ];
 
-export const WEBAPI_ADVANCED_GUIDES: SecurityGuide[] = drafts.map(({ source, ...guide }) => ({
+export const WEBAPI_ADVANCED_GUIDES: SecurityGuide[] = drafts.map(({ source, additionalSources = [], ...guide }) => ({
   ...guide,
   updated: "2026-10-28",
-  sources: [source],
+  sources: [source, ...additionalSources],
 }));

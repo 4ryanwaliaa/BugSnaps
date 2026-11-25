@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "@/components/site/content-link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
-import { ScrollBeam } from "@/components/ui/motion";
 import { newAssessmentUrl } from "@/lib/mypentest";
 import { cn } from "@/lib/utils";
 
@@ -25,12 +24,37 @@ export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const scrollBeam = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const beam = scrollBeam.current;
+    const root = document.documentElement;
+    let frame = 0;
+
+    function updateScroll() {
+      frame = 0;
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 12);
+      const scrollRange = root.scrollHeight - root.clientHeight;
+      const progress = scrollRange > 0 ? Math.min(1, Math.max(0, scrollY / scrollRange)) : 0;
+      if (beam) beam.style.transform = `scaleX(${progress})`;
+    }
+
+    function scheduleUpdate() {
+      if (!frame) frame = requestAnimationFrame(updateScroll);
+    }
+
+    updateScroll();
+    const pageSize = new ResizeObserver(scheduleUpdate);
+    pageSize.observe(document.body);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      pageSize.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Close the mobile menu on navigation and on Escape.
@@ -112,7 +136,12 @@ export function Navbar() {
           {open ? <X className="h-[22px] w-[22px]" /> : <Menu className="h-[22px] w-[22px]" />}
         </button>
       </nav>
-      <ScrollBeam />
+      <div
+        ref={scrollBeam}
+        aria-hidden="true"
+        style={{ transform: "scaleX(0)" }}
+        className="pointer-events-none absolute inset-x-0 bottom-[-1px] h-px origin-left bg-gradient-to-r from-primary/0 via-accent to-sky-300 shadow-[0_0_12px_rgb(59_130_246/0.8)]"
+      />
 
       <div
         id="mobile-menu"
