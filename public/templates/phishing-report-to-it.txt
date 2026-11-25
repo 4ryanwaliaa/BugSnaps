@@ -1,0 +1,22 @@
+Suspected phishing email report
+
+Send this note to your approved IT or security reporting channel.
+Keep full links, message headers, attachments, passwords and one-time codes out of the note.
+
+Message received
+[Date, time and time zone]
+
+Claimed sender or organization
+[Display name or claimed organization]
+
+Requested action
+[Describe the request in a sentence]
+
+What happened
+[Received only, clicked a link, entered information, downloaded a file, or opened a file. List all that apply. If you entered information, name its type and leave out the actual values.]
+
+Steps already taken
+[Report button used, IT contacted, or other action taken. Include the time if known.]
+
+Original message or case reference
+[Where authorized responders can find the original, or the existing incident reference if known]

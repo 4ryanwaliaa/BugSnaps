@@ -19,6 +19,7 @@ export function GET() {
     `- [Website security checklist](${absoluteUrl("/website-security-checklist")}): Pre-launch checks for applications, deployment settings, and incident readiness.`,
     `- [How to read phishing link checker results](${absoluteUrl("/blog/phishing-link-checker-results-explained")}): Interpret local signals, external evidence, and unavailable checks.`,
     `- [Phishing click incident triage](${absoluteUrl("/guides/phishing-click-incident-triage")}): Identify what happened, preserve relevant evidence, and route the incident to the right people.`,
+    `- [Report a phishing email](${absoluteUrl("/guides/phishing-email-evidence-preservation")}): Find the reporting controls in Gmail and Outlook.com and download a short note for your IT team.`,
     `- [Windows firewall profile review](${absoluteUrl("/guides/windows-firewall-profile-review")}): Review which firewall profiles are enabled and document exceptions.`,
     `- [Windows update posture review](${absoluteUrl("/guides/windows-update-posture-review")}): Review patch evidence and follow up on missing updates.`,
     `- [Windows Security Protection History](${absoluteUrl("/guides/windows-security-protection-history")}): Find recent Windows Security actions and record useful details for support.`,

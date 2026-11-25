@@ -40,18 +40,46 @@ export const RECON_PHISHING_GUIDES: SecurityGuide[] = [
   },
   {
     slug: "phishing-email-evidence-preservation",
-    title: "Preserve a suspected phishing email for investigation",
-    description: "Record the original message, relevant context and handling decisions without exposing credentials or spreading a suspicious link.",
-    category: "Testing workflow", updated: "2026-10-28",
-    answer: "Use your organization's reporting function to preserve a suspected phishing message and its context. Keep original message data available to authorized investigators, restrict access and avoid opening links or attachments during collection.",
+    title: "How to Report Phishing in Gmail or Outlook",
+    description: "Find the Report phishing option in Gmail and Outlook.com, check where managed reports go, and use a redacted note to tell your IT team what happened.",
+    category: "Testing workflow",
+    published: "2026-10-28",
+    updated: "2026-11-26",
+    answer: "For a work or school mailbox, start with your organization’s approved phishing-reporting process. On Gmail in a desktop browser, use More next to Reply and choose Report phishing. On Outlook.com, select the message and choose Report, then Report phishing. Leave links and attachments untouched.",
+    download: {
+      path: "/templates/phishing-report-to-it.txt",
+      label: "Download the phishing report note for IT (TXT)",
+    },
     sections: [
+      {
+        title: "Report phishing in Gmail on the web",
+        paragraphs: ["On your computer, open Gmail through your usual sign-in. Open the message itself and leave its links, buttons and attachments untouched. Choose the More menu beside Reply and select Report phishing."],
+        source: 2,
+      },
+      {
+        title: "Report phishing in Outlook.com",
+        paragraphs: ["Select the message in the Outlook.com message list. Above the reading pane, choose Report, then Report phishing. If you need to block the sender as well, use Outlook.com’s separate sender-blocking control."],
+        source: 3,
+      },
+      {
+        title: "Use the approved channel for a managed mailbox",
+        paragraphs: ["In managed Microsoft 365 mailboxes, administrators can route reports to a reporting mailbox, Microsoft, or both. If your reporting button is missing or you need to tell your team about an interaction, use your organization’s known IT contact or support portal. Follow the organization’s instructions for preserving the original message.", "Use the downloadable note to describe what happened. Leave full links, email headers, attachments, passwords and one-time codes out of the note. If authorized responders need the original message, let them tell you how to provide it through their restricted process."],
+        source: 4,
+      },
       { title: "Capture the context", paragraphs: ["Record the recipient, time, business context, claimed sender and requested action. Note whether anyone clicked, entered information, downloaded a file or merely received the message. These distinctions help responders choose containment steps.", "If an organization has a reporting button or mailbox, follow that process rather than forwarding an active link into an ordinary chat."], source: 0 },
       { title: "Preserve the original when permitted", paragraphs: ["Screenshots help explain what a user saw but can omit full headers and message structure. Authorized responders may request the original message or a supported export from the mail system. Use the documented collection method and record who collected it and when."], checklist: ["Do not open an attachment to determine its contents.", "Retain a copy in the approved restricted incident location.", "Record any handling or transformation of the evidence."] },
       { title: "Share a minimized working summary", paragraphs: ["An email may contain names, addresses, internal references and credential-reset links. Give the wider team a redacted summary with the incident identifier, suspected tactic and recommended action. Keep sensitive originals available only to the people who need them."], source: 1 },
       { title: "Connect evidence to action", paragraphs: ["The response owner can compare similar reports, identify affected recipients and check mail-system logs within authorized scope. A screenshot or one suspicious domain does not prove a mailbox was compromised. Record uncertainty and what additional evidence would change the conclusion."] },
     ], limitations: "Message headers and content can be forged or incomplete. Evidence handling depends on organizational policy, applicable law and the mail system; a preserved email does not prove a particular sender or compromise.",
     faqs: [{ question: "Is a screenshot enough for every investigation?", answer: "It can show the user-visible message, but may omit headers and message structure. Ask the incident team what original evidence it needs." }, { question: "Should I send the link to coworkers as a warning?", answer: "Use an approved reporting process and a sanitized description, so the warning does not spread a clickable suspicious link." }],
-    sources: [CISA_PHISHING, NIST_IR], related: ["how-to-assess-a-suspicious-url-safely", "security-testing-report"]
+    sources: [
+      CISA_PHISHING,
+      NIST_IR,
+      { title: "Google Gmail Help: Avoid and report phishing emails", url: "https://support.google.com/mail/answer/8253?hl=en" },
+      { title: "Microsoft Support: Report a message as phishing in Outlook.com", url: "https://support.microsoft.com/en-us/outlook/mail/phishing-and-suspicious-behavior-in-outlook" },
+      { title: "Microsoft Learn: How managed Outlook reports are routed", url: "https://learn.microsoft.com/en-us/defender-office-365/submissions-user-reported-messages-custom-mailbox" },
+    ],
+    related: ["how-to-assess-a-suspicious-url-safely", "security-testing-report"]
   },
   {
     slug: "email-header-investigation-limits",
