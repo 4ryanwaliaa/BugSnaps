@@ -52,6 +52,7 @@ export const RECON_PHISHING_GUIDES: SecurityGuide[] = [
     },
     readNext: [
       { label: "What to do after clicking a phishing link", href: "/guides/phishing-click-incident-triage" },
+      { label: "Understand rewritten Outlook links", href: "/guides/how-to-assess-a-suspicious-url-safely" },
     ],
     sections: [
       {

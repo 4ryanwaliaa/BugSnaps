@@ -8,12 +8,25 @@ export const PRODUCT_SECURITY_GUIDES: SecurityGuide[] = [
     description: "Inspect an unexpected link safely, understand URL warning signs, and verify the sender through a trusted independent channel.",
     category: "Testing workflow",
     answer: "Do not open a suspicious link to see whether it is real. Copy it without visiting the destination, examine the hostname and message context, and contact the organization through a known address or app. A URL checker can highlight clues but cannot guarantee safety.",
-    updated: "2026-10-28",
+    published: "2026-10-28",
+    updated: "2026-11-27",
     sections: [
       { title: "Pause and preserve the context", paragraphs: ["Unexpected requests to sign in, pay, or act urgently deserve independent verification, even if they appear to come from a familiar sender. Do not reply or use the message's phone number. Contact the organization using a number or website you found independently, or open its app yourself."], checklist: ["Do not open attachments or click an unsubscribe link in a suspicious message.", "Use your workplace's reporting process if the message arrived on a work account.", "Keep a copy for the security team only if that is consistent with your organization's reporting instructions."], source: 0 },
       { title: "Examine the actual hostname", paragraphs: ["A link's displayed text can differ from its destination. Copy the address without opening it and inspect the hostname carefully. For example, in https://accounts.example.test.attacker.test/login, the hostname is accounts.example.test.attacker.test; the earlier example.test text does not make it an example.test address. Those names are illustrative, not real services."], checklist: ["Be alert to unfamiliar domains, unexpected subdomains, unusual spelling, and shortened URLs.", "A URL containing an @ character can place misleading text before the actual hostname.", "HTTPS encrypts a connection; it does not establish that the site or request is trustworthy."] },
       { title: "Use a local checker as a clue", paragraphs: ["BugSnaps PhishLens examines URL structure and text in the browser and does not visit the destination. Its highlighted patterns are a starting point: familiar-looking addresses can still be malicious, while an unusual address can be legitimate. Optional domain intelligence and DNS checks are initiated separately and may be incomplete or unavailable; the tool does not follow redirects or establish domain ownership."], checklist: ["Avoid pasting sensitive links containing authentication tokens into tools you do not trust.", "Treat an unflagged result as inconclusive, not a safe-to-open verdict.", "Do not try to inspect the destination yourself when your organization's procedure calls for security staff." ] },
       { title: "If you already interacted", paragraphs: ["If you entered a password or payment information, contact the affected service or financial institution through a trusted channel promptly. Change the exposed password and any reused passwords, enable multi-factor authentication where available, and follow your organization's incident process. The right response depends on what was disclosed or downloaded."], source: 1 },
+      {
+        title: "Why an Outlook link shows a Safe Links address",
+        paragraphs: [
+          "A long address in Outlook may start with na01.safelinks.protection.outlook.com. Microsoft can rewrite an email link to check it at click time. This can appear in eligible personal Outlook.com mailboxes and in managed Microsoft 365 mailboxes, depending on the protection settings.",
+          "In an illustrative calendar message, the Safe Links hostname belongs to the checking service and calendar.example.test represents the intended destination. Check who sent the message and whether you expected the request. If Microsoft shows a warning page, stop there.",
+        ],
+        checklist: [
+          "Expected calendar update. Open your usual calendar and check for the invitation there.",
+          "Unexpected account or payment request. Open the official app or use a saved bookmark. For work mail, report suspicious messages through your approved channel.",
+        ],
+        source: 2,
+      },
     ],
     limitations: "Visual URL checks and automated patterns cannot prove ownership, reveal what a destination will do, or establish the safety of a redirect. Scammers can use legitimate hosting and convincing language; independent verification remains necessary.",
     faqs: [
@@ -24,6 +37,8 @@ export const PRODUCT_SECURITY_GUIDES: SecurityGuide[] = [
     sources: [
       { title: "CISA: Avoid Phishing Scams with Three Simple Tips", url: "https://www.cisa.gov/sites/default/files/2024-09/Secure-Our-World-Phishing-Tip-Sheet.pdf" },
       { title: "FTC: What To Do if You Were Scammed", url: "https://consumer.ftc.gov/articles/what-do-if-you-were-scammed" },
+      { title: "Microsoft Support: Safe Links in Outlook.com", url: "https://support.microsoft.com/en-us/outlook/advanced-outlook-com-security-for-microsoft-365-subscribers" },
+      { title: "Microsoft Learn: Safe Links in Microsoft Defender for Office 365", url: "https://learn.microsoft.com/en-us/defender-office-365/safe-links-about" },
     ],
     related: ["how-to-corroborate-public-username-search-results", "what-to-do-after-a-breach-exposure-result", "security-testing-report"],
   },
