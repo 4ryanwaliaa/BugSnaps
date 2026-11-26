@@ -365,6 +365,7 @@ function expectedMimePatternForUrl(assetUrl) {
     return null;
   }
   if (pathname === "/_next/image") return /^image\//;
+  if (pathname === "/resources/atom.xml") return /application\/atom\+xml/;
   if (pathname.endsWith(".webp")) return /image\/webp/;
   if (pathname.endsWith(".png")) return /image\/png/;
   if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) return /image\/jpe?g/;

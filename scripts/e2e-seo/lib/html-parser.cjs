@@ -474,6 +474,7 @@ function isStaticAssetUrl(rawHref) {
   } catch {
     return false;
   }
+  if (pathname === "/resources/atom.xml") return true;
   if (/^\/(?:downloads|images|templates|tutorials|benchmarks|fonts)\//i.test(pathname)) return true;
   if (/\.(?:webp|png|jpe?g|svg|gif|ico|mp4|webm|vtt|csv|txt|ps1|pdf|zip|ttf|woff2?|json)$/i.test(pathname)) {
     return true;

@@ -325,6 +325,18 @@ async function audit(route) {
   for (const path of ["/phishing-detector", "/endpointradar", "/benchmarks/phishing-link-checker", "/compare/phishing-link-checkers", "/website-security-checklist"]) {
     assert(aiDirectoryUrls.has(`${SITE_URL}${path}`), `Missing AI directory link to ${path}`);
   }
+  const feedPath = "/resources/atom.xml";
+  const [feed, resources] = await Promise.all([get(feedPath), get("/resources")]);
+  assert.equal(feed.status, 200, "Defensive resource feed is unavailable");
+  assert(feed.type.includes("application/atom+xml"), "Defensive resource feed must be served as Atom");
+  assert(feed.body.includes('<feed xmlns="http://www.w3.org/2005/Atom"'), "Missing Atom namespace");
+  const feedIds = [...feed.body.matchAll(/<entry>\s*<id>([^<]+)<\/id>/g)].map((entry) => decode(entry[1]));
+  assert(feedIds.length > 0, "Defensive resource feed needs at least one entry");
+  assert.equal(new Set(feedIds).size, feedIds.length, "Duplicate defensive resource feed entry");
+  for (const id of feedIds) assert(expected.has(id), `Atom entry must be a canonical sitemap URL: ${id}`);
+  assert([...resources.body.matchAll(/<link\b[^>]*>/gi)].map((match) => attributes(match[0])).some(
+    ({ rel, type, href }) => rel === "alternate" && type === "application/atom+xml" && href === SITE_URL + feedPath,
+  ), "Missing Atom feed metadata on the resources page");
   const csv = await get("/benchmarks/run-template.csv");
   assert.equal(csv.status, 200, "Benchmark record template unavailable");
   assert(csv.body.includes("ground_truth_artifact") && csv.body.includes("raw_report_artifact"), "Benchmark template missing evidence fields");

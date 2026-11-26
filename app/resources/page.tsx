@@ -4,11 +4,19 @@ import { ArrowRight } from "lucide-react";
 import { CtaBand, JsonLd, PageHeader, Section, SiteShell } from "@/components/site/page-parts";
 import { absoluteUrl, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
+const resourceMetadata = pageMetadata({
   title: "Security Testing Resources, Guides & Templates",
   description: "Plan an authorized security assessment with practical guides, app testing workflows, CSV templates, and sourced tool comparisons.",
   path: "/resources",
 });
+
+export const metadata: Metadata = {
+  ...resourceMetadata,
+  alternates: {
+    ...resourceMetadata.alternates,
+    types: { "application/atom+xml": absoluteUrl("/resources/atom.xml") },
+  },
+};
 
 const collections = [
   { title: "Website security checklist before launch", path: "/website-security-checklist", text: "Review HTTPS, access, backups and alerts. Download a CSV to record evidence and sign off on a release." },
@@ -60,7 +68,11 @@ export default function ResourcesPage() {
         eyebrow="Security resources"
         title="Security Testing Resources, Guides & Comparisons"
         lead="Start with a question, follow a workflow for your application, and compare tools against the tests and evidence you need."
-      />
+      >
+        <a href="/resources/atom.xml" className="inline-flex min-h-11 items-center font-medium text-accent hover:underline">
+          Follow defensive updates in a feed reader
+        </a>
+      </PageHeader>
       <Section labelledBy="collections-title">
         <h2 id="collections-title" className="text-2xl font-semibold tracking-tight">
           Where to start

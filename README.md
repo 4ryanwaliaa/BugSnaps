@@ -6,6 +6,8 @@ The BugSnaps website (bugsnaps.in): the company, its products - **MyPentest**
 
 ## Defensive security resources
 
+Follow the [BugSnaps defensive security feed](https://bugsnaps.in/resources/atom.xml) in an Atom reader.
+
 - [PhishLens link checker](https://bugsnaps.in/phishing-detector) reviews suspicious URL text locally in the browser.
 - [Phishing link checker comparison](https://bugsnaps.in/compare/phishing-link-checkers) explains the evidence and data-sharing tradeoffs for five tools.
 - [Phishing link checker benchmark](https://bugsnaps.in/benchmarks/phishing-link-checker) publishes the offline evaluation method and aggregate results.
