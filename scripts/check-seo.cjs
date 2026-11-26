@@ -346,8 +346,14 @@ async function audit(route) {
   const launchChecklist = await get("/templates/website-security-release-checklist.csv");
   assert.equal(launchChecklist.status, 200, "Website release checklist unavailable");
   assert(launchChecklist.type.includes("csv"), "Website release checklist must be served as CSV");
-  const phishingBenchmark = await get("/benchmarks/phishing-link-checker");
-  for (const route of ["/benchmarks/phishlens-offline-2026-11-25.json", "/benchmarks/phishlens-dotgov-2026-11-26.json"]) {
+  const phishingBenchmarkPath = "/benchmarks/phishing-link-checker";
+  const phishingBenchmark = await get(phishingBenchmarkPath);
+  const benchmarkDatasets = [...phishingBenchmark.body.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)]
+    .map((match) => JSON.parse(match[1])).filter((data) => data["@type"] === "Dataset");
+  for (const [route, anchor] of [
+    ["/benchmarks/phishlens-offline-2026-11-25.json", "aggregate-results"],
+    ["/benchmarks/phishlens-dotgov-2026-11-26.json", "dotgov-results"],
+  ]) {
     const results = await get(route);
     assert.equal(results.status, 200, `PhishLens aggregate results unavailable: ${route}`);
     assert(results.type.includes("application/json"), `PhishLens aggregate results must be JSON: ${route}`);
@@ -355,7 +361,11 @@ async function audit(route) {
     assert.equal(counts.parsed + counts.rejected + counts.duplicateInputs, counts.inputEntries, `PhishLens input totals must reconcile: ${route}`);
     assert.equal(counts.highConcern + counts.review + counts.noObviousSignals, counts.parsed, `PhishLens outcome counts must match parsed inputs: ${route}`);
     assert(phishingBenchmark.body.includes(`href="${route}"`), `PhishLens benchmark must link to ${route}`);
-    assert(phishingBenchmark.body.includes(`"contentUrl":"${SITE_URL}${route}"`), `PhishLens Dataset must reference ${route}`);
+    const identity = `${SITE_URL}${phishingBenchmarkPath}#${anchor}`;
+    const dataset = benchmarkDatasets.find((entry) => entry["@id"] === identity);
+    assert.equal(dataset?.identifier, identity, `PhishLens Dataset must use its public citation identity: ${identity}`);
+    assert.equal(dataset?.distribution?.contentUrl, SITE_URL + route, `PhishLens Dataset must reference ${route}`);
+    assert(phishingBenchmark.body.includes(`id="${anchor}"`), `PhishLens Dataset citation must resolve to #${anchor}`);
   }
   const editorialImage = await fetch(new URL("/images/website-security-review.webp", base), { signal: AbortSignal.timeout(30000) });
   assert.equal(editorialImage.status, 200, "Editorial image is unavailable");

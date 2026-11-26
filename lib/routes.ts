@@ -22,7 +22,7 @@ export interface IndexableRoute {
 }
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [
-  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-11-08" },
+  { path: "/", changeFrequency: "weekly", priority: 1.0, lastModified: "2026-11-27" },
   { path: "/vulnerability-guides", changeFrequency: "weekly", priority: 0.8, lastModified: "2026-10-22" },
 
   // Product
@@ -59,7 +59,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Comparisons
   { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-26" },
-  { path: "/benchmarks/phishing-link-checker", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-26" },
+  { path: "/benchmarks/phishing-link-checker", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-27" },
   { path: "/improvements", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/why-bugsnaps", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/compare/mypentest-vs-ai-assistants", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
@@ -74,7 +74,7 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
   // Content
   { path: "/blog", changeFrequency: "weekly", priority: 0.6, lastModified: "2026-11-21" },
   { path: "/security-playbooks", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-10-28" },
-  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-26" },
+  { path: "/resources", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-27" },
   { path: "/website-security-checklist", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-26" },
   { path: "/security-readiness", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
   { path: "/guides", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-01" },

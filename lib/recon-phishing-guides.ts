@@ -44,12 +44,15 @@ export const RECON_PHISHING_GUIDES: SecurityGuide[] = [
     description: "Find the Report phishing option in Gmail and Outlook.com, check where managed reports go, and use a redacted note to tell your IT team what happened.",
     category: "Testing workflow",
     published: "2026-10-28",
-    updated: "2026-11-26",
+    updated: "2026-11-27",
     answer: "For a work or school mailbox, start with your organization’s approved phishing-reporting process. On Gmail in a desktop browser, use More next to Reply and choose Report phishing. On Outlook.com, select the message and choose Report, then Report phishing. Leave links and attachments untouched.",
     download: {
       path: "/templates/phishing-report-to-it.txt",
       label: "Download the phishing report note for IT (TXT)",
     },
+    readNext: [
+      { label: "What to do after clicking a phishing link", href: "/guides/phishing-click-incident-triage" },
+    ],
     sections: [
       {
         title: "Report phishing in Gmail on the web",

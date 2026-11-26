@@ -160,9 +160,14 @@ export default function Home() {
             { path: "/alternatives", title: "Choose a testing tool", text: "Sourced alternatives with strengths and operating trade-offs." },
           ].map((item) => <LinkCard key={item.path} {...item} />)}
         </div>
-        <Link href="/resources" className="group mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline">
-          All security resources <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </Link>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link href="/resources" className="group inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline">
+            All security resources <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
+          <Link href="/website-security-checklist" className="text-sm font-medium text-accent hover:underline">
+            Website security checklist before launch
+          </Link>
+        </div>
       </Section>
       <Section labelledBy="advisory-guides-title" className="border-t border-white/5">
         <SectionTitle

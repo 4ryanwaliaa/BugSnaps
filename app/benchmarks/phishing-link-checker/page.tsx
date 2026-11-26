@@ -5,11 +5,9 @@ import run from "@/public/benchmarks/phishlens-offline-2026-11-25.json";
 import registryRun from "@/public/benchmarks/phishlens-dotgov-2026-11-26.json";
 
 const path = "/benchmarks/phishing-link-checker";
-const resultsPath = "/benchmarks/phishlens-offline-2026-11-25.json";
-const registryResultsPath = "/benchmarks/phishlens-dotgov-2026-11-26.json";
 const headline = "Phishing link checker benchmark";
 const published = "2026-11-25";
-const modified = "2026-11-26";
+const modified = "2026-11-27";
 const description =
   "See how PhishLens reviewed 141,480 threat-listed hostnames and 17,149 registered .gov domains offline. Read the method and download aggregate results.";
 
@@ -37,37 +35,53 @@ const samples = [
   { label: "Threat-listed hostnames", counts },
   { label: "Registered .gov domains", counts: registryCounts },
 ];
-const resultsJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  "@id": `${absoluteUrl(path)}#aggregate-results`,
-  url: absoluteUrl(path),
-  name: "PhishLens offline phishing link checker results",
-  description: "Aggregate verdict counts and run details from the 25 November 2026 PhishLens hostname-only evaluation. Includes counts for high concern, review, and no obvious signals.",
-  creator: { "@type": "Organization", "@id": ORG_ID, name: ORG.name },
-  datePublished: published,
-  isAccessibleForFree: true,
-  distribution: {
-    "@type": "DataDownload",
-    contentUrl: absoluteUrl(resultsPath),
-    encodingFormat: "application/json",
+const datasets = [
+  {
+    anchor: "aggregate-results",
+    name: "PhishLens offline verdicts for threat-listed hostnames",
+    description: "Aggregate verdict counts and run details from the 25 November 2026 PhishLens hostname-only evaluation. Includes counts for high concern, review, and no obvious signals.",
+    datePublished: published,
+    evaluatedAt: run.evaluatedAt,
+    downloadPath: "/benchmarks/phishlens-offline-2026-11-25.json",
+    downloadLabel: "Threat-listed results (JSON)",
   },
-};
-const registryJsonLd = {
-  ...resultsJsonLd,
-  "@id": `${absoluteUrl(path)}#dotgov-results`,
-  name: "PhishLens offline verdicts for registered U.S. .gov domains",
-  description: "Aggregate verdict counts for 17,149 registered second-level .gov domain names from the 25 November 2026 CISA registry snapshot. Evaluated offline on 26 November 2026.",
-  datePublished: modified,
-  distribution: { ...resultsJsonLd.distribution, contentUrl: absoluteUrl(registryResultsPath) },
-};
+  {
+    anchor: "dotgov-results",
+    name: "PhishLens offline verdicts for registered U.S. .gov domains",
+    description: "Aggregate verdict counts for 17,149 registered second-level .gov domain names from the 25 November 2026 CISA registry snapshot. Evaluated offline on 26 November 2026.",
+    datePublished: "2026-11-26",
+    evaluatedAt: registryRun.evaluatedAt,
+    downloadPath: "/benchmarks/phishlens-dotgov-2026-11-26.json",
+    downloadLabel: "Registered .gov results (JSON)",
+  },
+].map((dataset) => ({ ...dataset, url: `${absoluteUrl(path)}#${dataset.anchor}` }));
+const formatDate = new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeZone: "UTC" });
+const benchmarkPublisher = { "@type": "Organization", "@id": ORG_ID, name: ORG.name };
 
 export default function PhishingLinkCheckerBenchmark() {
   return (
     <SiteShell>
       <JsonLd data={techArticleJsonLd({ headline, description, path, datePublished: published, dateModified: modified })} />
-      <JsonLd data={resultsJsonLd} />
-      <JsonLd data={registryJsonLd} />
+      {datasets.map((dataset) => (
+        <JsonLd key={dataset.anchor} data={{
+          "@context": "https://schema.org",
+          "@type": "Dataset",
+          "@id": dataset.url,
+          url: dataset.url,
+          identifier: dataset.url,
+          name: dataset.name,
+          description: dataset.description,
+          creator: benchmarkPublisher,
+          publisher: benchmarkPublisher,
+          datePublished: dataset.datePublished,
+          isAccessibleForFree: true,
+          distribution: {
+            "@type": "DataDownload",
+            contentUrl: absoluteUrl(dataset.downloadPath),
+            encodingFormat: "application/json",
+          },
+        }} />
+      ))}
       <PageHeader
         crumbs={[
           { name: "Benchmarks", path: "/benchmarks" },
@@ -77,12 +91,11 @@ export default function PhishingLinkCheckerBenchmark() {
         lead={`PhishLens flagged ${formatCount.format(flagged)} of ${formatCount.format(counts.parsed)} threat-listed hostnames (${formatRate.format(flagged / counts.parsed)}) and ${formatCount.format(registryFlagged)} of ${formatCount.format(registryCounts.parsed)} registered .gov domains (${formatRate.format(registryFlagged / registryCounts.parsed)}) for review in two offline evaluations.`}
       >
         <div className="flex flex-wrap gap-3">
-          <a href={resultsPath} download className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50">
-            Threat-listed results (JSON)
-          </a>
-          <a href={registryResultsPath} download className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50">
-            Registered .gov results (JSON)
-          </a>
+          {datasets.map((dataset) => (
+            <a key={dataset.anchor} href={dataset.downloadPath} download className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50">
+              {dataset.downloadLabel}
+            </a>
+          ))}
         </div>
       </PageHeader>
 
@@ -140,6 +153,15 @@ export default function PhishingLinkCheckerBenchmark() {
             <a href="https://get.gov/domains/eligibility/">.gov registration eligibility</a>
           </p>
         </Prose>
+        <h3 className="mt-10 text-xl font-semibold tracking-tight">How to cite the benchmark data</h3>
+        <ul className="mt-4 max-w-3xl space-y-4">
+          {datasets.map((dataset) => (
+            <li key={dataset.anchor} id={dataset.anchor} className="scroll-mt-24 rounded-xl border border-white/10 bg-surface/40 px-4 py-3 text-sm leading-relaxed sm:text-base">
+              <p>{ORG.name}. <cite><a href={`#${dataset.anchor}`} className="font-medium text-accent underline underline-offset-4">{dataset.name}</a></cite>. Evaluated <time dateTime={dataset.evaluatedAt.slice(0, 10)}>{formatDate.format(new Date(dataset.evaluatedAt))}</time>.</p>
+              <a href={dataset.downloadPath} download className="mt-2 inline-block text-sm text-accent hover:underline">{dataset.downloadLabel}</a>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section labelledBy="phish-use" className="border-t border-white/10">

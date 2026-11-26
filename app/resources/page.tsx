@@ -23,6 +23,7 @@ const collections = [
   { title: "Website incident response checklist", path: "/blog/suspected-rce-website-incident-response-checklist", text: "Preserve evidence after suspected server compromise and use a worked timeline to brief your response lead." },
   { title: "Phishing link checker comparison", path: "/compare/phishing-link-checkers", text: "Compare five tools, including PhishLens and CheckPhish, by what they check and what you share." },
   { title: "Report phishing in Gmail or Outlook", path: "/guides/phishing-email-evidence-preservation", text: "Find the web reporting controls, preserve the original email and download a text template for your IT report." },
+  { title: "What to do after clicking a phishing link", path: "/guides/phishing-click-incident-triage", text: "Choose your next step based on whether you opened the page, entered account details, or downloaded a file." },
   { title: "PhishLens offline benchmark", path: "/benchmarks/phishing-link-checker", text: "See offline verdicts for 141,480 threat-listed hostnames and 17,149 registered .gov domains, with aggregate downloads." },
   { title: "Windows Security Protection History", path: "/guides/windows-security-protection-history", text: "Find recent Windows Security alerts, understand what the action cards mean and record details for IT." },
   { title: "Security playbooks", path: "/security-playbooks", text: "Choose a practical starting point for applications, APIs, Windows endpoints, digital footprints, suspicious links and broader assessments." },
