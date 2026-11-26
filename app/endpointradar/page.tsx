@@ -5,13 +5,45 @@ import type { Metadata } from "next";
 import Link from "@/components/site/content-link";
 import { ArrowRight, ArrowUpRight, FileJson, Laptop, LockKeyhole, Radar, ShieldCheck } from "lucide-react";
 import { Breadcrumbs, JsonLd, Section, SectionTitle, SiteShell } from "@/components/site/page-parts";
-import { ORG_ID, SITE_URL, faqJsonLd, pageMetadata } from "@/lib/site";
+import { ORG_ID, absoluteUrl, faqJsonLd, pageMetadata } from "@/lib/site";
+
+const endpointRadarPath = "/endpointradar";
+const endpointRadarUrl = absoluteUrl(endpointRadarPath);
+const endpointRadarRepository = "https://github.com/4ryanwalia/EndpointRadar";
+const endpointRadarId = `${endpointRadarUrl}#software`;
 
 export const metadata: Metadata = pageMetadata({
   title: "Free Windows Posture Scanner | EndpointRadar",
   description: "Check Windows security posture free with EndpointRadar. Scan locally or over WinRM, import JSON reports, and prioritize firewall and AV fixes.",
-  path: "/endpointradar",
+  path: endpointRadarPath,
 });
+
+const endpointRadarJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": endpointRadarId,
+      name: "EndpointRadar",
+      applicationCategory: "SecurityApplication",
+      operatingSystem: "Windows, Web",
+      url: endpointRadarUrl,
+      description: "Free, open-source Windows endpoint security posture scanner with a browser-based report viewer.",
+      publisher: { "@id": ORG_ID },
+      offers: [
+        { "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "USD" },
+        { "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "INR" },
+      ],
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": `${endpointRadarUrl}#scanner-source`,
+      name: "EndpointRadar Windows scanner source code",
+      codeRepository: endpointRadarRepository,
+      targetProduct: { "@id": endpointRadarId },
+    },
+  ],
+};
 
 const faqs = [
   {
@@ -38,7 +70,7 @@ export default function EndpointRadarPage() {
   const managedReady = process.env.ENDPOINTRADAR_DATABASE_LOCKED === "true";
   return (
     <SiteShell>
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: "EndpointRadar", applicationCategory: "SecurityApplication", operatingSystem: "Windows, Web", url: `${SITE_URL}/endpointradar`, codeRepository: "https://github.com/4ryanwalia/EndpointRadar", description: "Free, open-source Windows endpoint security posture scanner with local and agentless WinRM options and a browser-based report viewer.", publisher: { "@id": ORG_ID }, offers: [{ "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "USD" }, { "@type": "Offer", name: "Free Open-Source Scanner", price: "0", priceCurrency: "INR" }] }} />
+      <JsonLd data={endpointRadarJsonLd} />
       <JsonLd data={faqJsonLd(faqs)} />
       <div className="relative overflow-hidden border-b border-white/[0.07]">
         <div aria-hidden="true" className="dot-grid absolute inset-0" />
@@ -53,7 +85,7 @@ export default function EndpointRadarPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/endpointradar/app" className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-white hover:bg-blue-500">Open free workspace <ArrowRight className="h-4 w-4" /></Link>
               {managedReady && <a href="/endpointradar/managed" className="inline-flex h-12 items-center gap-2 rounded-full border border-blue-400/30 px-6 text-sm font-semibold text-blue-200 hover:bg-blue-500/10">Manage clients <ArrowRight className="h-4 w-4" /></a>}
-              <a href="https://github.com/4ryanwalia/EndpointRadar" className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium hover:bg-white/5">Get the Windows scanner <ArrowUpRight className="h-4 w-4" /></a>
+              <a href={endpointRadarRepository} className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium hover:bg-white/5">Get the Windows scanner <ArrowUpRight className="h-4 w-4" /></a>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-muted-2">Open-source scanner · Free browser workspace · No account needed</p>
           </div>

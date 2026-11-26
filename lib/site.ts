@@ -154,12 +154,7 @@ export function organizationJsonLd() {
           url: `${SITE_URL}/contact`,
           availableLanguage: ["en"],
         },
-        sameAs: [
-          LINKEDIN_URL,
-          MYRECON_URL,
-          "https://github.com/4ryanwalia/EndpointRadar",
-          "https://github.com/4ryanwalia/Phishing-detection",
-        ],
+        sameAs: [LINKEDIN_URL],
         knowsAbout: [
           "Penetration testing",
           "Automated penetration testing",
