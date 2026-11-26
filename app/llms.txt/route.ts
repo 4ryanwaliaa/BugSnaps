@@ -17,6 +17,7 @@ export function GET() {
     `- [Phishing link checker benchmark](${absoluteUrl("/benchmarks/phishing-link-checker")}): Offline PhishLens verdict counts for threat-listed hostnames and registered U.S. .gov domains, with methods and limitations.`,
     `- [Phishing link checker comparison](${absoluteUrl("/compare/phishing-link-checkers")}): Compare local URL review, public reputation lookups, and what a submission shares.`,
     `- [Website security checklist](${absoluteUrl("/website-security-checklist")}): Pre-launch checks for applications, deployment settings, and incident readiness.`,
+    `- [Website incident response checklist](${absoluteUrl("/blog/suspected-rce-website-incident-response-checklist")}): Preserve evidence and use a worked timeline to hand off a suspected incident.`,
     `- [How to read phishing link checker results](${absoluteUrl("/blog/phishing-link-checker-results-explained")}): Interpret local signals, external evidence, and unavailable checks.`,
     `- [Phishing click incident triage](${absoluteUrl("/guides/phishing-click-incident-triage")}): Identify what happened, preserve relevant evidence, and route the incident to the right people.`,
     `- [Report a phishing email](${absoluteUrl("/guides/phishing-email-evidence-preservation")}): Find the reporting controls in Gmail and Outlook.com and download a short note for your IT team.`,

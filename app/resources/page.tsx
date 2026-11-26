@@ -12,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
 
 const collections = [
   { title: "Website security checklist before launch", path: "/website-security-checklist", text: "Review HTTPS, access, backups and alerts. Download a CSV to record evidence and sign off on a release." },
+  { title: "Website incident response checklist", path: "/blog/suspected-rce-website-incident-response-checklist", text: "Preserve evidence after suspected server compromise and use a worked timeline to brief your response lead." },
   { title: "Phishing link checker comparison", path: "/compare/phishing-link-checkers", text: "Compare five tools, including PhishLens and CheckPhish, by what they check and what you share." },
   { title: "Report phishing in Gmail or Outlook", path: "/guides/phishing-email-evidence-preservation", text: "Find the web reporting controls, preserve the original email and download a text template for your IT report." },
   { title: "PhishLens offline benchmark", path: "/benchmarks/phishing-link-checker", text: "See offline verdicts for 141,480 threat-listed hostnames and 17,149 registered .gov domains, with aggregate downloads." },

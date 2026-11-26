@@ -201,6 +201,10 @@ export default function WebsiteSecurityChecklistPage() {
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted">
           After switching DNS or promoting a deployment, open the live site and verify the final hostname, HTTPS, key pages and normal sign-in if applicable. Record the post-launch observations against the same release ID.
         </p>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
+          If monitoring suggests the deployed site was compromised, use the{" "}
+          <Link href="/blog/suspected-rce-website-incident-response-checklist" className="text-accent underline underline-offset-4">website incident response checklist and example timeline</Link>.
+        </p>
       </Section>
     </SiteShell>
   );

@@ -70,6 +70,7 @@ export const securityResponsePosts: Post[] = [
     related: [
       { label: "Official Next.js React Server Components RCE advisory", href: "https://nextjs.org/blog/CVE-2025-66478" },
       { label: "Current Next.js release and security announcements", href: "https://nextjs.org/blog" },
+      { label: "Respond to suspected website compromise", href: "/blog/suspected-rce-website-incident-response-checklist" },
       { label: "Run a website security scan", href: "/mypentest" },
       { label: "What a clean scan can establish", href: "/blog/website-vulnerability-scan-clean-report-cve-coverage" },
     ],
@@ -77,8 +78,9 @@ export const securityResponsePosts: Post[] = [
   {
     slug: "suspected-rce-website-incident-response-checklist",
     title: "Suspected Website RCE: Incident Checklist",
-    description: "What website owners should do after suspected remote code execution: contain exposure, preserve logs, rotate secrets, and verify the clean build.",
+    description: "Respond to suspected website remote code execution. Contain the affected service, preserve logs, and use a worked timeline to hand off evidence.",
     published: "2026-10-22",
+    updated: "2026-11-26",
     author: "BugSnaps",
     readingMinutes: 5,
     body: [
@@ -98,6 +100,14 @@ export const securityResponsePosts: Post[] = [
         "Review which data stores, cloud roles and third-party services the application process could access.",
         "Ask the incident lead to evaluate related accounts and infrastructure, including unexpected configuration or deployment changes.",
         "Keep a timestamped decision log covering containment, evidence collection, changes and recovery approvals." ] },
+      { type: "h2", text: "Example incident timeline for a hosted website" },
+      { type: "p", text: "This fictional example shows how to hand off a suspected server incident. Record the event time and time zone, the affected deployment, an evidence reference and the next decision owner. Keep original timestamps with the evidence. If an alert is the first thing you saw, record the start time of the incident as unknown until you have evidence for it." },
+      { type: "table", caption: "Fictional website incident timeline. Times are in UTC.", head: ["Time", "Recorded fact", "Evidence reference", "Next decision"], rows: [
+        ["09:10", "The hosting audit log recorded a production deployment.", "E1 · deployment event and build ID", "The service owner records the first known exposure window."],
+        ["09:27", "Monitoring reported unexpected process activity on that deployment.", "E2 · alert export and collection time", "The responder checks the alert. Compromise and customer impact are still unknown."],
+        ["09:35", "The hosting audit log recorded the approved isolation change.", "E3 · access change and approver", "The incident lead confirms containment and assigns remaining evidence collection."],
+      ] },
+      { type: "p", text: "For each evidence reference, record the collector, collection time, source time range and restricted storage location. Preserve the original export. Give stakeholders the evidence reference and a redacted summary. Before restoring service, record the clean build ID, the verification result and the person who approved recovery." },
       { type: "h2", text: "Recover from a trusted state and review credentials" },
       { type: "p", text: "Apply the vendor's remediation and verify the clean replacement artifact before routing users back to it. Coordinate secret rotation and session invalidation with the response lead so replacement credentials are not delivered into an environment still under attacker control. Review the permissions attached to each credential as well as its value. A database password change alone does not remove an unauthorized cloud account or a modified deployment pipeline." },
       { type: "p", text: "For React2Shell specifically, the official Next.js advisory recommends rotating application secrets after patching and redeploying. Use that advisory's guidance together with the findings from your own environment. Avoid assuming that a generic HTTP response, a quiet dashboard or one clean scan proves historical compromise did not occur." },
@@ -108,7 +118,9 @@ export const securityResponsePosts: Post[] = [
     ],
     related: [
       { label: "Canadian Centre for Cyber Security: responding to compromise", href: "https://www.cyber.gc.ca/en/guidance/what-do-when-your-organization-has-been-compromised-cyber-attack-itsap00009" },
+      { label: "NIST incident response recommendations", href: "https://csrc.nist.gov/pubs/sp/800/61/r3/final" },
       { label: "Official Next.js advisory and secret rotation guidance", href: "https://nextjs.org/blog/CVE-2025-66478" },
+      { label: "Website launch security checklist", href: "/website-security-checklist" },
       { label: "Verify a deployed React or Next.js security patch", href: "/blog/verify-react-nextjs-security-patch-production" },
       { label: "Assess your authorized website with MyPentest", href: "/mypentest" },
     ],
