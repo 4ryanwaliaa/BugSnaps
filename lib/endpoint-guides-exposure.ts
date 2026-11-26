@@ -30,6 +30,7 @@ export const ENDPOINT_EXPOSURE_GUIDES: SecurityGuide[] = [
     description: "List installed Windows apps with Settings or WinGet. Record versions, publishers and owners, and account for portable and per-user apps.",
     category: "Testing workflow",
     answer: "On Windows 11, open Settings, select Apps, then select Installed apps. If Windows Package Manager is available, you can also run winget list in a terminal. Record the app name, version, publisher, collection time and source so you can reconcile gaps between the two views.",
+    published: "2026-10-28",
     updated: "2026-11-26",
     sections: [
       { title: "How to see installed apps in Windows 11", paragraphs: ["Open Start, choose Settings, then go to Apps and select Installed apps. Start with the device and user profile you need to review. Record the collection time and copy the app names and versions you can verify into your inventory.", "If WinGet is available, open a terminal and run winget list. It shows software installed through WinGet and applications it recognizes from other installation methods."], checklist: ["Use the Version column for the installed version. Available shows an update version when WinGet finds one.", "Record an unknown version as unknown and follow up with the application owner.", "If an approved portable app is missing from both lists, record the approved software record or vendor-confirmed version as a separate source for that entry."], source: 2 },
