@@ -98,18 +98,42 @@ export const RECON_PHISHING_GUIDES: SecurityGuide[] = [
   },
   {
     slug: "phishing-click-incident-triage",
-    title: "Triage a phishing click: what happened after the link?",
-    description: "Distinguish a link click from credential entry, downloads and payment exposure, and collect the facts needed for an incident response.",
-    category: "Testing workflow", updated: "2026-10-28",
+    title: "What to Do After Clicking a Phishing Link",
+    description: "Choose your next step after a phishing link, including what to check in Gmail or Outlook.com if you entered a password or shared a code.",
+    category: "Testing workflow",
+    published: "2026-10-28",
+    updated: "2026-11-26",
     answer: "Record the actual interaction and promptly involve the appropriate security or service provider. A click, credential submission and downloaded program present different questions; avoid assuming that all clicks have the same effect.",
+    quickFacts: [
+      { label: "Opened the link only", value: "Close the page. Record when it opened and whether it downloaded anything. Report the message through a trusted channel." },
+      { label: "Entered a password or shared a code", value: "Use the service’s official site to secure the account. For a work or school account, contact your IT team right away and say exactly what you shared." },
+      { label: "Downloaded or opened a file", value: "Leave a saved file unopened. If it ran or you installed something, tell IT or trusted device support before using that device to recover an account." },
+    ],
     sections: [
       { title: "Establish a timeline", paragraphs: ["Ask when the message arrived, which device was used, whether a page loaded and what the user entered or downloaded. Use the original message and existing logs where authorized rather than opening the link again.", "Do not ask the user to repeat the action for a screenshot. Preserve the report and avoid sharing passwords, one-time codes or sensitive URL parameters in the incident ticket."], source: 0 },
       { title: "Separate the possible exposures", paragraphs: ["If credentials were submitted, use a trusted channel to change the affected password and any reused passwords, then follow the provider's account recovery guidance. If a payment card was entered, contact the issuer. If software was downloaded or run, the device owner and security team need to assess the device."], source: 1 },
+      {
+        title: "After changing a personal Google Account password",
+        paragraphs: ["Open Google Account using a trusted bookmark or its official app. Under Security & sign-in, review recent security events and use Manage all devices to review sessions. Follow Google’s prompts for activity you don’t recognize. Check your recovery email and phone, then review Gmail filters and forwarding rules you did not set up.", "If you are locked out, use the official recovery flow linked in Google’s account-security guide. Keep the suspicious email for your report and leave passwords and codes out of your report."],
+        source: 2,
+      },
+      {
+        title: "After changing a personal Microsoft account password",
+        paragraphs: ["Use Microsoft’s sign-in helper if you cannot access your account. For Outlook.com, review connected accounts, forwarding and automatic replies using Microsoft’s recovery guidance. If you suspect someone still has an active session, Microsoft documents a separate Sign out everywhere control. It can take up to 24 hours and excludes Xbox consoles."],
+        source: 3,
+      },
       { title: "Coordinate response and evidence", paragraphs: ["A work account may require the security team to review active sessions, recovery settings and sign-in activity. Record actions and their times; avoid deleting evidence or performing changes that conflict with incident procedures."], checklist: ["Identify the affected account and device without recording a password.", "Note if a multifactor prompt was approved or a code was shared.", "Record whether a download was merely saved or executed."] },
       { title: "Communicate uncertainty", paragraphs: ["A local link check can show structural clues but cannot establish what the page delivered or whether an account was accessed. Responders may need account, email or endpoint logs and the provider's assistance. Document checks that could not be completed."] },
     ], limitations: "The appropriate containment depends on the interaction, device and account. A benign-looking link or a lack of immediate symptoms cannot prove an incident did not occur.",
-    faqs: [{ question: "Does one click prove an account was taken over?", answer: "No. Determine what happened after the click and review relevant account and device evidence with the appropriate owner." }, { question: "Should I revisit the page to understand it?", answer: "Avoid repeating the interaction. Give the original message and your account of events to authorized responders." }],
-    sources: [NIST_IR, FTC_SCAM], related: ["phishing-email-evidence-preservation", "what-to-do-after-a-breach-exposure-result"]
+    faqs: [{ question: "Does one click prove an account was taken over?", answer: "No. Determine what happened after the click and review relevant account and device evidence with the appropriate owner." }, { question: "Should I revisit the page to understand it?", answer: "Avoid repeating the interaction. Give the original message and your account of events to authorized responders." }, { question: "What if I shared a one-time code or approved a sign-in prompt?", answer: "Tell the service provider or your IT team what you shared or approved and when. Use the provider’s official security page to review recent activity and sessions for a personal account." }],
+    sources: [
+      NIST_IR,
+      FTC_SCAM,
+      { title: "Google Account Help: Secure a compromised Google Account", url: "https://support.google.com/accounts/answer/6294825?hl=en" },
+      { title: "Microsoft Support: Recover a compromised Microsoft account", url: "https://support.microsoft.com/en-us/accounts-billing/manage/how-to-recover-a-hacked-or-compromised-microsoft-account" },
+      { title: "Microsoft Support: Sign out of your account everywhere", url: "https://support.microsoft.com/en-us/accounts-billing/manage/how-to-sign-out-of-your-microsoft-account-everywhere" },
+    ],
+    related: ["phishing-email-evidence-preservation", "what-to-do-after-a-breach-exposure-result", "session-revocation-after-credential-exposure"]
   },
   {
     slug: "lookalike-domain-triage",
