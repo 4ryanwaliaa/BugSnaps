@@ -109,7 +109,7 @@ export function PhishLensWorkspace() {
   const success = result?.ok ? result : null;
 
   return (
-    <div id="checker" className="scroll-mt-24 overflow-hidden rounded-[1.5rem] border border-white/[.12] bg-[#101820] shadow-[0_32px_90px_-35px_rgba(0,0,0,.9)] sm:rounded-[1.75rem]">
+    <div id="checker" className="overflow-hidden rounded-[1.5rem] border border-white/[.12] bg-[#101820] shadow-[0_32px_90px_-35px_rgba(0,0,0,.9)] sm:rounded-[1.75rem]">
       <div aria-hidden="true" className="h-1 bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-400" />
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[.08] bg-white/[.018] px-5 py-4 sm:px-7"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/[.08] text-cyan-300"><ScanSearch className="h-5 w-5" /></span><div><p className="text-sm font-semibold tracking-tight text-white">PhishLens workspace</p><p className="mt-0.5 text-xs text-zinc-400">A closer look at suspicious links</p></div></div><span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[.07] px-3 py-1.5 text-[11px] font-medium text-emerald-300"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Local review first</span></div>
       <div className="p-4 sm:p-7">
