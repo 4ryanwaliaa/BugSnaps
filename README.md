@@ -7,9 +7,11 @@ The BugSnaps website (bugsnaps.in): the company, its products - **MyPentest**
 ## Defensive security resources
 
 - [PhishLens link checker](https://bugsnaps.in/phishing-detector) reviews suspicious URL text locally in the browser.
+- [Phishing link checker comparison](https://bugsnaps.in/compare/phishing-link-checkers) explains the evidence and data-sharing tradeoffs for five tools.
 - [Phishing link checker benchmark](https://bugsnaps.in/benchmarks/phishing-link-checker) publishes the offline evaluation method and aggregate results.
 - [Website security checklist](https://bugsnaps.in/website-security-checklist) includes a release evidence template for HTTPS, access, backups, and monitoring.
 - [EndpointRadar](https://bugsnaps.in/endpointradar) reviews Windows security settings and evidence.
+- [Windows Event Viewer evidence worksheet](https://bugsnaps.in/guides/windows-endpoint-evidence-handling) includes a downloadable CSV and a worked example for documenting file-share events.
 - [Windows Security Protection History](https://bugsnaps.in/guides/windows-security-protection-history) explains where to find recent alerts and what details to share with IT.
 
 ## Stack

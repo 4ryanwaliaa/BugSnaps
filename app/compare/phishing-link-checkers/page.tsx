@@ -7,9 +7,9 @@ import { pageMetadata } from "@/lib/site";
 const pathname = "/compare/phishing-link-checkers";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Phishing Link Checker Comparison: 4 Tools",
+  title: "Phishing Link Checker Comparison",
   description:
-    "Compare PhishLens, Malwarebytes, VirusTotal and Google Safe Browsing. See what each checks and which link details you share before you open anything.",
+    "Compare PhishLens, Malwarebytes, CheckPhish, VirusTotal and Google Safe Browsing. See what each checks and which link details you share.",
   path: pathname,
 });
 
@@ -30,6 +30,13 @@ const providers = [
       { name: "Malwarebytes product announcement", href: "https://www.malwarebytes.com/press/2026/10/05/malwarebytes-launches-free-scam-link-check-so-anyone-can-verify-a-link-is-safe-before-they-click" },
       { name: "Malwarebytes help and reporting", href: "https://help.malwarebytes.com/hc/en-us/articles/56793303873563-Use-Malwarebytes-Scam-Link-Check" },
     ],
+  },
+  {
+    name: "CheckPhish by Bolster",
+    fit: "Investigate a public URL when a screenshot and hosting details would help you review what the scanning service observed.",
+    evidence: "CheckPhish describes a live scan with page screenshots, certificate information, page structure and hosting details.",
+    sharing: "CheckPhish receives the URL you enter for the hosted scan. Keep links with private paths or access tokens out of the web form.",
+    sources: [{ name: "CheckPhish URL scanning overview", href: "https://checkphish.bolster.ai/" }],
   },
   {
     name: "VirusTotal public web service",
@@ -69,7 +76,7 @@ export default function PhishingLinkCheckerComparisonPage() {
             Check a link with PhishLens <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <a href="#checker-comparison" className="py-2 text-sm font-medium text-accent hover:underline">
-            Compare the four tools
+            Compare the tools
           </a>
         </div>
       </PageHeader>
@@ -78,7 +85,7 @@ export default function PhishingLinkCheckerComparisonPage() {
         <SectionTitle
           id="comparison-title"
           title="What each tool checks and what you share"
-          lead="Written by BugSnaps, which makes PhishLens. We reviewed the linked provider documentation on November 25, 2026. This comparison covers documented workflows and data sharing."
+          lead="Written by BugSnaps, which makes PhishLens. We reviewed the linked provider documentation on November 25 and 26, 2026. This comparison covers documented workflows and data sharing."
         />
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {providers.map((provider) => (

@@ -61,3 +61,11 @@ The Windows endpoint evidence guide offers an Event Viewer worksheet for preserv
 The PhishLens benchmark describes its downloadable aggregate verdict counts with Dataset and DataDownload structured data. Inspect the exact benchmark URL for Google indexing and check its title in Dataset Search after recrawl. [Google Dataset structured data](https://developers.google.com/search/docs/appearance/structured-data/dataset)
 
 The phishing email evidence guide now covers reporting from Gmail and Outlook.com, where employer-managed Outlook reports can go, and what to put in a short report to IT. Keep the guide and the downloadable note on one canonical URL so searchers reach the reporting steps and the template together. [Gmail Help](https://support.google.com/mail/answer/8253?hl=en), [Microsoft 365 reporting settings](https://learn.microsoft.com/en-us/defender-office-365/submissions-user-reported-messages-custom-mailbox)
+
+## November 26 Bing keyword research
+
+Bing Webmaster Tools showed 20.6K impressions for “link checker,” 9.1K for “URL checker,” and 5.2K for “is this link safe” in its three-month related-keyword report. These figures describe Bing search demand. Use the Search Performance report to measure BugSnaps impressions for each query.
+
+For “phishing link checker,” Bing listed Cloudflare Radar, CheckPhish, and Malwarebytes first in its top URL report. Their pages put the checker upfront. PhishLens addresses the same task with a browser-local review and a direct answer about what a clean result means. The comparison now includes CheckPhish’s hosted scan and the URL it receives. [Cloudflare Radar](https://radar.cloudflare.com/scan), [CheckPhish](https://checkphish.bolster.ai/), [Malwarebytes](https://www.malwarebytes.com/scam-check/link)
+
+For “website security checklist,” Bing listed Cloudflare and UpGuard first and returned insufficient volume data. The BugSnaps page focuses on launch checks, evidence collection, and a reusable worksheet. [Cloudflare checklist](https://www.cloudflare.com/learning/security/glossary/website-security-checklist/), [UpGuard checklist](https://www.upguard.com/blog/the-website-security-checklist)

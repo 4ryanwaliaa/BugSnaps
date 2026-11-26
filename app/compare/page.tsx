@@ -44,7 +44,7 @@ export default function CompareHub() {
       <Section labelledBy="phishing-comparison-title" className="!pb-0">
         <h2 id="phishing-comparison-title" className="text-2xl font-semibold">Compare tools for checking suspicious links</h2>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          See how PhishLens, Malwarebytes, VirusTotal and Google Safe Browsing handle link analysis, reputation and submitted data.
+          Compare five link checkers, including PhishLens and CheckPhish, by what they find and what data they receive.
         </p>
         <Link href="/compare/phishing-link-checkers" className="mt-4 inline-flex font-medium text-accent hover:underline">
           Compare phishing link checkers
