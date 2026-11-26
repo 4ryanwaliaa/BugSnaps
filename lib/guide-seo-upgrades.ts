@@ -396,7 +396,7 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
     title: "Windows Service Hardening: Accounts & Startup",
   },
   "windows-software-inventory-review": {
-    title: "Windows Software Inventory & App Review Guide",
+    title: "Windows Software Inventory: List Installed Apps",
   },
   "windows-local-administrator-review": {
     title: "Windows Local Administrator Privilege Review",

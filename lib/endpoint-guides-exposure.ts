@@ -27,11 +27,12 @@ export const ENDPOINT_EXPOSURE_GUIDES: SecurityGuide[] = [
   {
     slug: "windows-software-inventory-review",
     title: "Windows software inventory: identify and prioritise applications",
-    description: "Build a useful Windows application inventory, check versions and ownership, and handle gaps in device and per-user software records.",
+    description: "List installed Windows apps with Settings or WinGet. Record versions, publishers and owners, and account for portable and per-user apps.",
     category: "Testing workflow",
-    answer: "A software inventory lists known applications on an endpoint with enough context to decide whether each is needed, supported and maintained. Reconcile multiple sources because no single installation record necessarily captures every application.",
-    updated: "2026-10-28",
+    answer: "On Windows 11, open Settings, select Apps, then select Installed apps. If Windows Package Manager is available, you can also run winget list in a terminal. Record the app name, version, publisher, collection time and source so you can reconcile gaps between the two views.",
+    updated: "2026-11-26",
     sections: [
+      { title: "How to see installed apps in Windows 11", paragraphs: ["Open Start, choose Settings, then go to Apps and select Installed apps. Start with the device and user profile you need to review. Record the collection time and copy the app names and versions you can verify into your inventory.", "If WinGet is available, open a terminal and run winget list. It shows software installed through WinGet and applications it recognizes from other installation methods."], checklist: ["Use the Version column for the installed version. Available shows an update version when WinGet finds one.", "Record an unknown version as unknown and follow up with the application owner.", "If an approved portable app is missing from both lists, record the approved software record or vendor-confirmed version as a separate source for that entry."], source: 2 },
       { title: "Collect the right fields", paragraphs: ["Record the device, collection time, application name, publisher, version, installation scope and known owner. Separate device-wide installations from software installed for a particular user. Management platforms can provide inventory across enrolled devices; a local review is useful for checking one machine but cannot represent the entire fleet."], source: 0 },
       { title: "Understand the blind spots", paragraphs: ["Windows application inventory can draw from uninstall registry entries and packaged-app records. Portable tools copied into a folder may not appear in either view, and some records omit version or publisher information. Compare important entries with the application's own version information or vendor records before treating an incomplete value as a finding."], checklist: ["Include 32-bit and 64-bit installation views and relevant user profiles where your tool supports them.", "Note offline devices and the last successful collection date.", "Avoid using Win32_Product as a routine inventory shortcut: Microsoft documents performance and repair side effects."], source: 1 },
       { title: "Turn the list into a decision", paragraphs: ["For a remote support tool found on a finance laptop, ask who approved it, whether it is still used and how it receives updates. Compare the observed version against the vendor's support and advisory information rather than declaring it vulnerable by its name alone. Prioritise unsupported or exposed applications with a responsible owner and a target date."] },
@@ -39,11 +40,17 @@ export const ENDPOINT_EXPOSURE_GUIDES: SecurityGuide[] = [
     ],
     limitations: "Inventory completeness depends on collection method, permissions, user profiles and device connectivity. A recorded version alone does not prove a vulnerability is exploitable, and an absent entry does not prove the software is absent.",
     faqs: [
+      { question: "What does Available mean in winget list?", answer: "Version is the currently installed version that WinGet identified. Available is the version WinGet found in a configured package source as a possible update. Check your approved update channel before scheduling a change." },
       { question: "Can one registry key list every Windows application?", answer: "No. Per-user, packaged and portable software can be missed by a single registry view. Combine sources and record coverage limitations." },
       { question: "Is old software automatically vulnerable?", answer: "Not necessarily. Check the exact product and version against vendor support and advisory information, then consider configuration and exposure." },
       { question: "Why track the inventory collection time?", answer: "An offline device or stale report may not reflect recent updates or removals. The timestamp helps distinguish current evidence from an old snapshot." },
     ],
-    sources: [{ title: "Microsoft: Windows app inventory", url: "https://learn.microsoft.com/en-us/intune/app-management/deployment/enhanced-app-inventory" }, { title: "Microsoft: Working with software installations", url: "https://learn.microsoft.com/en-us/powershell/scripting/samples/working-with-software-installations?view=powershell-7.6" }],
+    sources: [
+      { title: "Microsoft: Windows app inventory", url: "https://learn.microsoft.com/en-us/intune/app-management/deployment/enhanced-app-inventory" },
+      { title: "Microsoft: Working with software installations", url: "https://learn.microsoft.com/en-us/powershell/scripting/samples/working-with-software-installations?view=powershell-7.6" },
+      { title: "Microsoft: Find installed apps in Windows 11", url: "https://support.microsoft.com/en-us/windows/apps/how-to-check-if-an-app-or-program-is-installed-in-windows" },
+      { title: "Microsoft: List installed applications with WinGet", url: "https://learn.microsoft.com/en-us/windows/package-manager/winget/list" },
+    ],
     related: ["windows-service-hardening-review", "windows-endpoint-hardening-baseline", "attack-surface-inventory"],
   },
   {
