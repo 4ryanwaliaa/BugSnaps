@@ -136,7 +136,7 @@ export default function BenchmarksPage() {
       <Section labelledBy="phishlens-benchmark-title" className="!pb-0">
         <h2 id="phishlens-benchmark-title" className="text-2xl font-semibold">PhishLens offline evaluation</h2>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          Review measured local link-checker results on an archived hostname dataset, with methods, limitations and aggregate counts.
+          Review offline verdicts for threat-listed hostnames and registered U.S. .gov domains, with methods, limitations and aggregate counts.
         </p>
         <Link href="/benchmarks/phishing-link-checker" className="mt-4 inline-flex font-medium text-accent hover:underline">
           Read the phishing link checker benchmark

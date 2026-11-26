@@ -14,7 +14,7 @@ const collections = [
   { title: "Website security checklist before launch", path: "/website-security-checklist", text: "Review HTTPS, access, backups and alerts. Download a CSV to record evidence and sign off on a release." },
   { title: "Phishing link checker comparison", path: "/compare/phishing-link-checkers", text: "Compare five tools, including PhishLens and CheckPhish, by what they check and what you share." },
   { title: "Report phishing in Gmail or Outlook", path: "/guides/phishing-email-evidence-preservation", text: "Find the web reporting controls, preserve the original email and download a text template for your IT report." },
-  { title: "PhishLens offline benchmark", path: "/benchmarks/phishing-link-checker", text: "See how the local checker classified 141,480 threat-listed hostnames, with downloadable aggregate results." },
+  { title: "PhishLens offline benchmark", path: "/benchmarks/phishing-link-checker", text: "See offline verdicts for 141,480 threat-listed hostnames and 17,149 registered .gov domains, with aggregate downloads." },
   { title: "Windows Security Protection History", path: "/guides/windows-security-protection-history", text: "Find recent Windows Security alerts, understand what the action cards mean and record details for IT." },
   { title: "Security playbooks", path: "/security-playbooks", text: "Choose a practical starting point for applications, APIs, Windows endpoints, digital footprints, suspicious links and broader assessments." },
   { title: "React2Shell and framework vulnerability guides", path: "/vulnerability-guides", text: "Check advisory names, affected deployments, framework patches and scan evidence across a connected collection of practical guides." },

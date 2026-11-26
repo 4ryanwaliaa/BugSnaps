@@ -1,0 +1,29 @@
+{
+  "evaluatedAt": "2026-11-26T03:38:19.532Z",
+  "publisher": "BugSnaps",
+  "test": "PhishLens local URL-pattern review on registered U.S. .gov domains",
+  "engineRevision": "773716f635ea9c2014ebf81e7729a313017eeceb",
+  "engineSha256": "6d5c39680700d380c38b006f666e11d881e89a0a1958b9d85c20d81137f8845e",
+  "source": {
+    "provider": "Cybersecurity and Infrastructure Security Agency (CISA)",
+    "dataset": "All .gov domains",
+    "snapshotDate": "2026-11-25",
+    "sourceRevision": "29c0fa2c4c7cc448f194aaff26b6fccf6e275859",
+    "url": "https://raw.githubusercontent.com/cisagov/dotgov-data/29c0fa2c4c7cc448f194aaff26b6fccf6e275859/current-full.csv",
+    "sha256": "23c71da6a7e1700bbf5bb025f6a0d0d2fd5e92f341b5fe9a14715ebe67455560"
+  },
+  "input": {
+    "normalization": "Read the Domain name CSV column, trim whitespace, lowercase and preserve source order. Save as UTF-8 with one name per line and LF after each name.",
+    "sha256": "0222f022e21fd0f32d7db9fba43baac13ea2dbfc2818b3727a9bd38c6a5c2b17"
+  },
+  "counts": {
+    "inputEntries": 17149,
+    "duplicateInputs": 0,
+    "parsed": 17149,
+    "rejected": 0,
+    "highConcern": 0,
+    "review": 2,
+    "noObviousSignals": 17147
+  },
+  "scope": "Registered second-level .gov domain names only. No listed domains were contacted. The results describe this registry snapshot and cannot establish page safety, a false-positive rate, or overall accuracy."
+}

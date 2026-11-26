@@ -14,7 +14,7 @@ export function GET() {
     `- [EndpointRadar Windows security posture](${absoluteUrl("/endpointradar")}): Review read-only checks for Windows firewall, antivirus, and update settings.`,
     "",
     "## Benchmarks and practical guides",
-    `- [Phishing link checker benchmark](${absoluteUrl("/benchmarks/phishing-link-checker")}): Measured PhishLens results and limitations for a local evaluation.`,
+    `- [Phishing link checker benchmark](${absoluteUrl("/benchmarks/phishing-link-checker")}): Offline PhishLens verdict counts for threat-listed hostnames and registered U.S. .gov domains, with methods and limitations.`,
     `- [Phishing link checker comparison](${absoluteUrl("/compare/phishing-link-checkers")}): Compare local URL review, public reputation lookups, and what a submission shares.`,
     `- [Website security checklist](${absoluteUrl("/website-security-checklist")}): Pre-launch checks for applications, deployment settings, and incident readiness.`,
     `- [How to read phishing link checker results](${absoluteUrl("/blog/phishing-link-checker-results-explained")}): Interpret local signals, external evidence, and unavailable checks.`,

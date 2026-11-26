@@ -58,8 +58,8 @@ export const INDEXABLE_ROUTES: IndexableRoute[] = [
 
   // Comparisons
   { path: "/us-vs-competitors", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-10-08" },
-  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-25" },
-  { path: "/benchmarks/phishing-link-checker", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-25" },
+  { path: "/benchmarks", changeFrequency: "weekly", priority: 0.9, lastModified: "2026-11-26" },
+  { path: "/benchmarks/phishing-link-checker", changeFrequency: "monthly", priority: 0.7, lastModified: "2026-11-26" },
   { path: "/improvements", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/why-bugsnaps", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },
   { path: "/compare/mypentest-vs-ai-assistants", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-10-08" },

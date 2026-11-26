@@ -2,13 +2,16 @@ import Link from "@/components/site/content-link";
 import { JsonLd, PageHeader, Prose, Section, SiteShell } from "@/components/site/page-parts";
 import { absoluteUrl, ORG, ORG_ID, pageMetadata, techArticleJsonLd } from "@/lib/site";
 import run from "@/public/benchmarks/phishlens-offline-2026-11-25.json";
+import registryRun from "@/public/benchmarks/phishlens-dotgov-2026-11-26.json";
 
 const path = "/benchmarks/phishing-link-checker";
 const resultsPath = "/benchmarks/phishlens-offline-2026-11-25.json";
+const registryResultsPath = "/benchmarks/phishlens-dotgov-2026-11-26.json";
 const headline = "Phishing link checker benchmark";
 const published = "2026-11-25";
+const modified = "2026-11-26";
 const description =
-  "See how PhishLens flagged 6,536 of 141,480 threat-listed hostnames offline. Read the method, limitations and downloadable aggregate results.";
+  "See how PhishLens reviewed 141,480 threat-listed hostnames and 17,149 registered .gov domains offline. Read the method and download aggregate results.";
 
 export const metadata = pageMetadata({
   title: "Phishing Link Checker Benchmark | PhishLens",
@@ -16,16 +19,23 @@ export const metadata = pageMetadata({
   path,
   type: "article",
   published,
+  modified,
 });
 
 const counts = run.counts;
+const registryCounts = registryRun.counts;
 const flagged = counts.highConcern + counts.review;
+const registryFlagged = registryCounts.highConcern + registryCounts.review;
 const formatCount = new Intl.NumberFormat("en-US");
 const formatRate = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 2 });
 const outcomes = [
-  { name: "High concern", count: counts.highConcern, meaning: "The local review found stronger lexical signals." },
-  { name: "Review", count: counts.review, meaning: "The local review found signals that warrant a closer look." },
-  { name: "No obvious signals", count: counts.noObviousSignals, meaning: "The local review found no signal strong enough to flag the hostname." },
+  { name: "High concern", key: "highConcern", meaning: "Stronger patterns in the hostname text." },
+  { name: "Review", key: "review", meaning: "Patterns worth a closer look." },
+  { name: "No obvious signals", key: "noObviousSignals", meaning: "No pattern strong enough to flag." },
+] as const;
+const samples = [
+  { label: "Threat-listed hostnames", counts },
+  { label: "Registered .gov domains", counts: registryCounts },
 ];
 const resultsJsonLd = {
   "@context": "https://schema.org",
@@ -43,52 +53,68 @@ const resultsJsonLd = {
     encodingFormat: "application/json",
   },
 };
+const registryJsonLd = {
+  ...resultsJsonLd,
+  "@id": `${absoluteUrl(path)}#dotgov-results`,
+  name: "PhishLens offline verdicts for registered U.S. .gov domains",
+  description: "Aggregate verdict counts for 17,149 registered second-level .gov domain names from the 25 November 2026 CISA registry snapshot. Evaluated offline on 26 November 2026.",
+  datePublished: modified,
+  distribution: { ...resultsJsonLd.distribution, contentUrl: absoluteUrl(registryResultsPath) },
+};
 
 export default function PhishingLinkCheckerBenchmark() {
   return (
     <SiteShell>
-      <JsonLd data={techArticleJsonLd({ headline, description, path, datePublished: published })} />
+      <JsonLd data={techArticleJsonLd({ headline, description, path, datePublished: published, dateModified: modified })} />
       <JsonLd data={resultsJsonLd} />
+      <JsonLd data={registryJsonLd} />
       <PageHeader
         crumbs={[
           { name: "Benchmarks", path: "/benchmarks" },
           { name: "Phishing link checker", path },
         ]}
         title={headline}
-        lead={`PhishLens flagged ${formatCount.format(flagged)} of ${formatCount.format(counts.parsed)} threat-listed hostnames (${formatRate.format(flagged / counts.parsed)}) in an offline evaluation. A dangerous link can produce a clean-looking result.`}
+        lead={`PhishLens flagged ${formatCount.format(flagged)} of ${formatCount.format(counts.parsed)} threat-listed hostnames (${formatRate.format(flagged / counts.parsed)}) and ${formatCount.format(registryFlagged)} of ${formatCount.format(registryCounts.parsed)} registered .gov domains (${formatRate.format(registryFlagged / registryCounts.parsed)}) for review in two offline evaluations.`}
       >
-        <a
-          href={resultsPath}
-          download
-          className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50"
-        >
-          Download aggregate results (JSON)
-        </a>
+        <div className="flex flex-wrap gap-3">
+          <a href={resultsPath} download className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50">
+            Threat-listed results (JSON)
+          </a>
+          <a href={registryResultsPath} download className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 text-base font-medium hover:border-accent/50">
+            Registered .gov results (JSON)
+          </a>
+        </div>
       </PageHeader>
 
       <Section labelledBy="phish-results">
         <h2 id="phish-results" className="text-2xl font-semibold tracking-tight">What PhishLens reported</h2>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-muted">
-          BugSnaps ran this evaluation on 25 November 2026. All {formatCount.format(counts.inputEntries)} snapshot entries were unique and parsed successfully.
+          BugSnaps ran the threat-list evaluation on 25 November 2026 and the .gov registry evaluation on 26 November using the same engine revision. All entries were unique within each sample and parsed successfully. Shares use each sample’s own total.
         </p>
         <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
-          <table className="w-full min-w-[32rem] text-left text-base">
-            <caption className="sr-only">Local verdicts for the archived hostname sample</caption>
+          <table className="w-full text-left text-sm sm:text-base">
+            <caption className="sr-only">Offline PhishLens verdict counts and shares by hostname sample</caption>
             <thead className="bg-surface">
               <tr>
-                <th scope="col" className="px-4 py-3">Verdict</th>
-                <th scope="col" className="px-4 py-3 text-right">Hostnames</th>
-                <th scope="col" className="px-4 py-3 text-right">Share</th>
-                <th scope="col" className="px-4 py-3">What it means</th>
+                <th scope="col" className="px-2.5 py-3 sm:px-4">Verdict</th>
+                {samples.map((sample) => (
+                  <th key={sample.label} scope="col" className="px-2.5 py-3 text-right sm:px-4">{sample.label}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {outcomes.map((outcome) => (
                 <tr key={outcome.name} className="border-t border-white/10">
-                  <th scope="row" className="px-4 py-3 font-medium">{outcome.name}</th>
-                  <td className="px-4 py-3 text-right tabular-nums">{formatCount.format(outcome.count)}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{formatRate.format(outcome.count / counts.parsed)}</td>
-                  <td className="px-4 py-3 text-muted">{outcome.meaning}</td>
+                  <th scope="row" className="px-2.5 py-3 font-medium sm:px-4">
+                    {outcome.name}
+                    <span className="block text-sm font-normal text-muted">{outcome.meaning}</span>
+                  </th>
+                  {samples.map((sample) => (
+                    <td key={sample.label} className="px-2.5 py-3 text-right tabular-nums sm:px-4">
+                      {formatCount.format(sample.counts[outcome.key])}
+                      <span className="block text-sm text-muted">{formatRate.format(sample.counts[outcome.key] / sample.counts.parsed)}</span>
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -100,13 +126,18 @@ export default function PhishingLinkCheckerBenchmark() {
         <h2 id="phish-method" className="text-2xl font-semibold tracking-tight">Method and limits</h2>
         <Prose>
           <p>
-            We verified the checksum of PhishDestroy’s 27 October 2026 DNS-active snapshot and passed its hostnames to the same URL-pattern engine used by PhishLens. PhishDestroy lists suspected phishing, scams and crypto-drainer infrastructure. Its DNS-active label means a hostname resolved during the provider’s check. We ran the evaluation offline and contacted none of the hostnames. The download records the dataset revision, checksums and counts.
+            We verified the checksum of PhishDestroy’s 27 October 2026 DNS-active snapshot and passed its hostnames to the same URL-pattern engine used by PhishLens. PhishDestroy lists suspected phishing, scams and crypto-drainer infrastructure. Its DNS-active label means a hostname resolved during the provider’s check.
           </p>
           <p>
-            The {formatRate.format(flagged / counts.parsed)} flagged rate applies to this particular list and hostname-only setup. We used no independently verified benign sample, so the run cannot estimate false positives or overall accuracy. Full URL paths, redirects, page content, message context and optional reputation or DNS lookups were outside the test. BugSnaps develops PhishLens and ran the evaluation in-house.
+            The registry evaluation used the second-level names in CISA’s 25 November 2026 .gov registry snapshot. Only verified U.S. government organizations can register .gov domains. The snapshot includes domains on hold and domains that may lack a website. Registry membership describes the registrant. It leaves the safety of individual pages unverified.
           </p>
           <p>
-            <a href="https://phishdestroy.io/dataset">PhishDestroy dataset documentation</a>
+            Each flagged rate describes its own hostname sample. These results cannot estimate false positives or overall accuracy. We contacted zero listed domains. URL paths, redirects, page content, message context and optional reputation or DNS lookups were outside both runs. The downloads record snapshot revisions, checksums and aggregate counts. BugSnaps develops PhishLens and ran both evaluations in-house.
+          </p>
+          <p>
+            <a href="https://phishdestroy.io/dataset">PhishDestroy dataset documentation</a>{" · "}
+            <a href="https://get.gov/about/data/">CISA .gov registry data</a>{" · "}
+            <a href="https://get.gov/domains/eligibility/">.gov registration eligibility</a>
           </p>
         </Prose>
       </Section>
