@@ -118,16 +118,43 @@ export const ENDPOINT_DETECTION_GUIDES: SecurityGuide[] = [
   guide({
     slug: "windows-audit-policy-change-event-4719", title: "Investigate Windows audit policy change event 4719",
     description: "Review a Windows audit policy change, determine whether it was approved and check its effect on future event visibility.",
-    answer: "Compare the actor, affected audit category and timing of event 4719 with approved policy changes, then verify the effective audit settings and expected collection.",
+    answer: "Windows Security Event ID 4719 records a change to the device’s audit policy. Open the event in the Security log and review the recorded account, subcategory and change. Compare those fields and the event time with the approved change record.",
     sections: [
-      { title: "Understand the record", paragraphs: ["Microsoft describes event 4719 when system audit policy changes and states that the event is logged regardless of the Audit Policy Change subcategory setting. Capture the affected device, subject, category, time and change details; do not assume the change was malicious."], source: 0 },
-      { title: "Compare with policy ownership", paragraphs: ["Check management assignments, approved deployment and change tickets. A baseline rollout can legitimately change auditing, while an unexpected local adjustment may be overridden by management later. Identify who owns the affected setting before altering the device."] },
+      {
+        title: "Find Event ID 4719 in Event Viewer",
+        paragraphs: [
+          "On a device whose logs you are authorized to review, open Event Viewer and select Windows Logs → Security. Choose Filter Current Log, enter 4719 in the event ID field, then open an event. Use General for the readable message and Details for the field names.",
+          "Record the device, event time and record ID. Microsoft documents 4719 as a system audit policy change. Its presence establishes that the policy changed. Verify the account, affected setting and approval before deciding how to respond.",
+        ],
+        source: 0,
+      },
+      {
+        title: "Read the account, subcategory and change fields",
+        paragraphs: ["In Details, expand EventData or open XML View. If the XML shows message codes, use the readable Changes text on the General tab. Keep the original record with any notes you make."],
+        checklist: [
+          "SubjectUserName and SubjectUserSid identify the Windows account recorded for the change. Compare it with the expected identity for the rollout.",
+          "SubcategoryGuid identifies the affected audit subcategory. Use the readable subcategory name to compare it with the approved setting.",
+          "AuditPolicyChanges describes which success or failure audit setting was added or removed. Compare the change with the requested outcome.",
+        ],
+        source: 0,
+      },
+      {
+        title: "Verify an approved audit policy rollout",
+        paragraphs: [
+          "In this fictional example, a ticket approves adding successful File Share auditing to a pilot workstation group. A 4719 record appears during rollout with File Share as the subcategory and Success added as the change. The device owner confirms the workstation belongs to the pilot group and the recorded identity matches the deployment record.",
+          "Save those references with the event. Verify the effective policy and whether the expected records reach the collector. If the device, time, identity or change falls outside the approval, mark the event unresolved and ask the policy owner to review it. Check the controlling assignment because a later policy refresh can replace a local change.",
+        ],
+      },
       { title: "Assess a visibility gap", paragraphs: ["If logon auditing was disabled on a sensitive workstation, determine the interval, affected categories and whether central records still exist. Avoid claiming that no events occurred during a gap. Correlate available evidence with other systems and document the limits of the investigation."] },
       { title: "Restore and test", paragraphs: ["Under an approved change, restore the intended effective policy at its controlling source. Produce a harmless authorized test event and verify the local and central collection path. Monitor the device after policy refresh and retain evidence of the mismatch and repair."] },
     ],
     limitations: "An audit change event does not explain intent or prove complete collection before or after the change. Event loss and retention gaps can obscure the timeline.",
-    faqs: [{ question: "Does 4719 always indicate an attacker?", answer: "No. Authorized policy deployment can generate it; verify the actor, setting and change record." }, { question: "Does restoring a policy recover missing events?", answer: "No. Document the gap and seek independent retained evidence." }],
-    sources: [{ title: "Microsoft: Security event 4719", url: "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4719" }], related: ["windows-audit-policy-assessment", "windows-security-log-retention-review", "windows-security-event-1102-review"],
+    faqs: [{ question: "Does 4719 always indicate an attacker?", answer: "An authorized policy deployment can generate it. Verify the recorded identity, setting and change record." }, { question: "What is the difference between Event ID 4719 and 1102?", answer: "4719 records a change to audit policy. 1102 records that the Windows Security audit log was cleared. Compare the timestamps and retain the evidence for each event." }, { question: "Does restoring a policy recover missing events?", answer: "Restoring the policy affects future events. Document the gap and look for earlier copies in retained or forwarded logs." }],
+    sources: [
+      { title: "Microsoft: Security event 4719", url: "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4719" },
+      { title: "Microsoft: View the Security log", url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/view-the-security-event-log" },
+    ],
+    related: ["windows-audit-policy-assessment", "windows-security-log-retention-review", "windows-security-event-1102-review"],
   }),
   guide({
     slug: "windows-network-share-access-event-5140", title: "Review Windows network share access event 5140",

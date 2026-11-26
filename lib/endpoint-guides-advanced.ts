@@ -115,7 +115,7 @@ export const ENDPOINT_ADVANCED_GUIDES: SecurityGuide[] = [
     limitations: "An event policy only records events covered by its settings and available instrumentation. A successful test does not establish complete collection across the fleet or prove that alerts are reviewed.",
     faqs: [{ question: "Does enabling audit policy guarantee central collection?", answer: "No. Confirm the local event, forwarding path, collector and access separately." }, { question: "Should every audit category be enabled everywhere?", answer: "Choose settings based on investigation needs and capacity, then test their volume and usefulness." }, { question: "Can a missing event prove an action did not occur?", answer: "No. Policy, permissions, forwarding, retention or device availability may have prevented the event from being observed." }],
     sources: [{ title: "Microsoft: Security audit policy recommendations", url: "https://learn.microsoft.com/windows-server/identity/ad-ds/plan/security-best-practices/audit-policy-recommendations" }],
-    related: ["windows-endpoint-security-assessment-checklist", "windows-endpoint-hardening-baseline", "security-testing-report"],
+    related: ["windows-audit-policy-change-event-4719", "windows-endpoint-security-assessment-checklist", "windows-endpoint-hardening-baseline", "security-testing-report"],
   }),
   guide({
     slug: "windows-security-log-retention-review",

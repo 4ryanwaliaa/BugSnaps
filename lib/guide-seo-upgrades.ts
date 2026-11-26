@@ -290,12 +290,14 @@ export const GUIDE_SEO_UPGRADES: Record<string, GuideSeoUpgrade> = {
   "windows-audit-policy-change-event-4719": {
     title: "Windows Event ID 4719: Audit Policy Changed",
     description:
-      "Investigate Windows Security Event ID 4719 (system audit policy changed): review SubcategoryGuid, SubjectUserName, and disabled logging visibility.",
+      "Find Event ID 4719 in Event Viewer, read what changed and use a worked example to verify an approved Windows audit policy rollout.",
+    updated: "2026-11-26",
     quickFacts: [
       { label: "Event ID & Channel", value: "Event ID 4719 in the Windows Security log (Audit Policy Change)." },
       { label: "Why it matters", value: "Shows when Success or Failure auditing was removed or added for a security subcategory on the endpoint." },
     ],
     readNext: [
+      windowsEventWorksheet,
       { label: "Windows Event IDs 1102, 4672, 5140 & 5145 triage guide", href: "/blog/windows-security-event-ids-1102-4672-5140-5145-guide" },
       { label: "Event ID 1102 audit log cleared guide", href: "/guides/windows-security-event-1102-review" },
     ],
